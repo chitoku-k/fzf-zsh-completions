@@ -44,7 +44,7 @@ zplug "chitoku-k/fzf-zsh-completions"
 
 ## Usage
 
-For further information, please refer to [Fuzzy completions for bash and zsh].
+For further information, please refer to [Fuzzy completions for bash and zsh][fzf-completions].
 
 ```zsh
 git rebase -i **<TAB>
