@@ -2,7 +2,7 @@ fzf-zsh-completions
 ===============
 
 Fuzzy completions for [fzf][] and [Zsh][] that can be triggered by the trigger
-sequence that is default to `**`.
+sequence that defaults to `**`.
 
 ## Prerequisites
 
@@ -18,7 +18,7 @@ below.
 
 ### zplug
 
-```
+```zsh
 zplug "chitoku-k/fzf-zsh-completions"
 ```
 
