@@ -20,6 +20,11 @@ _fzf_complete_git() {
         return
     fi
 
+    if [[ "$@" = 'git add'* ]]; then
+        _fzf_complete_git-add "$@"
+        return
+    fi
+
     _fzf_path_completion "$prefix" "$@"
 }
 
@@ -59,6 +64,23 @@ _fzf_complete_git_tabularize() {
             }
         }
     '
+}
+
+_fzf_complete_git-add() {
+    _fzf_complete '--ansi' "$@" < <(git status --porcelain=v1 | awk \
+        -v green="$(tput setaf 2)" \
+        -v red="$(tput setaf 1)" \
+        -v reset="$(tput sgr0)" "
+        $fzf_colorize_git_status
+        /^.[^ ]/ {
+            y = substr(\$0, 2, 1)
+            print colorize_git_status(green, red, reset)
+        }
+        ")
+}
+
+_fzf_complete_git-add_post() {
+    awk '{ print substr($0, 4) }'
 }
 
 fzf_colorize_git_status='function colorize_git_status(color1, color2, reset) {
