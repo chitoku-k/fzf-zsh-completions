@@ -60,3 +60,19 @@ _fzf_complete_git_tabularize() {
         }
     '
 }
+
+fzf_colorize_git_status='function colorize_git_status(color1, color2, reset) {
+    x = substr($0, 1, 1)
+    y = substr($0, 2, 1)
+    if (x ~ /[MADRC]/) {
+        xcolor = color1
+    }
+    if (x y ~ /(D[DU]|A[AU])|U.|\?\?|!!/) {
+        xcolor = color2
+    }
+    if (y ~ /[MADRCU\?!]/) {
+        ycolor = color2
+    }
+
+    return sprintf("%s%s%s%s%s%s %s", xcolor, x, reset, ycolor, y, reset, substr($0, 4))
+}'
