@@ -1,0 +1,4 @@
+language: shell
+
+script:
+  - zsh -c 'source *.zsh'
