@@ -1,4 +1,9 @@
 language: shell
 
+addons:
+  apt:
+    packages:
+      - zsh
+
 script:
   - zsh -c 'source *.zsh'
