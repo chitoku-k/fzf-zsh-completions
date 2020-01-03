@@ -1,6 +1,8 @@
 fzf-zsh-completions
 ===============
 
+[![][travis-badge]][travis-link]
+
 Fuzzy completions for [fzf][] and [Zsh][] that can be triggered by the trigger
 sequence that defaults to `**`.
 
@@ -58,6 +60,8 @@ For further information, please refer to [Fuzzy completions for bash and zsh][fz
 git rebase -i **<TAB>
 ```
 
+[travis-link]:     https://travis-ci.com/chitoku-k/fzf-zsh-completions
+[travis-badge]:    https://img.shields.io/travis/com/chitoku-k/fzf-zsh-completions/master.svg?style=flat-square
 [fzf]:             https://github.com/junegunn/fzf
 [fzf-completions]: https://github.com/junegunn/fzf/blob/master/README.md#fuzzy-completion-for-bash-and-zsh
 [Zsh]:             https://www.zsh.org/
