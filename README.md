@@ -25,6 +25,8 @@ zplug "chitoku-k/fzf-zsh-completions"
 ## Supported commands
 
 - git
+  - add
+    - Shows the files
   - branch
     - Shows the branches
   - checkout
