@@ -67,7 +67,7 @@ _fzf_complete_git_tabularize() {
 }
 
 _fzf_complete_git-add() {
-    _fzf_complete '--ansi' "$@" < <(git status --porcelain=v1 | awk \
+    _fzf_complete '--ansi' "$@" < <(git status --porcelain=v1 2> /dev/null | awk \
         -v green="$(tput setaf 2)" \
         -v red="$(tput setaf 1)" \
         -v reset="$(tput sgr0)" "
