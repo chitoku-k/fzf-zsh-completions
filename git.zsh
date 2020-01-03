@@ -34,7 +34,7 @@ _fzf_complete_git() {
     fi
 
     if [[ "$@" = 'git add'* ]]; then
-        _fzf_complete_git-files "$@"
+        _fzf_complete_git-unstaged-files "$@"
         return
     fi
 
@@ -68,7 +68,7 @@ _fzf_complete_git-commit-messages_post() {
     }'
 }
 
-_fzf_complete_git-files() {
+_fzf_complete_git-unstaged-files() {
     _fzf_complete '--ansi' "$@" < <(git status --porcelain=v1 2> /dev/null | awk \
         -v green="$(tput setaf 2)" \
         -v red="$(tput setaf 1)" \
@@ -81,7 +81,7 @@ _fzf_complete_git-files() {
     )
 }
 
-_fzf_complete_git-files_post() {
+_fzf_complete_git-unstaged-files_post() {
     awk '{ print substr($0, 4) }'
 }
 

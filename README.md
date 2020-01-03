@@ -26,7 +26,7 @@ zplug "chitoku-k/fzf-zsh-completions"
 
 - git
   - add
-    - Shows the files
+    - Shows the unstaged files
   - branch
     - Shows the commits/branches
   - checkout
