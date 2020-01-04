@@ -69,7 +69,9 @@ _fzf_complete_git-commit-messages_post() {
 }
 
 _fzf_complete_git-unstaged-files() {
-    _fzf_complete "--ansi $1" "${@:2}" < <(git status --porcelain=v1 2> /dev/null | awk \
+    local options="$1"
+    shift
+    _fzf_complete "--ansi $options" "$@" < <(git status --porcelain=v1 2> /dev/null | awk \
         -v green="$(tput setaf 2)" \
         -v red="$(tput setaf 1)" \
         -v reset="$(tput sgr0)" '
