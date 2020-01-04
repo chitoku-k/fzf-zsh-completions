@@ -19,14 +19,19 @@ _fzf_complete_awk_functions='
 '
 
 _fzf_complete_git() {
-    if [[ "$@" =~ '^git (branch|checkout|cherry-pick|log|merge|rebase|reset)' ]]; then
-        _fzf_complete_git-commits "$@"
+    if [[ "$@" =~ '^git (checkout|log|rebase|reset)' ]]; then
+        _fzf_complete_git-commits '' "$@"
+        return
+    fi
+
+    if [[ "$@" =~ '^git (branch|cherry-pick|merge)' ]]; then
+        _fzf_complete_git-commits '--multi' "$@"
         return
     fi
 
     if [[ "$@" = 'git commit'* ]]; then
         if [[ "$prefix" = '--fixup=' ]]; then
-            _fzf_complete_git-commits "$@"
+            _fzf_complete_git-commits '' "$@"
         else
             _fzf_complete_git-commit-messages "$@"
         fi
@@ -46,7 +51,9 @@ _fzf_complete_git_post() {
 }
 
 _fzf_complete_git-commits() {
-    _fzf_complete '--ansi --tiebreak=index' "$@" < <({
+    local options="$1"
+    shift
+    _fzf_complete "--ansi --tiebreak=index $options" "$@" < <({
         git branch -a --format='%(refname:short) %(contents:subject)' 2> /dev/null
         git log --color=always --format='%h %s' 2> /dev/null | awk -v prefix="$prefix" '{ print prefix $0 }'
     } | _fzf_complete_git_tabularize)
