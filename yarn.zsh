@@ -2,7 +2,7 @@
 
 _fzf_complete_yarn() {
     if [[ "$@" = 'yarn ' ]]; then
-        _fzf_complete_npm-run "$@"
+        _fzf_complete_npm-run '' "$@"
         return
     fi
 

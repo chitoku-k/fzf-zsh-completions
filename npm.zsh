@@ -2,7 +2,7 @@
 
 _fzf_complete_npm() {
     if [[ "$@" = 'npm run'* ]]; then
-        _fzf_complete_npm-run "$@"
+        _fzf_complete_npm-run '' "$@"
         return
     fi
 
@@ -10,7 +10,9 @@ _fzf_complete_npm() {
 }
 
 _fzf_complete_npm-run() {
-    _fzf_complete '--ansi --tiebreak=index' "$@" < <(npm run 2> /dev/null | awk '
+    local options="$1"
+    shift
+    _fzf_complete "--ansi --tiebreak=index $options" "$@" < <(npm run 2> /dev/null | awk '
         /^  [^ ]/ {
             gsub(/^ */, "")
             command = $0

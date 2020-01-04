@@ -33,7 +33,7 @@ _fzf_complete_git() {
         if [[ "$prefix" = '--fixup=' ]]; then
             _fzf_complete_git-commits '' "$@"
         else
-            _fzf_complete_git-commit-messages "$@"
+            _fzf_complete_git-commit-messages '' "$@"
         fi
         return
     fi
@@ -64,7 +64,9 @@ _fzf_complete_git-commits_post() {
 }
 
 _fzf_complete_git-commit-messages() {
-    _fzf_complete '--ansi --tiebreak=index' "$@" < <(git log --color=always --format='%C(yellow)%h%C(reset)  %s' 2> /dev/null)
+    local options="$1"
+    shift
+    _fzf_complete "--ansi --tiebreak=index $options" "$@" < <(git log --color=always --format='%C(yellow)%h%C(reset)  %s' 2> /dev/null)
 }
 
 _fzf_complete_git-commit-messages_post() {
