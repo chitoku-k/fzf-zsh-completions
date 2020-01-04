@@ -19,22 +19,27 @@ _fzf_complete_awk_functions='
 '
 
 _fzf_complete_git() {
-    if [[ "$@" =~ '^git (branch|checkout|cherry-pick|log|merge|rebase|reset)' ]]; then
-        _fzf_complete_git-commits "$@"
+    if [[ "$@" =~ '^git (checkout|log|rebase|reset)' ]]; then
+        _fzf_complete_git-commits '' "$@"
+        return
+    fi
+
+    if [[ "$@" =~ '^git (branch|cherry-pick|merge)' ]]; then
+        _fzf_complete_git-commits '--multi' "$@"
         return
     fi
 
     if [[ "$@" = 'git commit'* ]]; then
         if [[ "$prefix" = '--fixup=' ]]; then
-            _fzf_complete_git-commits "$@"
+            _fzf_complete_git-commits '' "$@"
         else
-            _fzf_complete_git-commit-messages "$@"
+            _fzf_complete_git-commit-messages '' "$@"
         fi
         return
     fi
 
     if [[ "$@" = 'git add'* ]]; then
-        _fzf_complete_git-unstaged-files "$@"
+        _fzf_complete_git-unstaged-files '--multi' "$@"
         return
     fi
 
@@ -46,7 +51,9 @@ _fzf_complete_git_post() {
 }
 
 _fzf_complete_git-commits() {
-    _fzf_complete '--ansi --tiebreak=index' "$@" < <({
+    local options="$1"
+    shift
+    _fzf_complete "--ansi --tiebreak=index $options" "$@" < <({
         git branch -a --format='%(refname:short) %(contents:subject)' 2> /dev/null
         git log --color=always --format='%h %s' 2> /dev/null | awk -v prefix="$prefix" '{ print prefix $0 }'
     } | _fzf_complete_git_tabularize)
@@ -57,7 +64,9 @@ _fzf_complete_git-commits_post() {
 }
 
 _fzf_complete_git-commit-messages() {
-    _fzf_complete '--ansi --tiebreak=index' "$@" < <(git log --color=always --format='%C(yellow)%h%C(reset)  %s' 2> /dev/null)
+    local options="$1"
+    shift
+    _fzf_complete "--ansi --tiebreak=index $options" "$@" < <(git log --color=always --format='%C(yellow)%h%C(reset)  %s' 2> /dev/null)
 }
 
 _fzf_complete_git-commit-messages_post() {
@@ -69,7 +78,9 @@ _fzf_complete_git-commit-messages_post() {
 }
 
 _fzf_complete_git-unstaged-files() {
-    _fzf_complete '--ansi' "$@" < <(git status --porcelain=v1 2> /dev/null | awk \
+    local options="$1"
+    shift
+    _fzf_complete "--ansi $options" "$@" < <(git status --porcelain=v1 2> /dev/null | awk \
         -v green="$(tput setaf 2)" \
         -v red="$(tput setaf 1)" \
         -v reset="$(tput sgr0)" '
