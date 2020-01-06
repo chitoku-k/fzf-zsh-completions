@@ -56,7 +56,7 @@ _fzf_complete_git-commits() {
     _fzf_complete "--ansi --tiebreak=index $options" "$@" < <({
         git branch -a --format='%(refname:short) %(contents:subject)' 2> /dev/null
         git log --color=always --format='%h %s' 2> /dev/null | awk -v prefix="$prefix" '{ print prefix $0 }'
-    } | _fzf_complete_git_tabularize)
+    } | grep -v -e '^(HEAD detached' | _fzf_complete_git_tabularize)
 }
 
 _fzf_complete_git-commits_post() {
