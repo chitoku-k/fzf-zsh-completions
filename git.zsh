@@ -21,11 +21,13 @@ _fzf_complete_awk_functions='
 _fzf_complete_git() {
     if [[ "$@" =~ '^git (checkout|log|rebase|reset)' ]]; then
         _fzf_complete_git-commits '' "$@"
+        zle reset-prompt
         return
     fi
 
     if [[ "$@" =~ '^git (branch|cherry-pick|merge)' ]]; then
         _fzf_complete_git-commits '--multi' "$@"
+        zle reset-prompt
         return
     fi
 
@@ -35,12 +37,14 @@ _fzf_complete_git() {
         else
             _fzf_complete_git-commit-messages '' "$@"
         fi
+        zle reset-prompt
         return
     fi
 
     if [[ "$@" = 'git add'* ]]; then
         FZF_DEFAULT_OPTS="--preview-window=right:70%:wrap --preview 'git diff --no-ext-diff --color=always {+2} | grep -v -e \"^[^ ]*\(diff\|---\|+++\)\"' $FZF_DEFAULT_OPTS" \
             _fzf_complete_git-unstaged-files '--multi' "$@"
+        zle reset-prompt
         return
     fi
 

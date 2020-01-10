@@ -3,6 +3,7 @@
 _fzf_complete_npm() {
     if [[ "$@" = 'npm run'* ]]; then
         _fzf_complete_npm-run '' "$@"
+        zle reset-prompt
         return
     fi
 

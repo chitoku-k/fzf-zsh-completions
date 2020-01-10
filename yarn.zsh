@@ -3,6 +3,7 @@
 _fzf_complete_yarn() {
     if [[ "$@" = 'yarn ' ]]; then
         _fzf_complete_npm-run '' "$@"
+        zle reset-prompt
         return
     fi
 
