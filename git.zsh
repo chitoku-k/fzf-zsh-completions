@@ -18,10 +18,9 @@ _fzf_complete_awk_functions='
     }
 '
 
-setopt interactivecomments
 _fzf_complete_preview_git_diff='
     --preview-window=right:70%:wrap
-    --preview="git diff --no-ext-diff --color=always -- {+2..} | awk \"NR == 2 || NR >= 5\""
+    --preview="echo {} | awk \"{ printf(\\\"%s\\\", substr(\\\$0, 4)) }\" | xargs -0 git diff --no-ext-diff --color=always -- | awk \"NR == 2 || NR >= 5\""
 '
 
 _fzf_complete_git() {
@@ -87,7 +86,8 @@ _fzf_complete_git-commit-messages_post() {
 _fzf_complete_git-unstaged-files() {
     local options="$1"
     shift
-    _fzf_complete "--ansi $options" "$@" < <(git status --porcelain=v1 2> /dev/null | awk \
+    _fzf_complete "--ansi $fzf_options" "$@" < <(git status --porcelain=v1 -z 2> /dev/null | awk \
+        -v RS='\0' \
         -v green="$(tput setaf 2)" \
         -v red="$(tput setaf 1)" \
         -v reset="$(tput sgr0)" '
@@ -100,7 +100,8 @@ _fzf_complete_git-unstaged-files() {
 }
 
 _fzf_complete_git-unstaged-files_post() {
-    awk '{ print substr($0, 4) }'
+    local filename=$(awk '{ print substr($0, 4) }')
+    echo "${(q)filename}"
 }
 
 _fzf_complete_git_tabularize() {
