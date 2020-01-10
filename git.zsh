@@ -39,7 +39,7 @@ _fzf_complete_git() {
     fi
 
     if [[ "$@" = 'git add'* ]]; then
-        FZF_DEFAULT_OPTS="--preview-window=right:70%:wrap --preview 'git diff --no-ext-diff --color=always {+2} | grep -v -e \"^[^ ]*\(diff\|---\|+++\)\"' $FZF_DEFAULT_OPTS" \
+        FZF_DEFAULT_OPTS="--preview-window=right:70%:wrap --preview 'git diff --no-ext-diff --no-prefix --color=always {+2} | grep -v -e '\''^[^ +-]*\(diff --git {+2} {+2}\|--- {+2}\|+++ {+2}\)'\''' $FZF_DEFAULT_OPTS" \
             _fzf_complete_git-unstaged-files '--multi' "$@"
         return
     fi
