@@ -52,9 +52,9 @@ _fzf_complete_git_post() {
 }
 
 _fzf_complete_git-commits() {
-    local options="$1"
+    local fzf_options="$1"
     shift
-    _fzf_complete "--ansi --tiebreak=index $options" "$@" < <({
+    _fzf_complete "--ansi --tiebreak=index $fzf_options" "$@" < <({
         git branch -a --format='%(refname:short) %(contents:subject)' 2> /dev/null
         git log --color=always --format='%h %s' 2> /dev/null | awk -v prefix="$prefix" '{ print prefix $0 }'
     } | grep -v -e '^(HEAD detached' | _fzf_complete_git_tabularize)
@@ -65,9 +65,9 @@ _fzf_complete_git-commits_post() {
 }
 
 _fzf_complete_git-commit-messages() {
-    local options="$1"
+    local fzf_options="$1"
     shift
-    _fzf_complete "--ansi --tiebreak=index $options" "$@" < <(git log --color=always --format='%C(yellow)%h%C(reset)  %s' 2> /dev/null)
+    _fzf_complete "--ansi --tiebreak=index $fzf_options" "$@" < <(git log --color=always --format='%C(yellow)%h%C(reset)  %s' 2> /dev/null)
 }
 
 _fzf_complete_git-commit-messages_post() {
@@ -79,9 +79,9 @@ _fzf_complete_git-commit-messages_post() {
 }
 
 _fzf_complete_git-unstaged-files() {
-    local options="$1"
+    local fzf_options="$1"
     shift
-    _fzf_complete "--ansi $options" "$@" < <(git status --porcelain=v1 2> /dev/null | awk \
+    _fzf_complete "--ansi $fzf_options" "$@" < <(git status --porcelain=v1 2> /dev/null | awk \
         -v green="$(tput setaf 2)" \
         -v red="$(tput setaf 1)" \
         -v reset="$(tput sgr0)" '
