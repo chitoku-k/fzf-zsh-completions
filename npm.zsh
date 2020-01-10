@@ -10,9 +10,9 @@ _fzf_complete_npm() {
 }
 
 _fzf_complete_npm-run() {
-    local options="$1"
+    local fzf_options="$1"
     shift
-    _fzf_complete "--ansi --tiebreak=index $options" "$@" < <(npm run 2> /dev/null | awk '
+    _fzf_complete "--ansi --tiebreak=index $fzf_options" "$@" < <(npm run 2> /dev/null | awk '
         /^  [^ ]/ {
             gsub(/^ */, "")
             command = $0
