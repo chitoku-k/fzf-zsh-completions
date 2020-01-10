@@ -60,9 +60,9 @@ _fzf_complete_git-commits() {
     local fzf_options="$1"
     shift
     _fzf_complete "--ansi --tiebreak=index $fzf_options" "$@" < <({
-        git branch -a --format='%(refname:short) %(contents:subject)' 2> /dev/null
-        git log --color=always --format='%h %s' 2> /dev/null | awk -v prefix="$prefix" '{ print prefix $0 }'
-    } | grep -v -e '^(HEAD detached' | _fzf_complete_git_tabularize)
+        git for-each-ref refs/heads refs/remotes refs/tags --format='%(refname:short) %(contents:subject)' 2> /dev/null
+        git log --format='%h %s' 2> /dev/null
+    } | awk -v prefix="$prefix" '{ print prefix $0 }' | _fzf_complete_git_tabularize)
 }
 
 _fzf_complete_git-commits_post() {
