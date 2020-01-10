@@ -18,6 +18,12 @@ _fzf_complete_awk_functions='
     }
 '
 
+setopt interactivecomments
+_fzf_complete_preview_git_diff='
+    --preview-window=right:70%:wrap
+    --preview="git diff --no-ext-diff --color=always -- {+2..} | awk \"NR == 2 || NR >= 5\""
+'
+
 _fzf_complete_git() {
     if [[ "$@" =~ '^git (checkout|log|rebase|reset)' ]]; then
         _fzf_complete_git-commits '' "$@"
@@ -39,7 +45,7 @@ _fzf_complete_git() {
     fi
 
     if [[ "$@" = 'git add'* ]]; then
-        FZF_DEFAULT_OPTS="--preview-window=right:70%:wrap --preview 'git diff --no-ext-diff --no-prefix --color=always {+2} | grep -v -e '\''^[^ +-]*\(diff --git {+2} {+2}\|--- {+2}\|+++ {+2}\)'\''' $FZF_DEFAULT_OPTS" \
+        FZF_DEFAULT_OPTS="$_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" \
             _fzf_complete_git-unstaged-files '--multi' "$@"
         return
     fi
