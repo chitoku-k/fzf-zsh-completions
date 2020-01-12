@@ -30,21 +30,21 @@ zplug "chitoku-k/fzf-zsh-completions"
   - add
     - Shows the unstaged files
   - branch
-    - Shows the commits/branches
+    - Shows the commits/branches/tags
   - checkout
-    - Shows the commits/branches
+    - Shows the commits/branches/tags
   - cherry-pick
-    - Shows the commits/branches
+    - Shows the commits/branches/tags
   - commit
-    - Shows the commit messages, or the commits/branches if preceded by `--fixup`
+    - Shows the commit messages, or the commits/branches/tags if preceded by `--fixup`
   - log
-    - Shows the commits/branches
+    - Shows the commits/branches/tags
   - merge
-    - Shows the commits/branches
+    - Shows the commits/branches/tags
   - rebase
-    - Shows the commits/branches
+    - Shows the commits/branches/tags
   - reset
-    - Shows the commits/branches
+    - Shows the commits/branches/tags
 - npm
   - run
     - Shows the scripts
