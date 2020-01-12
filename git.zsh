@@ -72,7 +72,7 @@ _fzf_complete_git-commits_post() {
 _fzf_complete_git-commit-messages() {
     local fzf_options="$1"
     shift
-    _fzf_complete "--ansi --tiebreak=index $fzf_options" "$@" < <(git log --color=always --format='%C(yellow)%h%C(reset)  %s' 2> /dev/null)
+    _fzf_complete "--ansi --tiebreak=index $fzf_options" "$@" < <(git log --format='%h  %s' 2> /dev/null)
 }
 
 _fzf_complete_git-commit-messages_post() {
