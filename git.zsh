@@ -80,25 +80,25 @@ _fzf_complete_git() {
             return
         fi
 
-        local cleanup_mode="strip whitespace verbatim scissors default"
+        local cleanup_mode=(strip whitespace verbatim scissors default)
         if [[ "$prefix" =~ '^--cleanup=' ]]; then
-            _fzf_complete '' "$@" < <(echo $cleanup_mode | awk -v RS=' ' -v prefix="${prefix/=*/=}" '{ print prefix $0 }')
+            _fzf_complete '' "$@" < <(awk -v prefix="${prefix/=*/=}" '{ print prefix $0 }' <<< ${(F)cleanup_mode})
             return
         fi
 
         if [[ "$last_options" = '--cleanup' ]]; then
-            _fzf_complete '' "$@" < <(echo $cleanup_mode | tr ' ' '\n')
+            _fzf_complete '' "$@" <<< ${(F)cleanp_mode}
             return
         fi
 
-        local untracked_file_mode="no normal all"
+        local untracked_file_mode=(no normal all)
         if [[ "$prefix" =~ '^--untracked-files=' ]]; then
-            _fzf_complete '' "$@" < <(echo $untracked_file_mode | awk -v RS=' ' -v prefix="${prefix/=*/=}" '{ print prefix $0 }')
+            _fzf_complete '' "$@" < <(awk -v prefix="${prefix/=*/=}" '{ print prefix $0 }' <<< ${(F)untracked_file_mode})
             return
         fi
 
         if [[ "$last_options" =~ '^(-[^-]*u|--untracked-files)' ]]; then
-            _fzf_complete '' "$@" < <(echo $untracked_file_mode | tr ' ' '\n')
+            _fzf_complete '' "$@" <<< ${(F)untracked_file_mode}
             return
         fi
 
