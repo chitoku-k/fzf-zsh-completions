@@ -20,7 +20,7 @@ _fzf_complete_awk_functions='
         match(str, prefix)
         return substr(str, RSTART + RLENGTH)
     }
-    function enclose_in_single_quote(str) {
+    function quote_by_single_quotations(str) {
         gsub("'\''", "'\''\\'\'''\''", str)
         return "'\''" str "'\''"
     }
