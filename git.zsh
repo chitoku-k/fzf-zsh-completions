@@ -35,8 +35,10 @@ _fzf_complete_git() {
     fi
 
     if [[ "$@" = 'git commit'* ]]; then
-        if [[ "$prefix" = '--fixup=' ]]; then
+        if [[ "$prefix" =~ '^--fixup=' ]]; then
+            prefix_option="${prefix/=*/=}"
             _fzf_complete_git-commits '' "$@"
+            unset prefix_option
         else
             _fzf_complete_git-commit-messages '' "$@"
         fi
@@ -62,7 +64,7 @@ _fzf_complete_git-commits() {
     _fzf_complete "--ansi --tiebreak=index $fzf_options" "$@" < <({
         git for-each-ref refs/heads refs/remotes refs/tags --format='%(refname:short) %(contents:subject)' 2> /dev/null
         git log --format='%h %s' 2> /dev/null
-    } | awk -v prefix="$prefix" '{ print prefix $0 }' | _fzf_complete_git_tabularize)
+    } | awk -v prefix="$prefix_option" '{ print prefix $0 }' | _fzf_complete_git_tabularize)
 }
 
 _fzf_complete_git-commits_post() {
