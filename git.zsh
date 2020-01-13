@@ -99,11 +99,11 @@ _fzf_complete_git-unstaged-files() {
 }
 
 _fzf_complete_git-unstaged-files_post() {
-    if [[ -z "$@" ]]; then
+    local filename=$(awk '{ print substr($0, 4) }')
+    if [[ -z "$filename" ]]; then
         return
     fi
 
-    local filename=$(awk '{ print substr($0, 4) }')
     echo "${(q)filename}"
 }
 
