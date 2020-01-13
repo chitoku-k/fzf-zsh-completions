@@ -212,37 +212,54 @@ _fzf_complete_git-gpg-key() {
     local local_key=$(git config --local user.signingkey)
     _fzf_complete "--ansi $fzf_options" "$@" < <(
         if [[ -n "$gpg_command" ]]; then
-            LANG=C "$gpg_command" --list-secret-keys --keyid-format LONG 2> /dev/null | awk \
+            LANG=C "$gpg_command" --with-colons --list-secret-keys --keyid-format LONG 2> /dev/null | awk \
+                -v FS=':' \
                 -v global_key="$global_key" \
                 -v local_key="$local_key" \
                 -v prefix="$prefix_option" '
-                    /^sec/ {
-                        for (i = 1; ;) {
-                            if ($0 == "") {
-                                break
-                            }
-                            if ($1 == "uid") {
-                                uid = $3 " " $4
-                            }
-                            if ($1 == "sec" || $1 == "ssb") {
-                                sub(/.*\//, "", $2)
-                                keys[i] = $2
-                                types[i++] = $4
-                            }
-                            getline
+                    function get_message(keyid) {
+                        if (keyid == global_key) {
+                            message = message " " "[Git Global]"
                         }
-                        for (j = 1; j < i; ++j) {
+                        if (keyid == local_key) {
+                            message = message " " "[Git Local]"
+                        }
+
+                        return message
+                    }
+                    /^(sec|ssb|uid)/ {
+                        if ($1 == "sec") {
+                            info[++id, "sec", "keyid"] = $5
+                            info[id, "sec", "capabilities"] = $12
+                            subid = 0
+                        }
+                        if ($1 == "ssb") {
+                            info[id, "ssb", ++subid, "keyid"] = $5
+                            info[id, "ssb", subid, "capabilities"] = $12
+                            ++subids[id]
+                        }
+                        if ($1 == "uid") {
+                            uids[id] = $10
+                        }
+                    }
+                    END {
+                        for (i = 1; i <= id; ++i) {
                             message = ""
-                            if (keys[j] == global_key) {
-                                message = message " " "[Git Global]"
+                            uid = uids[i]
+                            sub_keyid = info[i, "sec", "keyid"]
+                            sub_capabilities = info[i, "sec", "capabilities"]
+                            gsub(/[A-Z]/, "", sub_capabilities)
+
+                            print sub_keyid, "[" toupper(sub_capabilities) "]", uid get_message(sub_keyid)
+
+                            for (j = 1; j <= subids[i]; ++j) {
+                                message = ""
+                                ssb_keyid = info[i, "ssb", j, "keyid"]
+                                ssb_capabilities = info[i, "ssb", j, "capabilities"]
+
+                                print ssb_keyid, "[" toupper(ssb_capabilities) "]", uid get_message(ssb_keyid)
                             }
-                            if (keys[j] == local_key) {
-                                message = message " " "[Git Local]"
-                            }
-                            print prefix keys[j], types[j], uid message
                         }
-                        delete keys
-                        delete types
                     }
                 ' | _fzf_complete_git_tabularize
         fi
