@@ -37,7 +37,7 @@ _fzf_complete_git() {
     fi
 
     if [[ "$@" = 'git commit'* ]]; then
-        if [[ "$prefix" =~ '^--(reuse-message|reedit-message|fixup|squash)=' ]]; then
+        if [[ "$prefix" =~ '^--(fixup|reedit-message|reuse-message|squash)=' ]]; then
             prefix_option="${prefix/=*/=}"
             _fzf_complete_git-commits '' "$@"
             unset prefix_option
