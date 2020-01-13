@@ -16,6 +16,14 @@ _fzf_complete_awk_functions='
 
         return sprintf("%s%s%s%s%s%s %s", index_status_color, index_status, reset, work_tree_status_color, work_tree_status, reset, substr($0, 4))
     }
+    function get_after_prefix(str) {
+        match(str, prefix)
+        return substr(str, RSTART + RLENGTH)
+    }
+    function enclose_in_single_quote(str) {
+        gsub("'\''", "'\''\\'\'''\''", str)
+        return "'\''" str "'\''"
+    }
 '
 
 _fzf_complete_preview_git_diff='
@@ -38,9 +46,7 @@ _fzf_complete_git() {
 
     if [[ "$@" = 'git commit'* ]]; then
         if [[ "$prefix" =~ '^--(fixup|reedit-message|reuse-message|squash)=' ]]; then
-            prefix_option="${prefix/=*/=}"
-            _fzf_complete_git-commits '' "$@"
-            unset prefix_option
+            prefix_option="${prefix/=*/=}" _fzf_complete_git-commits '' "$@"
             return
         fi
 
@@ -51,9 +57,7 @@ _fzf_complete_git() {
         fi
 
         if [[ "$prefix" =~ '^--message=' ]]; then
-            prefix_option="${prefix/=*/=}"
-            _fzf_complete_git-commit-messages '' "$@"
-            unset prefix_option
+            prefix_option="${prefix/=*/=}" _fzf_complete_git-commit-messages '' "$@"
             return
         fi
 
@@ -66,7 +70,15 @@ _fzf_complete_git() {
             return
         fi
 
+        if [[ "$last_options" =~ '^--author$' ]]; then
+            return
+        fi
+
         if [[ "$prefix" =~ '^--date=' ]]; then
+            return
+        fi
+
+        if [[ "$last_options" =~ '^--date$' ]]; then
             return
         fi
 
@@ -104,9 +116,7 @@ _fzf_complete_git() {
 
         local gpg_command=$(git config --global gpg.program || (which gpg > /dev/null && echo gpg))
         if [[ "$prefix" =~ '^--gpg-sign=' ]]; then
-            prefix_option="${prefix/=*/=}"
-            _fzf_complete_git-gpg-key '' "$@"
-            unset prefix_option
+            prefix_option="${prefix/=*/=}" _fzf_complete_git-gpg-key '' "$@"
             return
         fi
 
@@ -155,20 +165,20 @@ _fzf_complete_git-commit-messages() {
                 match($0, / /)
                 print $1, prefix substr($0, RSTART + RLENGTH)
             }
-        ' |
-        _fzf_complete_git_tabularize
+        ' | _fzf_complete_git_tabularize
     )
 }
 
 _fzf_complete_git-commit-messages_post() {
-    awk -v prefix="$prefix_option" '{
-        match($0, /  /)
-        str = substr($0, RSTART + RLENGTH)
-        match(str, prefix)
-        str = substr(str, RSTART + RLENGTH)
-        gsub("'\''", "'\''\\'\'''\''", str)
-        print prefix "'\''" str "'\''"
-    }'
+    awk -v prefix="$prefix_option" '
+        '"$_fzf_complete_awk_functions"'
+        {
+            match($0, /  /)
+            str = substr($0, RSTART + RLENGTH)
+            str = get_after_prefix(str)
+            print prefix enclose_in_single_quote(str)
+        }
+    '
 }
 
 _fzf_complete_git-unstaged-files() {
@@ -201,37 +211,41 @@ _fzf_complete_git-gpg-key() {
     local global_key=$(git config --global user.signingkey)
     local local_key=$(git config --local user.signingkey)
     _fzf_complete "--ansi $fzf_options" "$@" < <(
-        [[ -n "$gpg_command" ]] && LANG=C "$gpg_command" --list-secret-keys --keyid-format LONG 2> /dev/null |
-        awk -v global_key="$global_key" -v local_key=$local_key -v prefix="$prefix_option" '
-            /^sec/ {
-                for (i = 1; ;) {
-                    if ($0 == "") {
-                        break
+        if [[ -n "$gpg_command" ]]; then
+            LANG=C "$gpg_command" --list-secret-keys --keyid-format LONG 2> /dev/null | awk \
+                -v global_key="$global_key" \
+                -v local_key="$local_key" \
+                -v prefix="$prefix_option" '
+                    /^sec/ {
+                        for (i = 1; ;) {
+                            if ($0 == "") {
+                                break
+                            }
+                            if ($1 == "uid") {
+                                uid = $3 " " $4
+                            }
+                            if ($1 == "sec" || $1 == "ssb") {
+                                sub(/.*\//, "", $2)
+                                keys[i] = $2
+                                types[i++] = $4
+                            }
+                            getline
+                        }
+                        for (j = 1; j < i; ++j) {
+                            message = ""
+                            if (keys[j] == global_key) {
+                                message = message " " "[Git Global]"
+                            }
+                            if (keys[j] == local_key) {
+                                message = message " " "[Git Local]"
+                            }
+                            print prefix keys[j], types[j], uid message
+                        }
+                        delete keys
+                        delete types
                     }
-                    if ($1 == "uid") {
-                        uid = $3 " " $4
-                    }
-                    if ($1 == "sec" || $1 == "ssb") {
-                        sub(/.*\//, "", $2)
-                        keys[i] = $2
-                        types[i++] = $4
-                    }
-                    getline
-                }
-                for (j = 1; j < i; ++j) {
-                    message = ""
-                    if (keys[j] == global_key) {
-                        message = message " " "[Git Global]"
-                    }
-                    if (keys[j] == local_key) {
-                        message = message " " "[Git Local]"
-                    }
-                    print prefix keys[j], types[j], uid message
-                }
-                delete keys
-                delete types
-            }
-        ' | _fzf_complete_git_tabularize
+                ' | _fzf_complete_git_tabularize
+        fi
     )
 }
 
