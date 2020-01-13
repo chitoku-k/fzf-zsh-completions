@@ -48,6 +48,8 @@ zplug "chitoku-k/fzf-zsh-completions"
 - npm
   - run
     - Shows the scripts
+- systemctl
+  - Shows the units
 - yarn
   - run
     - Shows the scripts
