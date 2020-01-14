@@ -191,7 +191,7 @@ _fzf_complete_git-unstaged-files_post() {
         return
     fi
 
-    echo "${(q)filename}"
+    echo ${(q)${(f)filename}}
 }
 
 _fzf_complete_git_tabularize() {
