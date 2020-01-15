@@ -31,9 +31,10 @@ _fzf_complete_preview_git_diff=$(cat <<'PREVIEW_OPTIONS'
     --preview='echo {} | awk '\''
         {
             if ($0 ~ /^(\?\?|!!)/) {
-                old_file_for_untracked = "/dev/null"
+                printf "%s%c%s", "/dev/null", 0, substr($0, 4)
+            } else {
+                printf "%s", substr($0, 4)
             }
-            printf "%s%c%s", old_file_for_untracked, 0, substr($0, 4)
         }
     '\'' | xargs -0 git diff --no-ext-diff --color=always --'
 PREVIEW_OPTIONS
