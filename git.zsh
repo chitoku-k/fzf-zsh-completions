@@ -173,7 +173,7 @@ _fzf_complete_git-commit-messages_post() {
 _fzf_complete_git-unstaged-files() {
     local fzf_options="$1"
     shift
-    _fzf_complete "--ansi $fzf_options" "$@" < <(git status --porcelain=v1 -z 2> /dev/null | xargs -0 -n 1 | awk \
+    _fzf_complete "--ansi $fzf_options" "$@" < <(git status --untracked-files=all --porcelain=v1 -z 2> /dev/null | xargs -0 -n 1 | awk \
         -v green="$(tput setaf 2)" \
         -v red="$(tput setaf 1)" \
         -v reset="$(tput sgr0)" '
