@@ -26,10 +26,19 @@ _fzf_complete_awk_functions='
     }
 '
 
-_fzf_complete_preview_git_diff='
+_fzf_complete_preview_git_diff=$(cat <<'PREVIEW_OPTIONS'
     --preview-window=right:70%:wrap
-    --preview="echo {} | awk \"{ printf(\\\"%s\\\", substr(\\\$0, 4)) }\" | xargs -0 git diff --no-ext-diff --color=always -- | awk \"NR == 2 || NR >= 5\""
-'
+    --preview='echo {} | awk '\''
+        {
+            if ($0 ~ /^(\?\?|!!)/) {
+                printf "%s%c%s", "/dev/null", 0, substr($0, 4)
+            } else {
+                printf "%s", substr($0, 4)
+            }
+        }
+    '\'' | xargs -0 git diff --no-ext-diff --color=always --'
+PREVIEW_OPTIONS
+)
 
 _fzf_complete_git() {
     local last_options=${${(z)LBUFFER}[-2]}
