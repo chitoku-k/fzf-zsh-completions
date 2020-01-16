@@ -16,7 +16,7 @@ _fzf_complete_awk_functions='
 
         return sprintf("%s%s%s%s%s%s %s", index_status_color, index_status, reset, work_tree_status_color, work_tree_status, reset, substr($0, 4))
     }
-    function get_after_prefix(str) {
+    function trim_prefix(str, prefix) {
         match(str, prefix)
         return substr(str, RSTART + RLENGTH)
     }
@@ -169,7 +169,7 @@ _fzf_complete_git-commit-messages_post() {
         {
             match($0, /  /)
             str = substr($0, RSTART + RLENGTH)
-            print get_after_prefix(str)
+            print trim_prefix(str, prefix)
         }
     ')
 
