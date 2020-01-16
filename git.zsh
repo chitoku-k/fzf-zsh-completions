@@ -20,10 +20,6 @@ _fzf_complete_awk_functions='
         match(str, prefix)
         return substr(str, RSTART + RLENGTH)
     }
-    function quote_by_single_quotations(str) {
-        gsub("'\''", "'\''\\'\'''\''", str)
-        return "'\''" str "'\''"
-    }
 '
 
 _fzf_complete_preview_git_diff=$(cat <<'PREVIEW_OPTIONS'
@@ -168,15 +164,16 @@ _fzf_complete_git-commit-messages() {
 }
 
 _fzf_complete_git-commit-messages_post() {
-    awk -v prefix="$prefix_option" '
+    local message=$(awk -v prefix="$prefix_option" '
         '"$_fzf_complete_awk_functions"'
         {
             match($0, /  /)
             str = substr($0, RSTART + RLENGTH)
-            str = get_after_prefix(str)
-            print prefix enclose_in_single_quote(str)
+            print prefix get_after_prefix(str)
         }
-    '
+    ')
+
+    echo ${(qq)message}
 }
 
 _fzf_complete_git-unstaged-files() {
