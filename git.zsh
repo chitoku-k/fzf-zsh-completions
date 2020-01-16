@@ -26,17 +26,10 @@ _fzf_complete_awk_functions='
 
 _fzf_complete_preview_git_diff=$(cat <<'PREVIEW_OPTIONS'
     --preview-window=right:70%:wrap
-    --preview='echo {} | awk '\''
-        NR == 1 {
+    --preview='echo {} | awk -v RS="" '\''
+        {
             status = substr($0, 1, 2)
             input = substr($0, 4)
-            next
-        }
-        {
-            input = input "\n" $0
-        }
-        END {
-            sub(/^\n/, "", input)
 
             if (status ~ /^(\?\?|!!)/) {
                 printf "%s%c%s", "/dev/null", 0, input
@@ -198,16 +191,13 @@ _fzf_complete_git-unstaged-files() {
         local files=$(git status --untracked-files=all --porcelain=v1 -z 2> /dev/null)
         for filename in ${(0)files}; do
             awk \
+                -v RS='' \
                 -v green="$(tput setaf 2)" \
                 -v red="$(tput setaf 1)" \
                 -v reset="$(tput sgr0)" '
                     '"$_fzf_complete_awk_functions"'
                     /^.[^ ]/ {
-                        input = input "\n" $0
-                    }
-                    END {
-                        sub(/^\n/, "", input)
-                        printf "%s%c", colorize_git_status(input, green, red, reset), 0
+                        printf "%s%c", colorize_git_status($0, green, red, reset), 0
                     }
                 ' <<< $filename
         done
