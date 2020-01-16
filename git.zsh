@@ -169,11 +169,11 @@ _fzf_complete_git-commit-messages_post() {
         {
             match($0, /  /)
             str = substr($0, RSTART + RLENGTH)
-            print prefix get_after_prefix(str)
+            print get_after_prefix(str)
         }
     ')
 
-    echo ${(qq)message}
+    echo "$prefix_option${(qq)message}"
 }
 
 _fzf_complete_git-unstaged-files() {
