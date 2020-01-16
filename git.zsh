@@ -16,13 +16,9 @@ _fzf_complete_awk_functions='
 
         return sprintf("%s%s%s%s%s%s %s", index_status_color, index_status, reset, work_tree_status_color, work_tree_status, reset, substr($0, 4))
     }
-    function get_after_prefix(str) {
+    function trim_prefix(str, prefix) {
         match(str, prefix)
         return substr(str, RSTART + RLENGTH)
-    }
-    function quote_by_single_quotations(str) {
-        gsub("'\''", "'\''\\'\'''\''", str)
-        return "'\''" str "'\''"
     }
 '
 
@@ -168,15 +164,16 @@ _fzf_complete_git-commit-messages() {
 }
 
 _fzf_complete_git-commit-messages_post() {
-    awk -v prefix="$prefix_option" '
+    local message=$(awk -v prefix="$prefix_option" '
         '"$_fzf_complete_awk_functions"'
         {
             match($0, /  /)
             str = substr($0, RSTART + RLENGTH)
-            str = get_after_prefix(str)
-            print prefix enclose_in_single_quote(str)
+            print trim_prefix(str, prefix)
         }
-    '
+    ')
+
+    echo "$prefix_option${(qq)message}"
 }
 
 _fzf_complete_git-unstaged-files() {
