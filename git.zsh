@@ -211,12 +211,12 @@ _fzf_complete_git_tabularize() {
                 refname_max = length($1)
             }
 
-            $1 = ""
-            messages[NR] = $0
+            match($0, / /)
+            messages[NR] = substr($0, RSTART + RLENGTH)
         }
         END {
             for (i = 1; i <= length(refnames); ++i) {
-                printf "%s%-" refname_max "s%s %s\n", yellow, refnames[i], reset, messages[i]
+                printf "%s%-" refname_max "s %s %s\n", yellow, refnames[i], reset, messages[i]
             }
         }
     '
