@@ -186,9 +186,10 @@ _fzf_complete_git-unstaged-files() {
     local fzf_options="$1"
     shift
 
-    _fzf_complete "--ansi --read0 $fzf_options" "$@" < <({
+    _fzf_complete "--ansi --read0 --print0 $fzf_options" "$@" < <({
         local filename
         local files=$(git status --untracked-files=all --porcelain=v1 -z 2> /dev/null)
+
         for filename in ${(0)files}; do
             awk \
                 -v RS='' \
@@ -205,12 +206,12 @@ _fzf_complete_git-unstaged-files() {
 }
 
 _fzf_complete_git-unstaged-files_post() {
-    local filename=$(awk '{ print substr($0, 4) }')
-    if [[ -z "$filename" ]]; then
-        return
-    fi
+    local filename
+    local input=$(cat)
 
-    echo ${(q)${(f)filename}}
+    for filename in ${(0)input}; do
+        echo ${${(q)filename:3}//\\n/\\\\n}
+    done
 }
 
 _fzf_complete_git_tabularize() {
