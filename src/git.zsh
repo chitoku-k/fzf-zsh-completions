@@ -108,7 +108,7 @@ _fzf_complete_git() {
         fi
 
         if [[ "$last_options" = '--cleanup' ]]; then
-            _fzf_complete '' "$@" <<< ${(F)cleanp_mode}
+            _fzf_complete '' "$@" <<< ${(F)cleanup_mode}
             return
         fi
 
