@@ -32,6 +32,14 @@
         echo file1 >> file1
         echo file2 >> directory1/file2
     } &> /dev/null
+
+    preview() {
+        for opt in ${(Q)${(Z+n+)FZF_DEFAULT_OPTS}}; do
+            if [[ $opt = --preview=* ]]; then
+                eval ${${opt/--preview=/}/\{\}/${(q)@}} 2>&1
+            fi
+        done
+    }
 }
 
 @teardown {
@@ -408,4 +416,69 @@
     LBUFFER=(git commit --untracked-files '**')
     prefix=
     _fzf_complete_git 'git commit --untracked-files '
+}
+
+@test 'Testing git commit' {
+    git checkout another-branch &> /dev/null
+    echo >> ' file3 containing space '
+    echo >> directory2/$'file4\ncontaining\nnewlines'
+
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --read0 --print0 --multi'
+        assert $2 same_as 'git commit '
+
+        input=$(cat)
+        actual=(${(0)input})
+
+        assert ${#actual} equals 4
+        assert ${actual[1]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0)  file3 containing space "
+        assert ${actual[2]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) directory1/file2"
+
+        assert ${#${(f)actual[3]}} equals 3
+        assert ${${(f)actual[3]}[1]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) directory2/file4"
+        assert ${${(f)actual[3]}[2]} same_as 'containing'
+        assert ${${(f)actual[3]}[3]} same_as 'newlines'
+
+        assert ${actual[4]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) file1"
+    }
+
+    LBUFFER=(git commit '**')
+    prefix=
+    _fzf_complete_git 'git commit '
+}
+
+@test 'Testing git add' {
+    git checkout another-branch &> /dev/null
+    echo >> ' file3 containing space '
+    echo >> directory2/$'file4\ncontaining\nnewlines'
+
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --read0 --print0 --multi'
+        assert $2 same_as 'git add '
+
+        input=$(cat)
+        actual=(${(0)input})
+
+        assert ${#actual} equals 4
+        assert ${actual[1]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0)  file3 containing space "
+        assert ${actual[2]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) directory1/file2"
+
+        assert ${#${(f)actual[3]}} equals 3
+        assert ${${(f)actual[3]}[1]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) directory2/file4"
+        assert ${${(f)actual[3]}[2]} same_as 'containing'
+        assert ${${(f)actual[3]}[3]} same_as 'newlines'
+
+        assert ${actual[4]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) file1"
+
+        assert "$(preview ' M  file3 containing space ')" is_not_empty
+        assert "$(preview ' M directory1/file2')" is_not_empty
+        assert "$(preview $' M directory2/file4\ncontaining\nnewlines')" is_not_empty
+        assert "$(preview ' M file1')" is_not_empty
+    }
+
+    LBUFFER=(git add '**')
+    prefix=
+    _fzf_complete_git 'git add '
 }
