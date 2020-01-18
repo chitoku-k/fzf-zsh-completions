@@ -46,7 +46,25 @@
     rm -rf $TEMP
 }
 
-@test 'Testing git checkout/log/rebase/reset' {
+@test 'Testing completion: git' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'git '
+    }
+
+    LBUFFER=(git '**')
+    prefix=
+    _fzf_complete_git 'git '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git checkout/log/rebase/reset' {
     _fzf_complete() {
         assert $# equals 2
         assert $1 same_as '--ansi --tiebreak=index '
@@ -82,7 +100,7 @@
     _fzf_complete_git 'git reset '
 }
 
-@test 'Testing git branch/cherry-pick/merge' {
+@test 'Testing completion: git branch/cherry-pick/merge' {
     _fzf_complete() {
         assert $# equals 2
         assert $1 same_as '--ansi --tiebreak=index --multi'
@@ -114,7 +132,7 @@
     _fzf_complete_git 'git merge '
 }
 
-@test 'Testing git commit --fixup=/--reedit-message=/--reuse-message=/--squash=' {
+@test 'Testing completion: git commit --fixup=/--reedit-message=/--reuse-message=/--squash=' {
     _fzf_complete() {
         assert $# equals 2
         assert $1 same_as '--ansi --tiebreak=index '
@@ -150,7 +168,7 @@
     _fzf_complete_git 'git commit '
 }
 
-@test 'Testing git commit -c/-C/--fixup/--reedit-message/--reuse-message/--squash' {
+@test 'Testing completion: git commit -c/-C/--fixup/--reedit-message/--reuse-message/--squash' {
     _fzf_complete() {
         assert $# equals 2
         assert $1 same_as '--ansi --tiebreak=index '
@@ -202,7 +220,7 @@
     _fzf_complete_git 'git commit --squash '
 }
 
-@test 'Testing git commit --message=' {
+@test 'Testing completion: git commit --message=' {
     git checkout another-branch &> /dev/null
 
     _fzf_complete() {
@@ -226,7 +244,7 @@
     _fzf_complete_git 'git commit '
 }
 
-@test 'Testing git commit -m/--message' {
+@test 'Testing completion: git commit -m/--message' {
     git checkout another-branch &> /dev/null
 
     _fzf_complete() {
@@ -254,7 +272,7 @@
     _fzf_complete_git 'git commit --message '
 }
 
-@test 'Testing git commit --author=/--date=/--author/--date' {
+@test 'Testing completion: git commit --author=/--date=/--author/--date' {
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -278,7 +296,7 @@
     assert $? equals 0
 }
 
-@test 'Testing git commit --file=/--template=' {
+@test 'Testing completion: git commit --file=/--template=' {
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -298,7 +316,7 @@
     _fzf_complete_git 'git commit '
 }
 
-@test 'Testing git commit -F/-t/--file/--template' {
+@test 'Testing completion: git commit -F/-t/--file/--template' {
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -334,7 +352,7 @@
     _fzf_complete_git 'git commit --template '
 }
 
-@test 'Testing git commit --cleanup=' {
+@test 'Testing completion: git commit --cleanup=' {
     _fzf_complete() {
         assert $# equals 2
         assert $1 same_as ''
@@ -356,7 +374,7 @@
     _fzf_complete_git 'git commit '
 }
 
-@test 'Testing git commit --cleanup' {
+@test 'Testing completion: git commit --cleanup' {
     _fzf_complete() {
         assert $# equals 2
         assert $1 same_as ''
@@ -378,7 +396,7 @@
     _fzf_complete_git 'git commit --cleanup '
 }
 
-@test 'Testing git commit --untracked-files=' {
+@test 'Testing completion: git commit --untracked-files=' {
     _fzf_complete() {
         assert $# equals 2
         assert $1 same_as ''
@@ -398,7 +416,7 @@
     _fzf_complete_git 'git commit '
 }
 
-@test 'Testing git commit --untracked-files' {
+@test 'Testing completion: git commit --untracked-files' {
     _fzf_complete() {
         assert $# equals 2
         assert $1 same_as ''
@@ -418,7 +436,7 @@
     _fzf_complete_git 'git commit --untracked-files '
 }
 
-@test 'Testing git commit/add' {
+@test 'Testing completion: git commit/add' {
     git checkout another-branch &> /dev/null
     echo >> ' file3 containing space '
     echo >> directory2/$'file4\ncontaining\nnewlines'
@@ -449,10 +467,10 @@
 
     LBUFFER=(git add '**')
     prefix=
-    _fzf_complete_git 'git commit '
+    _fzf_complete_git 'git add '
 }
 
-@test 'Testing git add (preview)' {
+@test 'Testing preview: git add' {
     git checkout another-branch &> /dev/null
     echo >> ' file3 containing space '
     echo >> directory2/$'file4\ncontaining\nnewlines'
@@ -474,22 +492,4 @@
     LBUFFER=(git add '**')
     prefix=
     _fzf_complete_git 'git add '
-}
-
-@test 'Testing git' {
-    _fzf_complete() {
-        fail '_fzf_complete should not be invoked'
-    }
-
-    _fzf_path_completion() {
-        assert $# equals 2
-        assert $1 same_as ''
-        assert $2 same_as 'git '
-    }
-
-    LBUFFER=(git '**')
-    prefix=
-    _fzf_complete_git 'git '
-
-    assert $? equals 0
 }
