@@ -290,30 +290,30 @@
     _fzf_path_completion() {
         assert $# equals 2
         assert $1 same_as ''
-        assert $2 same_as 'git commit '
+        assert $2 matches '^git commit (-[^-]*[Ft]|--(file|template)) '
     }
 
     LBUFFER=(git commit -F '**')
     prefix=
-    _fzf_complete_git 'git commit '
+    _fzf_complete_git 'git commit -F '
 
     LBUFFER=(git commit -t '**')
     prefix=
-    _fzf_complete_git 'git commit '
+    _fzf_complete_git 'git commit -t '
 
     LBUFFER=(git commit -qF '**')
     prefix=
-    _fzf_complete_git 'git commit '
+    _fzf_complete_git 'git commit -qF '
 
     LBUFFER=(git commit -qt '**')
     prefix=
-    _fzf_complete_git 'git commit '
+    _fzf_complete_git 'git commit -qt '
 
     LBUFFER=(git commit --file '**')
     prefix=
-    _fzf_complete_git 'git commit '
+    _fzf_complete_git 'git commit --file '
 
     LBUFFER=(git commit --template '**')
     prefix=
-    _fzf_complete_git 'git commit '
+    _fzf_complete_git 'git commit --template '
 }
