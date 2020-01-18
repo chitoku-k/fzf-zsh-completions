@@ -187,20 +187,25 @@ _fzf_complete_git-unstaged-files() {
     shift
 
     _fzf_complete "--ansi --read0 --print0 $fzf_options" "$@" < <({
+        local previous_status
         local filename
         local files=$(git status --untracked-files=all --porcelain=v1 -z 2> /dev/null)
 
         for filename in ${(0)files}; do
-            awk \
-                -v RS='' \
-                -v green="$(tput setaf 2)" \
-                -v red="$(tput setaf 1)" \
-                -v reset="$(tput sgr0)" '
-                    '"$_fzf_complete_awk_functions"'
-                    /^.[^ ]/ {
-                        printf "%s%c", colorize_git_status($0, green, red, reset), 0
-                    }
-                ' <<< $filename
+            if [[ "$previous_status" != R ]]; then
+                awk \
+                    -v RS='' \
+                    -v green="$(tput setaf 2)" \
+                    -v red="$(tput setaf 1)" \
+                    -v reset="$(tput sgr0)" '
+                            '"$_fzf_complete_awk_functions"'
+                            /^.[^ ]/ {
+                            printf "%s%c", colorize_git_status($0, green, red, reset), 0
+                        }
+                    ' <<< $filename
+            fi
+
+            previous_status=${filename:0:1}
         done
     })
 }
@@ -210,7 +215,7 @@ _fzf_complete_git-unstaged-files_post() {
     local input=$(cat)
 
     for filename in ${(0)input}; do
-        echo ${${(q)filename:3}//\\n/\\\\n}
+        echo ${${(q+)filename:3}//\\n/\\\\n}
     done
 }
 
