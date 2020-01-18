@@ -133,16 +133,16 @@
     prefix=--reedit-message=
     _fzf_complete_git 'git commit '
 
-    LBUFFER=(git merge '--reuse-message=**')
+    LBUFFER=(git commit '--reuse-message=**')
     prefix=--reuse-message=
     _fzf_complete_git 'git commit '
 
-    LBUFFER=(git merge '--squash=**')
+    LBUFFER=(git commit '--squash=**')
     prefix=--squash=
     _fzf_complete_git 'git commit '
 }
 
-@test 'Testing git commit -C/--fixup/--reedit-message/--reuse-message/--squash' {
+@test 'Testing git commit -c/-C/--fixup/--reedit-message/--reuse-message/--squash' {
     _fzf_complete() {
         assert $# equals 2
         assert $1 same_as '--ansi --tiebreak=index '
@@ -161,9 +161,17 @@
         assert ${actual[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
     }
 
+    LBUFFER=(git commit -c '**')
+    prefix=
+    _fzf_complete_git 'git commit -c '
+
     LBUFFER=(git commit -C '**')
     prefix=
     _fzf_complete_git 'git commit -C '
+
+    LBUFFER=(git commit -qc '**')
+    prefix=
+    _fzf_complete_git 'git commit -qc '
 
     LBUFFER=(git commit -qC '**')
     prefix=
@@ -177,11 +185,11 @@
     prefix=
     _fzf_complete_git 'git commit --reedit-message '
 
-    LBUFFER=(git merge --reuse-message '**')
+    LBUFFER=(git commit --reuse-message '**')
     prefix=
     _fzf_complete_git 'git commit --reuse-message '
 
-    LBUFFER=(git merge --squash '**')
+    LBUFFER=(git commit --squash '**')
     prefix=
     _fzf_complete_git 'git commit --squash '
 }
