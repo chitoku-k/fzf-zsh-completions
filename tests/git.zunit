@@ -1,6 +1,8 @@
 #!/usr/bin/env zunit
 
 @setup {
+    load ../src/git.zsh
+
     TEMP=$(mktemp -d)
     pushd $TEMP
 
@@ -30,8 +32,6 @@
         echo file1 >> file1
         echo file2 >> directory1/file2
     } &> /dev/null
-
-    popd
 }
 
 @teardown {
@@ -39,13 +39,10 @@
 }
 
 @test 'Testing git checkout/log/rebase/reset' {
-    load ../src/git.zsh
-    pushd $TEMP
-
     _fzf_complete() {
         assert $# equals 2
         assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 matches '^git (checkout|log|rebase|reset)'
+        assert $2 matches '^git (checkout|log|rebase|reset) '
 
         hash_1=$(git rev-parse --short v1)
 
@@ -61,26 +58,27 @@
     }
 
     LBUFFER=(git checkout '**')
-    _fzf_complete_git 'git checkout'
+    prefix=
+    _fzf_complete_git 'git checkout '
 
     LBUFFER=(git log '**')
-    _fzf_complete_git 'git log'
+    prefix=
+    _fzf_complete_git 'git log '
 
     LBUFFER=(git rebase '**')
-    _fzf_complete_git 'git rebase'
+    prefix=
+    _fzf_complete_git 'git rebase '
 
     LBUFFER=(git reset '**')
-    _fzf_complete_git 'git reset'
+    prefix=
+    _fzf_complete_git 'git reset '
 }
 
 @test 'Testing git branch/cherry-pick/merge' {
-    load ../src/git.zsh
-    pushd $TEMP
-
     _fzf_complete() {
         assert $# equals 2
         assert $1 same_as '--ansi --tiebreak=index --multi'
-        assert $2 matches '^git (branch|cherry-pick|merge)'
+        assert $2 matches '^git (branch|cherry-pick|merge) '
 
         hash_1=$(git rev-parse --short v1)
 
@@ -96,23 +94,23 @@
     }
 
     LBUFFER=(git branch -D '**')
-    _fzf_complete_git 'git branch -D'
+    prefix=
+    _fzf_complete_git 'git branch -D '
 
     LBUFFER=(git cherry-pick '**')
-    _fzf_complete_git 'git cherry-pick'
+    prefix=
+    _fzf_complete_git 'git cherry-pick '
 
     LBUFFER=(git merge '**')
-    _fzf_complete_git 'git merge'
+    prefix=
+    _fzf_complete_git 'git merge '
 }
 
 @test 'Testing git commit --fixup=/--reedit-message=/--reuse-message=/--squash=' {
-    load ../src/git.zsh
-    pushd $TEMP
-
     _fzf_complete() {
         assert $# equals 2
         assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git commit'
+        assert $2 same_as 'git commit '
 
         hash_1=$(git rev-parse --short v1)
 
@@ -129,29 +127,26 @@
 
     LBUFFER=(git commit '--fixup=**')
     prefix=--fixup=
-    _fzf_complete_git 'git commit'
+    _fzf_complete_git 'git commit '
 
     LBUFFER=(git commit '--reedit-message=**')
     prefix=--reedit-message=
-    _fzf_complete_git 'git commit'
+    _fzf_complete_git 'git commit '
 
     LBUFFER=(git merge '--reuse-message=**')
     prefix=--reuse-message=
-    _fzf_complete_git 'git commit'
+    _fzf_complete_git 'git commit '
 
     LBUFFER=(git merge '--squash=**')
     prefix=--squash=
-    _fzf_complete_git 'git commit'
+    _fzf_complete_git 'git commit '
 }
 
 @test 'Testing git commit -C/--fixup/--reedit-message/--reuse-message/--squash' {
-    load ../src/git.zsh
-    pushd $TEMP
-
     _fzf_complete() {
         assert $# equals 2
         assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git commit'
+        assert $2 matches '^git commit (-[^-]*[cC]|--(reuse-message|reedit-message|fixup|squash)) '
 
         hash_1=$(git rev-parse --short v1)
 
@@ -167,26 +162,158 @@
     }
 
     LBUFFER=(git commit -C '**')
-    prefix=-C
-    _fzf_complete_git 'git commit'
+    prefix=
+    _fzf_complete_git 'git commit -C '
 
     LBUFFER=(git commit -qC '**')
-    prefix=-qC
-    _fzf_complete_git 'git commit'
+    prefix=
+    _fzf_complete_git 'git commit -qC '
 
     LBUFFER=(git commit --fixup '**')
-    prefix=--fixup
-    _fzf_complete_git 'git commit'
+    prefix=
+    _fzf_complete_git 'git commit --fixup '
 
     LBUFFER=(git commit --reedit-message '**')
-    prefix=--reedit-message
-    _fzf_complete_git 'git commit'
+    prefix=
+    _fzf_complete_git 'git commit --reedit-message '
 
     LBUFFER=(git merge --reuse-message '**')
-    prefix=--reuse-message
-    _fzf_complete_git 'git commit'
+    prefix=
+    _fzf_complete_git 'git commit --reuse-message '
 
     LBUFFER=(git merge --squash '**')
-    prefix=--squash
-    _fzf_complete_git 'git commit'
+    prefix=
+    _fzf_complete_git 'git commit --squash '
+}
+
+@test 'Testing git commit --message=' {
+    git checkout another-branch &> /dev/null
+
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit '
+
+        hash_1=$(git rev-parse --short v1)
+        hash_2=$(git rev-parse --short v2)
+
+        input=$(cat)
+        actual=(${(f)input})
+
+        assert ${#actual} equals 2
+        assert ${actual[1]} same_as "$(tput setaf 3)$hash_2 $(tput sgr0) ${prefix} 2nd commit"
+        assert ${actual[2]} same_as "$(tput setaf 3)$hash_1 $(tput sgr0) ${prefix}1st commit"
+    }
+
+    LBUFFER=(git commit '--message=**')
+    prefix=--message=
+    _fzf_complete_git 'git commit '
+}
+
+@test 'Testing git commit -m/--message' {
+    git checkout another-branch &> /dev/null
+
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 matches '^git commit (-[^-]*m|--message) '
+
+        hash_1=$(git rev-parse --short v1)
+        hash_2=$(git rev-parse --short v2)
+
+        input=$(cat)
+        actual=(${(f)input})
+
+        assert ${#actual} equals 2
+        assert ${actual[1]} same_as "$(tput setaf 3)$hash_2 $(tput sgr0)  2nd commit"
+        assert ${actual[2]} same_as "$(tput setaf 3)$hash_1 $(tput sgr0) 1st commit"
+    }
+
+    LBUFFER=(git commit -m '**')
+    prefix=
+    _fzf_complete_git 'git commit -m '
+
+    LBUFFER=(git commit --message '**')
+    prefix=
+    _fzf_complete_git 'git commit --message '
+}
+
+@test 'Testing git commit --author=/--date=/--author/--date' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    LBUFFER=(git commit '--author=**')
+    prefix=--author=
+    _fzf_complete_git 'git commit '
+
+    LBUFFER=(git commit '--date=**')
+    prefix=--date=
+    _fzf_complete_git 'git commit '
+
+    LBUFFER=(git commit --author '**')
+    prefix=
+    _fzf_complete_git 'git commit --author '
+
+    LBUFFER=(git commit --date '**')
+    prefix=
+    _fzf_complete_git 'git commit --date '
+
+    assert $? equals 0
+}
+
+@test 'Testing git commit --file=/--template=' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 matches '^git commit --(file|template)=$'
+    }
+
+    LBUFFER=(git commit '--file=**')
+    prefix=--file=
+    _fzf_complete_git 'git commit '
+
+    LBUFFER=(git commit '--template=**')
+    prefix=--template=
+    _fzf_complete_git 'git commit '
+}
+
+@test 'Testing git commit -F/-t/--file/--template' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'git commit '
+    }
+
+    LBUFFER=(git commit -F '**')
+    prefix=
+    _fzf_complete_git 'git commit '
+
+    LBUFFER=(git commit -t '**')
+    prefix=
+    _fzf_complete_git 'git commit '
+
+    LBUFFER=(git commit -qF '**')
+    prefix=
+    _fzf_complete_git 'git commit '
+
+    LBUFFER=(git commit -qt '**')
+    prefix=
+    _fzf_complete_git 'git commit '
+
+    LBUFFER=(git commit --file '**')
+    prefix=
+    _fzf_complete_git 'git commit '
+
+    LBUFFER=(git commit --template '**')
+    prefix=
+    _fzf_complete_git 'git commit '
 }
