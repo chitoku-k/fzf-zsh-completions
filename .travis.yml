@@ -6,4 +6,4 @@ addons:
       - zsh
 
 script:
-  - zsh -c 'source *.zsh'
+  - zsh -c 'tests/test.zsh'
