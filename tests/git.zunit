@@ -317,3 +317,87 @@
     prefix=
     _fzf_complete_git 'git commit --template '
 }
+
+@test 'Testing git commit --cleanup=' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'git commit '
+
+        input=$(cat)
+        actual=(${(f)input})
+
+        assert ${#actual} equals 5
+        assert ${actual[1]} same_as --cleanup=strip
+        assert ${actual[2]} same_as --cleanup=whitespace
+        assert ${actual[3]} same_as --cleanup=verbatim
+        assert ${actual[4]} same_as --cleanup=scissors
+        assert ${actual[5]} same_as --cleanup=default
+    }
+
+    LBUFFER=(git commit '--cleanup=**')
+    prefix=--cleanup=
+    _fzf_complete_git 'git commit '
+}
+
+@test 'Testing git commit --cleanup' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'git commit --cleanup '
+
+        input=$(cat)
+        actual=(${(f)input})
+
+        assert ${#actual} equals 5
+        assert ${actual[1]} same_as strip
+        assert ${actual[2]} same_as whitespace
+        assert ${actual[3]} same_as verbatim
+        assert ${actual[4]} same_as scissors
+        assert ${actual[5]} same_as default
+    }
+
+    LBUFFER=(git commit --cleanup '**')
+    prefix=
+    _fzf_complete_git 'git commit --cleanup '
+}
+
+@test 'Testing git commit --untracked-files=' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'git commit '
+
+        input=$(cat)
+        actual=(${(f)input})
+
+        assert ${#actual} equals 3
+        assert ${actual[1]} same_as --untracked-files=no
+        assert ${actual[2]} same_as --untracked-files=normal
+        assert ${actual[3]} same_as --untracked-files=all
+    }
+
+    LBUFFER=(git commit '--untracked-files=**')
+    prefix=--untracked-files=
+    _fzf_complete_git 'git commit '
+}
+
+@test 'Testing git commit --untracked-files' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'git commit --untracked-files '
+
+        input=$(cat)
+        actual=(${(f)input})
+
+        assert ${#actual} equals 3
+        assert ${actual[1]} same_as no
+        assert ${actual[2]} same_as normal
+        assert ${actual[3]} same_as all
+    }
+
+    LBUFFER=(git commit --untracked-files '**')
+    prefix=
+    _fzf_complete_git 'git commit --untracked-files '
+}
