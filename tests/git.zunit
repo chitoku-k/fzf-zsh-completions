@@ -418,7 +418,7 @@
     _fzf_complete_git 'git commit --untracked-files '
 }
 
-@test 'Testing git commit' {
+@test 'Testing git commit/add' {
     git checkout another-branch &> /dev/null
     echo >> ' file3 containing space '
     echo >> directory2/$'file4\ncontaining\nnewlines'
@@ -426,7 +426,7 @@
     _fzf_complete() {
         assert $# equals 2
         assert $1 same_as '--ansi --read0 --print0 --multi'
-        assert $2 same_as 'git commit '
+        assert $2 matches '^git (commit|add) '
 
         input=$(cat)
         actual=(${(0)input})
@@ -446,36 +446,29 @@
     LBUFFER=(git commit '**')
     prefix=
     _fzf_complete_git 'git commit '
+
+    LBUFFER=(git add '**')
+    prefix=
+    _fzf_complete_git 'git commit '
 }
 
-@test 'Testing git add' {
+@test 'Testing git add (preview)' {
     git checkout another-branch &> /dev/null
     echo >> ' file3 containing space '
     echo >> directory2/$'file4\ncontaining\nnewlines'
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --read0 --print0 --multi'
-        assert $2 same_as 'git add '
+        actual=$(preview ' M  file3 containing space ')
+        assert $actual is_not_empty
 
-        input=$(cat)
-        actual=(${(0)input})
+        actual=$(preview ' M directory1/file2')
+        assert $actual is_not_empty
 
-        assert ${#actual} equals 4
-        assert ${actual[1]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0)  file3 containing space "
-        assert ${actual[2]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) directory1/file2"
+        actual=$(preview $' M directory2/file4\ncontaining\nnewlines')
+        assert $actual is_not_empty
 
-        assert ${#${(f)actual[3]}} equals 3
-        assert ${${(f)actual[3]}[1]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) directory2/file4"
-        assert ${${(f)actual[3]}[2]} same_as 'containing'
-        assert ${${(f)actual[3]}[3]} same_as 'newlines'
-
-        assert ${actual[4]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) file1"
-
-        assert "$(preview ' M  file3 containing space ')" is_not_empty
-        assert "$(preview ' M directory1/file2')" is_not_empty
-        assert "$(preview $' M directory2/file4\ncontaining\nnewlines')" is_not_empty
-        assert "$(preview ' M file1')" is_not_empty
+        actual=$(preview ' M file1')
+        assert $actual is_not_empty
     }
 
     LBUFFER=(git add '**')
