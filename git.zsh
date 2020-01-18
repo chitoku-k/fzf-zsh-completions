@@ -172,6 +172,9 @@ _fzf_complete_git-commit-messages_post() {
             print trim_prefix(str, prefix)
         }
     ')
+    if [[ -z "$message" ]]; then
+        return
+    fi
 
     echo "$prefix_option${(qq)message}"
 }
