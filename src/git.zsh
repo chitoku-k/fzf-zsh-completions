@@ -43,34 +43,42 @@ PREVIEW_OPTIONS
 
 _fzf_complete_git() {
     local arguments=$@
+    local resolved_commands=()
 
     while true; do
-        local resolved=$(_fzf_complete_git_resolve_alias ${(z)arguments})
+        local resolved=$(_fzf_complete_git_resolve_alias ${(Qz)arguments})
         if [[ -z $resolved ]]; then
             break
         fi
+        if [[ ${${(Qz)arguments}[2]} = ${${(Qz)resolved}[2]} ]]; then
+            break
+        fi
+        if [[ ${resolved_commands[(ie)${${(Qz)resolved}[2]}]} -le ${#resolved_commands} ]]; then
+            break
+        fi
         arguments=$resolved
+        resolved_commands+=(${${(Qz)resolved}[2]})
     done
 
-    local last_options=${${(z)arguments}[-1]}
+    local last_argument=${${(Qz)arguments}[-1]}
 
-    if [[ $arguments =~ '^git (checkout|log|rebase|reset)' ]]; then
+    if [[ ${(Q)arguments} =~ '^git (checkout|log|rebase|reset)' ]]; then
         _fzf_complete_git-commits '' $@
         return
     fi
 
-    if [[ $arguments =~ '^git (branch|cherry-pick|merge)' ]]; then
+    if [[ ${(Q)arguments} =~ '^git (branch|cherry-pick|merge)' ]]; then
         _fzf_complete_git-commits '--multi' $@
         return
     fi
 
-    if [[ $arguments = 'git commit'* ]]; then
+    if [[ ${(Q)arguments} = 'git commit'* ]]; then
         if [[ $prefix =~ '^--(fixup|reedit-message|reuse-message|squash)=' ]]; then
             prefix_option=${prefix/=*/=} _fzf_complete_git-commits '' $@
             return
         fi
 
-        if [[ $last_options =~ '^(-[^-]*[cC]|--(reuse-message|reedit-message|fixup|squash))$' ]]; then
+        if [[ $last_argument =~ '^(-[^-]*[cC]|--(reuse-message|reedit-message|fixup|squash))$' ]]; then
             _fzf_complete_git-commits '' $@
             return
         fi
@@ -80,7 +88,7 @@ _fzf_complete_git() {
             return
         fi
 
-        if [[ $last_options =~ '^(-[^-]*m|--message)$' ]]; then
+        if [[ $last_argument =~ '^(-[^-]*m|--message)$' ]]; then
             _fzf_complete_git-commit-messages '' $@
             return
         fi
@@ -89,7 +97,7 @@ _fzf_complete_git() {
             return
         fi
 
-        if [[ $last_options = '--author' ]]; then
+        if [[ $last_argument = '--author' ]]; then
             return
         fi
 
@@ -97,7 +105,7 @@ _fzf_complete_git() {
             return
         fi
 
-        if [[ $last_options = '--date' ]]; then
+        if [[ $last_argument = '--date' ]]; then
             return
         fi
 
@@ -106,7 +114,7 @@ _fzf_complete_git() {
             return
         fi
 
-        if [[ $last_options =~ '^(-[^-]*[Ft]|--(file|template|pathspec-from-file))$' ]]; then
+        if [[ $last_argument =~ '^(-[^-]*[Ft]|--(file|template|pathspec-from-file))$' ]]; then
             _fzf_path_completion '' $@
             return
         fi
@@ -117,7 +125,7 @@ _fzf_complete_git() {
             return
         fi
 
-        if [[ $last_options = '--cleanup' ]]; then
+        if [[ $last_argument = '--cleanup' ]]; then
             _fzf_complete '' $@ <<< ${(F)cleanup_mode}
             return
         fi
@@ -128,7 +136,7 @@ _fzf_complete_git() {
             return
         fi
 
-        if [[ $last_options =~ '^(-[^-]*u|--untracked-files)$' ]]; then
+        if [[ $last_argument =~ '^(-[^-]*u|--untracked-files)$' ]]; then
             _fzf_complete '' $@ <<< ${(F)untracked_file_mode}
             return
         fi
@@ -137,7 +145,7 @@ _fzf_complete_git() {
         return
     fi
 
-    if [[ $arguments = 'git add'* ]]; then
+    if [[ ${(Q)arguments} = 'git add'* ]]; then
         _fzf_complete_git-unstaged-files "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
         return
     fi
@@ -232,10 +240,6 @@ _fzf_complete_git_resolve_alias() {
     local git_aliases=$(git config --get-regexp '^alias\.')
 
     for git_alias in ${(f)git_aliases}; do
-        if [[ ${${git_alias#* }%% *} = $2 ]]; then
-            return
-        fi
-
         if [[ ${${git_alias#alias.}%% *} = $2 ]]; then
             git_alias_resolved="$1 ${git_alias#* } ${@:3}"
         fi
