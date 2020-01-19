@@ -136,10 +136,6 @@ _fzf_complete_git() {
     _fzf_path_completion "$prefix" "$@"
 }
 
-_fzf_complete_git_post() {
-    awk '{ print $1 }'
-}
-
 _fzf_complete_git-commits() {
     local fzf_options="$1"
     shift

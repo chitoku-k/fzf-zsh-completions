@@ -890,11 +890,78 @@
         run preview '??  file5 containing space '
         assert $output is_not_empty
 
-        run preview '?? directory2/file6'
+        run preview $'?? directory2/file6\ncontaining\nnewlines'
         assert $output is_not_empty
     }
 
     LBUFFER=(git add '**')
     prefix=
     _fzf_complete_git 'git add '
+}
+
+@test 'Testing post: git commits' {
+    input=(
+        'another-branch   2nd commit'
+        'master          1st commit'
+        'v1              1st commit'
+        'v2               2nd commit'
+        "$hash_1         1st commit"
+    )
+
+    run _fzf_complete_git-commits_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 5
+    assert ${lines[1]} same_as 'another-branch'
+    assert ${lines[2]} same_as 'master'
+    assert ${lines[3]} same_as 'v1'
+    assert ${lines[4]} same_as 'v2'
+    assert ${lines[5]} same_as $hash_1
+}
+
+@test 'Testing post: git commit messages containing space' {
+    input=(
+        "$hash_1  1st commit"
+    )
+
+    run _fzf_complete_git-commit-messages_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as "'1st commit'"
+}
+
+@test 'Testing post: git commit messages starting with space' {
+    input=(
+        "$hash_2   2nd commit"
+    )
+
+    run _fzf_complete_git-commit-messages_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as "' 2nd commit'"
+}
+
+@test 'Testing post: git unstaged files' {
+    input=(
+        'M  file1'
+        'M  directory1/file2'
+        'M   file3 containing space '
+        $'M  file4\ncontaining\nnewlines'
+        '??  file5 containing space '
+        $'?? directory2/file6\ncontaining\nnewlines'
+    )
+
+    run _fzf_complete_git-unstaged-files_post <<< ${(pj:\0:)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 6
+
+    assert ${lines[1]} same_as 'file1'
+    assert ${lines[2]} same_as 'directory1/file2'
+    assert ${lines[3]} same_as "' file3 containing space '"
+    assert ${lines[4]} same_as "\$'file4\\ncontaining\\nnewlines'"
+    assert ${lines[5]} same_as "' file5 containing space '"
+    assert ${lines[6]} same_as "\$'directory2/file6\\ncontaining\\nnewlines'"
 }
