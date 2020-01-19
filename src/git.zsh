@@ -46,7 +46,7 @@ _fzf_complete_git() {
 
     while true; do
         local resolved=$(_fzf_complete_git_resolve_alias ${(z)arguments})
-        if [[ -z $resolved ]]; then
+        if [[ -z $resolved ]] || [[ ${${(z)resolved}[2]} = ${${(z)arguments}[2]} ]]; then
             break
         fi
         arguments=$resolved
