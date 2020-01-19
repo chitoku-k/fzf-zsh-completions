@@ -39,7 +39,7 @@
     preview() {
         for opt in ${(Q)${(Z+n+)fzf_options}}; do
             if [[ $opt = --preview=* ]]; then
-                eval ${${opt/*--preview=/}/\{\}/${(q)@}} 2>&1
+                eval ${${opt/--preview=/}/\{\}/${(q)@}} 2>&1
             fi
         done
     }
