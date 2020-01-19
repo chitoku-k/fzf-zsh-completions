@@ -10,4 +10,4 @@ matrix:
     - os: osx
 
 script:
-  - zsh -c 'tests/test.zsh'
+  - tests/test.zsh
