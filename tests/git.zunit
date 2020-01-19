@@ -33,6 +33,9 @@
         echo file2 >> directory1/file2
     } &> /dev/null
 
+    hash_1=$(git rev-parse --short v1)
+    hash_2=$(git rev-parse --short v2)
+
     preview() {
         for opt in ${(Q)${(Z+n+)FZF_DEFAULT_OPTS}}; do
             if [[ $opt = --preview=* ]]; then
@@ -46,7 +49,7 @@
     rm -rf $TEMP
 }
 
-@test 'Testing completion: git' {
+@test 'Testing completion: git **' {
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -64,163 +67,387 @@
     assert $? equals 0
 }
 
-@test 'Testing completion: git checkout/log/rebase/reset' {
+@test 'Testing completion: git checkout **' {
     _fzf_complete() {
         assert $# equals 2
         assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 matches '^git (checkout|log|rebase|reset) '
+        assert $2 same_as 'git checkout '
 
-        hash_1=$(git rev-parse --short v1)
-
-        input=$(cat)
-        actual=(${(f)input})
-
-        assert ${#actual} equals 5
-        assert ${actual[1]} same_as "$(tput setaf 3)another-branch $(tput sgr0)  2nd commit"
-        assert ${actual[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
-        assert ${actual[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
-        assert ${actual[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
-        assert ${actual[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "$(tput setaf 3)another-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
     }
 
     LBUFFER=(git checkout '**')
     prefix=
     _fzf_complete_git 'git checkout '
+}
+
+@test 'Testing completion: git log **' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git log '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "$(tput setaf 3)another-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+    }
 
     LBUFFER=(git log '**')
     prefix=
     _fzf_complete_git 'git log '
+}
+
+@test 'Testing completion: git rebase **' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git rebase '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "$(tput setaf 3)another-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+    }
 
     LBUFFER=(git rebase '**')
     prefix=
     _fzf_complete_git 'git rebase '
+}
+
+@test 'Testing completion: git reset **' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git reset '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "$(tput setaf 3)another-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+    }
 
     LBUFFER=(git reset '**')
     prefix=
     _fzf_complete_git 'git reset '
 }
 
-@test 'Testing completion: git branch/cherry-pick/merge' {
+@test 'Testing completion: git branch **' {
     _fzf_complete() {
         assert $# equals 2
         assert $1 same_as '--ansi --tiebreak=index --multi'
-        assert $2 matches '^git (branch|cherry-pick|merge) '
+        assert $2 same_as 'git branch -D '
 
-        hash_1=$(git rev-parse --short v1)
-
-        input=$(cat)
-        actual=(${(f)input})
-
-        assert ${#actual} equals 5
-        assert ${actual[1]} same_as "$(tput setaf 3)another-branch $(tput sgr0)  2nd commit"
-        assert ${actual[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
-        assert ${actual[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
-        assert ${actual[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
-        assert ${actual[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "$(tput setaf 3)another-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
     }
 
     LBUFFER=(git branch -D '**')
     prefix=
     _fzf_complete_git 'git branch -D '
+}
+
+@test 'Testing completion: git cherry-pick **' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index --multi'
+        assert $2 same_as 'git cherry-pick '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "$(tput setaf 3)another-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+    }
 
     LBUFFER=(git cherry-pick '**')
     prefix=
     _fzf_complete_git 'git cherry-pick '
+}
+
+@test 'Testing completion: git merge **' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index --multi'
+        assert $2 same_as 'git merge '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "$(tput setaf 3)another-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+    }
 
     LBUFFER=(git merge '**')
     prefix=
     _fzf_complete_git 'git merge '
 }
 
-@test 'Testing completion: git commit --fixup=/--reedit-message=/--reuse-message=/--squash=' {
+@test 'Testing completion: git commit --fixup=**' {
     _fzf_complete() {
         assert $# equals 2
         assert $1 same_as '--ansi --tiebreak=index '
         assert $2 same_as 'git commit '
 
-        hash_1=$(git rev-parse --short v1)
-
-        input=$(cat)
-        actual=(${(f)input})
-
-        assert ${#actual} equals 5
-        assert ${actual[1]} same_as "$(tput setaf 3)${prefix}another-branch $(tput sgr0)  2nd commit"
-        assert ${actual[2]} same_as "$(tput setaf 3)${prefix}master         $(tput sgr0) 1st commit"
-        assert ${actual[3]} same_as "$(tput setaf 3)${prefix}v1             $(tput sgr0) 1st commit"
-        assert ${actual[4]} same_as "$(tput setaf 3)${prefix}v2             $(tput sgr0)  2nd commit"
-        assert ${actual[5]} same_as "$(tput setaf 3)${prefix}$hash_1        $(tput sgr0) 1st commit"
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "$(tput setaf 3)${prefix}another-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)${prefix}master         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)${prefix}v1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)${prefix}v2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)${prefix}$hash_1        $(tput sgr0) 1st commit"
     }
 
     LBUFFER=(git commit '--fixup=**')
     prefix=--fixup=
     _fzf_complete_git 'git commit '
+}
+
+@test 'Testing completion: git commit --reedit-message=**' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "$(tput setaf 3)${prefix}another-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)${prefix}master         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)${prefix}v1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)${prefix}v2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)${prefix}$hash_1        $(tput sgr0) 1st commit"
+    }
 
     LBUFFER=(git commit '--reedit-message=**')
     prefix=--reedit-message=
     _fzf_complete_git 'git commit '
+}
+
+@test 'Testing completion: git commit --reuse-message=**' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "$(tput setaf 3)${prefix}another-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)${prefix}master         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)${prefix}v1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)${prefix}v2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)${prefix}$hash_1        $(tput sgr0) 1st commit"
+    }
 
     LBUFFER=(git commit '--reuse-message=**')
     prefix=--reuse-message=
     _fzf_complete_git 'git commit '
+}
+
+@test 'Testing completion: git commit --squash=**' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "$(tput setaf 3)${prefix}another-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)${prefix}master         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)${prefix}v1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)${prefix}v2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)${prefix}$hash_1        $(tput sgr0) 1st commit"
+    }
 
     LBUFFER=(git commit '--squash=**')
     prefix=--squash=
     _fzf_complete_git 'git commit '
 }
 
-@test 'Testing completion: git commit -c/-C/--fixup/--reedit-message/--reuse-message/--squash' {
+@test 'Testing completion: git commit -c **' {
     _fzf_complete() {
         assert $# equals 2
         assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 matches '^git commit (-[^-]*[cC]|--(reuse-message|reedit-message|fixup|squash)) '
+        assert $2 same_as 'git commit -c '
 
-        hash_1=$(git rev-parse --short v1)
-
-        input=$(cat)
-        actual=(${(f)input})
-
-        assert ${#actual} equals 5
-        assert ${actual[1]} same_as "$(tput setaf 3)another-branch $(tput sgr0)  2nd commit"
-        assert ${actual[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
-        assert ${actual[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
-        assert ${actual[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
-        assert ${actual[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "$(tput setaf 3)another-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
     }
 
     LBUFFER=(git commit -c '**')
     prefix=
     _fzf_complete_git 'git commit -c '
+}
 
-    LBUFFER=(git commit -C '**')
-    prefix=
-    _fzf_complete_git 'git commit -C '
+@test 'Testing completion: git commit -qc **' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit -qc '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "$(tput setaf 3)another-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+    }
 
     LBUFFER=(git commit -qc '**')
     prefix=
     _fzf_complete_git 'git commit -qc '
+}
+
+@test 'Testing completion: git commit -C **' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit -C '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "$(tput setaf 3)another-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+    }
+
+    LBUFFER=(git commit -C '**')
+    prefix=
+    _fzf_complete_git 'git commit -C '
+}
+
+@test 'Testing completion: git commit -qC **' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit -qC '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "$(tput setaf 3)another-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+    }
 
     LBUFFER=(git commit -qC '**')
     prefix=
     _fzf_complete_git 'git commit -qC '
+}
+
+@test 'Testing completion: git commit --fixup **' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit --fixup '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "$(tput setaf 3)another-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+    }
 
     LBUFFER=(git commit --fixup '**')
     prefix=
     _fzf_complete_git 'git commit --fixup '
+}
+
+@test 'Testing completion: git commit --reedit-message **' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit --reedit-message '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "$(tput setaf 3)another-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+    }
 
     LBUFFER=(git commit --reedit-message '**')
     prefix=
     _fzf_complete_git 'git commit --reedit-message '
+}
+
+@test 'Testing completion: git commit --reuse-message **' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit --reuse-message '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "$(tput setaf 3)another-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+    }
 
     LBUFFER=(git commit --reuse-message '**')
     prefix=
     _fzf_complete_git 'git commit --reuse-message '
+}
+
+@test 'Testing completion: git commit --squash' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit --squash '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "$(tput setaf 3)another-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+    }
 
     LBUFFER=(git commit --squash '**')
     prefix=
     _fzf_complete_git 'git commit --squash '
 }
 
-@test 'Testing completion: git commit --message=' {
+@test 'Testing completion: git commit --message=**' {
     git checkout another-branch &> /dev/null
 
     _fzf_complete() {
@@ -228,15 +455,10 @@
         assert $1 same_as '--ansi --tiebreak=index '
         assert $2 same_as 'git commit '
 
-        hash_1=$(git rev-parse --short v1)
-        hash_2=$(git rev-parse --short v2)
-
-        input=$(cat)
-        actual=(${(f)input})
-
-        assert ${#actual} equals 2
-        assert ${actual[1]} same_as "$(tput setaf 3)$hash_2 $(tput sgr0) ${prefix} 2nd commit"
-        assert ${actual[2]} same_as "$(tput setaf 3)$hash_1 $(tput sgr0) ${prefix}1st commit"
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "$(tput setaf 3)$hash_2 $(tput sgr0) ${prefix} 2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)$hash_1 $(tput sgr0) ${prefix}1st commit"
     }
 
     LBUFFER=(git commit '--message=**')
@@ -244,35 +466,64 @@
     _fzf_complete_git 'git commit '
 }
 
-@test 'Testing completion: git commit -m/--message' {
+@test 'Testing completion: git commit -m **' {
     git checkout another-branch &> /dev/null
 
     _fzf_complete() {
         assert $# equals 2
         assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 matches '^git commit (-[^-]*m|--message) '
+        assert $2 same_as 'git commit -m '
 
-        hash_1=$(git rev-parse --short v1)
-        hash_2=$(git rev-parse --short v2)
-
-        input=$(cat)
-        actual=(${(f)input})
-
-        assert ${#actual} equals 2
-        assert ${actual[1]} same_as "$(tput setaf 3)$hash_2 $(tput sgr0)  2nd commit"
-        assert ${actual[2]} same_as "$(tput setaf 3)$hash_1 $(tput sgr0) 1st commit"
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "$(tput setaf 3)$hash_2 $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)$hash_1 $(tput sgr0) 1st commit"
     }
 
     LBUFFER=(git commit -m '**')
     prefix=
     _fzf_complete_git 'git commit -m '
+}
+
+@test 'Testing completion: git commit -qm **' {
+    git checkout another-branch &> /dev/null
+
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit -qm '
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "$(tput setaf 3)$hash_2 $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)$hash_1 $(tput sgr0) 1st commit"
+    }
+
+    LBUFFER=(git commit -qm '**')
+    prefix=
+    _fzf_complete_git 'git commit -qm '
+}
+
+@test 'Testing completion: git commit --message **' {
+    git checkout another-branch &> /dev/null
+
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit --message '
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "$(tput setaf 3)$hash_2 $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)$hash_1 $(tput sgr0) 1st commit"
+    }
 
     LBUFFER=(git commit --message '**')
     prefix=
     _fzf_complete_git 'git commit --message '
 }
 
-@test 'Testing completion: git commit --author=/--date=/--author/--date' {
+@test 'Testing completion: git commit --author=**' {
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -281,13 +532,37 @@
     prefix=--author=
     _fzf_complete_git 'git commit '
 
+    assert $? equals 0
+}
+
+@test 'Testing completion: git commit --date=**' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
     LBUFFER=(git commit '--date=**')
     prefix=--date=
     _fzf_complete_git 'git commit '
 
+    assert $? equals 0
+}
+
+@test 'Testing completion: git commit --author **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
     LBUFFER=(git commit --author '**')
     prefix=
     _fzf_complete_git 'git commit --author '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git commit --date **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
 
     LBUFFER=(git commit --date '**')
     prefix=
@@ -296,7 +571,7 @@
     assert $? equals 0
 }
 
-@test 'Testing completion: git commit --file=/--template=' {
+@test 'Testing completion: git commit --file=**' {
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -304,19 +579,31 @@
     _fzf_path_completion() {
         assert $# equals 2
         assert $1 same_as ''
-        assert $2 matches '^git commit --(file|template)=$'
+        assert $2 same_as 'git commit --file='
     }
 
     LBUFFER=(git commit '--file=**')
     prefix=--file=
     _fzf_complete_git 'git commit '
+}
+
+@test 'Testing completion: git commit --template=**' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'git commit --template='
+    }
 
     LBUFFER=(git commit '--template=**')
     prefix=--template=
     _fzf_complete_git 'git commit '
 }
 
-@test 'Testing completion: git commit -F/-t/--file/--template' {
+@test 'Testing completion: git commit -F **' {
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -324,49 +611,107 @@
     _fzf_path_completion() {
         assert $# equals 2
         assert $1 same_as ''
-        assert $2 matches '^git commit (-[^-]*[Ft]|--(file|template)) '
+        assert $2 same_as 'git commit -F '
     }
 
     LBUFFER=(git commit -F '**')
     prefix=
     _fzf_complete_git 'git commit -F '
+}
 
-    LBUFFER=(git commit -t '**')
-    prefix=
-    _fzf_complete_git 'git commit -t '
+@test 'Testing completion: git commit -qF **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'git commit -qF '
+    }
 
     LBUFFER=(git commit -qF '**')
     prefix=
     _fzf_complete_git 'git commit -qF '
+}
 
-    LBUFFER=(git commit -qt '**')
+@test 'Testing completion: git commit -t **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'git commit -t '
+    }
+
+    LBUFFER=(git commit -t '**')
+    prefix=
+    _fzf_complete_git 'git commit -t '
+}
+
+@test 'Testing completion: git commit -qt **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'git commit -qt '
+    }
+
+    LBUFFER=(git commit -t '**')
     prefix=
     _fzf_complete_git 'git commit -qt '
+}
+
+@test 'Testing completion: git commit --file **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'git commit --file '
+    }
 
     LBUFFER=(git commit --file '**')
     prefix=
     _fzf_complete_git 'git commit --file '
+}
+
+@test 'Testing completion: git commit --template **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'git commit --template '
+    }
 
     LBUFFER=(git commit --template '**')
     prefix=
     _fzf_complete_git 'git commit --template '
 }
 
-@test 'Testing completion: git commit --cleanup=' {
+@test 'Testing completion: git commit --cleanup=**' {
     _fzf_complete() {
         assert $# equals 2
         assert $1 same_as ''
         assert $2 same_as 'git commit '
 
-        input=$(cat)
-        actual=(${(f)input})
-
-        assert ${#actual} equals 5
-        assert ${actual[1]} same_as --cleanup=strip
-        assert ${actual[2]} same_as --cleanup=whitespace
-        assert ${actual[3]} same_as --cleanup=verbatim
-        assert ${actual[4]} same_as --cleanup=scissors
-        assert ${actual[5]} same_as --cleanup=default
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as --cleanup=strip
+        assert ${lines[2]} same_as --cleanup=whitespace
+        assert ${lines[3]} same_as --cleanup=verbatim
+        assert ${lines[4]} same_as --cleanup=scissors
+        assert ${lines[5]} same_as --cleanup=default
     }
 
     LBUFFER=(git commit '--cleanup=**')
@@ -374,21 +719,19 @@
     _fzf_complete_git 'git commit '
 }
 
-@test 'Testing completion: git commit --cleanup' {
+@test 'Testing completion: git commit --cleanup **' {
     _fzf_complete() {
         assert $# equals 2
         assert $1 same_as ''
         assert $2 same_as 'git commit --cleanup '
 
-        input=$(cat)
-        actual=(${(f)input})
-
-        assert ${#actual} equals 5
-        assert ${actual[1]} same_as strip
-        assert ${actual[2]} same_as whitespace
-        assert ${actual[3]} same_as verbatim
-        assert ${actual[4]} same_as scissors
-        assert ${actual[5]} same_as default
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as strip
+        assert ${lines[2]} same_as whitespace
+        assert ${lines[3]} same_as verbatim
+        assert ${lines[4]} same_as scissors
+        assert ${lines[5]} same_as default
     }
 
     LBUFFER=(git commit --cleanup '**')
@@ -396,19 +739,17 @@
     _fzf_complete_git 'git commit --cleanup '
 }
 
-@test 'Testing completion: git commit --untracked-files=' {
+@test 'Testing completion: git commit --untracked-files=**' {
     _fzf_complete() {
         assert $# equals 2
         assert $1 same_as ''
         assert $2 same_as 'git commit '
 
-        input=$(cat)
-        actual=(${(f)input})
-
-        assert ${#actual} equals 3
-        assert ${actual[1]} same_as --untracked-files=no
-        assert ${actual[2]} same_as --untracked-files=normal
-        assert ${actual[3]} same_as --untracked-files=all
+        run cat
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as --untracked-files=no
+        assert ${lines[2]} same_as --untracked-files=normal
+        assert ${lines[3]} same_as --untracked-files=all
     }
 
     LBUFFER=(git commit '--untracked-files=**')
@@ -416,19 +757,17 @@
     _fzf_complete_git 'git commit '
 }
 
-@test 'Testing completion: git commit --untracked-files' {
+@test 'Testing completion: git commit --untracked-files **' {
     _fzf_complete() {
         assert $# equals 2
         assert $1 same_as ''
         assert $2 same_as 'git commit --untracked-files '
 
-        input=$(cat)
-        actual=(${(f)input})
-
-        assert ${#actual} equals 3
-        assert ${actual[1]} same_as no
-        assert ${actual[2]} same_as normal
-        assert ${actual[3]} same_as all
+        run cat
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as no
+        assert ${lines[2]} same_as normal
+        assert ${lines[3]} same_as all
     }
 
     LBUFFER=(git commit --untracked-files '**')
@@ -436,57 +775,91 @@
     _fzf_complete_git 'git commit --untracked-files '
 }
 
-@test 'Testing completion: git commit/add' {
-    git checkout another-branch &> /dev/null
+@test 'Testing completion: git commit **' {
+    run git checkout another-branch
     echo >> ' file3 containing space '
     echo >> directory2/$'file4\ncontaining\nnewlines'
 
     _fzf_complete() {
         assert $# equals 2
         assert $1 same_as '--ansi --read0 --print0 --multi'
-        assert $2 matches '^git (commit|add) '
+        assert $2 same_as 'git commit '
 
-        input=$(cat)
-        actual=(${(0)input})
+        run cat
+        assert ${#lines} equals 3
 
-        assert ${#actual} equals 4
-        assert ${actual[1]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0)  file3 containing space "
-        assert ${actual[2]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) directory1/file2"
+        actual1=(${(0)lines[1]})
+        assert ${#actual1} equals 3
+        assert ${actual1[1]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0)  file3 containing space "
+        assert ${actual1[2]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) directory1/file2"
+        assert ${actual1[3]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) directory2/file4"
 
-        assert ${#${(f)actual[3]}} equals 3
-        assert ${${(f)actual[3]}[1]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) directory2/file4"
-        assert ${${(f)actual[3]}[2]} same_as 'containing'
-        assert ${${(f)actual[3]}[3]} same_as 'newlines'
+        actual2=(${(0)lines[2]})
+        assert ${#actual2} equals 1
+        assert ${actual2[1]} same_as 'containing'
 
-        assert ${actual[4]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) file1"
+        actual3=(${(0)lines[3]})
+        assert ${#actual3} equals 2
+        assert ${actual3[1]} same_as 'newlines'
+        assert ${actual3[2]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) file1"
     }
 
     LBUFFER=(git commit '**')
     prefix=
     _fzf_complete_git 'git commit '
+}
+
+@test 'Testing completion: git add **' {
+    run git checkout another-branch
+    echo >> ' file3 containing space '
+    echo >> directory2/$'file4\ncontaining\nnewlines'
+
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --read0 --print0 --multi'
+        assert $2 same_as 'git add '
+
+        run cat
+        assert ${#lines} equals 3
+
+        actual1=(${(0)lines[1]})
+        assert ${#actual1} equals 3
+        assert ${actual1[1]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0)  file3 containing space "
+        assert ${actual1[2]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) directory1/file2"
+        assert ${actual1[3]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) directory2/file4"
+
+        actual2=(${(0)lines[2]})
+        assert ${#actual2} equals 1
+        assert ${actual2[1]} same_as 'containing'
+
+        actual3=(${(0)lines[3]})
+        assert ${#actual3} equals 2
+        assert ${actual3[1]} same_as 'newlines'
+        assert ${actual3[2]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) file1"
+    }
 
     LBUFFER=(git add '**')
     prefix=
     _fzf_complete_git 'git add '
 }
 
-@test 'Testing preview: git add' {
-    git checkout another-branch &> /dev/null
+@test 'Testing preview: git add **' {
+    run git checkout another-branch
     echo >> ' file3 containing space '
     echo >> directory2/$'file4\ncontaining\nnewlines'
 
     _fzf_complete() {
-        actual=$(preview ' M  file3 containing space ')
-        assert $actual is_not_empty
+        run preview ' M  file3 containing space '
+        assert $output is_not_empty
 
-        actual=$(preview ' M directory1/file2')
-        assert $actual is_not_empty
+        run preview ' M directory1/file2'
+        assert $output is_not_empty
 
-        actual=$(preview $' M directory2/file4\ncontaining\nnewlines')
-        assert $actual is_not_empty
+        run preview $' M directory2/file4\ncontaining\nnewlines'
+        assert $output is_not_empty
 
-        actual=$(preview ' M file1')
-        assert $actual is_not_empty
+        run preview ' M file1'
+        assert $output is_not_empty
     }
 
     LBUFFER=(git add '**')
