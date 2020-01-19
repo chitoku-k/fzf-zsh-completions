@@ -46,7 +46,7 @@ _fzf_complete_git() {
 
     while true; do
         local resolved=$(_fzf_complete_git_resolve_alias ${(z)arguments})
-        if [[ -z $resolved ]] || [[ ${${(z)resolved}[2]} = ${${(z)arguments}[2]} ]]; then
+        if [[ -z $resolved ]]; then
             break
         fi
         arguments=$resolved
@@ -232,6 +232,10 @@ _fzf_complete_git_resolve_alias() {
     local git_aliases=$(git config --get-regexp '^alias\.')
 
     for git_alias in ${(f)git_aliases}; do
+        if [[ ${${git_alias#* }} = "$2 "* ]]; then
+            return
+        fi
+
         if [[ ${${git_alias#alias.}%% *} = $2 ]]; then
             echo $1 ${git_alias#* } ${@:3}
             return
