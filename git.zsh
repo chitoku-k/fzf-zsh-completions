@@ -79,7 +79,7 @@ _fzf_complete_git() {
             return
         fi
 
-        if [[ "$last_options" =~ '^--author$' ]]; then
+        if [[ "$last_options" = '--author' ]]; then
             return
         fi
 
@@ -87,7 +87,7 @@ _fzf_complete_git() {
             return
         fi
 
-        if [[ "$last_options" =~ '^--date$' ]]; then
+        if [[ "$last_options" = '--date' ]]; then
             return
         fi
 
@@ -96,7 +96,7 @@ _fzf_complete_git() {
             return
         fi
 
-        if [[ "$last_options" =~ '^(-[^-]*[Ft]|--(file|template))' ]]; then
+        if [[ "$last_options" =~ '^(-[^-]*[Ft]|--(file|template))$' ]]; then
             _fzf_path_completion '' "$@"
             return
         fi
@@ -118,7 +118,7 @@ _fzf_complete_git() {
             return
         fi
 
-        if [[ "$last_options" =~ '^(-[^-]*u|--untracked-files)' ]]; then
+        if [[ "$last_options" =~ '^(-[^-]*u|--untracked-files)$' ]]; then
             _fzf_complete '' "$@" <<< ${(F)untracked_file_mode}
             return
         fi
