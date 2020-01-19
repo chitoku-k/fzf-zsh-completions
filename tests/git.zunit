@@ -955,6 +955,8 @@
 
     run _fzf_complete_git-unstaged-files_post <<< ${(pj:\0:)input}
 
+    # TODO: Force print lines
+    assert ${lines[@]} same_as ''
     assert $state equals 0
     assert ${#lines} equals 6
 
