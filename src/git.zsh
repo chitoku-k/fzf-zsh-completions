@@ -128,8 +128,7 @@ _fzf_complete_git() {
     fi
 
     if [[ "$@" = 'git add'* ]]; then
-        FZF_DEFAULT_OPTS="$_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" \
-            _fzf_complete_git-unstaged-files '--multi' "$@"
+        _fzf_complete_git-unstaged-files "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" "$@"
         return
     fi
 
