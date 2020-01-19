@@ -1,0 +1,6 @@
+[submodule "bin/revolver"]
+	path = bin/revolver
+	url = https://github.com/molovo/revolver
+[submodule "bin/zunit"]
+	path = bin/zunit
+	url = https://github.com/zunit-zsh/zunit

@@ -108,7 +108,7 @@ _fzf_complete_git() {
         fi
 
         if [[ "$last_options" = '--cleanup' ]]; then
-            _fzf_complete '' "$@" <<< ${(F)cleanp_mode}
+            _fzf_complete '' "$@" <<< ${(F)cleanup_mode}
             return
         fi
 
@@ -144,10 +144,6 @@ _fzf_complete_git() {
     fi
 
     _fzf_path_completion "$prefix" "$@"
-}
-
-_fzf_complete_git_post() {
-    awk '{ print $1 }'
 }
 
 _fzf_complete_git-commits() {
