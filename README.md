@@ -9,7 +9,7 @@ sequence that defaults to `**`.
 ## Prerequisites
 
 - [fzf][]
-- [Zsh][]
+- [Zsh][] >= 5.3
 
 ## Installation
 
