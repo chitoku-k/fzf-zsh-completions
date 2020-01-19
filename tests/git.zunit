@@ -37,9 +37,9 @@
     hash_2=$(git rev-parse --short v2)
 
     preview() {
-        for opt in ${(Q)${(Z+n+)FZF_DEFAULT_OPTS}}; do
+        for opt in ${(Q)${(Z+n+)fzf_options}}; do
             if [[ $opt = --preview=* ]]; then
-                eval ${${opt/--preview=/}/\{\}/${(q)@}} 2>&1
+                eval ${${opt/*--preview=/}/\{\}/${(q)@}} 2>&1
             fi
         done
     }
@@ -830,7 +830,7 @@
 
     _fzf_complete() {
         assert $# equals 2
-        assert $1 same_as '--ansi --read0 --print0 --multi'
+        assert $1 matches '--ansi --read0 --print0 --multi '
         assert $2 same_as 'git add '
 
         run cat
@@ -875,22 +875,22 @@
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
     _fzf_complete() {
-        run preview ' M  file3 containing space '
+        fzf_options=$1 run preview ' M  file3 containing space '
         assert $output is_not_empty
 
-        run preview ' M directory1/file2'
+        fzf_options=$1 run preview ' M directory1/file2'
         assert $output is_not_empty
 
-        run preview $' M directory2/file4\ncontaining\nnewlines'
+        fzf_options=$1 run preview $' M directory2/file4\ncontaining\nnewlines'
         assert $output is_not_empty
 
-        run preview ' M file1'
+        fzf_options=$1 run preview ' M file1'
         assert $output is_not_empty
 
-        run preview '??  file5 containing space '
+        fzf_options=$1 run preview '??  file5 containing space '
         assert $output is_not_empty
 
-        run preview $'?? directory2/file6\ncontaining\nnewlines'
+        fzf_options=$1 run preview $'?? directory2/file6\ncontaining\nnewlines'
         assert $output is_not_empty
     }
 
