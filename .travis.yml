@@ -1,9 +1,14 @@
 language: shell
 
-addons:
-  apt:
-    packages:
-      - zsh
+matrix:
+  include:
+    - os: linux
+      dist: bionic
+      addons:
+        apt:
+          packages:
+            - zsh
+    - os: osx
 
 script:
-  - zsh -c 'source *.zsh'
+  - tests/test.zsh
