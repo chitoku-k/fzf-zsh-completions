@@ -3,6 +3,7 @@ language: shell
 matrix:
   include:
     - os: linux
+      dist: bionic
       addons:
         apt:
           packages:
