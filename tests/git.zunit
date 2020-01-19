@@ -448,7 +448,7 @@
 }
 
 @test 'Testing completion: git commit --message=**' {
-    git checkout another-branch &> /dev/null
+    run git checkout another-branch
 
     _fzf_complete() {
         assert $# equals 2
@@ -467,7 +467,7 @@
 }
 
 @test 'Testing completion: git commit -m **' {
-    git checkout another-branch &> /dev/null
+    run git checkout another-branch
 
     _fzf_complete() {
         assert $# equals 2
@@ -486,7 +486,7 @@
 }
 
 @test 'Testing completion: git commit -qm **' {
-    git checkout another-branch &> /dev/null
+    run git checkout another-branch
 
     _fzf_complete() {
         assert $# equals 2
@@ -505,7 +505,7 @@
 }
 
 @test 'Testing completion: git commit --message **' {
-    git checkout another-branch &> /dev/null
+    run git checkout another-branch
 
     _fzf_complete() {
         assert $# equals 2
