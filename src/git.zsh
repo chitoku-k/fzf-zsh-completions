@@ -50,9 +50,6 @@ _fzf_complete_git() {
         if [[ -z $resolved ]]; then
             break
         fi
-        if [[ ${${(Qz)arguments}[2]} = ${${(Qz)resolved}[2]} ]]; then
-            break
-        fi
         if [[ ${resolved_commands[(ie)${${(Qz)resolved}[2]}]} -le ${#resolved_commands} ]]; then
             break
         fi
