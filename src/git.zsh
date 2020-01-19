@@ -232,7 +232,7 @@ _fzf_complete_git_resolve_alias() {
     local git_aliases=$(git config --get-regexp '^alias\.')
 
     for git_alias in ${(f)git_aliases}; do
-        if [[ ${${git_alias#* }} = "$2 "* ]]; then
+        if [[ ${${git_alias#* }%% *} = $2 ]]; then
             return
         fi
 
