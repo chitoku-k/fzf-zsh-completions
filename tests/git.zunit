@@ -603,6 +603,22 @@
     _fzf_complete_git 'git commit '
 }
 
+@test 'Testing completion: git commit --pathspec-from-file=**' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'git commit --pathspec-from-file='
+    }
+
+    LBUFFER=(git commit '--pathspec-from-file=**')
+    prefix=--pathspec-from-file=
+    _fzf_complete_git 'git commit '
+}
+
 @test 'Testing completion: git commit -F **' {
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
@@ -697,6 +713,22 @@
     LBUFFER=(git commit --template '**')
     prefix=
     _fzf_complete_git 'git commit --template '
+}
+
+@test 'Testing completion: git commit --pathspec-from-file **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'git commit --pathspec-from-file '
+    }
+
+    LBUFFER=(git commit --pathspec-from-file '**')
+    prefix=
+    _fzf_complete_git 'git commit --pathspec-from-file '
 }
 
 @test 'Testing completion: git commit --cleanup=**' {

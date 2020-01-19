@@ -91,12 +91,12 @@ _fzf_complete_git() {
             return
         fi
 
-        if [[ "$prefix" =~ '^--(file|template)=$' ]]; then
+        if [[ "$prefix" =~ '^--(file|template|pathspec-from-file)=$' ]]; then
             _fzf_path_completion '' "$@$prefix"
             return
         fi
 
-        if [[ "$last_options" =~ '^(-[^-]*[Ft]|--(file|template))$' ]]; then
+        if [[ "$last_options" =~ '^(-[^-]*[Ft]|--(file|template|pathspec-from-file))$' ]]; then
             _fzf_path_completion '' "$@"
             return
         fi
@@ -120,16 +120,6 @@ _fzf_complete_git() {
 
         if [[ "$last_options" =~ '^(-[^-]*u|--untracked-files)$' ]]; then
             _fzf_complete '' "$@" <<< ${(F)untracked_file_mode}
-            return
-        fi
-
-        if [[ "$prefix" =~ '^--pathspec-from-file=' ]]; then
-            _fzf_path_completion '' "$@$prefix"
-            return
-        fi
-
-        if [[ "$last_options" = '--pathspec-from-file' ]]; then
-            _fzf_path_completion '' "$@"
             return
         fi
 
