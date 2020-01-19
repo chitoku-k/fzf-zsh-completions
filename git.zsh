@@ -123,6 +123,16 @@ _fzf_complete_git() {
             return
         fi
 
+        if [[ "$prefix" =~ '^--pathspec-from-file=' ]]; then
+            _fzf_path_completion '' "$@$prefix"
+            return
+        fi
+
+        if [[ "$last_options" = '--pathspec-from-file' ]]; then
+            _fzf_path_completion '' "$@"
+            return
+        fi
+
         _fzf_complete_git-unstaged-files '--multi' "$@"
         return
     fi
