@@ -13,7 +13,7 @@ sequence that defaults to `**`.
 
 ## Installation
 
-Just load all the `*.zsh` files under the root directory.
+Load `fzf-zsh-completions.plugin.zsh`.
 
 For those who prefer to install via package managers, see the instructions
 below.
