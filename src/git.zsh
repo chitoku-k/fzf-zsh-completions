@@ -52,7 +52,7 @@ _fzf_complete_git() {
         arguments=$resolved
     done
 
-    local last_options=${${(z)LBUFFER}[-2]}
+    local last_options=${${(z)arguments}[-1]}
 
     if [[ $arguments =~ '^git (checkout|log|rebase|reset)' ]]; then
         _fzf_complete_git-commits '' $@
@@ -228,7 +228,7 @@ _fzf_complete_git-unstaged-files_post() {
 }
 
 _fzf_complete_git_resolve_alias() {
-    local git_alias
+    local git_alias git_alias_resolved
     local git_aliases=$(git config --get-regexp '^alias\.')
 
     for git_alias in ${(f)git_aliases}; do
@@ -237,10 +237,11 @@ _fzf_complete_git_resolve_alias() {
         fi
 
         if [[ ${${git_alias#alias.}%% *} = $2 ]]; then
-            echo $1 ${git_alias#* } ${@:3}
-            return
+            git_alias_resolved="$1 ${git_alias#* } ${@:3}"
         fi
     done
+
+    echo $git_alias_resolved
 }
 
 _fzf_complete_git_tabularize() {
