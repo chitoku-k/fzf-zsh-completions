@@ -50,11 +50,14 @@ _fzf_complete_git() {
         if [[ -z $resolved ]]; then
             break
         fi
-        if [[ ${resolved_commands[(ie)${${(Qz)resolved}[2]}]} -le ${#resolved_commands} ]]; then
+
+        local subcommand=${${(Qz)resolved}[2]}
+        if [[ ${resolved_commands[(r)$subcommand]} = $subcommand ]]; then
             break
         fi
+
         arguments=$resolved
-        resolved_commands+=(${${(Qz)resolved}[2]})
+        resolved_commands+=($subcommand)
     done
 
     local last_argument=${${(Qz)arguments}[-1]}
