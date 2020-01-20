@@ -42,107 +42,125 @@ PREVIEW_OPTIONS
 )
 
 _fzf_complete_git() {
-    local last_options=${${(z)LBUFFER}[-2]}
+    local arguments=$@
+    local resolved_commands=()
 
-    if [[ "$@" =~ '^git (checkout|log|rebase|reset)' ]]; then
-        _fzf_complete_git-commits '' "$@"
+    while true; do
+        local resolved=$(_fzf_complete_git_resolve_alias ${(Qz)arguments})
+        if [[ -z $resolved ]]; then
+            break
+        fi
+
+        local subcommand=${${(Qz)resolved}[2]}
+        if [[ ${resolved_commands[(r)$subcommand]} = $subcommand ]]; then
+            break
+        fi
+
+        arguments=$resolved
+        resolved_commands+=($subcommand)
+    done
+
+    local last_argument=${${(Qz)arguments}[-1]}
+
+    if [[ ${(Q)arguments} =~ '^git (checkout|log|rebase|reset)' ]]; then
+        _fzf_complete_git-commits '' $@
         return
     fi
 
-    if [[ "$@" =~ '^git (branch|cherry-pick|merge)' ]]; then
-        _fzf_complete_git-commits '--multi' "$@"
+    if [[ ${(Q)arguments} =~ '^git (branch|cherry-pick|merge)' ]]; then
+        _fzf_complete_git-commits '--multi' $@
         return
     fi
 
-    if [[ "$@" = 'git commit'* ]]; then
-        if [[ "$prefix" =~ '^--(fixup|reedit-message|reuse-message|squash)=' ]]; then
-            prefix_option="${prefix/=*/=}" _fzf_complete_git-commits '' "$@"
+    if [[ ${(Q)arguments} = 'git commit'* ]]; then
+        if [[ $prefix =~ '^--(fixup|reedit-message|reuse-message|squash)=' ]]; then
+            prefix_option=${prefix/=*/=} _fzf_complete_git-commits '' $@
             return
         fi
 
-        if [[ "$last_options" =~ '^(-[^-]*[cC]|--(reuse-message|reedit-message|fixup|squash))$' ]]; then
-            _fzf_complete_git-commits '' "$@"
+        if [[ $last_argument =~ '^(-[^-]*[cC]|--(reuse-message|reedit-message|fixup|squash))$' ]]; then
+            _fzf_complete_git-commits '' $@
             return
         fi
 
-        if [[ "$prefix" =~ '^--message=' ]]; then
-            prefix_option="${prefix/=*/=}" _fzf_complete_git-commit-messages '' "$@"
+        if [[ $prefix =~ '^--message=' ]]; then
+            prefix_option=${prefix/=*/=} _fzf_complete_git-commit-messages '' $@
             return
         fi
 
-        if [[ "$last_options" =~ '^(-[^-]*m|--message)$' ]]; then
-            _fzf_complete_git-commit-messages '' "$@"
+        if [[ $last_argument =~ '^(-[^-]*m|--message)$' ]]; then
+            _fzf_complete_git-commit-messages '' $@
             return
         fi
 
-        if [[ "$prefix" =~ '^--author=' ]]; then
+        if [[ $prefix =~ '^--author=' ]]; then
             return
         fi
 
-        if [[ "$last_options" = '--author' ]]; then
+        if [[ $last_argument = '--author' ]]; then
             return
         fi
 
-        if [[ "$prefix" =~ '^--date=' ]]; then
+        if [[ $prefix =~ '^--date=' ]]; then
             return
         fi
 
-        if [[ "$last_options" = '--date' ]]; then
+        if [[ $last_argument = '--date' ]]; then
             return
         fi
 
-        if [[ "$prefix" =~ '^--(file|template|pathspec-from-file)=$' ]]; then
-            _fzf_path_completion '' "$@$prefix"
+        if [[ $prefix =~ '^--(file|template|pathspec-from-file)=$' ]]; then
+            _fzf_path_completion '' $@$prefix
             return
         fi
 
-        if [[ "$last_options" =~ '^(-[^-]*[Ft]|--(file|template|pathspec-from-file))$' ]]; then
-            _fzf_path_completion '' "$@"
+        if [[ $last_argument =~ '^(-[^-]*[Ft]|--(file|template|pathspec-from-file))$' ]]; then
+            _fzf_path_completion '' $@
             return
         fi
 
         local cleanup_mode=(strip whitespace verbatim scissors default)
-        if [[ "$prefix" =~ '^--cleanup=' ]]; then
-            _fzf_complete '' "$@" < <(awk -v prefix="${prefix/=*/=}" '{ print prefix $0 }' <<< ${(F)cleanup_mode})
+        if [[ $prefix =~ '^--cleanup=' ]]; then
+            _fzf_complete '' $@ < <(awk -v prefix=${prefix/=*/=} '{ print prefix $0 }' <<< ${(F)cleanup_mode})
             return
         fi
 
-        if [[ "$last_options" = '--cleanup' ]]; then
-            _fzf_complete '' "$@" <<< ${(F)cleanup_mode}
+        if [[ $last_argument = '--cleanup' ]]; then
+            _fzf_complete '' $@ <<< ${(F)cleanup_mode}
             return
         fi
 
         local untracked_file_mode=(no normal all)
-        if [[ "$prefix" =~ '^--untracked-files=' ]]; then
-            _fzf_complete '' "$@" < <(awk -v prefix="${prefix/=*/=}" '{ print prefix $0 }' <<< ${(F)untracked_file_mode})
+        if [[ $prefix =~ '^--untracked-files=' ]]; then
+            _fzf_complete '' $@ < <(awk -v prefix=${prefix/=*/=} '{ print prefix $0 }' <<< ${(F)untracked_file_mode})
             return
         fi
 
-        if [[ "$last_options" =~ '^(-[^-]*u|--untracked-files)$' ]]; then
-            _fzf_complete '' "$@" <<< ${(F)untracked_file_mode}
+        if [[ $last_argument =~ '^(-[^-]*u|--untracked-files)$' ]]; then
+            _fzf_complete '' $@ <<< ${(F)untracked_file_mode}
             return
         fi
 
-        _fzf_complete_git-unstaged-files '--multi' "$@"
+        _fzf_complete_git-unstaged-files '--multi' $@
         return
     fi
 
-    if [[ "$@" = 'git add'* ]]; then
-        _fzf_complete_git-unstaged-files "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" "$@"
+    if [[ ${(Q)arguments} = 'git add'* ]]; then
+        _fzf_complete_git-unstaged-files "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
         return
     fi
 
-    _fzf_path_completion "$prefix" "$@"
+    _fzf_path_completion "$prefix" $@
 }
 
 _fzf_complete_git-commits() {
-    local fzf_options="$1"
+    local fzf_options=$1
     shift
 
-    _fzf_complete "--ansi --tiebreak=index $fzf_options" "$@" < <({
+    _fzf_complete "--ansi --tiebreak=index $fzf_options" $@ < <({
         git for-each-ref refs/heads refs/remotes refs/tags --format='%(refname:short) %(contents:subject)' 2> /dev/null
         git log --format='%h %s' 2> /dev/null
-    } | awk -v prefix="$prefix_option" '{ print prefix $0 }' | _fzf_complete_git_tabularize)
+    } | awk -v prefix=$prefix_option '{ print prefix $0 }' | _fzf_complete_git_tabularize)
 }
 
 _fzf_complete_git-commits_post() {
@@ -150,12 +168,12 @@ _fzf_complete_git-commits_post() {
 }
 
 _fzf_complete_git-commit-messages() {
-    local fzf_options="$1"
+    local fzf_options=$1
     shift
 
-    _fzf_complete "--ansi --tiebreak=index $fzf_options" "$@" < <(
+    _fzf_complete "--ansi --tiebreak=index $fzf_options" $@ < <(
         git log --format='%h %s' 2> /dev/null |
-        awk -v prefix="$prefix_option" '
+        awk -v prefix=$prefix_option '
             {
                 match($0, / /)
                 print $1, prefix substr($0, RSTART + RLENGTH)
@@ -165,38 +183,38 @@ _fzf_complete_git-commit-messages() {
 }
 
 _fzf_complete_git-commit-messages_post() {
-    local message=$(awk -v prefix="$prefix_option" '
-        '"$_fzf_complete_awk_functions"'
+    local message=$(awk -v prefix=$prefix_option '
+        '$_fzf_complete_awk_functions'
         {
             match($0, /  /)
             str = substr($0, RSTART + RLENGTH)
             print trim_prefix(str, prefix)
         }
     ')
-    if [[ -z "$message" ]]; then
+    if [[ -z $message ]]; then
         return
     fi
 
-    echo "$prefix_option${(qq)message}"
+    echo $prefix_option${(qq)message}
 }
 
 _fzf_complete_git-unstaged-files() {
-    local fzf_options="$1"
+    local fzf_options=$1
     shift
 
-    _fzf_complete "--ansi --read0 --print0 $fzf_options" "$@" < <({
+    _fzf_complete "--ansi --read0 --print0 $fzf_options" $@ < <({
         local previous_status
         local filename
         local files=$(git status --untracked-files=all --porcelain=v1 -z 2> /dev/null)
 
         for filename in ${(0)files}; do
-            if [[ "$previous_status" != R ]]; then
+            if [[ $previous_status != R ]]; then
                 awk \
                     -v RS='' \
-                    -v green="$(tput setaf 2)" \
-                    -v red="$(tput setaf 1)" \
-                    -v reset="$(tput sgr0)" '
-                            '"$_fzf_complete_awk_functions"'
+                    -v green=$(tput setaf 2) \
+                    -v red=$(tput setaf 1) \
+                    -v reset=$(tput sgr0) '
+                            '$_fzf_complete_awk_functions'
                             /^.[^ ]/ {
                             printf "%s%c", colorize_git_status($0, green, red, reset), 0
                         }
@@ -217,10 +235,23 @@ _fzf_complete_git-unstaged-files_post() {
     done
 }
 
+_fzf_complete_git_resolve_alias() {
+    local git_alias git_alias_resolved
+    local git_aliases=$(git config --get-regexp '^alias\.')
+
+    for git_alias in ${(f)git_aliases}; do
+        if [[ ${${git_alias#alias.}%% *} = $2 ]]; then
+            git_alias_resolved="$1 ${git_alias#* } ${@:3}"
+        fi
+    done
+
+    echo $git_alias_resolved
+}
+
 _fzf_complete_git_tabularize() {
     awk \
-        -v yellow="$(tput setaf 3)" \
-        -v reset="$(tput sgr0)" '
+        -v yellow=$(tput setaf 3) \
+        -v reset=$(tput sgr0) '
         {
             refnames[NR] = $1
 
