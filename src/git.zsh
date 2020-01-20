@@ -62,17 +62,34 @@ _fzf_complete_git() {
 
     local last_argument=${${(Qz)arguments}[-1]}
 
-    if [[ ${(Q)arguments} =~ '^git (checkout|log|rebase|reset)' ]]; then
+    if [[ ${(Qz)arguments} =~ '^git (checkout|log|rebase|reset)' ]]; then
+        if [[ ${${(Qz)arguments}[(r)--]} = -- ]]; then
+            if [[ ${(Qz)arguments} = 'git checkout '* ]]; then
+                _fzf_complete_git-unstaged-files "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
+                return
+            fi
+
+            if [[ ${(Qz)arguments} =~ '^git (log|rebase)' ]]; then
+                _fzf_path_completion "$prefix" $@
+                return
+            fi
+        fi
+
         _fzf_complete_git-commits '' $@
         return
     fi
 
-    if [[ ${(Q)arguments} =~ '^git (branch|cherry-pick|merge)' ]]; then
+    if [[ ${(Qz)arguments} =~ '^git (branch|cherry-pick|merge)' ]]; then
         _fzf_complete_git-commits '--multi' $@
         return
     fi
 
-    if [[ ${(Q)arguments} = 'git commit'* ]]; then
+    if [[ ${(Qz)arguments} = 'git commit'* ]]; then
+        if [[ ${${(Qz)arguments}[(r)--]} = -- ]]; then
+            _fzf_complete_git-unstaged-files '--multi' $@
+            return
+        fi
+
         if [[ $prefix =~ '^--(fixup|reedit-message|reuse-message|squash)=' ]]; then
             prefix_option=${prefix/=*/=} _fzf_complete_git-commits '' $@
             return
@@ -145,7 +162,7 @@ _fzf_complete_git() {
         return
     fi
 
-    if [[ ${(Q)arguments} = 'git add'* ]]; then
+    if [[ ${(Qz)arguments} = 'git add'* ]]; then
         _fzf_complete_git-unstaged-files "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
         return
     fi

@@ -1057,7 +1057,7 @@
     _fzf_complete() {
         assert $# equals 2
         assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as '"git" "squash" '
+        assert $2 same_as '"git"  "squash" '
 
         run cat
         assert ${#lines} equals 5
@@ -1069,7 +1069,7 @@
     }
 
     prefix=
-    _fzf_complete_git '"git" "squash" '
+    _fzf_complete_git '"git"  "squash" '
 }
 
 @test 'Testing preview: git add **' {
