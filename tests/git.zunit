@@ -51,19 +51,19 @@
 
 @test 'Debug 1' {
     v1='git  checkout  '
-    [[ ${(Qz)v1} = 'git checkout ' ]]
+    [[ ${(Q)${(z)v1}} = 'git checkout ' ]]
     assert $? equals 0
 }
 
 @test 'Debug 2' {
     v1='git  checkout  '
-    [[ ${(Qz)v1} = 'git checkout' ]]
+    [[ ${(Q)${(z)v1}} = 'git checkout' ]]
     assert $? equals 0
 }
 
 @test 'Debug 3' {
     v1='git  checkout  '
-    echo :${(Qz)v1}: >&2
+    echo :${(Q)${(z)v1}}: >&2
     assert $? equals 1
 }
 
