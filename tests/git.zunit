@@ -49,6 +49,18 @@
     rm -rf $TEMP
 }
 
+@test 'Debug 1' {
+    v1='git  checkout  '
+    [[ ${(Qz)v1} = 'git checkout ' ]]
+    assert $? equals 0
+}
+
+@test 'Debug 2' {
+    v1='git  checkout  '
+    [[ ${(Qz)v1} = 'git checkout' ]]
+    assert $? equals 0
+}
+
 @test 'Testing completion: git **' {
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
