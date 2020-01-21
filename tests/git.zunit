@@ -61,6 +61,12 @@
     assert $? equals 0
 }
 
+@test 'Debug 3' {
+    v1='git  checkout  '
+    echo :${(Qz)v1}:
+    assert $? equals 0
+}
+
 @test 'Testing completion: git **' {
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
