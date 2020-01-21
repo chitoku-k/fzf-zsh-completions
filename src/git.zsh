@@ -46,12 +46,12 @@ _fzf_complete_git() {
     local resolved_commands=()
 
     while true; do
-        local resolved=$(_fzf_complete_git_resolve_alias ${(Qz)arguments})
+        local resolved=$(_fzf_complete_git_resolve_alias ${(Q)${(z)arguments}})
         if [[ -z $resolved ]]; then
             break
         fi
 
-        local subcommand=${${(Qz)resolved}[2]}
+        local subcommand=${${(Q)${(z)resolved}}[2]}
         if [[ ${resolved_commands[(r)$subcommand]} = $subcommand ]]; then
             break
         fi
@@ -60,16 +60,16 @@ _fzf_complete_git() {
         resolved_commands+=($subcommand)
     done
 
-    local last_argument=${${(Qz)arguments}[-1]}
+    local last_argument=${${(Q)${(z)arguments}}[-1]}
 
-    if [[ ${(Qz)arguments} =~ '^git (checkout|log|rebase|reset)' ]]; then
-        if [[ ${${(Qz)arguments}[(r)--]} = -- ]]; then
-            if [[ ${(Qz)arguments} = 'git checkout '* ]]; then
+    if [[ ${(Q)${(z)arguments}} =~ '^git (checkout|log|rebase|reset)' ]]; then
+        if [[ ${${(Q)${(z)arguments}}[(r)--]} = -- ]]; then
+            if [[ ${(Q)${(z)arguments}} = 'git checkout '* ]]; then
                 _fzf_complete_git-unstaged-files "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
                 return
             fi
 
-            if [[ ${(Qz)arguments} =~ '^git (log|rebase)' ]]; then
+            if [[ ${(Q)${(z)arguments}} =~ '^git (log|rebase)' ]]; then
                 _fzf_path_completion "$prefix" $@
                 return
             fi
@@ -79,13 +79,13 @@ _fzf_complete_git() {
         return
     fi
 
-    if [[ ${(Qz)arguments} =~ '^git (branch|cherry-pick|merge)' ]]; then
+    if [[ ${(Q)${(z)arguments}} =~ '^git (branch|cherry-pick|merge)' ]]; then
         _fzf_complete_git-commits '--multi' $@
         return
     fi
 
-    if [[ ${(Qz)arguments} = 'git commit'* ]]; then
-        if [[ ${${(Qz)arguments}[(r)--]} = -- ]]; then
+    if [[ ${(Q)${(z)arguments}} = 'git commit'* ]]; then
+        if [[ ${${(Q)${(z)arguments}}[(r)--]} = -- ]]; then
             _fzf_complete_git-unstaged-files '--multi' $@
             return
         fi
@@ -162,7 +162,7 @@ _fzf_complete_git() {
         return
     fi
 
-    if [[ ${(Qz)arguments} = 'git add'* ]]; then
+    if [[ ${(Q)${(z)arguments}} = 'git add'* ]]; then
         _fzf_complete_git-unstaged-files "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
         return
     fi

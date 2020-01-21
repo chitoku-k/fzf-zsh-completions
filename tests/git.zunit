@@ -49,24 +49,6 @@
     rm -rf $TEMP
 }
 
-@test 'Debug 1' {
-    v1='git  checkout  '
-    [[ ${(Q)${(z)v1}} = 'git checkout ' ]]
-    assert $? equals 0
-}
-
-@test 'Debug 2' {
-    v1='git  checkout  '
-    [[ ${(Q)${(z)v1}} = 'git checkout' ]]
-    assert $? equals 0
-}
-
-@test 'Debug 3' {
-    v1='git  checkout  '
-    echo :${(Q)${(z)v1}}: >&2
-    assert $? equals 1
-}
-
 @test 'Testing completion: git **' {
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
