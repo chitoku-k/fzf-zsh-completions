@@ -69,8 +69,8 @@ _fzf_complete_git() {
                 return
             fi
 
-            if [[ ${(Q)${(z)arguments}} =~ '^git (log|rebase)' ]]; then
-                _fzf_path_completion "$prefix" $@
+            if [[ ${(Q)${(z)arguments}} = 'git log '* ]]; then
+                _fzf_complete_git-ls-files '' '--multi' $@
                 return
             fi
         fi
@@ -213,6 +213,23 @@ _fzf_complete_git-commit-messages_post() {
     fi
 
     echo $prefix_option${(qq)message}
+}
+
+_fzf_complete_git-ls-files() {
+    local git_options=$1
+    local fzf_options=$2
+    shift 2
+
+    _fzf_complete "--ansi --read0 --print0 $fzf_options" $@ < <(git ls-files -z ${(Z+n+)git_options} 2> /dev/null)
+}
+
+_fzf_complete_git-ls-files_post() {
+    local filename
+    local input=$(cat)
+
+    for filename in ${(0)input}; do
+        echo ${${(q+)filename}//\\n/\\\\n}
+    done
 }
 
 _fzf_complete_git-unstaged-files() {
