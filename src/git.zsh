@@ -65,7 +65,7 @@ _fzf_complete_git() {
     if [[ ${(Q)${(z)arguments}} =~ '^git (checkout|log|rebase|reset)' ]]; then
         if [[ ${${(Q)${(z)arguments}}[(r)--]} = -- ]]; then
             if [[ ${(Q)${(z)arguments}} = 'git checkout '* ]]; then
-                _fzf_complete_git-unstaged-files "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
+                _fzf_complete_git-unstaged-files '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
                 return
             fi
 
@@ -86,7 +86,7 @@ _fzf_complete_git() {
 
     if [[ ${(Q)${(z)arguments}} = 'git commit'* ]]; then
         if [[ ${${(Q)${(z)arguments}}[(r)--]} = -- ]]; then
-            _fzf_complete_git-unstaged-files '--multi' $@
+            _fzf_complete_git-unstaged-files '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
             return
         fi
 
@@ -158,12 +158,12 @@ _fzf_complete_git() {
             return
         fi
 
-        _fzf_complete_git-unstaged-files '--multi' $@
+        _fzf_complete_git-unstaged-files '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
         return
     fi
 
     if [[ ${(Q)${(z)arguments}} = 'git add'* ]]; then
-        _fzf_complete_git-unstaged-files "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
+        _fzf_complete_git-unstaged-files '--untracked-files=all' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
         return
     fi
 
@@ -216,13 +216,14 @@ _fzf_complete_git-commit-messages_post() {
 }
 
 _fzf_complete_git-unstaged-files() {
-    local fzf_options=$1
-    shift
+    local git_options=$1
+    local fzf_options=$2
+    shift 2
 
     _fzf_complete "--ansi --read0 --print0 $fzf_options" $@ < <({
         local previous_status
         local filename
-        local files=$(git status --untracked-files=all --porcelain=v1 -z 2> /dev/null)
+        local files=$(git status --porcelain=v1 -z ${(Z+n+)git_options} 2> /dev/null)
 
         for filename in ${(0)files}; do
             if [[ $previous_status != R ]]; then
