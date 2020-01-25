@@ -83,6 +83,41 @@
     _fzf_complete_git 'git checkout '
 }
 
+@test 'Testing completion: git checkout -- **' {
+    run git checkout another-branch
+    echo >> ' file3 containing space '
+    echo >> directory2/$'file4\ncontaining\nnewlines'
+    echo >> ' file5 containing space '
+    echo >> directory2/$'file6\ncontaining\nnewlines'
+
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 matches '--ansi --read0 --print0 --multi '
+        assert $2 same_as 'git checkout -- '
+
+        run cat
+        assert ${#lines} equals 3
+
+        actual1=(${(0)lines[1]})
+        assert ${#actual1} equals 3
+        assert ${actual1[1]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0)  file3 containing space "
+        assert ${actual1[2]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) directory1/file2"
+        assert ${actual1[3]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) directory2/file4"
+
+        actual2=(${(0)lines[2]})
+        assert ${#actual2} equals 1
+        assert ${actual2[1]} same_as 'containing'
+
+        actual3=(${(0)lines[3]})
+        assert ${#actual3} equals 2
+        assert ${actual3[1]} same_as 'newlines'
+        assert ${actual3[2]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) file1"
+    }
+
+    prefix=
+    _fzf_complete_git 'git checkout -- '
+}
+
 @test 'Testing completion: git log **' {
     _fzf_complete() {
         assert $# equals 2
@@ -100,6 +135,41 @@
 
     prefix=
     _fzf_complete_git 'git log '
+}
+
+@test 'Testing completion: git log -- **' {
+    run git checkout another-branch
+    echo >> ' file3 containing space '
+    echo >> directory2/$'file4\ncontaining\nnewlines'
+    echo >> ' file5 containing space '
+    echo >> directory2/$'file6\ncontaining\nnewlines'
+
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --read0 --print0 --multi'
+        assert $2 same_as 'git log -- '
+
+        run cat
+        assert ${#lines} equals 3
+
+        actual1=(${(0)lines[1]})
+        assert ${#actual1} equals 3
+        assert ${actual1[1]} same_as ' file3 containing space '
+        assert ${actual1[2]} same_as 'directory1/file2'
+        assert ${actual1[3]} same_as 'directory2/file4'
+
+        actual2=(${(0)lines[2]})
+        assert ${#actual2} equals 1
+        assert ${actual2[1]} same_as 'containing'
+
+        actual3=(${(0)lines[3]})
+        assert ${#actual3} equals 2
+        assert ${actual3[1]} same_as 'newlines'
+        assert ${actual3[2]} same_as 'file1'
+    }
+
+    prefix=
+    _fzf_complete_git 'git log -- '
 }
 
 @test 'Testing completion: git rebase **' {
@@ -772,11 +842,11 @@
 
     _fzf_complete() {
         assert $# equals 2
-        assert $1 same_as '--ansi --read0 --print0 --multi'
+        assert $1 matches '--ansi --read0 --print0 --multi '
         assert $2 same_as 'git commit '
 
         run cat
-        assert ${#lines} equals 5
+        assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
         assert ${#actual1} equals 3
@@ -789,23 +859,48 @@
         assert ${actual2[1]} same_as 'containing'
 
         actual3=(${(0)lines[3]})
-        assert ${#actual3} equals 4
+        assert ${#actual3} equals 2
         assert ${actual3[1]} same_as 'newlines'
         assert ${actual3[2]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) file1"
-        assert ${actual3[3]} same_as "$(tput setaf 1)?$(tput sgr0)$(tput setaf 1)?$(tput sgr0)  file5 containing space "
-        assert ${actual3[4]} same_as "$(tput setaf 1)?$(tput sgr0)$(tput setaf 1)?$(tput sgr0) directory2/file6"
-
-        actual4=(${(0)lines[4]})
-        assert ${#actual4} equals 1
-        assert ${actual4[1]} same_as 'containing'
-
-        actual5=(${(0)lines[5]})
-        assert ${#actual5} equals 1
-        assert ${actual5[1]} same_as 'newlines'
     }
 
     prefix=
     _fzf_complete_git 'git commit '
+}
+
+@test 'Testing completion: git commit -- **' {
+    run git checkout another-branch
+    echo >> ' file3 containing space '
+    echo >> directory2/$'file4\ncontaining\nnewlines'
+    echo >> ' file5 containing space '
+    echo >> directory2/$'file6\ncontaining\nnewlines'
+
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 matches '--ansi --read0 --print0 --multi '
+        assert $2 same_as 'git commit -- '
+
+        run cat
+        assert ${#lines} equals 3
+
+        actual1=(${(0)lines[1]})
+        assert ${#actual1} equals 3
+        assert ${actual1[1]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0)  file3 containing space "
+        assert ${actual1[2]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) directory1/file2"
+        assert ${actual1[3]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) directory2/file4"
+
+        actual2=(${(0)lines[2]})
+        assert ${#actual2} equals 1
+        assert ${actual2[1]} same_as 'containing'
+
+        actual3=(${(0)lines[3]})
+        assert ${#actual3} equals 2
+        assert ${actual3[1]} same_as 'newlines'
+        assert ${actual3[2]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) file1"
+    }
+
+    prefix=
+    _fzf_complete_git 'git commit -- '
 }
 
 @test 'Testing completion: git add **' {
@@ -974,11 +1069,11 @@
 
     _fzf_complete() {
         assert $# equals 2
-        assert $1 same_as '--ansi --read0 --print0 --multi'
+        assert $1 matches '--ansi --read0 --print0 --multi '
         assert $2 same_as 'git commit-all '
 
         run cat
-        assert ${#lines} equals 5
+        assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
         assert ${#actual1} equals 3
@@ -991,19 +1086,9 @@
         assert ${actual2[1]} same_as 'containing'
 
         actual3=(${(0)lines[3]})
-        assert ${#actual3} equals 4
+        assert ${#actual3} equals 2
         assert ${actual3[1]} same_as 'newlines'
         assert ${actual3[2]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) file1"
-        assert ${actual3[3]} same_as "$(tput setaf 1)?$(tput sgr0)$(tput setaf 1)?$(tput sgr0)  file5 containing space "
-        assert ${actual3[4]} same_as "$(tput setaf 1)?$(tput sgr0)$(tput setaf 1)?$(tput sgr0) directory2/file6"
-
-        actual4=(${(0)lines[4]})
-        assert ${#actual4} equals 1
-        assert ${actual4[1]} same_as 'containing'
-
-        actual5=(${(0)lines[5]})
-        assert ${#actual5} equals 1
-        assert ${actual5[1]} same_as 'newlines'
     }
 
     prefix=
@@ -1057,7 +1142,7 @@
     _fzf_complete() {
         assert $# equals 2
         assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as '"git" "squash" '
+        assert $2 same_as '"git"  "squash" '
 
         run cat
         assert ${#lines} equals 5
@@ -1069,7 +1154,57 @@
     }
 
     prefix=
-    _fzf_complete_git '"git" "squash" '
+    _fzf_complete_git '"git"  "squash" '
+}
+
+@test 'Testing preview: git checkout -- **' {
+    run git checkout another-branch
+    echo >> ' file3 containing space '
+    echo >> directory2/$'file4\ncontaining\nnewlines'
+    echo >> ' file5 containing space '
+    echo >> directory2/$'file6\ncontaining\nnewlines'
+
+    _fzf_complete() {
+        fzf_options=$1 run preview ' M  file3 containing space '
+        assert $output is_not_empty
+
+        fzf_options=$1 run preview ' M directory1/file2'
+        assert $output is_not_empty
+
+        fzf_options=$1 run preview $' M directory2/file4\ncontaining\nnewlines'
+        assert $output is_not_empty
+
+        fzf_options=$1 run preview ' M file1'
+        assert $output is_not_empty
+    }
+
+    prefix=
+    _fzf_complete_git 'git checkout -- '
+}
+
+@test 'Testing preview: git commit -- **' {
+    run git checkout another-branch
+    echo >> ' file3 containing space '
+    echo >> directory2/$'file4\ncontaining\nnewlines'
+    echo >> ' file5 containing space '
+    echo >> directory2/$'file6\ncontaining\nnewlines'
+
+    _fzf_complete() {
+        fzf_options=$1 run preview ' M  file3 containing space '
+        assert $output is_not_empty
+
+        fzf_options=$1 run preview ' M directory1/file2'
+        assert $output is_not_empty
+
+        fzf_options=$1 run preview $' M directory2/file4\ncontaining\nnewlines'
+        assert $output is_not_empty
+
+        fzf_options=$1 run preview ' M file1'
+        assert $output is_not_empty
+    }
+
+    prefix=
+    _fzf_complete_git 'git commit -- '
 }
 
 @test 'Testing preview: git add **' {

@@ -46,12 +46,12 @@ _fzf_complete_git() {
     local resolved_commands=()
 
     while true; do
-        local resolved=$(_fzf_complete_git_resolve_alias ${(Qz)arguments})
+        local resolved=$(_fzf_complete_git_resolve_alias ${(Q)${(z)arguments}})
         if [[ -z $resolved ]]; then
             break
         fi
 
-        local subcommand=${${(Qz)resolved}[2]}
+        local subcommand=${${(Q)${(z)resolved}}[2]}
         if [[ ${resolved_commands[(r)$subcommand]} = $subcommand ]]; then
             break
         fi
@@ -60,19 +60,36 @@ _fzf_complete_git() {
         resolved_commands+=($subcommand)
     done
 
-    local last_argument=${${(Qz)arguments}[-1]}
+    local last_argument=${${(Q)${(z)arguments}}[-1]}
 
-    if [[ ${(Q)arguments} =~ '^git (checkout|log|rebase|reset)' ]]; then
+    if [[ ${(Q)${(z)arguments}} =~ '^git (checkout|log|rebase|reset)' ]]; then
+        if [[ ${${(Q)${(z)arguments}}[(r)--]} = -- ]]; then
+            if [[ ${(Q)${(z)arguments}} = 'git checkout '* ]]; then
+                _fzf_complete_git-unstaged-files '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
+                return
+            fi
+
+            if [[ ${(Q)${(z)arguments}} = 'git log '* ]]; then
+                _fzf_complete_git-ls-files '' '--multi' $@
+                return
+            fi
+        fi
+
         _fzf_complete_git-commits '' $@
         return
     fi
 
-    if [[ ${(Q)arguments} =~ '^git (branch|cherry-pick|merge)' ]]; then
+    if [[ ${(Q)${(z)arguments}} =~ '^git (branch|cherry-pick|merge)' ]]; then
         _fzf_complete_git-commits '--multi' $@
         return
     fi
 
-    if [[ ${(Q)arguments} = 'git commit'* ]]; then
+    if [[ ${(Q)${(z)arguments}} = 'git commit'* ]]; then
+        if [[ ${${(Q)${(z)arguments}}[(r)--]} = -- ]]; then
+            _fzf_complete_git-unstaged-files '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
+            return
+        fi
+
         if [[ $prefix =~ '^--(fixup|reedit-message|reuse-message|squash)=' ]]; then
             prefix_option=${prefix/=*/=} _fzf_complete_git-commits '' $@
             return
@@ -141,12 +158,12 @@ _fzf_complete_git() {
             return
         fi
 
-        _fzf_complete_git-unstaged-files '--multi' $@
+        _fzf_complete_git-unstaged-files '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
         return
     fi
 
-    if [[ ${(Q)arguments} = 'git add'* ]]; then
-        _fzf_complete_git-unstaged-files "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
+    if [[ ${(Q)${(z)arguments}} = 'git add'* ]]; then
+        _fzf_complete_git-unstaged-files '--untracked-files=all' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
         return
     fi
 
@@ -198,14 +215,32 @@ _fzf_complete_git-commit-messages_post() {
     echo $prefix_option${(qq)message}
 }
 
+_fzf_complete_git-ls-files() {
+    local git_options=$1
+    local fzf_options=$2
+    shift 2
+
+    _fzf_complete "--ansi --read0 --print0 $fzf_options" $@ < <(git ls-files -z ${(Z+n+)git_options} 2> /dev/null)
+}
+
+_fzf_complete_git-ls-files_post() {
+    local filename
+    local input=$(cat)
+
+    for filename in ${(0)input}; do
+        echo ${${(q+)filename}//\\n/\\\\n}
+    done
+}
+
 _fzf_complete_git-unstaged-files() {
-    local fzf_options=$1
-    shift
+    local git_options=$1
+    local fzf_options=$2
+    shift 2
 
     _fzf_complete "--ansi --read0 --print0 $fzf_options" $@ < <({
         local previous_status
         local filename
-        local files=$(git status --untracked-files=all --porcelain=v1 -z 2> /dev/null)
+        local files=$(git status --porcelain=v1 -z ${(Z+n+)git_options} 2> /dev/null)
 
         for filename in ${(0)files}; do
             if [[ $previous_status != R ]]; then
