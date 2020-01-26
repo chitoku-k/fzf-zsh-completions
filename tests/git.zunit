@@ -1,7 +1,7 @@
 #!/usr/bin/env zunit
 
 @setup {
-    load ../src/git.zsh
+    load ../fzf-zsh-completions.plugin.zsh
 
     TEMP=$(mktemp -d)
     pushd $TEMP
