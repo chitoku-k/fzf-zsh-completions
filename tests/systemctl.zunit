@@ -1,0 +1,73 @@
+#!/usr/bin/env zunit
+
+@setup {
+    if ! (( $+commands[systemctl] )); then
+        skip 'This test requires systemctl'
+    fi
+
+    load ../fzf-zsh-completions.plugin.zsh
+
+    preview() {
+        for opt in ${(Q)${(Z+n+)fzf_options}}; do
+            if [[ $opt = --preview=* ]]; then
+                eval ${${opt/--preview=/}/\{\}/${(q)@}} 2>&1
+            fi
+        done
+    }
+}
+
+@test 'Testing completion: systemctl status **' {
+    units=$(systemctl list-units --full --no-legend --no-pager | sort)
+
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 matches '--ansi --tiebreak=index '
+        assert $2 same_as 'systemctl status '
+
+        run cat
+        assert ${#lines} equals ${#${(f)units}}
+        assert ${#lines} is_greater_than 0
+    }
+
+    prefix=
+    _fzf_complete_systemctl 'systemctl status '
+}
+
+@test 'Testing preview: systemctl status **' {
+    _fzf_complete() {
+        fzf_options=$1 run preview '● basic.target'
+        assert $output is_not_empty
+
+        fzf_options=$1 run preview '● boot.mount'
+        assert $output is_not_empty
+
+        fzf_options=$1 run preview '● dbus.service'
+        assert $output is_not_empty
+
+        fzf_options=$1 run preview '● dbus.socket'
+        assert $output is_not_empty
+    }
+
+    prefix=
+    _fzf_complete_systemctl 'systemctl status '
+}
+
+@test 'Testing post: systemctl' {
+    input=(
+        '● basic.target'
+        '● boot.mount'
+        '● dbus.service'
+        '● dbus.socket'
+        '● docker.service'
+    )
+
+    run _fzf_complete_systemctl_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 5
+    assert ${lines[1]} same_as 'basic.target'
+    assert ${lines[2]} same_as 'boot.mount'
+    assert ${lines[3]} same_as 'dbus.service'
+    assert ${lines[4]} same_as 'dbus.socket'
+    assert ${lines[5]} same_as 'docker.service'
+}
