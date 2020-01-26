@@ -2,7 +2,7 @@
 
 _fzf_complete_preview_systemctl_status=$(cat <<'PREVIEW_OPTIONS'
     --preview-window=right:70%:wrap
-    --preview='echo {} | awk '\''{ print substr($0, length("●") + 2) }'\'' | xargs systemctl status --'
+    --preview='echo {} | awk '\''{ print $2 }'\'' | xargs systemctl status --'
 PREVIEW_OPTIONS
 )
 
