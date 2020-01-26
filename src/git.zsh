@@ -69,7 +69,7 @@ _fzf_complete_git() {
                 return
             fi
 
-            if [[ ${(Q)${(z)arguments}} = 'git log '* ]]; then
+            if [[ ${(Q)${(z)arguments}} =~ '^git (log|reset)' ]]; then
                 _fzf_complete_git-ls-files '' '--multi' $@
                 return
             fi
