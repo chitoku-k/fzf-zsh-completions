@@ -79,7 +79,7 @@ _fzf_complete_git() {
         return
     fi
 
-    if [[ ${(Q)${(z)arguments}} =~ '^git (branch|cherry-pick|merge)' ]]; then
+    if [[ ${(Q)${(z)arguments}} =~ '^git (branch|cherry-pick|merge|revert)' ]]; then
         _fzf_complete_git-commits '--multi' $@
         return
     fi
