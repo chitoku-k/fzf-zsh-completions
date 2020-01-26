@@ -210,6 +210,41 @@
     _fzf_complete_git 'git reset '
 }
 
+@test 'Testing completion: git reset -- **' {
+    run git checkout another-branch
+    echo >> ' file3 containing space '
+    echo >> directory2/$'file4\ncontaining\nnewlines'
+    echo >> ' file5 containing space '
+    echo >> directory2/$'file6\ncontaining\nnewlines'
+
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --read0 --print0 --multi'
+        assert $2 same_as 'git reset -- '
+
+        run cat
+        assert ${#lines} equals 3
+
+        actual1=(${(0)lines[1]})
+        assert ${#actual1} equals 3
+        assert ${actual1[1]} same_as ' file3 containing space '
+        assert ${actual1[2]} same_as 'directory1/file2'
+        assert ${actual1[3]} same_as 'directory2/file4'
+
+        actual2=(${(0)lines[2]})
+        assert ${#actual2} equals 1
+        assert ${actual2[1]} same_as 'containing'
+
+        actual3=(${(0)lines[3]})
+        assert ${#actual3} equals 2
+        assert ${actual3[1]} same_as 'newlines'
+        assert ${actual3[2]} same_as 'file1'
+    }
+
+    prefix=
+    _fzf_complete_git 'git reset -- '
+}
+
 @test 'Testing completion: git branch **' {
     _fzf_complete() {
         assert $# equals 2
