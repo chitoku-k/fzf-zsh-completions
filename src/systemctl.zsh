@@ -1,37 +1,32 @@
 #!/usr/bin/env zsh
 
+_fzf_complete_preview_systemctl_status=$(cat <<'PREVIEW_OPTIONS'
+    --preview-window=right:70%:wrap
+    --preview='echo {} | awk '\''{ print substr($0, length("●") + 2) }'\'' | xargs systemctl status --'
+PREVIEW_OPTIONS
+)
+
 _fzf_complete_systemctl() {
-    _fzf_complete '--ansi --tiebreak=index' "$@" < \
+    _fzf_complete "--ansi --tiebreak=index $_fzf_complete_preview_systemctl_status $FZF_DEFAULT_OPTS" $@ < \
         <(systemctl list-units --full --no-legend --no-pager "$prefix*" | sort | awk \
-            -v green="$(tput setaf 2)" \
-            -v red="$(tput setaf 1)" \
-            -v reset="$(tput sgr0)" '
+            -v green=$(tput setaf 2) \
+            -v red=$(tput setaf 1) \
+            -v reset=$(tput sgr0) '
             {
-                unitnames[NR] = $1
-                statuses[NR] = $3
+                unitname = $1
+                status = $3
 
-                if (length($1) > unitname_max) {
-                    unitname_max = length($1)
+                switch (status) {
+                    case "active":
+                        active_color = green
+                        break
+
+                    case "failed":
+                        active_color = red
+                        break
                 }
 
-                $1 = $2 = $3 = $4 = ""
-                sub(/^ */, "")
-                descriptions[NR] = $0
-            }
-            END {
-                for (i = 1; i <= length(unitnames); ++i) {
-                    switch (statuses[i]) {
-                        case "active":
-                            active_color = green
-                            break
-
-                        case "failed":
-                            active_color = red
-                            break
-                    }
-
-                    printf("%s●%s %-" unitname_max "s  %s\n", active_color, reset, unitnames[i], descriptions[i])
-                }
+                printf("%s●%s %s\n", active_color, reset, unitname)
             }')
 }
 
