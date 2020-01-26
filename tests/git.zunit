@@ -267,6 +267,25 @@
     _fzf_complete_git 'git merge '
 }
 
+@test 'Testing completion: git revert **' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index --multi'
+        assert $2 same_as 'git revert '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "$(tput setaf 3)another-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+    }
+
+    prefix=
+    _fzf_complete_git 'git revert '
+}
+
 @test 'Testing completion: git commit --fixup=**' {
     _fzf_complete() {
         assert $# equals 2
