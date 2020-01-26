@@ -1,3 +1,6 @@
+directories:
+  tests: tests
+  support: tests/_support
 tap: false
 time_limit: 10
 fail_fast: false

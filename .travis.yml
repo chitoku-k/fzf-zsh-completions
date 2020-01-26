@@ -10,5 +10,8 @@ matrix:
             - zsh
     - os: osx
 
+install:
+  - nvm install --lts
+
 script:
   - tests/test.zsh
