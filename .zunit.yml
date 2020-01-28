@@ -1,6 +1,7 @@
 directories:
   tests: tests
   support: tests/_support
+  output: $(echo ${__zunit_output_temp_dir})
 tap: false
 time_limit: 10
 fail_fast: false
