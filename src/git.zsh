@@ -61,6 +61,8 @@ _fzf_complete_git() {
     done
 
     local last_argument=${${(Q)${(z)arguments}}[-1]}
+    local cleanup_mode=(strip whitespace verbatim scissors default)
+    local untracked_file_mode=(no normal all)
 
     if [[ ${(Q)${(z)arguments}} =~ '^git (checkout|log|rebase|reset)' ]]; then
         if [[ ${${(Q)${(z)arguments}}[(r)--]} = -- ]]; then
@@ -90,71 +92,36 @@ _fzf_complete_git() {
             return
         fi
 
-        if [[ $prefix =~ '^--(fixup|reedit-message|reuse-message|squash)=' ]]; then
-            prefix_option=${prefix/=*/=} _fzf_complete_git-commits '' $@
+        if [[ $(_fzf_complete_git_has_options 'c C fixup reedit-message reuse-message squash' $last_argument $prefix) = 0 ]]; then
+            prefix_option=$(_fzf_complete_git_prefix) _fzf_complete_git-commits '' $@
             return
         fi
 
-        if [[ $last_argument =~ '^(-[^-]*[cC]|--(reuse-message|reedit-message|fixup|squash))$' ]]; then
-            _fzf_complete_git-commits '' $@
+        if [[ $(_fzf_complete_git_has_options 'm message' $last_argument $prefix) = 0 ]]; then
+            prefix_option=$(_fzf_complete_git_prefix) _fzf_complete_git-commit-messages '' $@
             return
         fi
 
-        if [[ $prefix =~ '^--message=' ]]; then
-            prefix_option=${prefix/=*/=} _fzf_complete_git-commit-messages '' $@
+        if [[ $(_fzf_complete_git_has_options 'author' $last_argument $prefix) = 0 ]]; then
             return
         fi
 
-        if [[ $last_argument =~ '^(-[^-]*m|--message)$' ]]; then
-            _fzf_complete_git-commit-messages '' $@
+        if [[ $(_fzf_complete_git_has_options 'date' $last_argument $prefix) = 0 ]]; then
             return
         fi
 
-        if [[ $prefix =~ '^--author=' ]]; then
+        if [[ $(_fzf_complete_git_has_options 'F t file pathspec-from-file template' $last_argument $prefix) = 0 ]]; then
+            _fzf_path_completion "${prefix/--*=}" $@$(_fzf_complete_git_prefix)
             return
         fi
 
-        if [[ $last_argument = '--author' ]]; then
+        if [[ $(_fzf_complete_git_has_options 'cleanup' $last_argument $prefix) = 0 ]]; then
+            _fzf_complete '' $@ < <(awk -v prefix=$(_fzf_complete_git_prefix) '{ print prefix $0 }' <<< ${(F)cleanup_mode})
             return
         fi
 
-        if [[ $prefix =~ '^--date=' ]]; then
-            return
-        fi
-
-        if [[ $last_argument = '--date' ]]; then
-            return
-        fi
-
-        if [[ $prefix =~ '^--(file|template|pathspec-from-file)=$' ]]; then
-            _fzf_path_completion '' $@$prefix
-            return
-        fi
-
-        if [[ $last_argument =~ '^(-[^-]*[Ft]|--(file|template|pathspec-from-file))$' ]]; then
-            _fzf_path_completion '' $@
-            return
-        fi
-
-        local cleanup_mode=(strip whitespace verbatim scissors default)
-        if [[ $prefix =~ '^--cleanup=' ]]; then
-            _fzf_complete '' $@ < <(awk -v prefix=${prefix/=*/=} '{ print prefix $0 }' <<< ${(F)cleanup_mode})
-            return
-        fi
-
-        if [[ $last_argument = '--cleanup' ]]; then
-            _fzf_complete '' $@ <<< ${(F)cleanup_mode}
-            return
-        fi
-
-        local untracked_file_mode=(no normal all)
-        if [[ $prefix =~ '^--untracked-files=' ]]; then
-            _fzf_complete '' $@ < <(awk -v prefix=${prefix/=*/=} '{ print prefix $0 }' <<< ${(F)untracked_file_mode})
-            return
-        fi
-
-        if [[ $last_argument =~ '^(-[^-]*u|--untracked-files)$' ]]; then
-            _fzf_complete '' $@ <<< ${(F)untracked_file_mode}
+        if [[ $(_fzf_complete_git_has_options 'u untracked-files' $last_argument $prefix) = 0 ]]; then
+            _fzf_complete '' $@ < <(awk -v prefix=$(_fzf_complete_git_prefix) '{ print prefix $0 }' <<< ${(F)untracked_file_mode})
             return
         fi
 
@@ -168,6 +135,40 @@ _fzf_complete_git() {
     fi
 
     _fzf_path_completion "$prefix" $@
+}
+
+_fzf_complete_git_prefix() {
+    if [[ -z ${prefix:/--[^-]##*=*} ]]; then
+        echo ${prefix/=*/=}
+    fi
+}
+
+_fzf_complete_git_has_options() {
+    local option
+    local options=$1
+    local last_argument=$2
+    local prefix=$3
+
+    for option in ${(z)options}; do
+        if [[ ${#option} = 1 ]]; then
+            if [[ $last_argument =~ "^-[^-]*$option" ]]; then
+                echo 0
+                return
+            fi
+        else
+            if [[ $last_argument = "--$option" ]]; then
+                echo 0
+                return
+            fi
+
+            if [[ $prefix =~ "^--$option=" ]]; then
+                echo 0
+                return
+            fi
+        fi
+    done
+
+    echo 1
 }
 
 _fzf_complete_git-commits() {
