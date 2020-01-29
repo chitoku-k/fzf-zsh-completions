@@ -9,21 +9,20 @@
 @test 'Testing completion: make **' {
     MAKEFILE_CONTENT=$(cat <<< "
 aoi:
-	echo 'Yeah, Akane-chang very cute'
+	echo 'Yeah, Akane-chang is very cute'
 akane:
-	echo 'Yeah, Aoi-chang very cute'
+	echo 'Yeah, Aoi-chang is very cute'
 "
 		)
 
     echo $MAKEFILE_CONTENT > Makefile
     _fzf_complete() {
-        assert $# equals 1
-        assert $2 same_as 'make'
-
-        actual=(${(0)lines[1]})
-
-        assert ${actual[1]} same_as 'aoi'
-        assert ${actual[2]} same_as 'akane'
+        assert $# equals 2
+				
+        assert $2 same_as 'make '
+        run cat
+        assert ${lines[1]} same_as 'akane'
+        assert ${lines[2]} same_as 'aoi'
       }
 
     prefix=
