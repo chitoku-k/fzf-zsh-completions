@@ -1,0 +1,31 @@
+#!/usr/bin/env zunit
+
+@setup {
+    load ../fzf-zsh-completions.plugin.zsh
+    TEMP=$(mktemp -d)
+    pushd $TEMP
+}
+
+@test 'Testing completion: make **' {
+    MAKEFILE_CONTENT=$(cat <<< "
+aoi:
+	echo 'Yeah, Akane-chang very cute'
+akane:
+	echo 'Yeah, Aoi-chang very cute'
+"
+		)
+
+    echo $MAKEFILE_CONTENT > Makefile
+    _fzf_complete() {
+        assert $# equals 1
+        assert $2 same_as 'make'
+
+        actual=(${(0)lines[1]})
+
+        assert ${actual[1]} same_as 'aoi'
+        assert ${actual[2]} same_as 'akane'
+      }
+
+    prefix=
+    _fzf_complete_make 'make '
+}
