@@ -93,35 +93,37 @@ _fzf_complete_git() {
             return
         fi
 
-        if _fzf_complete_git_has_options $last_argument "$prefix" c C fixup reedit-message reuse-message squash; then
+        local using_commit=(c C fixup reedit-message reuse-message squash)
+        if _fzf_complete_git_has_options $last_argument "$prefix" $using_commit; then
             prefix_option=$(_fzf_complete_git_option_prefix) _fzf_complete_git-commits '' $@
             return
         fi
 
-        if _fzf_complete_git_has_options $last_argument "$prefix" m message; then
+        local using_commit_message=(m message)
+        if _fzf_complete_git_has_options $last_argument "$prefix" $using_commit_message; then
             prefix_option=$(_fzf_complete_git_option_prefix) _fzf_complete_git-commit-messages '' $@
             return
         fi
 
-        if _fzf_complete_git_has_options $last_argument "$prefix" author; then
+        local using_nothing=(author date)
+        if _fzf_complete_git_has_options $last_argument "$prefix" $using_nothing; then
             return
         fi
 
-        if _fzf_complete_git_has_options $last_argument "$prefix" date; then
-            return
-        fi
-
-        if _fzf_complete_git_has_options $last_argument "$prefix" F t file pathspec-from-file template; then
+        local using_file=(F t file pathspec-from-file template)
+        if _fzf_complete_git_has_options $last_argument "$prefix" $using_file; then
             _fzf_path_completion "${prefix/--*=}" $@$(_fzf_complete_git_option_prefix)
             return
         fi
 
-        if _fzf_complete_git_has_options $last_argument "$prefix" cleanup; then
+        local using_cleanup_mode=(cleanup)
+        if _fzf_complete_git_has_options $last_argument "$prefix" $using_cleanup_mode; then
             _fzf_complete '' $@ < <(awk -v prefix=$(_fzf_complete_git_option_prefix) '{ print prefix $0 }' <<< ${(F)cleanup_mode})
             return
         fi
 
-        if _fzf_complete_git_has_options $last_argument "$prefix" u untracked-files; then
+        local using_untracked_files_mode=(u untracked-files)
+        if _fzf_complete_git_has_options $last_argument "$prefix" $using_untracked_files_mode; then
             _fzf_complete '' $@ < <(awk -v prefix=$(_fzf_complete_git_option_prefix) '{ print prefix $0 }' <<< ${(F)untracked_file_mode})
             return
         fi
