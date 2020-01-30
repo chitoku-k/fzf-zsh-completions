@@ -146,9 +146,8 @@ _fzf_complete_git_option_prefix() {
 _fzf_complete_git_has_options() {
     local option
     local last_argument=$1
-    shift
-    local prefix=$1
-    shift
+    local prefix=$2
+    shift 2
     local options=$@
 
     for option in ${(z)options}; do
