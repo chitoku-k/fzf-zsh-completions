@@ -60,18 +60,19 @@ _fzf_complete_git() {
         resolved_commands+=($subcommand)
     done
 
+    local subcommand=${${(Q)${(z)arguments}}[2]}
     local last_argument=${${(Q)${(z)arguments}}[-1]}
     local cleanup_mode=(strip whitespace verbatim scissors default)
     local untracked_file_mode=(no normal all)
 
-    if [[ ${(Q)${(z)arguments}} =~ '^git (checkout|log|rebase|reset)' ]]; then
+    if [[ $subcommand =~ '(checkout|log|rebase|reset)' ]]; then
         if [[ ${${(Q)${(z)arguments}}[(r)--]} = -- ]]; then
-            if [[ ${(Q)${(z)arguments}} = 'git checkout '* ]]; then
+            if [[ $subcommand = 'checkout' ]]; then
                 _fzf_complete_git-unstaged-files '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
                 return
             fi
 
-            if [[ ${(Q)${(z)arguments}} =~ '^git (log|reset)' ]]; then
+            if [[ $subcommand =~ '(log|reset)' ]]; then
                 _fzf_complete_git-ls-files '' '--multi' $@
                 return
             fi
@@ -81,12 +82,12 @@ _fzf_complete_git() {
         return
     fi
 
-    if [[ ${(Q)${(z)arguments}} =~ '^git (branch|cherry-pick|merge|revert)' ]]; then
+    if [[ $subcommand =~ '(branch|cherry-pick|merge|revert)' ]]; then
         _fzf_complete_git-commits '--multi' $@
         return
     fi
 
-    if [[ ${(Q)${(z)arguments}} = 'git commit'* ]]; then
+    if [[ $subcommand = 'commit' ]]; then
         local result
         if [[ ${${(Q)${(z)arguments}}[(r)--]} = -- ]]; then
             _fzf_complete_git-unstaged-files '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
@@ -132,7 +133,7 @@ _fzf_complete_git() {
         return
     fi
 
-    if [[ ${(Q)${(z)arguments}} = 'git add'* ]]; then
+    if [[ $subcommand = 'add' ]]; then
         _fzf_complete_git-unstaged-files '--untracked-files=all' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
         return
     fi
