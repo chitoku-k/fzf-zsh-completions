@@ -87,41 +87,42 @@ _fzf_complete_git() {
     fi
 
     if [[ ${(Q)${(z)arguments}} = 'git commit'* ]]; then
+        local result
         if [[ ${${(Q)${(z)arguments}}[(r)--]} = -- ]]; then
             _fzf_complete_git-unstaged-files '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
             return
         fi
 
-        if [[ $(_fzf_complete_git_has_options 'c C fixup reedit-message reuse-message squash' $last_argument $prefix) = 0 ]]; then
-            prefix_option=$(_fzf_complete_git_prefix) _fzf_complete_git-commits '' $@
+        if _fzf_complete_git_has_options $last_argument "$prefix" c C fixup reedit-message reuse-message squash; then
+            prefix_option=$(_fzf_complete_git_option_prefix) _fzf_complete_git-commits '' $@
             return
         fi
 
-        if [[ $(_fzf_complete_git_has_options 'm message' $last_argument $prefix) = 0 ]]; then
-            prefix_option=$(_fzf_complete_git_prefix) _fzf_complete_git-commit-messages '' $@
+        if _fzf_complete_git_has_options $last_argument "$prefix" m message; then
+            prefix_option=$(_fzf_complete_git_option_prefix) _fzf_complete_git-commit-messages '' $@
             return
         fi
 
-        if [[ $(_fzf_complete_git_has_options 'author' $last_argument $prefix) = 0 ]]; then
+        if _fzf_complete_git_has_options $last_argument "$prefix" author; then
             return
         fi
 
-        if [[ $(_fzf_complete_git_has_options 'date' $last_argument $prefix) = 0 ]]; then
+        if _fzf_complete_git_has_options $last_argument "$prefix" date; then
             return
         fi
 
-        if [[ $(_fzf_complete_git_has_options 'F t file pathspec-from-file template' $last_argument $prefix) = 0 ]]; then
-            _fzf_path_completion "${prefix/--*=}" $@$(_fzf_complete_git_prefix)
+        if _fzf_complete_git_has_options $last_argument "$prefix" F t file pathspec-from-file template; then
+            _fzf_path_completion "${prefix/--*=}" $@$(_fzf_complete_git_option_prefix)
             return
         fi
 
-        if [[ $(_fzf_complete_git_has_options 'cleanup' $last_argument $prefix) = 0 ]]; then
-            _fzf_complete '' $@ < <(awk -v prefix=$(_fzf_complete_git_prefix) '{ print prefix $0 }' <<< ${(F)cleanup_mode})
+        if _fzf_complete_git_has_options $last_argument "$prefix" cleanup; then
+            _fzf_complete '' $@ < <(awk -v prefix=$(_fzf_complete_git_option_prefix) '{ print prefix $0 }' <<< ${(F)cleanup_mode})
             return
         fi
 
-        if [[ $(_fzf_complete_git_has_options 'u untracked-files' $last_argument $prefix) = 0 ]]; then
-            _fzf_complete '' $@ < <(awk -v prefix=$(_fzf_complete_git_prefix) '{ print prefix $0 }' <<< ${(F)untracked_file_mode})
+        if _fzf_complete_git_has_options $last_argument "$prefix" u untracked-files; then
+            _fzf_complete '' $@ < <(awk -v prefix=$(_fzf_complete_git_option_prefix) '{ print prefix $0 }' <<< ${(F)untracked_file_mode})
             return
         fi
 
@@ -137,38 +138,36 @@ _fzf_complete_git() {
     _fzf_path_completion "$prefix" $@
 }
 
-_fzf_complete_git_prefix() {
+_fzf_complete_git_option_prefix() {
     if [[ -z ${prefix:/--[^-]##*=*} ]]; then
         echo ${prefix/=*/=}
     fi
 }
-
 _fzf_complete_git_has_options() {
     local option
-    local options=$1
-    local last_argument=$2
-    local prefix=$3
+    local last_argument=$1
+    shift
+    local prefix=$1
+    shift
+    local options=$@
 
     for option in ${(z)options}; do
         if [[ ${#option} = 1 ]]; then
             if [[ $last_argument =~ "^-[^-]*$option" ]]; then
-                echo 0
-                return
+                return 0
             fi
         else
             if [[ $last_argument = "--$option" ]]; then
-                echo 0
-                return
+                return 0
             fi
 
             if [[ $prefix =~ "^--$option=" ]]; then
-                echo 0
-                return
+                return 0
             fi
         fi
     done
 
-    echo 1
+    return 1
 }
 
 _fzf_complete_git-commits() {
