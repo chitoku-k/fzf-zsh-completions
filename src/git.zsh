@@ -44,6 +44,7 @@ PREVIEW_OPTIONS
 _fzf_complete_git() {
     local arguments=$@
     local resolved_commands=()
+    local arguments_num=${#${(z)arguments}}
 
     while true; do
         local resolved=$(_fzf_complete_git_resolve_alias ${(Q)${(z)arguments}})
@@ -64,6 +65,26 @@ _fzf_complete_git() {
     local last_argument=${${(Q)${(z)arguments}}[-1]}
     local cleanup_modes=(strip whitespace verbatim scissors default)
     local untracked_file_modes=(no normal all)
+    local recurse_submodules=(yes on-demand no)
+    local strategies=(octopus ours subtree recursive resolve)
+    local strategy_options=(
+        diff-algorithm
+        find-rename
+        histogram
+        ignore-all-space
+        ignore-space-at-eol
+        ignore-space-change
+        no-renames
+        no-renormalize
+        ours
+        patience
+        rename-threshold
+        renormalize
+        subtree
+        theirs
+    )
+    local rebases=(false interactive merges preserve true)
+    local negotiation_tips=(commit glob)
 
     if [[ $subcommand =~ '(checkout|log|rebase|reset)' ]]; then
         if [[ ${${(Q)${(z)arguments}}[(r)--]} = -- ]]; then
@@ -135,6 +156,75 @@ _fzf_complete_git() {
     if [[ $subcommand = 'add' ]]; then
         _fzf_complete_git-unstaged-files '--untracked-files=all' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
         return
+    fi
+
+    if [[ $subcommand = 'pull' ]]; then
+        local git_options_recurse_submodules_completion=(recurse-submodules)
+        if _fzf_complete_git_has_options $last_argument "$prefix" $git_options_recurse_submodules_completion; then
+            _fzf_complete '' $@ < <(awk -v prefix=$(_fzf_complete_git_option_prefix) '{ print prefix $0 }' <<< ${(F)recurse_submodules})
+            return
+        fi
+
+        local git_options_cleanup_mode_completion=(cleanup)
+        if _fzf_complete_git_has_options $last_argument "$prefix" $git_options_cleanup_mode_completion; then
+            _fzf_complete '' $@ < <(awk -v prefix=$(_fzf_complete_git_option_prefix) '{ print prefix $0 }' <<< ${(F)cleanup_mode})
+            return
+        fi
+
+        local git_options_strategy_completion=(s strategy)
+        if _fzf_complete_git_has_options $last_argument "$prefix" $git_options_strategy_completion; then
+            _fzf_complete '' $@ < <(awk -v prefix=$(_fzf_complete_git_option_prefix) '{ print prefix $0 }' <<< ${(F)strategies})
+            return
+        fi
+
+        # TODO: Some options also take a value😭
+        local git_options_strategy_option_completion=(X strategy-option)
+        if _fzf_complete_git_has_options $last_argument "$prefix" $git_options_strategy_option_completion; then
+            _fzf_complete '' $@ < <(awk -v prefix=$(_fzf_complete_git_option_prefix) '{ print prefix $0 }' <<< ${(F)strategy_options})
+            return
+        fi
+
+        local git_options_rebase_completion=(rebase)
+        if _fzf_complete_git_has_options $last_argument "$prefix" $git_options_rebase_completion; then
+            _fzf_complete '' $@ < <(awk -v prefix=$(_fzf_complete_git_option_prefix) '{ print prefix $0 }' <<< ${(F)rebases})
+            return
+        fi
+
+        # TODO: revision
+        local git_options_revision_completion=(shallow-exclude)
+        if _fzf_complete_git_has_options $last_argument "$prefix" $git_options_revision_completion; then
+            prefix_option=$(_fzf_complete_git_option_prefix) _fzf_complete_git-commits '' $@
+            return
+        fi
+
+        local git_options_negotiation_tip_completion=(negotiation-tip)
+        if _fzf_complete_git_has_options $last_argument "$prefix" $git_options_negotiation_tip_completion; then
+            _fzf_complete '' $@ < <(awk -v prefix=$(_fzf_complete_git_option_prefix) '{ print prefix $0 }' <<< ${(F)negotiation_tips})
+            return
+        fi
+
+        # local git_options_gpg_sign_completion=(S gpg-sign)
+        # if _fzf_complete_git_has_options $last_argument "$prefix" $git_options_nothing_completion; then
+        #     prefix_option=$(_fzf_complete_git_option_prefix) _fzf_complete_git-gpg-key '' $@
+        #     return
+        # fi
+
+        local git_options_nothing_completion=(o date depth depthn log server-option shallow-since upload-pack)
+        if _fzf_complete_git_has_options $last_argument "$prefix" $git_options_nothing_completion; then
+            return
+        fi
+
+        # TODO: Use the number of removing options instead of $arguments_num
+        if [[ $arguments_num = 2 ]]; then
+            _fzf_complete_git-remotes '' $@
+            return
+        fi
+
+        if [[ $arguments_num = 3 ]]; then
+            # TODO: Stop hard coding for $repository
+            repository=${${(Qz)arguments}[3]} _fzf_complete_git-refs '' $@
+            return
+        fi
     fi
 
     _fzf_path_completion "$prefix" $@
@@ -268,6 +358,44 @@ _fzf_complete_git-unstaged-files_post() {
     for filename in ${(0)input}; do
         echo ${${(q+)filename:3}//\\n/\\\\n}
     done
+}
+
+_fzf_complete_git-remotes() {
+    local fzf_options="$1"
+    shift
+
+    _fzf_complete "--ansi $fzf_options" $@ < <(git remote --verbose | awk '
+        /\(fetch\)$/ {
+            gsub("\t", " ")
+            print
+        }
+    ' | _fzf_complete_git_tabularize)
+}
+
+_fzf_complete_git-remotes_post() {
+    awk '{ print $1 }'
+}
+
+_fzf_complete_git-refs() {
+    local fzf_options=$1
+    shift
+
+    local ref=${${$(git config remote.origin.fetch 2> /dev/null)#*:}%\*}
+
+    _fzf_complete "--ansi --tiebreak=index $fzf_options" $@ < <(
+        git for-each-ref $ref --format='%(refname:short) %(contents:subject)' 2> /dev/null |
+        awk -v prefix=$prefix_option '{ print prefix $0 }' | _fzf_complete_git_tabularize
+    )
+}
+
+_fzf_complete_git-refs_post() {
+    input=$(cat)
+
+    if [[ -z $input ]]; then
+        return
+    fi
+
+    echo ${${input#*/}%% *}
 }
 
 _fzf_complete_git_resolve_alias() {
