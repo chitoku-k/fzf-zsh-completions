@@ -28,31 +28,20 @@ zplug "chitoku-k/fzf-zsh-completions"
 
 - git
   - add
-    - Shows the unstaged files
   - branch
-    - Shows the commits/branches/tags
   - checkout
-    - Shows the commits/branches/tags
   - cherry-pick
-    - Shows the commits/branches/tags
   - commit
-    - Shows the commit messages, or the commits/branches/tags if preceded by `--fixup`
   - log
-    - Shows the commits/branches/tags
   - merge
-    - Shows the commits/branches/tags
   - rebase
-    - Shows the commits/branches/tags
   - reset
-    - Shows the commits/branches/tags
+  - revert
 - npm
   - run
-    - Shows the scripts
 - systemctl
-  - Shows the units
 - yarn
   - run
-    - Shows the scripts
 
 ## Usage
 
@@ -60,6 +49,14 @@ For further information, please refer to [Fuzzy completions for bash and zsh][fz
 
 ```zsh
 git rebase -i **<TAB>
+```
+
+## Testing
+
+For contributing to this project, be sure to update `tests/` and run following:
+
+```zsh
+tests/test.zsh
 ```
 
 [travis-link]:     https://travis-ci.com/chitoku-k/fzf-zsh-completions
