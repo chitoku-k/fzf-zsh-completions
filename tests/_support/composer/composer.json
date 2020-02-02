@@ -1,0 +1,9 @@
+{
+    "name": "chitoku-k/fzf-zsh-completions-test",
+    "scripts": {
+        "start": "php index.php",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        " script containing spaces ": "echo \"This script contains spaces in its name\"",
+        "script\nthat\nconsists\nof\nmultiple\nlines": "echo \"The name of this script consists of multiple lines\""
+    }
+}
