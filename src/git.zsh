@@ -139,13 +139,13 @@ _fzf_complete_git() {
 
         local git_options_cleanup_mode_completion=(cleanup)
         if _fzf_complete_git_has_options "$last_argument" "$prefix" $git_options_cleanup_mode_completion; then
-            _fzf_complete '' $@ < <(awk -v prefix=$(_fzf_complete_git_option_prefix) '{ print prefix $0 }' <<< ${(F)cleanup_modes})
+            _fzf_complete_git_specific_values '' "${(F)cleanup_modes}" $@
             return
         fi
 
         local git_options_untracked_files_mode_completion=(u untracked-files)
         if _fzf_complete_git_has_options "$last_argument" "$prefix" $git_options_untracked_files_mode_completion; then
-            _fzf_complete '' $@ < <(awk -v prefix=$(_fzf_complete_git_option_prefix) '{ print prefix $0 }' <<< ${(F)untracked_file_modes})
+            _fzf_complete_git_specific_values '' "${(F)untracked_file_modes}" $@
             return
         fi
 
@@ -161,32 +161,32 @@ _fzf_complete_git() {
     if [[ $subcommand = 'pull' ]]; then
         local git_options_recurse_submodules_completion=(recurse-submodules)
         if _fzf_complete_git_has_options $last_argument "$prefix" $git_options_recurse_submodules_completion; then
-            _fzf_complete '' $@ < <(awk -v prefix=$(_fzf_complete_git_option_prefix) '{ print prefix $0 }' <<< ${(F)recurse_submodules})
+            _fzf_complete_git_specific_values '' "${(F)recurse_submodules}" $@
             return
         fi
 
         local git_options_cleanup_mode_completion=(cleanup)
         if _fzf_complete_git_has_options $last_argument "$prefix" $git_options_cleanup_mode_completion; then
-            _fzf_complete '' $@ < <(awk -v prefix=$(_fzf_complete_git_option_prefix) '{ print prefix $0 }' <<< ${(F)cleanup_mode})
+            _fzf_complete_git_specific_values '' "${(F)cleanup_mode}" $@
             return
         fi
 
         local git_options_strategy_completion=(s strategy)
         if _fzf_complete_git_has_options $last_argument "$prefix" $git_options_strategy_completion; then
-            _fzf_complete '' $@ < <(awk -v prefix=$(_fzf_complete_git_option_prefix) '{ print prefix $0 }' <<< ${(F)strategies})
+            _fzf_complete_git_specific_values '' "${(F)strategies}" $@
             return
         fi
 
         # TODO: Some options also take a value😭
         local git_options_strategy_option_completion=(X strategy-option)
         if _fzf_complete_git_has_options $last_argument "$prefix" $git_options_strategy_option_completion; then
-            _fzf_complete '' $@ < <(awk -v prefix=$(_fzf_complete_git_option_prefix) '{ print prefix $0 }' <<< ${(F)strategy_options})
+            _fzf_complete_git_specific_values '' "${(F)strategy_options}" $@
             return
         fi
 
         local git_options_rebase_completion=(rebase)
         if _fzf_complete_git_has_options $last_argument "$prefix" $git_options_rebase_completion; then
-            _fzf_complete '' $@ < <(awk -v prefix=$(_fzf_complete_git_option_prefix) '{ print prefix $0 }' <<< ${(F)rebases})
+            _fzf_complete_git_specific_values '' "${(F)rebases}" $@
             return
         fi
 
@@ -199,7 +199,7 @@ _fzf_complete_git() {
 
         local git_options_negotiation_tip_completion=(negotiation-tip)
         if _fzf_complete_git_has_options $last_argument "$prefix" $git_options_negotiation_tip_completion; then
-            _fzf_complete '' $@ < <(awk -v prefix=$(_fzf_complete_git_option_prefix) '{ print prefix $0 }' <<< ${(F)negotiation_tips})
+            _fzf_complete_git_specific_values '' "${(F)negotiation_tips}" $@
             return
         fi
 
@@ -396,6 +396,14 @@ _fzf_complete_git-refs_post() {
     fi
 
     echo ${${input#*/}%% *}
+}
+
+_fzf_complete_git_specific_values() {
+    local fzf_options=$1
+    local values=$2
+    shift 2
+
+    _fzf_complete "$fzf_options" $@ < <(awk -v prefix=$(_fzf_complete_git_option_prefix) '{ print prefix $0 }' <<< ${values})
 }
 
 _fzf_complete_git_resolve_alias() {
