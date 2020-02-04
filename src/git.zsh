@@ -214,18 +214,18 @@ _fzf_complete_git() {
         fi
 
         local git_all_options_with_value=${${$(typeset -m 'git_options_*_completion')#*\(}%)}
-        local n=${${(z)arguments}[(ib:3:)[^-]*]}
+        local argument_position=${${(z)arguments}[(ib:3:)[^-]*]}
         local floating_arguments_number=0
         local repository
-        while (( n <= ${#${(z)arguments}} )); do
-            com=${${arguments[(w)$(( n - 1 ))]}##-##}
-            if [[ ${git_all_options_with_value[(wr)$com]} != $com ]]; then
+        while (( argument_position <= ${#${(z)arguments}} )); do
+            local argument=${${arguments[(w)$(( argument_position - 1 ))]}##-##}
+            if [[ ${git_all_options_with_value[(wr)$argument]} != $argument ]]; then
                 (( floating_arguments_number++ ))
                 if [[ $floating_arguments_number == 1 ]]; then
                     repository=${arguments[(w)$n]}
                 fi
             fi
-            n=${${(z)arguments}[(ib:(( n + 1 )):)[^-]*]}
+            argument_position=${${(z)arguments}[(ib:(( argument_position + 1 )):)[^-]*]}
         done
 
         if [[ $floating_arguments_number = 0 ]]; then
@@ -394,7 +394,7 @@ _fzf_complete_git-refs() {
     local fzf_options=$1
     shift
 
-    local ref=${${$(git config remote.origin.fetch 2> /dev/null)#*:}%\*}
+    local ref=${${$(git config remote.$repository.fetch 2> /dev/null)#*:}%\*}
 
     _fzf_complete "--ansi --tiebreak=index $fzf_options" $@ < <(
         git for-each-ref $ref --format='%(refname:short) %(contents:subject)' 2> /dev/null |
