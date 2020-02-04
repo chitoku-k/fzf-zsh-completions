@@ -190,7 +190,6 @@ _fzf_complete_git() {
             return
         fi
 
-        # TODO: revision
         local git_options_revision_completion=(shallow-exclude)
         if _fzf_complete_git_has_options $last_argument "$prefix" $git_options_revision_completion; then
             prefix_option=$(_fzf_complete_git_option_prefix) _fzf_complete_git-commits '' $@
@@ -214,17 +213,32 @@ _fzf_complete_git() {
             return
         fi
 
-        # TODO: Use the number of removing options instead of $arguments_num
-        if [[ $arguments_num = 2 ]]; then
+        local git_all_options_with_value=${${$(typeset -m 'git_options_*_completion')#*\(}%)}
+        local n=${${(z)arguments}[(ib:3:)[^-]*]}
+        local floating_arguments_number=0
+        local repository
+        while (( n <= ${#${(z)arguments}} )); do
+            com=${${arguments[(w)$(( n - 1 ))]}##-##}
+            if [[ ${git_all_options_with_value[(wr)$com]} != $com ]]; then
+                (( floating_arguments_number++ ))
+                if [[ $floating_arguments_number == 1 ]]; then
+                    repository=${arguments[(w)$n]}
+                fi
+            fi
+            n=${${(z)arguments}[(ib:(( n + 1 )):)[^-]*]}
+        done
+
+        if [[ $floating_arguments_number = 0 ]]; then
             _fzf_complete_git-remotes '' $@
             return
         fi
 
-        if [[ $arguments_num = 3 ]]; then
-            # TODO: Stop hard coding for $repository
-            repository=${${(Qz)arguments}[3]} _fzf_complete_git-refs '' $@
+        if [[ $floating_arguments_number = 1 ]]; then
+            repository=$repository _fzf_complete_git-refs '' $@
             return
         fi
+
+        return
     fi
 
     _fzf_path_completion "$prefix" $@
