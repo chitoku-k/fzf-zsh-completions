@@ -68,8 +68,9 @@ _fzf_complete_git() {
     local recurse_submodules=(yes on-demand no)
     local strategies=(octopus ours subtree recursive resolve)
     local strategy_options=(
-        diff-algorithm
+        diff-algorithm=
         find-rename
+        find-rename=
         histogram
         ignore-all-space
         ignore-space-at-eol
@@ -78,11 +79,13 @@ _fzf_complete_git() {
         no-renormalize
         ours
         patience
-        rename-threshold
+        rename-threshold=
         renormalize
         subtree
+        subtree=
         theirs
     )
+    local diff_algorithms=(histogram minimal myery patience)
     local rebases=(false interactive merges preserve true)
     local negotiation_tips=(commit glob)
 
@@ -177,10 +180,21 @@ _fzf_complete_git() {
             return
         fi
 
-        # TODO: Some options also take a value😭
         local git_options_strategy_option_completion=(X strategy-option)
+        local git_options_value_diff_algorithm_completion=(diff-algorithm)
         if _fzf_complete_git_has_options $last_argument "$prefix" $git_options_strategy_option_completion; then
+            local option_value=${${prefix#*=}%=*}
+            if [[ -n $option_value ]] && [[ ${${git_options_diff_algorithm_completion}[(r)$option_value]} == $option_value ]]; then
+                _fzf_complete_git_specific_values '' "${(F)diff_algorithms}" $@
+                return
+            fi
+
             _fzf_complete_git_specific_values '' "${(F)strategy_options}" $@
+
+            if [[ ${LBUFFER[-2]} == = ]]; then
+                LBUFFER="${LBUFFER%\ }"
+            fi
+
             return
         fi
 
@@ -213,7 +227,7 @@ _fzf_complete_git() {
             return
         fi
 
-        local git_all_options_with_value=${${$(typeset -m 'git_options_*_completion')#*\(}%)}
+        local git_all_options_with_value=${${$(typeset -m 'git_options_*_completion~git_options_value_*_completion')#*\(}%)}
         local argument_position=${${(z)arguments}[(ib:3:)[^-]*]}
         local floating_arguments_number=0
         local repository
@@ -246,9 +260,10 @@ _fzf_complete_git() {
 
 _fzf_complete_git_option_prefix() {
     if [[ -z ${prefix:/--[^-]##*=*} ]]; then
-        echo ${prefix/=*/=}
+        echo ${prefix/%=[^=]#/=}
     fi
 }
+
 _fzf_complete_git_has_options() {
     local option
     local last_argument=$1
@@ -417,7 +432,7 @@ _fzf_complete_git_specific_values() {
     local values=$2
     shift 2
 
-    _fzf_complete "$fzf_options" $@ < <(awk -v prefix=$(_fzf_complete_git_option_prefix) '{ print prefix $0 }' <<< ${values})
+    _fzf_complete "--ansi --tiebreak=index $fzf_options" $@ < <(awk -v prefix=$(_fzf_complete_git_option_prefix) '{ print prefix $0 }' <<< ${values})
 }
 
 _fzf_complete_git_resolve_alias() {
