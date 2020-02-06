@@ -8,6 +8,10 @@
     pushd $TEMP
 }
 
+@teardown {
+    rm -rf $TEMP
+}
+
 @test 'Testing completion: make **' {
     _fzf_complete() {
         assert $# equals 2
