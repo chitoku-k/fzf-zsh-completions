@@ -3,26 +3,21 @@
 @setup {
     load ../fzf-zsh-completions.plugin.zsh
     TEMP=$(mktemp -d)
+    
+    cat tests/_support/make/Makefile > $TEMP/Makefile
     pushd $TEMP
 }
 
 @test 'Testing completion: make **' {
-MAKEFILE_CONTENT=$(cat <<< "
-aoi:
-echo 'Yeah, Akane-chang is very cute'
-akane:
-echo 'Yeah, Aoi-chang is very cute'
-"
-)
+    _fzf_complete() {
+        assert $# equals 2
 
-echo $MAKEFILE_CONTENT > Makefile
-_fzf_complete() {
-    assert $# equals 2
+        assert $2 same_as 'make '
+        run cat
+        assert ${lines[1]} same_as 'aoi'
+        assert ${lines[2]} same_as 'akane'
+    }
 
-    assert $2 same_as 'make '
-    run cat
-    assert ${lines[1]} same_as 'akane'
-    assert ${lines[2]} same_as 'aoi'
+    prefix=
+    _fzf_complete_make 'make '
 }
-
-prefix=_fzf_complete_make 'make '
