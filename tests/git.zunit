@@ -1534,10 +1534,9 @@
 }
 
 @test 'Testing completion: git pull origin **' {
-    run mkdir -p .git/refs/remotes/origin
-    run echo $(git rev-parse master) > .git/refs/remotes/origin/master
-    run echo $(git rev-parse another-branch) > .git/refs/remotes/origin/another-branch
     run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
+    run git symbolic-ref refs/remotes/origin/master refs/heads/master
+    run git symbolic-ref refs/remotes/origin/another-branch refs/heads/another-branch
 
     _fzf_complete() {
         assert $# equals 2
