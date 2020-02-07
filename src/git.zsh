@@ -44,7 +44,6 @@ PREVIEW_OPTIONS
 _fzf_complete_git() {
     local arguments=$@
     local resolved_commands=()
-    local arguments_num=${#${(z)arguments}}
 
     while true; do
         local resolved=$(_fzf_complete_git_resolve_alias ${(Q)${(z)arguments}})
@@ -184,7 +183,6 @@ _fzf_complete_git() {
         local git_options_value_diff_algorithm_completion=(diff-algorithm)
         if _fzf_complete_git_has_options "$last_argument" "$prefix" $git_options_strategy_option_completion; then
             local option_value=${${prefix#*=}%=*}
-            echo $option_value
             if [[ -n $option_value ]] && [[ ${${git_options_value_diff_algorithm_completion}[(r)$option_value]} == $option_value ]]; then
                 _fzf_complete_git_specific_values '' "${(F)diff_algorithms}" $@
                 return
