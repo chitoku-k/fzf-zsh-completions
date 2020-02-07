@@ -235,9 +235,8 @@ _fzf_complete_git() {
         while (( argument_position <= ${#${(z)arguments}} )); do
             local argument=${${arguments[(w)$(( argument_position - 1 ))]}##-##}
             if [[ ${git_all_options_with_value[(wr)$argument]} != $argument ]]; then
-                (( floating_arguments_number++ ))
-                if [[ $floating_arguments_number == 1 ]]; then
-                    repository=${arguments[(w)$n]}
+                if (( ++floating_arguments_number == 1 )); then
+                    repository=${arguments[(w)$argument_position]}
                 fi
             fi
             argument_position=${${(z)arguments}[(ib:(( argument_position + 1 )):)[^-]*]}
@@ -394,7 +393,7 @@ _fzf_complete_git-remotes() {
     local fzf_options="$1"
     shift
 
-    _fzf_complete "--ansi $fzf_options" $@ < <(git remote --verbose | awk '
+    _fzf_complete "--ansi --tiebreak=index $fzf_options" $@ < <(git remote --verbose | awk '
         /\(fetch\)$/ {
             gsub("\t", " ")
             print

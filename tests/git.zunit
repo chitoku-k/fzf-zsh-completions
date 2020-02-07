@@ -1512,6 +1512,48 @@
     assert $? equals 0
 }
 
+@test 'Testing completion: git pull **' {
+    run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
+    run git remote add upstream git@github.com:example-fork/fzf-zsh-completions
+    run git remote add example example
+
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git pull '
+
+        run cat
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "$(tput setaf 3)example  $(tput sgr0) example (fetch)"
+        assert ${lines[2]} same_as "$(tput setaf 3)origin   $(tput sgr0) git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
+        assert ${lines[3]} same_as "$(tput setaf 3)upstream $(tput sgr0) git@github.com:example-fork/fzf-zsh-completions (fetch)"
+    }
+
+    prefix=
+    _fzf_complete_git 'git pull '
+}
+
+@test 'Testing completion: git pull origin **' {
+    run mkdir -p .git/refs/remotes/origin
+    run echo $(git rev-parse master) > .git/refs/remotes/origin/master
+    run echo $(git rev-parse another-branch) > .git/refs/remotes/origin/another-branch
+    run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
+
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git pull origin '
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "$(tput setaf 3)origin/another-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)origin/master         $(tput sgr0) 1st commit"
+    }
+
+    prefix=
+    _fzf_complete_git 'git pull origin '
+}
+
 @test 'Testing completion (alias): git commit --squash **' {
     run git config alias.squash 'commit --squash'
 
@@ -1867,4 +1909,32 @@
     assert ${lines[4]} same_as "\$'file4\\ncontaining\\nnewlines'"
     assert ${lines[5]} same_as "' file5 containing space '"
     assert ${lines[6]} same_as "\$'directory2/file6\\ncontaining\\nnewlines'"
+}
+
+@test 'Testing post: git remotes' {
+    input=(
+        'origin  git@github.com:chitoku-k/fzf-zsh-completions (fetch)'
+    )
+
+    run _fzf_complete_git-remotes_post <<< ${(F)input}
+
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+
+    assert ${lines[1]} same_as 'origin'
+}
+
+@test 'Testing post: git refs' {
+    input=(
+        'origin/another-branch   2nd commit'
+    )
+
+    run _fzf_complete_git-refs_post <<< ${(F)input}
+
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+
+    assert ${lines[1]} same_as 'another-branch'
 }
