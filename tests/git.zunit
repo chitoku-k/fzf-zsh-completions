@@ -853,6 +853,42 @@
     _fzf_complete_git 'git commit --cleanup '
 }
 
+@test 'Testing completion: git commit -u**' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'git commit '
+
+        run cat
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as -uno
+        assert ${lines[2]} same_as -unormal
+        assert ${lines[3]} same_as -uall
+    }
+
+    prefix=-u
+    _fzf_complete_git 'git commit '
+}
+
+@test 'Testing completion: git commit -u **' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 matches '--ansi --read0 --print0 --multi '
+        assert $2 same_as 'git commit -u '
+
+        run cat
+        assert ${#lines} equals 1
+
+        actual1=(${(0)lines[1]})
+        assert ${#actual1} equals 2
+        assert ${actual1[1]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) directory1/file2"
+        assert ${actual1[2]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) file1"
+    }
+
+    prefix=
+    _fzf_complete_git 'git commit -u '
+}
+
 @test 'Testing completion: git commit --untracked-files=**' {
     _fzf_complete() {
         assert $# equals 2
@@ -873,14 +909,16 @@
 @test 'Testing completion: git commit --untracked-files **' {
     _fzf_complete() {
         assert $# equals 2
-        assert $1 same_as ''
+        assert $1 matches '--ansi --read0 --print0 --multi '
         assert $2 same_as 'git commit --untracked-files '
 
         run cat
-        assert ${#lines} equals 3
-        assert ${lines[1]} same_as no
-        assert ${lines[2]} same_as normal
-        assert ${lines[3]} same_as all
+        assert ${#lines} equals 1
+
+        actual1=(${(0)lines[1]})
+        assert ${#actual1} equals 2
+        assert ${actual1[1]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) directory1/file2"
+        assert ${actual1[2]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) file1"
     }
 
     prefix=
@@ -1093,8 +1131,8 @@
     _fzf_complete_git 'git commit-cleanup '
 }
 
-@test 'Testing completion (alias): git commit --untracked-files **' {
-    run git config alias.commit-untracked 'commit --untracked-files'
+@test 'Testing completion (alias): git commit --untracked-files=**' {
+    run git config alias.commit-untracked 'commit --untracked-files='
 
     _fzf_complete() {
         assert $# equals 2
@@ -1103,12 +1141,12 @@
 
         run cat
         assert ${#lines} equals 3
-        assert ${lines[1]} same_as no
-        assert ${lines[2]} same_as normal
-        assert ${lines[3]} same_as all
+        assert ${lines[1]} same_as --untracked-files=no
+        assert ${lines[2]} same_as --untracked-files=normal
+        assert ${lines[3]} same_as --untracked-files=all
     }
 
-    prefix=
+    prefix=--untracked-files=
     _fzf_complete_git 'git commit-untracked '
 }
 
