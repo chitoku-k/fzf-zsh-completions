@@ -122,7 +122,7 @@ _fzf_complete_git() {
             return
         fi
 
-        local git_options_untracked_files_mode_completion=(u untracked-files)
+        local git_options_untracked_files_mode_completion=('u?' 'untracked-files?')
         if _fzf_complete_git_has_options "$last_argument" "$prefix" $git_options_untracked_files_mode_completion; then
             _fzf_complete '' $@ < <(awk -v prefix=$(_fzf_complete_git_option_prefix) '{ print prefix $0 }' <<< ${(F)untracked_file_modes})
             return
@@ -141,10 +141,11 @@ _fzf_complete_git() {
 }
 
 _fzf_complete_git_option_prefix() {
-    if [[ -z ${prefix:/--[^-]##*=*} ]]; then
+    if [[ -z ${prefix:/--[^-]##*=*} ]] || [[ ${prefix:0:2} =~ '-[^-]' ]]; then
         echo ${prefix/=*/=}
     fi
 }
+
 _fzf_complete_git_has_options() {
     local option
     local last_argument=$1
@@ -152,16 +153,23 @@ _fzf_complete_git_has_options() {
     shift 2
 
     for option in ${(z)@}; do
-        if [[ ${#option} = 1 ]]; then
-            if [[ $last_argument =~ "^-[^-]*$option" ]]; then
-                return 0
-            fi
-        else
-            if [[ $last_argument = "--$option" ]]; then
+        local option_last_character=${option[-1]}
+        local option_without_last_question_mark=${option%\?}
+
+        if [[ ${#option_without_last_question_mark} = 1 ]]; then
+            if [[ $option_last_character != '?' ]] && [[ $last_argument =~ "^-[^-]*$option_without_last_question_mark" ]]; then
                 return 0
             fi
 
-            if [[ $prefix =~ "^--$option=" ]]; then
+            if [[ $option_last_character == '?' ]] && [[ $prefix =~ "^-[^-]*$option_without_last_question_mark" ]]; then
+                return 0
+            fi
+        else
+            if [[ $option_last_character != '?' ]] && [[ $last_argument = "--$option_without_last_question_mark" ]]; then
+                return 0
+            fi
+
+            if [[ $prefix =~ "^--$option_without_last_question_mark=" ]]; then
                 return 0
             fi
         fi
