@@ -567,6 +567,24 @@
     _fzf_complete_git 'git commit '
 }
 
+@test 'Testing completion: git commit -m**' {
+    run git checkout another-branch
+
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit '
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "$(tput setaf 3)$hash_2 $(tput sgr0) ${prefix} 2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)$hash_1 $(tput sgr0) ${prefix}1st commit"
+    }
+
+    prefix=-m
+    _fzf_complete_git 'git commit '
+}
+
 @test 'Testing completion: git commit -m **' {
     run git checkout another-branch
 
@@ -583,6 +601,24 @@
 
     prefix=
     _fzf_complete_git 'git commit -m '
+}
+
+@test 'Testing completion: git commit -qm**' {
+    run git checkout another-branch
+
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit '
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "$(tput setaf 3)$hash_2 $(tput sgr0) ${prefix} 2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)$hash_1 $(tput sgr0) ${prefix}1st commit"
+    }
+
+    prefix=-qm
+    _fzf_complete_git 'git commit '
 }
 
 @test 'Testing completion: git commit -qm **' {
@@ -710,6 +746,21 @@
     _fzf_complete_git 'git commit '
 }
 
+@test 'Testing completion: git commit -F**' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'git commit -F'
+    }
+
+    prefix=-F
+    _fzf_complete_git 'git commit '
+}
+
 @test 'Testing completion: git commit -F **' {
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
@@ -723,6 +774,21 @@
 
     prefix=
     _fzf_complete_git 'git commit -F '
+}
+
+@test 'Testing completion: git commit -qF**' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'git commit -qF'
+    }
+
+    prefix=-qF
+    _fzf_complete_git 'git commit '
 }
 
 @test 'Testing completion: git commit -qF **' {
@@ -740,6 +806,21 @@
     _fzf_complete_git 'git commit -qF '
 }
 
+@test 'Testing completion: git commit -t**' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'git commit -t'
+    }
+
+    prefix=-t
+    _fzf_complete_git 'git commit '
+}
+
 @test 'Testing completion: git commit -t **' {
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
@@ -753,6 +834,21 @@
 
     prefix=
     _fzf_complete_git 'git commit -t '
+}
+
+@test 'Testing completion: git commit -qt**' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'git commit -qt'
+    }
+
+    prefix=-qt
+    _fzf_complete_git 'git commit '
 }
 
 @test 'Testing completion: git commit -qt **' {

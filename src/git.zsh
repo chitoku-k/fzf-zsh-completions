@@ -93,6 +93,34 @@ _fzf_complete_git() {
             return
         fi
 
+        # When the prefix is short options such as `-qm**`
+        if [[ ${prefix:0:2} =~ "-[^-]" ]]; then
+            local git_options_commit_completion=(c C)
+            local git_options_commit_message_completion=(m)
+            local git_options_file_completion=(F t)
+            local git_options_untracked_files_mode_completion=(u)
+            local num=1
+            while (( num <= ${#prefix%=*} )); do
+                if [[ ${git_options_commit_completion[(wr)${prefix[$num]}]} == ${prefix[$num]} ]]; then
+                    prefix_option=$(_fzf_complete_git_option_prefix $num) _fzf_complete_git-commits '' $@
+                    return
+                fi
+                if [[ ${git_options_commit_message_completion[(wr)${prefix[$num]}]} == ${prefix[$num]} ]]; then
+                    prefix_option=$(_fzf_complete_git_option_prefix $num) _fzf_complete_git-commit-messages '' $@
+                    return
+                fi
+                if [[ ${git_options_file_completion[(wr)${prefix[$num]}]} == ${prefix[$num]} ]]; then
+                    _fzf_path_completion "${prefix:$num}" $@$(_fzf_complete_git_option_prefix $num)
+                    return
+                fi
+                if [[ ${git_options_untracked_files_mode_completion[(wr)${prefix[$num]}]} == ${prefix[$num]} ]]; then
+                    _fzf_complete '' $@ < <(awk -v prefix=$(_fzf_complete_git_option_prefix $num) '{ print prefix $0 }' <<< ${(F)untracked_file_modes})
+                    return
+                fi
+                (( ++num ))
+            done
+        fi
+
         local git_options_commit_completion=(c C fixup reedit-message reuse-message squash)
         if _fzf_complete_git_has_options "$last_argument" "$prefix" $git_options_commit_completion; then
             prefix_option=$(_fzf_complete_git_option_prefix) _fzf_complete_git-commits '' $@
@@ -141,6 +169,13 @@ _fzf_complete_git() {
 }
 
 _fzf_complete_git_option_prefix() {
+    local num=$1
+
+    if [[ -n $1 ]] && [[ ${prefix:0:2} =~ '-[^-]' ]]; then
+        echo ${prefix:0:$num}
+        return
+    fi
+
     if [[ -z ${prefix:/--[^-]##*=*} ]]; then
         echo ${prefix/=*/=}
     fi
