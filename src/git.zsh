@@ -153,23 +153,20 @@ _fzf_complete_git_has_options() {
     shift 2
 
     for option in ${(z)@}; do
-        local option_last_character=${option[-1]}
-        local option_without_last_question_mark=${option%\?}
-
-        if [[ ${#option_without_last_question_mark} = 1 ]]; then
-            if [[ $option_last_character != '?' ]] && [[ $last_argument =~ "^-[^-]*$option_without_last_question_mark" ]]; then
+        if [[ ${#option%\?} = 1 ]]; then
+            if [[ ${option[-1]} != '?' ]] && [[ $last_argument =~ "^-[^-]*${option%\?}" ]]; then
                 return 0
             fi
 
-            if [[ $option_last_character == '?' ]] && [[ $prefix =~ "^-[^-]*$option_without_last_question_mark" ]]; then
+            if [[ $prefix =~ "^-[^-]*${option%\?}" ]]; then
                 return 0
             fi
         else
-            if [[ $option_last_character != '?' ]] && [[ $last_argument = "--$option_without_last_question_mark" ]]; then
+            if [[ ${option[-1]} != '?' ]] && [[ $last_argument = "--${option%\?}" ]]; then
                 return 0
             fi
 
-            if [[ $prefix =~ "^--$option_without_last_question_mark=" ]]; then
+            if [[ $prefix =~ "^--${option%\?}=" ]]; then
                 return 0
             fi
         fi
