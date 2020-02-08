@@ -86,7 +86,7 @@ _fzf_complete_git() {
     fi
 
     if [[ $subcommand = 'commit' ]]; then
-        if [[ ${${(Q)${(z)arguments}}[(r)--]} != '' ]] || [[ $last_argument != -* && $prefix != -* ]]; then
+        if [[ -n ${${(Q)${(z)arguments}}[(r)--]} ]] || [[ $last_argument != -* && $prefix != -* ]]; then
             _fzf_complete_git-unstaged-files '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
             return
         fi
@@ -96,10 +96,10 @@ _fzf_complete_git() {
         local git_options_argument_optional=(-u --untracked-files)
 
         current=$prefix
-        while [[ $current != '' ]]; do
+        while [[ -n $current ]]; do
             case $current in
                 -[A-Za-z]*)
-                    if [[ ${git_options_argument_required[(r)${current:0:2}]} != '' ]] || [[ ${git_options_argument_optional[(r)${current:0:2}]} != '' ]]; then
+                    if [[ -n ${git_options_argument_required[(r)${current:0:2}]} ]] || [[ -n ${git_options_argument_optional[(r)${current:0:2}]} ]]; then
                         completing_option=${current:0:2}
                         completing_option_source=prefix
                         break
@@ -107,7 +107,7 @@ _fzf_complete_git() {
                     ;;
 
                 --*)
-                    if [[ ${git_options_argument_required[(r)${current%=*}]} != '' ]] || [[ ${git_options_argument_optional[(r)${current%=*}]} != '' ]]; then
+                    if [[ -n ${git_options_argument_required[(r)${current%=*}]} ]] || [[ -n ${git_options_argument_optional[(r)${current%=*}]} ]]; then
                         completing_option=${current%=*}
                         completing_option_source=prefix
                         break
@@ -123,8 +123,8 @@ _fzf_complete_git() {
         done
 
         current=$last_argument
-        while [[ $current != '' ]]; do
-            if [[ ${git_options_argument_required[(r)$current]} != '' ]]; then
+        while [[ -n $current ]]; do
+            if [[ -n ${git_options_argument_required[(r)$current]} ]]; then
                 completing_option=$current
                 completing_option_source=last_argument
                 break
