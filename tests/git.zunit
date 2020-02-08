@@ -416,6 +416,25 @@
     _fzf_complete_git 'git commit -c '
 }
 
+@test 'Testing completion: git commit -c**' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "$(tput setaf 3)-canother-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)-cmaster         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)-cv1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)-cv2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)-c$hash_1        $(tput sgr0) 1st commit"
+    }
+
+    prefix=-c
+    _fzf_complete_git 'git commit '
+}
+
 @test 'Testing completion: git commit -qc **' {
     _fzf_complete() {
         assert $# equals 2
@@ -433,6 +452,25 @@
 
     prefix=
     _fzf_complete_git 'git commit -qc '
+}
+
+@test 'Testing completion: git commit -qc**' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "$(tput setaf 3)-qcanother-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)-qcmaster         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)-qcv1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)-qcv2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)-qc$hash_1        $(tput sgr0) 1st commit"
+    }
+
+    prefix=-qc
+    _fzf_complete_git 'git commit '
 }
 
 @test 'Testing completion: git commit -C **' {
@@ -454,6 +492,25 @@
     _fzf_complete_git 'git commit -C '
 }
 
+@test 'Testing completion: git commit -C**' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "$(tput setaf 3)-Canother-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)-Cmaster         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)-Cv1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)-Cv2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)-C$hash_1        $(tput sgr0) 1st commit"
+    }
+
+    prefix=-C
+    _fzf_complete_git 'git commit '
+}
+
 @test 'Testing completion: git commit -qC **' {
     _fzf_complete() {
         assert $# equals 2
@@ -471,6 +528,25 @@
 
     prefix=
     _fzf_complete_git 'git commit -qC '
+}
+
+@test 'Testing completion: git commit -qC**' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "$(tput setaf 3)-qCanother-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)-qCmaster         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)-qCv1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)-qCv2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)-qC$hash_1        $(tput sgr0) 1st commit"
+    }
+
+    prefix=-qC
+    _fzf_complete_git 'git commit '
 }
 
 @test 'Testing completion: git commit --fixup **' {
@@ -585,6 +661,24 @@
     _fzf_complete_git 'git commit -m '
 }
 
+@test 'Testing completion: git commit -m**' {
+    run git checkout another-branch
+
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit '
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "$(tput setaf 3)$hash_2 $(tput sgr0) -m 2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)$hash_1 $(tput sgr0) -m1st commit"
+    }
+
+    prefix=-m
+    _fzf_complete_git 'git commit '
+}
+
 @test 'Testing completion: git commit -qm **' {
     run git checkout another-branch
 
@@ -601,6 +695,24 @@
 
     prefix=
     _fzf_complete_git 'git commit -qm '
+}
+
+@test 'Testing completion: git commit -qm**' {
+    run git checkout another-branch
+
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit '
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "$(tput setaf 3)$hash_2 $(tput sgr0) -qm 2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)$hash_1 $(tput sgr0) -qm1st commit"
+    }
+
+    prefix=-qm
+    _fzf_complete_git 'git commit '
 }
 
 @test 'Testing completion: git commit --message **' {
@@ -853,6 +965,40 @@
     _fzf_complete_git 'git commit --cleanup '
 }
 
+@test 'Testing completion: git commit -u**' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'git commit '
+
+        run cat
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as -uno
+        assert ${lines[2]} same_as -unormal
+        assert ${lines[3]} same_as -uall
+    }
+
+    prefix=-u
+    _fzf_complete_git 'git commit '
+}
+
+@test 'Testing completion: git commit -qu**' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'git commit '
+
+        run cat
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as -quno
+        assert ${lines[2]} same_as -qunormal
+        assert ${lines[3]} same_as -quall
+    }
+
+    prefix=-qu
+    _fzf_complete_git 'git commit '
+}
+
 @test 'Testing completion: git commit --untracked-files=**' {
     _fzf_complete() {
         assert $# equals 2
@@ -871,16 +1017,34 @@
 }
 
 @test 'Testing completion: git commit --untracked-files **' {
+    run git checkout another-branch
+    echo >> ' file3 containing space '
+    echo >> directory2/$'file4\ncontaining\nnewlines'
+    echo >> ' file5 containing space '
+    echo >> directory2/$'file6\ncontaining\nnewlines'
+
     _fzf_complete() {
         assert $# equals 2
-        assert $1 same_as ''
+        assert $1 matches '--ansi --read0 --print0 --multi '
         assert $2 same_as 'git commit --untracked-files '
 
         run cat
         assert ${#lines} equals 3
-        assert ${lines[1]} same_as no
-        assert ${lines[2]} same_as normal
-        assert ${lines[3]} same_as all
+
+        actual1=(${(0)lines[1]})
+        assert ${#actual1} equals 3
+        assert ${actual1[1]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0)  file3 containing space "
+        assert ${actual1[2]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) directory1/file2"
+        assert ${actual1[3]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) directory2/file4"
+
+        actual2=(${(0)lines[2]})
+        assert ${#actual2} equals 1
+        assert ${actual2[1]} same_as 'containing'
+
+        actual3=(${(0)lines[3]})
+        assert ${#actual3} equals 2
+        assert ${actual3[1]} same_as 'newlines'
+        assert ${actual3[2]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) file1"
     }
 
     prefix=
@@ -1094,18 +1258,36 @@
 }
 
 @test 'Testing completion (alias): git commit --untracked-files **' {
+    run git checkout another-branch
     run git config alias.commit-untracked 'commit --untracked-files'
+
+    echo >> ' file3 containing space '
+    echo >> directory2/$'file4\ncontaining\nnewlines'
+    echo >> ' file5 containing space '
+    echo >> directory2/$'file6\ncontaining\nnewlines'
 
     _fzf_complete() {
         assert $# equals 2
-        assert $1 same_as ''
+        assert $1 matches '--ansi --read0 --print0 --multi '
         assert $2 same_as 'git commit-untracked '
 
         run cat
         assert ${#lines} equals 3
-        assert ${lines[1]} same_as no
-        assert ${lines[2]} same_as normal
-        assert ${lines[3]} same_as all
+
+        actual1=(${(0)lines[1]})
+        assert ${#actual1} equals 3
+        assert ${actual1[1]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0)  file3 containing space "
+        assert ${actual1[2]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) directory1/file2"
+        assert ${actual1[3]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) directory2/file4"
+
+        actual2=(${(0)lines[2]})
+        assert ${#actual2} equals 1
+        assert ${actual2[1]} same_as 'containing'
+
+        actual3=(${(0)lines[3]})
+        assert ${#actual3} equals 2
+        assert ${actual3[1]} same_as 'newlines'
+        assert ${actual3[2]} same_as " $(tput sgr0)$(tput setaf 1)M$(tput sgr0) file1"
     }
 
     prefix=
