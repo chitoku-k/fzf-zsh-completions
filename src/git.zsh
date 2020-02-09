@@ -116,7 +116,7 @@ _fzf_complete_git() {
                 ;;
 
             -F|-t|--file|--pathspec-from-file|--template)
-                _fzf_path_completion "${prefix#$prefix_option}" $@$prefix_option
+                __fzf_generic_path_completion "${prefix#$prefix_option}" $@$prefix_option _fzf_compgen_path '' '' ' '
                 ;;
 
             --cleanup)

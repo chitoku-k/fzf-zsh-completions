@@ -782,10 +782,14 @@
         fail '_fzf_complete should not be invoked'
     }
 
-    _fzf_path_completion() {
-        assert $# equals 2
+    __fzf_generic_path_completion() {
+        assert $# equals 6
         assert $1 same_as ''
         assert $2 same_as 'git commit --file='
+        assert $3 same_as '_fzf_compgen_path'
+        assert $4 same_as ''
+        assert $5 same_as ''
+        assert $6 same_as ' '
     }
 
     prefix=--file=
@@ -797,10 +801,14 @@
         fail '_fzf_complete should not be invoked'
     }
 
-    _fzf_path_completion() {
-        assert $# equals 2
+    __fzf_generic_path_completion() {
+        assert $# equals 6
         assert $1 same_as ''
         assert $2 same_as 'git commit --template='
+        assert $3 same_as '_fzf_compgen_path'
+        assert $4 same_as ''
+        assert $5 same_as ''
+        assert $6 same_as ' '
     }
 
     prefix=--template=
@@ -812,10 +820,14 @@
         fail '_fzf_complete should not be invoked'
     }
 
-    _fzf_path_completion() {
-        assert $# equals 2
+    __fzf_generic_path_completion() {
+        assert $# equals 6
         assert $1 same_as ''
         assert $2 same_as 'git commit --pathspec-from-file='
+        assert $3 same_as '_fzf_compgen_path'
+        assert $4 same_as ''
+        assert $5 same_as ''
+        assert $6 same_as ' '
     }
 
     prefix=--pathspec-from-file=
@@ -827,10 +839,14 @@
         fail '_fzf_complete should not be invoked'
     }
 
-    _fzf_path_completion() {
-        assert $# equals 2
+    __fzf_generic_path_completion() {
+        assert $# equals 6
         assert $1 same_as ''
         assert $2 same_as 'git commit -F '
+        assert $3 same_as '_fzf_compgen_path'
+        assert $4 same_as ''
+        assert $5 same_as ''
+        assert $6 same_as ' '
     }
 
     prefix=
@@ -842,10 +858,14 @@
         fail '_fzf_complete should not be invoked'
     }
 
-    _fzf_path_completion() {
-        assert $# equals 2
+    __fzf_generic_path_completion() {
+        assert $# equals 6
         assert $1 same_as ''
         assert $2 same_as 'git commit -F'
+        assert $3 same_as '_fzf_compgen_path'
+        assert $4 same_as ''
+        assert $5 same_as ''
+        assert $6 same_as ' '
     }
 
     prefix=-F
@@ -857,10 +877,14 @@
         fail '_fzf_complete should not be invoked'
     }
 
-    _fzf_path_completion() {
-        assert $# equals 2
+    __fzf_generic_path_completion() {
+        assert $# equals 6
         assert $1 same_as ''
         assert $2 same_as 'git commit -qF '
+        assert $3 same_as '_fzf_compgen_path'
+        assert $4 same_as ''
+        assert $5 same_as ''
+        assert $6 same_as ' '
     }
 
     prefix=
@@ -872,10 +896,14 @@
         fail '_fzf_complete should not be invoked'
     }
 
-    _fzf_path_completion() {
-        assert $# equals 2
+    __fzf_generic_path_completion() {
+        assert $# equals 6
         assert $1 same_as ''
         assert $2 same_as 'git commit -qF'
+        assert $3 same_as '_fzf_compgen_path'
+        assert $4 same_as ''
+        assert $5 same_as ''
+        assert $6 same_as ' '
     }
 
     prefix=-qF
@@ -887,10 +915,14 @@
         fail '_fzf_complete should not be invoked'
     }
 
-    _fzf_path_completion() {
-        assert $# equals 2
+    __fzf_generic_path_completion() {
+        assert $# equals 6
         assert $1 same_as ''
         assert $2 same_as 'git commit -t '
+        assert $3 same_as '_fzf_compgen_path'
+        assert $4 same_as ''
+        assert $5 same_as ''
+        assert $6 same_as ' '
     }
 
     prefix=
@@ -902,10 +934,14 @@
         fail '_fzf_complete should not be invoked'
     }
 
-    _fzf_path_completion() {
-        assert $# equals 2
+    __fzf_generic_path_completion() {
+        assert $# equals 6
         assert $1 same_as ''
         assert $2 same_as 'git commit -t'
+        assert $3 same_as '_fzf_compgen_path'
+        assert $4 same_as ''
+        assert $5 same_as ''
+        assert $6 same_as ' '
     }
 
     prefix=-t
@@ -917,10 +953,14 @@
         fail '_fzf_complete should not be invoked'
     }
 
-    _fzf_path_completion() {
-        assert $# equals 2
+    __fzf_generic_path_completion() {
+        assert $# equals 6
         assert $1 same_as ''
         assert $2 same_as 'git commit -qt '
+        assert $3 same_as '_fzf_compgen_path'
+        assert $4 same_as ''
+        assert $5 same_as ''
+        assert $6 same_as ' '
     }
 
     prefix=
@@ -932,10 +972,14 @@
         fail '_fzf_complete should not be invoked'
     }
 
-    _fzf_path_completion() {
-        assert $# equals 2
+    __fzf_generic_path_completion() {
+        assert $# equals 6
         assert $1 same_as ''
         assert $2 same_as 'git commit -qt'
+        assert $3 same_as '_fzf_compgen_path'
+        assert $4 same_as ''
+        assert $5 same_as ''
+        assert $6 same_as ' '
     }
 
     prefix=-qt
@@ -947,10 +991,14 @@
         fail '_fzf_complete should not be invoked'
     }
 
-    _fzf_path_completion() {
-        assert $# equals 2
+    __fzf_generic_path_completion() {
+        assert $# equals 6
         assert $1 same_as ''
         assert $2 same_as 'git commit --file '
+        assert $3 same_as '_fzf_compgen_path'
+        assert $4 same_as ''
+        assert $5 same_as ''
+        assert $6 same_as ' '
     }
 
     prefix=
@@ -962,10 +1010,14 @@
         fail '_fzf_complete should not be invoked'
     }
 
-    _fzf_path_completion() {
-        assert $# equals 2
+    __fzf_generic_path_completion() {
+        assert $# equals 6
         assert $1 same_as ''
         assert $2 same_as 'git commit --template '
+        assert $3 same_as '_fzf_compgen_path'
+        assert $4 same_as ''
+        assert $5 same_as ''
+        assert $6 same_as ' '
     }
 
     prefix=
@@ -977,10 +1029,14 @@
         fail '_fzf_complete should not be invoked'
     }
 
-    _fzf_path_completion() {
-        assert $# equals 2
+    __fzf_generic_path_completion() {
+        assert $# equals 6
         assert $1 same_as ''
         assert $2 same_as 'git commit --pathspec-from-file '
+        assert $3 same_as '_fzf_compgen_path'
+        assert $4 same_as ''
+        assert $5 same_as ''
+        assert $6 same_as ' '
     }
 
     prefix=
@@ -1286,10 +1342,14 @@
         fail '_fzf_complete should not be invoked'
     }
 
-    _fzf_path_completion() {
-        assert $# equals 2
+    __fzf_generic_path_completion() {
+        assert $# equals 6
         assert $1 same_as ''
         assert $2 same_as 'git commit-spec '
+        assert $3 same_as '_fzf_compgen_path'
+        assert $4 same_as ''
+        assert $5 same_as ''
+        assert $6 same_as ' '
     }
 
     prefix=
