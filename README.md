@@ -26,6 +26,7 @@ zplug "chitoku-k/fzf-zsh-completions"
 
 ## Supported commands
 
+- composer
 - git
   - add
   - branch
