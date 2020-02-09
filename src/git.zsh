@@ -91,53 +91,11 @@ _fzf_complete_git() {
             return
         fi
 
-        local current prefix_option completing_option completing_option_source
+        local prefix_option completing_option
         local git_options_argument_required=(-c -C --fixup --reedit-message --reuse-message --squash -m --message --author --date -F -t --file --pathspec-from-file --template --cleanup)
         local git_options_argument_optional=(-u --untracked-files)
 
-        current=$prefix
-        while [[ -n $current ]]; do
-            case $current in
-                -[A-Za-z]*)
-                    if [[ -n ${git_options_argument_required[(r)${current:0:2}]} ]] || [[ -n ${git_options_argument_optional[(r)${current:0:2}]} ]]; then
-                        completing_option=${current:0:2}
-                        completing_option_source=prefix
-                        break
-                    fi
-                    ;;
-
-                --*)
-                    if [[ -n ${git_options_argument_required[(r)${current%=*}]} ]] || [[ -n ${git_options_argument_optional[(r)${current%=*}]} ]]; then
-                        completing_option=${current%=*}
-                        completing_option_source=prefix
-                        break
-                    fi
-                    ;;
-            esac
-
-            if [[ $current != -[A-Za-z][A-Za-z]* ]]; then
-                break
-            fi
-
-            current=${current/-[A-Za-z]/-}
-        done
-
-        current=$last_argument
-        while [[ -n $current ]]; do
-            if [[ -n ${git_options_argument_required[(r)$current]} ]]; then
-                completing_option=$current
-                completing_option_source=last_argument
-                break
-            fi
-
-            if [[ $current != -[A-Za-z][A-Za-z]* ]]; then
-                break
-            fi
-
-            current=${current/-[A-Za-z]/-}
-        done
-
-        if [[ $completing_option_source = prefix ]]; then
+        if completing_option=$(_fzf_complete_git_parse_completing_option "$prefix" "$last_argument" ${(F)git_options_argument_required} ${(F)git_options_argument_optional}); then
             if [[ $completing_option = --* ]]; then
                 prefix_option=$completing_option=
             else
@@ -298,6 +256,75 @@ _fzf_complete_git_resolve_alias() {
     done
 
     echo $git_alias_resolved
+}
+
+_fzf_complete_git_parse_completing_option() {
+    local prefix=$1
+    local last_argument=$2
+    local options_argument_required=(${(z)3})
+    local options_argument_optional=(${(z)4})
+    shift 4
+
+    local current=$prefix
+    local completing_option
+    local completing_option_source
+
+    while [[ -n $current ]]; do
+        case $current in
+            -[A-Za-z]*)
+                if [[ -n ${options_argument_required[(r)${current:0:2}]} ]] || [[ -n ${options_argument_optional[(r)${current:0:2}]} ]]; then
+                    completing_option=${current:0:2}
+                    completing_option_source=prefix
+                    break
+                fi
+                ;;
+
+            --*)
+                if [[ -n ${options_argument_required[(r)${current%=*}]} ]] || [[ -n ${options_argument_optional[(r)${current%=*}]} ]]; then
+                    completing_option=${current%=*}
+                    completing_option_source=prefix
+                    break
+                fi
+                ;;
+        esac
+
+        if [[ $current != -[A-Za-z][A-Za-z]* ]]; then
+            break
+        fi
+
+        current=${current/-[A-Za-z]/-}
+    done
+
+    current=$last_argument
+
+    while [[ -n $current ]]; do
+        if [[ -n ${options_argument_required[(r)$current]} ]]; then
+            completing_option=$current
+            completing_option_source=last_argument
+            break
+        fi
+
+        if [[ $current != -[A-Za-z][A-Za-z]* ]]; then
+            break
+        fi
+
+        current=${current/-[A-Za-z]/-}
+    done
+
+    echo $completing_option
+    case $completing_option_source in
+        prefix)
+            return 0
+            ;;
+
+        last_argument)
+            return 1
+            ;;
+
+        *)
+            return 2
+            ;;
+    esac
 }
 
 _fzf_complete_git_tabularize() {
