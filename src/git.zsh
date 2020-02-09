@@ -138,7 +138,11 @@ _fzf_complete_git() {
         done
 
         if [[ $completing_option_source = prefix ]]; then
-            prefix_option=$prefix
+            if [[ $completing_option = --* ]]; then
+                prefix_option=$completing_option=
+            else
+                prefix_option=${prefix%%${completing_option[-1]}*}${completing_option[-1]}
+            fi
         fi
 
         case $completing_option in
@@ -154,7 +158,7 @@ _fzf_complete_git() {
                 ;;
 
             -F|-t|--file|--pathspec-from-file|--template)
-                _fzf_path_completion "${prefix/--*=}" $@$prefix_option
+                _fzf_path_completion "${prefix#$prefix_option}" $@$prefix_option
                 ;;
 
             --cleanup)

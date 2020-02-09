@@ -837,6 +837,21 @@
     _fzf_complete_git 'git commit -F '
 }
 
+@test 'Testing completion: git commit -F**' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'git commit -F'
+    }
+
+    prefix=-F
+    _fzf_complete_git 'git commit '
+}
+
 @test 'Testing completion: git commit -qF **' {
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
@@ -850,6 +865,21 @@
 
     prefix=
     _fzf_complete_git 'git commit -qF '
+}
+
+@test 'Testing completion: git commit -qF**' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'git commit -qF'
+    }
+
+    prefix=-qF
+    _fzf_complete_git 'git commit '
 }
 
 @test 'Testing completion: git commit -t **' {
@@ -867,6 +897,21 @@
     _fzf_complete_git 'git commit -t '
 }
 
+@test 'Testing completion: git commit -t**' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'git commit -t'
+    }
+
+    prefix=-t
+    _fzf_complete_git 'git commit '
+}
+
 @test 'Testing completion: git commit -qt **' {
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
@@ -880,6 +925,21 @@
 
     prefix=
     _fzf_complete_git 'git commit -qt '
+}
+
+@test 'Testing completion: git commit -qt**' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'git commit -qt'
+    }
+
+    prefix=-qt
+    _fzf_complete_git 'git commit '
 }
 
 @test 'Testing completion: git commit --file **' {
