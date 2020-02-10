@@ -2337,3 +2337,30 @@
 
     assert ${lines[1]} same_as 'another-branch'
 }
+
+@test 'Testing post: git constants ending without equal' {
+    input=(
+        '--strategy-option=subtree'
+        '--strategy-option=subtree'
+    )
+
+    run _fzf_complete_git_git_constants_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+
+    assert ${lines[1]} same_as '--strategy-option=subtree'
+}
+
+@test 'Testing post: git constants ending with equal' {
+    input=(
+        '--strategy-option=subtree='
+    )
+
+    run _fzf_complete_git_git_constants_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+
+    assert ${lines[1]} same_as '--strategy-option=subtree='
+}

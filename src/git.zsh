@@ -121,12 +121,12 @@ _fzf_complete_git() {
 
             --cleanup)
                 local cleanup_modes=(strip whitespace verbatim scissors default)
-                _fzf_complete_git_specific_values '' "${(F)cleanup_modes}" $@
+                _fzf_complete_git_git_constants '' "${(F)cleanup_modes}" $@
                 ;;
 
             -u|--untracked-files)
                 local untracked_file_modes=(no normal all)
-                _fzf_complete_git_specific_values '' "${(F)untracked_file_modes}" $@
+                _fzf_complete_git_git_constants '' "${(F)untracked_file_modes}" $@
                 ;;
 
             *)
@@ -159,17 +159,17 @@ _fzf_complete_git() {
         case $completing_option in
             --recurse-submodules)
                 local recurse_submodules=(yes on-demand no)
-                _fzf_complete_git_specific_values '' "${(F)recurse_submodules}" $@
+                _fzf_complete_git_git_constants '' "${(F)recurse_submodules}" $@
                 ;;
 
             --cleanup)
                 local cleanup_modes=(strip whitespace verbatim scissors default)
-                _fzf_complete_git_specific_values '' "${(F)cleanup_modes}" $@
+                _fzf_complete_git_git_constants '' "${(F)cleanup_modes}" $@
                 ;;
 
             -s|--strategy)
                 local strategies=(octopus ours subtree recursive resolve)
-                _fzf_complete_git_specific_values '' "${(F)strategies}" $@
+                _fzf_complete_git_git_constants '' "${(F)strategies}" $@
                 ;;
 
             --strategy-option|--strategy-option=diff-algorithm|-X)
@@ -194,16 +194,12 @@ _fzf_complete_git() {
                     subtree=
                     theirs
                 )
-                prefix_option=${prefix/=*/=} _fzf_complete_git_specific_values '' "${(F)strategy_options}" $@
-
-                if [[ ${LBUFFER[-2]} == = ]]; then
-                    LBUFFER="${LBUFFER%\ }"
-                fi
+                prefix_option=${prefix_option/=*/=} _fzf_complete_git_git_constants '' "${(F)strategy_options}" $@
                 ;;
 
             --rebase)
                 local rebases=(false interactive merges preserve true)
-                _fzf_complete_git_specific_values '' "${(F)rebases}" $@
+                _fzf_complete_git_git_constants '' "${(F)rebases}" $@
                 ;;
 
             --shallow-exclude)
@@ -212,7 +208,7 @@ _fzf_complete_git() {
 
             --negotiation-tip)
                 local negotiation_tips=(commit glob)
-                _fzf_complete_git_specific_values '' "${(F)negotiation_tips}" $@
+                _fzf_complete_git_git_constants '' "${(F)negotiation_tips}" $@
                 ;;
 
             --gpg-sign|-S)
@@ -391,12 +387,26 @@ _fzf_complete_git-refs_post() {
     echo ${${input#*/}%% *}
 }
 
-_fzf_complete_git_specific_values() {
+_fzf_complete_git_git_constants() {
     local fzf_options=$1
     local values=$2
     shift 2
 
     _fzf_complete "--ansi --tiebreak=index $fzf_options" $@ < <(awk -v prefix=$prefix_option '{ print prefix $0 }' <<< $values)
+}
+
+_fzf_complete_git_git_constants_post() {
+    local input=$(cat)
+
+    if [[ -z $input ]]; then
+        return
+    fi
+
+    if [[ $input = *= ]]; then
+        echo -n $input
+    else
+        echo $input
+    fi
 }
 
 _fzf_complete_git_resolve_alias() {
