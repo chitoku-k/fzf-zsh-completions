@@ -2343,7 +2343,6 @@
 @test 'Testing post: git constants ending without equal' {
     input=(
         '--strategy-option=subtree'
-        '--strategy-option=subtree'
     )
 
     run _fzf_complete_git_git_constants_post <<< ${(F)input}
