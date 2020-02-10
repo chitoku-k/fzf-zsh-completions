@@ -2,39 +2,13 @@
 
 @setup {
     load ../fzf-zsh-completions.plugin.zsh
-
-    TEMP=$(mktemp -d)
-    pushd $TEMP
+    pushd tests/_support/git
+    cp -r _git .git
 
     {
-        git init
-
-        mkdir directory1
-        echo file1 > file1
-        echo file2 > directory1/file2
-
-        git add -A
-        git commit -m '1st commit'
-        git tag v1
-
-        mkdir directory2
-        echo ' file3 containing space ' > ' file3 containing space '
-        echo $'file4\ncontaining\nnewlines' > directory2/$'file4\ncontaining\nnewlines'
-
-        git checkout -b another-branch
-
-        git add -A
-        git commit -m ' 2nd commit'
-        git tag v2
-
-        git checkout master
-
         echo file1 >> file1
         echo file2 >> directory1/file2
     } &> /dev/null
-
-    hash_1=$(git rev-parse --short v1)
-    hash_2=$(git rev-parse --short v2)
 
     preview() {
         for opt in ${(Q)${(Z+n+)fzf_options}}; do
@@ -46,7 +20,12 @@
 }
 
 @teardown {
-    rm -rf $TEMP
+    {
+        git reset --hard master
+        git clean -d -f --exclude=_git
+    } &> /dev/null
+
+    rm -rf .git
 }
 
 @test 'Testing completion: git **' {
@@ -76,7 +55,7 @@
         assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
         assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
         assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)7e96c8a        $(tput sgr0) 1st commit"
     }
 
     prefix=
@@ -130,7 +109,7 @@
         assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
         assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
         assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)7e96c8a        $(tput sgr0) 1st commit"
     }
 
     prefix=
@@ -184,7 +163,7 @@
         assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
         assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
         assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)7e96c8a        $(tput sgr0) 1st commit"
     }
 
     prefix=
@@ -203,7 +182,7 @@
         assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
         assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
         assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)7e96c8a        $(tput sgr0) 1st commit"
     }
 
     prefix=
@@ -257,7 +236,7 @@
         assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
         assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
         assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)7e96c8a        $(tput sgr0) 1st commit"
     }
 
     prefix=
@@ -276,7 +255,7 @@
         assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
         assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
         assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)7e96c8a        $(tput sgr0) 1st commit"
     }
 
     prefix=
@@ -295,7 +274,7 @@
         assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
         assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
         assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)7e96c8a        $(tput sgr0) 1st commit"
     }
 
     prefix=
@@ -314,7 +293,7 @@
         assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
         assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
         assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)7e96c8a        $(tput sgr0) 1st commit"
     }
 
     prefix=
@@ -333,7 +312,7 @@
         assert ${lines[2]} same_as "$(tput setaf 3)${prefix}master         $(tput sgr0) 1st commit"
         assert ${lines[3]} same_as "$(tput setaf 3)${prefix}v1             $(tput sgr0) 1st commit"
         assert ${lines[4]} same_as "$(tput setaf 3)${prefix}v2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)${prefix}$hash_1        $(tput sgr0) 1st commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)${prefix}7e96c8a        $(tput sgr0) 1st commit"
     }
 
     prefix=--fixup=
@@ -352,7 +331,7 @@
         assert ${lines[2]} same_as "$(tput setaf 3)${prefix}master         $(tput sgr0) 1st commit"
         assert ${lines[3]} same_as "$(tput setaf 3)${prefix}v1             $(tput sgr0) 1st commit"
         assert ${lines[4]} same_as "$(tput setaf 3)${prefix}v2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)${prefix}$hash_1        $(tput sgr0) 1st commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)${prefix}7e96c8a        $(tput sgr0) 1st commit"
     }
 
     prefix=--reedit-message=
@@ -371,7 +350,7 @@
         assert ${lines[2]} same_as "$(tput setaf 3)${prefix}master         $(tput sgr0) 1st commit"
         assert ${lines[3]} same_as "$(tput setaf 3)${prefix}v1             $(tput sgr0) 1st commit"
         assert ${lines[4]} same_as "$(tput setaf 3)${prefix}v2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)${prefix}$hash_1        $(tput sgr0) 1st commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)${prefix}7e96c8a        $(tput sgr0) 1st commit"
     }
 
     prefix=--reuse-message=
@@ -390,7 +369,7 @@
         assert ${lines[2]} same_as "$(tput setaf 3)${prefix}master         $(tput sgr0) 1st commit"
         assert ${lines[3]} same_as "$(tput setaf 3)${prefix}v1             $(tput sgr0) 1st commit"
         assert ${lines[4]} same_as "$(tput setaf 3)${prefix}v2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)${prefix}$hash_1        $(tput sgr0) 1st commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)${prefix}7e96c8a        $(tput sgr0) 1st commit"
     }
 
     prefix=--squash=
@@ -409,7 +388,7 @@
         assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
         assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
         assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)7e96c8a        $(tput sgr0) 1st commit"
     }
 
     prefix=
@@ -428,7 +407,7 @@
         assert ${lines[2]} same_as "$(tput setaf 3)-cmaster         $(tput sgr0) 1st commit"
         assert ${lines[3]} same_as "$(tput setaf 3)-cv1             $(tput sgr0) 1st commit"
         assert ${lines[4]} same_as "$(tput setaf 3)-cv2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)-c$hash_1        $(tput sgr0) 1st commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)-c7e96c8a        $(tput sgr0) 1st commit"
     }
 
     prefix=-c
@@ -447,7 +426,7 @@
         assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
         assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
         assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)7e96c8a        $(tput sgr0) 1st commit"
     }
 
     prefix=
@@ -466,7 +445,7 @@
         assert ${lines[2]} same_as "$(tput setaf 3)-qcmaster         $(tput sgr0) 1st commit"
         assert ${lines[3]} same_as "$(tput setaf 3)-qcv1             $(tput sgr0) 1st commit"
         assert ${lines[4]} same_as "$(tput setaf 3)-qcv2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)-qc$hash_1        $(tput sgr0) 1st commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)-qc7e96c8a        $(tput sgr0) 1st commit"
     }
 
     prefix=-qc
@@ -485,7 +464,7 @@
         assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
         assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
         assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)7e96c8a        $(tput sgr0) 1st commit"
     }
 
     prefix=
@@ -504,7 +483,7 @@
         assert ${lines[2]} same_as "$(tput setaf 3)-Cmaster         $(tput sgr0) 1st commit"
         assert ${lines[3]} same_as "$(tput setaf 3)-Cv1             $(tput sgr0) 1st commit"
         assert ${lines[4]} same_as "$(tput setaf 3)-Cv2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)-C$hash_1        $(tput sgr0) 1st commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)-C7e96c8a        $(tput sgr0) 1st commit"
     }
 
     prefix=-C
@@ -523,7 +502,7 @@
         assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
         assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
         assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)7e96c8a        $(tput sgr0) 1st commit"
     }
 
     prefix=
@@ -542,7 +521,7 @@
         assert ${lines[2]} same_as "$(tput setaf 3)-qCmaster         $(tput sgr0) 1st commit"
         assert ${lines[3]} same_as "$(tput setaf 3)-qCv1             $(tput sgr0) 1st commit"
         assert ${lines[4]} same_as "$(tput setaf 3)-qCv2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)-qC$hash_1        $(tput sgr0) 1st commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)-qC7e96c8a        $(tput sgr0) 1st commit"
     }
 
     prefix=-qC
@@ -561,7 +540,7 @@
         assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
         assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
         assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)7e96c8a        $(tput sgr0) 1st commit"
     }
 
     prefix=
@@ -580,7 +559,7 @@
         assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
         assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
         assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)7e96c8a        $(tput sgr0) 1st commit"
     }
 
     prefix=
@@ -599,7 +578,7 @@
         assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
         assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
         assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)7e96c8a        $(tput sgr0) 1st commit"
     }
 
     prefix=
@@ -618,7 +597,7 @@
         assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
         assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
         assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)7e96c8a        $(tput sgr0) 1st commit"
     }
 
     prefix=
@@ -635,8 +614,8 @@
 
         run cat
         assert ${#lines} equals 2
-        assert ${lines[1]} same_as "$(tput setaf 3)$hash_2 $(tput sgr0) ${prefix} 2nd commit"
-        assert ${lines[2]} same_as "$(tput setaf 3)$hash_1 $(tput sgr0) ${prefix}1st commit"
+        assert ${lines[1]} same_as "$(tput setaf 3)72f4275 $(tput sgr0) ${prefix} 2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)7e96c8a $(tput sgr0) ${prefix}1st commit"
     }
 
     prefix=--message=
@@ -653,8 +632,8 @@
 
         run cat
         assert ${#lines} equals 2
-        assert ${lines[1]} same_as "$(tput setaf 3)$hash_2 $(tput sgr0)  2nd commit"
-        assert ${lines[2]} same_as "$(tput setaf 3)$hash_1 $(tput sgr0) 1st commit"
+        assert ${lines[1]} same_as "$(tput setaf 3)72f4275 $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)7e96c8a $(tput sgr0) 1st commit"
     }
 
     prefix=
@@ -671,8 +650,8 @@
 
         run cat
         assert ${#lines} equals 2
-        assert ${lines[1]} same_as "$(tput setaf 3)$hash_2 $(tput sgr0) -m 2nd commit"
-        assert ${lines[2]} same_as "$(tput setaf 3)$hash_1 $(tput sgr0) -m1st commit"
+        assert ${lines[1]} same_as "$(tput setaf 3)72f4275 $(tput sgr0) -m 2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)7e96c8a $(tput sgr0) -m1st commit"
     }
 
     prefix=-m
@@ -689,8 +668,8 @@
 
         run cat
         assert ${#lines} equals 2
-        assert ${lines[1]} same_as "$(tput setaf 3)$hash_2 $(tput sgr0)  2nd commit"
-        assert ${lines[2]} same_as "$(tput setaf 3)$hash_1 $(tput sgr0) 1st commit"
+        assert ${lines[1]} same_as "$(tput setaf 3)72f4275 $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)7e96c8a $(tput sgr0) 1st commit"
     }
 
     prefix=
@@ -707,8 +686,8 @@
 
         run cat
         assert ${#lines} equals 2
-        assert ${lines[1]} same_as "$(tput setaf 3)$hash_2 $(tput sgr0) -qm 2nd commit"
-        assert ${lines[2]} same_as "$(tput setaf 3)$hash_1 $(tput sgr0) -qm1st commit"
+        assert ${lines[1]} same_as "$(tput setaf 3)72f4275 $(tput sgr0) -qm 2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)7e96c8a $(tput sgr0) -qm1st commit"
     }
 
     prefix=-qm
@@ -725,8 +704,8 @@
 
         run cat
         assert ${#lines} equals 2
-        assert ${lines[1]} same_as "$(tput setaf 3)$hash_2 $(tput sgr0)  2nd commit"
-        assert ${lines[2]} same_as "$(tput setaf 3)$hash_1 $(tput sgr0) 1st commit"
+        assert ${lines[1]} same_as "$(tput setaf 3)72f4275 $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)7e96c8a $(tput sgr0) 1st commit"
     }
 
     prefix=
@@ -1296,7 +1275,7 @@
         assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
         assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
         assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)7e96c8a        $(tput sgr0) 1st commit"
     }
 
     prefix=
@@ -1314,8 +1293,8 @@
 
         run cat
         assert ${#lines} equals 2
-        assert ${lines[1]} same_as "$(tput setaf 3)$hash_2 $(tput sgr0)  2nd commit"
-        assert ${lines[2]} same_as "$(tput setaf 3)$hash_1 $(tput sgr0) 1st commit"
+        assert ${lines[1]} same_as "$(tput setaf 3)72f4275 $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)7e96c8a $(tput sgr0) 1st commit"
     }
 
     prefix=
@@ -1466,7 +1445,7 @@
         assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
         assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
         assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)7e96c8a        $(tput sgr0) 1st commit"
     }
 
     prefix=
@@ -1506,7 +1485,7 @@
         assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
         assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
         assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)7e96c8a        $(tput sgr0) 1st commit"
     }
 
     prefix=
@@ -1600,7 +1579,7 @@
         'master          1st commit'
         'v1              1st commit'
         'v2               2nd commit'
-        "$hash_1         1st commit"
+        "7e96c8a         1st commit"
     )
 
     run _fzf_complete_git-commits_post <<< ${(F)input}
@@ -1611,12 +1590,12 @@
     assert ${lines[2]} same_as 'master'
     assert ${lines[3]} same_as 'v1'
     assert ${lines[4]} same_as 'v2'
-    assert ${lines[5]} same_as $hash_1
+    assert ${lines[5]} same_as 7e96c8a
 }
 
 @test 'Testing post: git commit messages containing space' {
     input=(
-        "$hash_1  1st commit"
+        "7e96c8a  1st commit"
     )
 
     run _fzf_complete_git-commit-messages_post <<< ${(F)input}
@@ -1628,7 +1607,7 @@
 
 @test 'Testing post: git commit messages starting with space' {
     input=(
-        "$hash_2   2nd commit"
+        "72f4275   2nd commit"
     )
 
     run _fzf_complete_git-commit-messages_post <<< ${(F)input}
