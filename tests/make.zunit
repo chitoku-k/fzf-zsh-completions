@@ -4,13 +4,9 @@
     load ../fzf-zsh-completions.plugin.zsh
     TEMP=$(mktemp -d)
     
-    cat tests/_support/make/Makefile > $TEMP/Makefile
-    pushd $TEMP
+    pushd tests/_support/make
 }
 
-@teardown {
-    rm -rf $TEMP
-}
 
 @test 'Testing completion: make **' {
     _fzf_complete() {
