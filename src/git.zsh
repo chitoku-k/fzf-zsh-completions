@@ -354,10 +354,10 @@ _fzf_complete_git-unstaged-files_post() {
 }
 
 _fzf_complete_git-remotes() {
-    local fzf_options="$1"
+    local fzf_options=$1
     shift
 
-    _fzf_complete "--ansi --tiebreak=index $fzf_options" $@ < <(git remote --verbose | awk '
+    _fzf_complete "--ansi --tiebreak=index $fzf_options" $@ < <(git remote --verbose 2> /dev/null | awk '
         /\(fetch\)$/ {
             gsub("\t", " ")
             print
@@ -382,7 +382,7 @@ _fzf_complete_git-refs() {
 }
 
 _fzf_complete_git-refs_post() {
-    input=$(cat)
+    local input=$(cat)
 
     if [[ -z $input ]]; then
         return
@@ -396,7 +396,7 @@ _fzf_complete_git_specific_values() {
     local values=$2
     shift 2
 
-    _fzf_complete "--ansi --tiebreak=index $fzf_options" $@ < <(awk -v prefix=$prefix_option '{ print prefix $0 }' <<< ${values})
+    _fzf_complete "--ansi --tiebreak=index $fzf_options" $@ < <(awk -v prefix=$prefix_option '{ print prefix $0 }' <<< $values)
 }
 
 _fzf_complete_git_resolve_alias() {
