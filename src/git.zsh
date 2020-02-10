@@ -142,6 +142,11 @@ _fzf_complete_git() {
         return
     fi
 
+    if [[ $subcommand = 'rm' ]]; then
+        _fzf_complete_git-ls-files '' '--multi' $@
+        return
+    fi
+
     _fzf_path_completion "$prefix" $@
 }
 
