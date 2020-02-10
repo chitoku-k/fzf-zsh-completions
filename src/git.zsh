@@ -222,13 +222,12 @@ _fzf_complete_git() {
                 ;;
 
             *)
-                local git_all_options_with_value=(${${${$(typeset -m 'git_options_argument_required')#*\(}%)}//-})
                 local argument_position=${${(z)arguments}[(ib:3:)[^-]*]}
                 local floating_arguments_number=0
                 local repository
                 while (( argument_position <= ${#${(z)arguments}} )); do
                     local argument=${${${(z)arguments}[$(( argument_position - 1 ))]}##-##}
-                    if [[ ${git_all_options_with_value[(r)$argument]} != $argument ]]; then
+                    if [[ ${${git_options_argument_required//-}[(r)$argument]} != $argument ]]; then
                         if (( ++floating_arguments_number == 1 )); then
                             repository=${${(z)arguments}[$argument_position]}
                         fi
