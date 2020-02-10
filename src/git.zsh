@@ -237,7 +237,7 @@ _fzf_complete_git() {
                 fi
 
                 if [[ $floating_arguments_number = 1 ]]; then
-                    repository=$repository _fzf_complete_git-refs '' $@
+                    repository=$repository _fzf_complete_git-refs '--multi' $@
                     return
                 fi
                 ;;
@@ -378,13 +378,16 @@ _fzf_complete_git-refs() {
 }
 
 _fzf_complete_git-refs_post() {
+    local ref
     local input=$(cat)
 
     if [[ -z $input ]]; then
         return
     fi
 
-    echo ${${input#*/}%% *}
+    for ref in ${(f)input}; do
+        echo ${${ref#*/}%% *}
+    done
 }
 
 _fzf_complete_git_git_constants() {
