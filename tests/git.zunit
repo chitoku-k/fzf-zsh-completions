@@ -226,6 +226,25 @@
     _fzf_complete_git 'git reset -- '
 }
 
+@test 'Testing completion: git switch **' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git switch '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "$(tput setaf 3)another-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)3e209a3        $(tput sgr0) 1st commit"
+    }
+
+    prefix=
+    _fzf_complete_git 'git switch '
+}
+
 @test 'Testing completion: git branch **' {
     _fzf_complete() {
         assert $# equals 2

@@ -63,7 +63,7 @@ _fzf_complete_git() {
     local subcommand=${${(Q)${(z)arguments}}[2]}
     local last_argument=${${(Q)${(z)arguments}}[-1]}
 
-    if [[ $subcommand =~ '(checkout|log|rebase|reset)' ]]; then
+    if [[ $subcommand =~ '(checkout|log|rebase|reset|switch)' ]]; then
         if [[ ${${(Q)${(z)arguments}}[(r)--]} = -- ]]; then
             if [[ $subcommand = 'checkout' ]]; then
                 _fzf_complete_git-unstaged-files '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@

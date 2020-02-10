@@ -40,6 +40,7 @@ zplug "chitoku-k/fzf-zsh-completions"
   - restore
   - revert
   - rm
+  - switch
 - make
 - npm
   - run
