@@ -1547,7 +1547,7 @@
         assert ${lines[2]} same_as "$(tput setaf 3)${prefix}master         $(tput sgr0) 1st commit"
         assert ${lines[3]} same_as "$(tput setaf 3)${prefix}v1             $(tput sgr0) 1st commit"
         assert ${lines[4]} same_as "$(tput setaf 3)${prefix}v2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)${prefix}$hash_1        $(tput sgr0) 1st commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)${prefix}3e209a3        $(tput sgr0) 1st commit"
     }
 
     prefix=--shallow-exclude=
@@ -1566,7 +1566,7 @@
         assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
         assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
         assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)$hash_1        $(tput sgr0) 1st commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)3e209a3        $(tput sgr0) 1st commit"
     }
 
     prefix=
