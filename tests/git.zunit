@@ -1581,7 +1581,7 @@
         'master          1st commit'
         'v1              1st commit'
         'v2               2nd commit'
-        "8a6fc8f         1st commit"
+        '8a6fc8f         1st commit'
     )
 
     run _fzf_complete_git-commits_post <<< ${(F)input}
@@ -1592,12 +1592,12 @@
     assert ${lines[2]} same_as 'master'
     assert ${lines[3]} same_as 'v1'
     assert ${lines[4]} same_as 'v2'
-    assert ${lines[5]} same_as 8a6fc8f
+    assert ${lines[5]} same_as '8a6fc8f'
 }
 
 @test 'Testing post: git commit messages containing space' {
     input=(
-        "8a6fc8f  1st commit"
+        '8a6fc8f  1st commit'
     )
 
     run _fzf_complete_git-commit-messages_post <<< ${(F)input}
@@ -1609,7 +1609,7 @@
 
 @test 'Testing post: git commit messages starting with space' {
     input=(
-        "304f21b   2nd commit"
+        '304f21b   2nd commit'
     )
 
     run _fzf_complete_git-commit-messages_post <<< ${(F)input}
