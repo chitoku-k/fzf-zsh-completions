@@ -1729,24 +1729,24 @@
     assert $? equals 0
 }
 
-@test 'Testing completion: git pull --depthn=**' {
+@test 'Testing completion: git pull --deepen=**' {
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
 
-    prefix=--depthn=
+    prefix=--deepen=
     _fzf_complete_git 'git pull '
 
     assert $? equals 0
 }
 
-@test 'Testing completion: git pull --depthn **' {
+@test 'Testing completion: git pull --deepen **' {
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
 
     prefix=
-    _fzf_complete_git 'git pull --depthn '
+    _fzf_complete_git 'git pull --deepen '
 
     assert $? equals 0
 }

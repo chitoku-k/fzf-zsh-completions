@@ -145,7 +145,7 @@ _fzf_complete_git() {
     if [[ $subcommand = 'pull' ]]; then
         local prefix_option completing_option
 
-        local git_options_argument_required=(--cleanup --date --depth --depthn --negotiation-tip -o -s --server-option --shallow-exclude --shallow-since --strategy --strategy-option --strategy-option=diff-algorithm --upload-pack -X)
+        local git_options_argument_required=(--cleanup --date --depth --deepen --negotiation-tip -o -s --server-option --shallow-exclude --shallow-since --strategy --strategy-option --strategy-option=diff-algorithm --upload-pack -X)
         local git_options_argument_optional=(--gpg-sign --log --rebase --recurse-submodules -S)
 
         if completing_option=$(_fzf_complete_git_parse_completing_option "$prefix" "$last_argument" ${(F)git_options_argument_required} ${(F)git_options_argument_optional}); then
@@ -218,7 +218,7 @@ _fzf_complete_git() {
             --gpg-sign|-S)
                 ;;
 
-            --date|--depth|--depthn|--log|--server-option|--shallow-since|--upload-pack|-o)
+            --date|--depth|--deepen|--log|--server-option|--shallow-since|--upload-pack|-o)
                 ;;
 
             *)
