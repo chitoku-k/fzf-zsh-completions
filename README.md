@@ -37,6 +37,7 @@ zplug "chitoku-k/fzf-zsh-completions"
   - merge
   - rebase
   - reset
+  - restore
   - revert
 - make
 - npm
