@@ -2,18 +2,17 @@
 
 @setup {
     load ../fzf-zsh-completions.plugin.zsh
-    TEMP=$(mktemp -d)
-    
     pushd tests/_support/make
 }
-
 
 @test 'Testing completion: make **' {
     _fzf_complete() {
         assert $# equals 2
-
+        assert $1 matches '--ansi --tiebreak=index '
         assert $2 same_as 'make '
+
         run cat
+        assert ${#lines} equals 2
         assert ${lines[1]} same_as 'aoi'
         assert ${lines[2]} same_as 'akane'
     }
