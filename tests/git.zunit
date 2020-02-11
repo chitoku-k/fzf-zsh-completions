@@ -364,11 +364,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "$(tput setaf 3)${prefix}another-branch $(tput sgr0)  2nd commit"
-        assert ${lines[2]} same_as "$(tput setaf 3)${prefix}master         $(tput sgr0) 1st commit"
-        assert ${lines[3]} same_as "$(tput setaf 3)${prefix}v1             $(tput sgr0) 1st commit"
-        assert ${lines[4]} same_as "$(tput setaf 3)${prefix}v2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)${prefix}3e209a3        $(tput sgr0) 1st commit"
+        assert ${lines[1]} same_as "$(tput setaf 3)--source=another-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)--source=master         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)--source=v1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)--source=v2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)--source=3e209a3        $(tput sgr0) 1st commit"
     }
 
     prefix=--source=
@@ -383,11 +383,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "$(tput setaf 3)${prefix}another-branch $(tput sgr0)  2nd commit"
-        assert ${lines[2]} same_as "$(tput setaf 3)${prefix}master         $(tput sgr0) 1st commit"
-        assert ${lines[3]} same_as "$(tput setaf 3)${prefix}v1             $(tput sgr0) 1st commit"
-        assert ${lines[4]} same_as "$(tput setaf 3)${prefix}v2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)${prefix}3e209a3        $(tput sgr0) 1st commit"
+        assert ${lines[1]} same_as "$(tput setaf 3)another-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)3e209a3        $(tput sgr0) 1st commit"
     }
 
     prefix=
@@ -402,11 +402,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "$(tput setaf 3)${prefix}another-branch $(tput sgr0)  2nd commit"
-        assert ${lines[2]} same_as "$(tput setaf 3)${prefix}master         $(tput sgr0) 1st commit"
-        assert ${lines[3]} same_as "$(tput setaf 3)${prefix}v1             $(tput sgr0) 1st commit"
-        assert ${lines[4]} same_as "$(tput setaf 3)${prefix}v2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)${prefix}3e209a3        $(tput sgr0) 1st commit"
+        assert ${lines[1]} same_as "$(tput setaf 3)--fixup=another-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)--fixup=master         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)--fixup=v1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)--fixup=v2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)--fixup=3e209a3        $(tput sgr0) 1st commit"
     }
 
     prefix=--fixup=
@@ -421,11 +421,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "$(tput setaf 3)${prefix}another-branch $(tput sgr0)  2nd commit"
-        assert ${lines[2]} same_as "$(tput setaf 3)${prefix}master         $(tput sgr0) 1st commit"
-        assert ${lines[3]} same_as "$(tput setaf 3)${prefix}v1             $(tput sgr0) 1st commit"
-        assert ${lines[4]} same_as "$(tput setaf 3)${prefix}v2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)${prefix}3e209a3        $(tput sgr0) 1st commit"
+        assert ${lines[1]} same_as "$(tput setaf 3)--reedit-message=another-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)--reedit-message=master         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)--reedit-message=v1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)--reedit-message=v2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)--reedit-message=3e209a3        $(tput sgr0) 1st commit"
     }
 
     prefix=--reedit-message=
@@ -440,11 +440,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "$(tput setaf 3)${prefix}another-branch $(tput sgr0)  2nd commit"
-        assert ${lines[2]} same_as "$(tput setaf 3)${prefix}master         $(tput sgr0) 1st commit"
-        assert ${lines[3]} same_as "$(tput setaf 3)${prefix}v1             $(tput sgr0) 1st commit"
-        assert ${lines[4]} same_as "$(tput setaf 3)${prefix}v2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)${prefix}3e209a3        $(tput sgr0) 1st commit"
+        assert ${lines[1]} same_as "$(tput setaf 3)--reuse-message=another-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)--reuse-message=master         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)--reuse-message=v1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)--reuse-message=v2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)--reuse-message=3e209a3        $(tput sgr0) 1st commit"
     }
 
     prefix=--reuse-message=
@@ -459,11 +459,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "$(tput setaf 3)${prefix}another-branch $(tput sgr0)  2nd commit"
-        assert ${lines[2]} same_as "$(tput setaf 3)${prefix}master         $(tput sgr0) 1st commit"
-        assert ${lines[3]} same_as "$(tput setaf 3)${prefix}v1             $(tput sgr0) 1st commit"
-        assert ${lines[4]} same_as "$(tput setaf 3)${prefix}v2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)${prefix}3e209a3        $(tput sgr0) 1st commit"
+        assert ${lines[1]} same_as "$(tput setaf 3)--squash=another-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)--squash=master         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)--squash=v1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)--squash=v2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)--squash=3e209a3        $(tput sgr0) 1st commit"
     }
 
     prefix=--squash=
@@ -708,8 +708,8 @@
 
         run cat
         assert ${#lines} equals 2
-        assert ${lines[1]} same_as "$(tput setaf 3)6088ecf $(tput sgr0) ${prefix} 2nd commit"
-        assert ${lines[2]} same_as "$(tput setaf 3)3e209a3 $(tput sgr0) ${prefix}1st commit"
+        assert ${lines[1]} same_as "$(tput setaf 3)6088ecf $(tput sgr0) --message= 2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)3e209a3 $(tput sgr0) --message=1st commit"
     }
 
     prefix=--message=
