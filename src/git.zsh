@@ -272,8 +272,9 @@ _fzf_complete_git-commits() {
     shift
 
     _fzf_complete "--ansi --tiebreak=index $fzf_options" $@ < <({
-        git for-each-ref refs/heads refs/remotes refs/tags --format='%(refname:short) %(contents:subject)' 2> /dev/null
-        git log --format='%h %s' 2> /dev/null
+        git for-each-ref refs/heads refs/remotes --format='%(refname:short) branch %(contents:subject)' 2> /dev/null
+        git for-each-ref refs/tags --format='%(refname:short) tag %(contents:subject)' 2> /dev/null
+        git log --format='%h commit %s' 2> /dev/null
     } | awk -v prefix=$prefix_option '{ print prefix $0 }' | _fzf_complete_git_tabularize)
 }
 
