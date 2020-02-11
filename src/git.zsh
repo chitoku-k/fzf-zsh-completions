@@ -176,12 +176,12 @@ _fzf_complete_git() {
                 local strategy_options=(
                     diff-algorithm=histogram
                     diff-algorithm=minimal
-                    diff-algorithm=myery
+                    diff-algorithm=myers
                     diff-algorithm=patience
-                    find-rename
-                    find-rename=
-                    histogram
+                    find-renames
+                    find-renames=
                     ignore-all-space
+                    ignore-cr-at-eol
                     ignore-space-at-eol
                     ignore-space-change
                     no-renames
