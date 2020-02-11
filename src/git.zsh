@@ -1,5 +1,8 @@
 #!/usr/bin/env zsh
 
+autoload -U colors
+colors
+
 _fzf_complete_awk_functions='
     function colorize_git_status(input, color1, color2, reset) {
         index_status = substr(input, 1, 1)
@@ -252,9 +255,9 @@ _fzf_complete_git-unstaged-files() {
             if [[ $previous_status != R ]]; then
                 awk \
                     -v RS='' \
-                    -v green=$(tput setaf 2) \
-                    -v red=$(tput setaf 1) \
-                    -v reset=$(tput sgr0) '
+                    -v green=${fg[green]} \
+                    -v red=${fg[red]} \
+                    -v reset=$reset_color '
                             '$_fzf_complete_awk_functions'
                             /^.[^ ]/ {
                             printf "%s%c", colorize_git_status($0, green, red, reset), 0
@@ -360,8 +363,8 @@ _fzf_complete_git_parse_completing_option() {
 
 _fzf_complete_git_tabularize() {
     awk \
-        -v yellow=$(tput setaf 3) \
-        -v reset=$(tput sgr0) '
+        -v yellow=${fg[yellow]} \
+        -v reset=$reset_color '
         {
             refnames[NR] = $1
 
