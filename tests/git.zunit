@@ -1437,25 +1437,25 @@
 
         run cat
         assert ${#lines} equals 19
-        assert ${lines[1]} same_as ${prefix}diff-algorithm=histogram
-        assert ${lines[2]} same_as ${prefix}diff-algorithm=minimal
-        assert ${lines[3]} same_as ${prefix}diff-algorithm=myery
-        assert ${lines[4]} same_as ${prefix}diff-algorithm=patience
-        assert ${lines[5]} same_as ${prefix}find-rename
-        assert ${lines[6]} same_as ${prefix}find-rename=
-        assert ${lines[7]} same_as ${prefix}histogram
-        assert ${lines[8]} same_as ${prefix}ignore-all-space
-        assert ${lines[9]} same_as ${prefix}ignore-space-at-eol
-        assert ${lines[10]} same_as ${prefix}ignore-space-change
-        assert ${lines[11]} same_as ${prefix}no-renames
-        assert ${lines[12]} same_as ${prefix}no-renormalize
-        assert ${lines[13]} same_as ${prefix}ours
-        assert ${lines[14]} same_as ${prefix}patience
-        assert ${lines[15]} same_as ${prefix}rename-threshold=
-        assert ${lines[16]} same_as ${prefix}renormalize
-        assert ${lines[17]} same_as ${prefix}subtree
-        assert ${lines[18]} same_as ${prefix}subtree=
-        assert ${lines[19]} same_as ${prefix}theirs
+        assert ${lines[1]} same_as --strategy-option=diff-algorithm=histogram
+        assert ${lines[2]} same_as --strategy-option=diff-algorithm=minimal
+        assert ${lines[3]} same_as --strategy-option=diff-algorithm=myery
+        assert ${lines[4]} same_as --strategy-option=diff-algorithm=patience
+        assert ${lines[5]} same_as --strategy-option=find-rename
+        assert ${lines[6]} same_as --strategy-option=find-rename=
+        assert ${lines[7]} same_as --strategy-option=histogram
+        assert ${lines[8]} same_as --strategy-option=ignore-all-space
+        assert ${lines[9]} same_as --strategy-option=ignore-space-at-eol
+        assert ${lines[10]} same_as --strategy-option=ignore-space-change
+        assert ${lines[11]} same_as --strategy-option=no-renames
+        assert ${lines[12]} same_as --strategy-option=no-renormalize
+        assert ${lines[13]} same_as --strategy-option=ours
+        assert ${lines[14]} same_as --strategy-option=patience
+        assert ${lines[15]} same_as --strategy-option=rename-threshold=
+        assert ${lines[16]} same_as --strategy-option=renormalize
+        assert ${lines[17]} same_as --strategy-option=subtree
+        assert ${lines[18]} same_as --strategy-option=subtree=
+        assert ${lines[19]} same_as --strategy-option=theirs
     }
 
     prefix=--strategy-option=
@@ -1543,11 +1543,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "$(tput setaf 3)${prefix}another-branch $(tput sgr0)  2nd commit"
-        assert ${lines[2]} same_as "$(tput setaf 3)${prefix}master         $(tput sgr0) 1st commit"
-        assert ${lines[3]} same_as "$(tput setaf 3)${prefix}v1             $(tput sgr0) 1st commit"
-        assert ${lines[4]} same_as "$(tput setaf 3)${prefix}v2             $(tput sgr0)  2nd commit"
-        assert ${lines[5]} same_as "$(tput setaf 3)${prefix}3e209a3        $(tput sgr0) 1st commit"
+        assert ${lines[1]} same_as "$(tput setaf 3)--shallow-exclude=another-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)--shallow-exclude=master         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)--shallow-exclude=v1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)--shallow-exclude=v2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)--shallow-exclude=3e209a3        $(tput sgr0) 1st commit"
     }
 
     prefix=--shallow-exclude=
@@ -1808,28 +1808,6 @@
     assert $? equals 0
 }
 
-@test 'Testing completion: git pull --date=**' {
-    _fzf_complete() {
-        fail '_fzf_complete should not be invoked'
-    }
-
-    prefix=--date=
-    _fzf_complete_git 'git pull '
-
-    assert $? equals 0
-}
-
-@test 'Testing completion: git pull --date **' {
-    _fzf_complete() {
-        fail '_fzf_complete should not be invoked'
-    }
-
-    prefix=
-    _fzf_complete_git 'git pull --date '
-
-    assert $? equals 0
-}
-
 @test 'Testing completion: git pull **' {
     run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
     run git remote add upstream git@github.com:example-fork/fzf-zsh-completions
@@ -1871,7 +1849,7 @@
     _fzf_complete_git 'git pull origin '
 }
 
-@test 'Testing completion: git pull --recurse-submodules=yes --rebase **' {
+@test 'Testing completion: git pull --cleanup strip --rebase **' {
     run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
     run git remote add upstream git@github.com:example-fork/fzf-zsh-completions
     run git remote add example example
@@ -1879,7 +1857,7 @@
     _fzf_complete() {
         assert $# equals 2
         assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git pull --recurse-submodules=yes --rebase '
+        assert $2 same_as 'git pull --cleanup strip --rebase '
 
         run cat
         assert ${#lines} equals 3
@@ -1889,10 +1867,10 @@
     }
 
     prefix=
-    _fzf_complete_git 'git pull --recurse-submodules=yes --rebase '
+    _fzf_complete_git 'git pull --cleanup strip --rebase '
 }
 
-@test 'Testing completion: git pull --recurse-submodules=yes --rebase origin --cleanup strip **' {
+@test 'Testing completion: git pull origin --cleanup strip --quiet **' {
     run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
     run git symbolic-ref refs/remotes/origin/master refs/heads/master
     run git symbolic-ref refs/remotes/origin/another-branch refs/heads/another-branch
@@ -1900,7 +1878,7 @@
     _fzf_complete() {
         assert $# equals 2
         assert $1 same_as '--ansi --tiebreak=index --multi'
-        assert $2 same_as 'git pull --recurse-submodules=yes --rebase origin --cleanup strip '
+        assert $2 same_as 'git pull origin --cleanup strip --quiet '
 
         run cat
         assert ${#lines} equals 2
@@ -1909,8 +1887,50 @@
     }
 
     prefix=
-    _fzf_complete_git 'git pull --recurse-submodules=yes --rebase origin --cleanup strip '
+    _fzf_complete_git 'git pull origin --cleanup strip --quiet '
 }
+
+@test 'Testing completion: git pull -- **' {
+    run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
+    run git remote add upstream git@github.com:example-fork/fzf-zsh-completions
+    run git remote add example example
+
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git pull -- '
+
+        run cat
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "$(tput setaf 3)example  $(tput sgr0) example (fetch)"
+        assert ${lines[2]} same_as "$(tput setaf 3)origin   $(tput sgr0) git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
+        assert ${lines[3]} same_as "$(tput setaf 3)upstream $(tput sgr0) git@github.com:example-fork/fzf-zsh-completions (fetch)"
+    }
+
+    prefix=
+    _fzf_complete_git 'git pull -- '
+}
+
+@test 'Testing completion: git pull -- origin **' {
+    run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
+    run git symbolic-ref refs/remotes/origin/master refs/heads/master
+    run git symbolic-ref refs/remotes/origin/another-branch refs/heads/another-branch
+
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index --multi'
+        assert $2 same_as 'git pull -- origin '
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "$(tput setaf 3)origin/another-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)origin/master         $(tput sgr0) 1st commit"
+    }
+
+    prefix=
+    _fzf_complete_git 'git pull -- origin '
+}
+
 
 @test 'Testing completion (alias): git commit --squash **' {
     run git config alias.squash 'commit --squash'

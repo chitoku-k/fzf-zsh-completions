@@ -218,28 +218,14 @@ _fzf_complete_git() {
                 ;;
 
             *)
-                local argument_position=${${(z)arguments}[(ib:3:)[^-]*]}
-                local floating_arguments_number=0
-                local repository
-                while (( argument_position <= ${#${(z)arguments}} )); do
-                    local argument=${${${(z)arguments}[$(( argument_position - 1 ))]}##-##}
-                    if [[ ${${git_options_argument_required//-}[(r)$argument]} != $argument ]]; then
-                        if (( ++floating_arguments_number == 1 )); then
-                            repository=${${(z)arguments}[$argument_position]}
-                        fi
-                    fi
-                    argument_position=${${(z)arguments}[(ib:(( argument_position + 1 )):)[^-]*]}
-                done
+                local repository=$(_fzf_complete_git_parse_argument "$arguments" 1 "${(F)git_options_argument_required}")
 
-                if [[ $floating_arguments_number = 0 ]]; then
+                if [[ -z $repository ]]; then
                     _fzf_complete_git-remotes '' $@
                     return
                 fi
 
-                if [[ $floating_arguments_number = 1 ]]; then
-                    repository=$repository _fzf_complete_git-refs '--multi' $@
-                    return
-                fi
+                repository=$repository _fzf_complete_git-refs '--multi' $@
                 ;;
         esac
 
@@ -371,6 +357,8 @@ _fzf_complete_git-refs() {
 
     local ref=${${$(git config remote.$repository.fetch 2> /dev/null)#*:}%\*}
 
+    [[ -z $ref ]] && return
+
     _fzf_complete "--ansi --tiebreak=index $fzf_options" $@ < <(
         git for-each-ref $ref --format='%(refname:short) %(contents:subject)' 2> /dev/null |
         awk -v prefix=$prefix_option '{ print prefix $0 }' | _fzf_complete_git_tabularize
@@ -492,6 +480,24 @@ _fzf_complete_git_parse_completing_option() {
             return 2
             ;;
     esac
+}
+
+_fzf_complete_git_parse_argument() {
+    local arguments=(${(z)1})
+    local index=$2
+    local options_argument_required=(${(z)3})
+
+    local argument_position=${arguments[(ib:3:)[^-]*]}
+    local command_arguments=()
+    while (( argument_position <= ${#arguments} )); do
+        local argument=${${arguments[$(( argument_position - 1 ))]}##-##}
+        if [[ -z ${${options_argument_required##-##}[(r)$argument]} ]] || [[ ${${options_argument_required##-##}[(r)$argument]} != $argument ]]; then
+            command_arguments+=${arguments[$argument_position]}
+        fi
+        argument_position=${arguments[(ib:(( argument_position + 1 )):)[^-]*]}
+    done
+
+    echo ${command_arguments[$index]}
 }
 
 _fzf_complete_git_tabularize() {
