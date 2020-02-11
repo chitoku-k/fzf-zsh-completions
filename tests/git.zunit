@@ -1282,7 +1282,7 @@
 
 @test 'Testing completion: git pull --recurse-submodules **' {
     run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
-    run git remote add upstream git@github.com:example-fork/fzf-zsh-completions
+    run git remote add upstream git@example.com:example/fzf-zsh-completions
     run git remote add example example
 
     _fzf_complete() {
@@ -1294,7 +1294,7 @@
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "$(tput setaf 3)example  $(tput sgr0) example (fetch)"
         assert ${lines[2]} same_as "$(tput setaf 3)origin   $(tput sgr0) git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
-        assert ${lines[3]} same_as "$(tput setaf 3)upstream $(tput sgr0) git@github.com:example-fork/fzf-zsh-completions (fetch)"
+        assert ${lines[3]} same_as "$(tput setaf 3)upstream $(tput sgr0) git@example.com:example/fzf-zsh-completions (fetch)"
     }
 
     prefix=
@@ -1406,12 +1406,12 @@
         assert ${#lines} equals 19
         assert ${lines[1]} same_as diff-algorithm=histogram
         assert ${lines[2]} same_as diff-algorithm=minimal
-        assert ${lines[3]} same_as diff-algorithm=myery
+        assert ${lines[3]} same_as diff-algorithm=myers
         assert ${lines[4]} same_as diff-algorithm=patience
-        assert ${lines[5]} same_as find-rename
-        assert ${lines[6]} same_as find-rename=
-        assert ${lines[7]} same_as histogram
-        assert ${lines[8]} same_as ignore-all-space
+        assert ${lines[5]} same_as find-renames
+        assert ${lines[6]} same_as find-renames=
+        assert ${lines[7]} same_as ignore-all-space
+        assert ${lines[8]} same_as ignore-cr-at-eol
         assert ${lines[9]} same_as ignore-space-at-eol
         assert ${lines[10]} same_as ignore-space-change
         assert ${lines[11]} same_as no-renames
@@ -1439,12 +1439,11 @@
         assert ${#lines} equals 19
         assert ${lines[1]} same_as --strategy-option=diff-algorithm=histogram
         assert ${lines[2]} same_as --strategy-option=diff-algorithm=minimal
-        assert ${lines[3]} same_as --strategy-option=diff-algorithm=myery
-        assert ${lines[4]} same_as --strategy-option=diff-algorithm=patience
-        assert ${lines[5]} same_as --strategy-option=find-rename
-        assert ${lines[6]} same_as --strategy-option=find-rename=
-        assert ${lines[7]} same_as --strategy-option=histogram
-        assert ${lines[8]} same_as --strategy-option=ignore-all-space
+        assert ${lines[3]} same_as --strategy-option=diff-algorithm=myers
+        assert ${lines[5]} same_as --strategy-option=find-renames
+        assert ${lines[6]} same_as --strategy-option=find-renames=
+        assert ${lines[7]} same_as --strategy-option=ignore-all-space
+        assert ${lines[8]} same_as --strategy-option=ignore-cr-at-eol
         assert ${lines[9]} same_as --strategy-option=ignore-space-at-eol
         assert ${lines[10]} same_as --strategy-option=ignore-space-change
         assert ${lines[11]} same_as --strategy-option=no-renames
@@ -1472,12 +1471,12 @@
         assert ${#lines} equals 19
         assert ${lines[1]} same_as diff-algorithm=histogram
         assert ${lines[2]} same_as diff-algorithm=minimal
-        assert ${lines[3]} same_as diff-algorithm=myery
+        assert ${lines[3]} same_as diff-algorithm=myers
         assert ${lines[4]} same_as diff-algorithm=patience
-        assert ${lines[5]} same_as find-rename
-        assert ${lines[6]} same_as find-rename=
-        assert ${lines[7]} same_as histogram
-        assert ${lines[8]} same_as ignore-all-space
+        assert ${lines[5]} same_as find-renames
+        assert ${lines[6]} same_as find-renames=
+        assert ${lines[7]} same_as ignore-all-space
+        assert ${lines[8]} same_as ignore-cr-at-eol
         assert ${lines[9]} same_as ignore-space-at-eol
         assert ${lines[10]} same_as ignore-space-change
         assert ${lines[11]} same_as no-renames
@@ -1516,7 +1515,7 @@
 
 @test 'Testing completion: git pull --rebase **' {
     run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
-    run git remote add upstream git@github.com:example-fork/fzf-zsh-completions
+    run git remote add upstream git@example.com:example/fzf-zsh-completions
     run git remote add example example
 
     _fzf_complete() {
@@ -1528,7 +1527,7 @@
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "$(tput setaf 3)example  $(tput sgr0) example (fetch)"
         assert ${lines[2]} same_as "$(tput setaf 3)origin   $(tput sgr0) git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
-        assert ${lines[3]} same_as "$(tput setaf 3)upstream $(tput sgr0) git@github.com:example-fork/fzf-zsh-completions (fetch)"
+        assert ${lines[3]} same_as "$(tput setaf 3)upstream $(tput sgr0) git@example.com:example/fzf-zsh-completions (fetch)"
     }
 
     prefix=
@@ -1580,9 +1579,12 @@
         assert $2 same_as 'git pull '
 
         run cat
-        assert ${#lines} equals 2
-        assert ${lines[1]} same_as --negotiation-tip=commit
-        assert ${lines[2]} same_as --negotiation-tip=glob
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "$(tput setaf 3)--negotiation-tip=another-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)--negotiation-tip=master         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)--negotiation-tip=v1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)--negotiation-tip=v2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)--negotiation-tip=3e209a3        $(tput sgr0) 1st commit"
     }
 
     prefix=--negotiation-tip=
@@ -1596,63 +1598,16 @@
         assert $2 same_as 'git pull --negotiation-tip '
 
         run cat
-        assert ${#lines} equals 2
-        assert ${lines[1]} same_as commit
-        assert ${lines[2]} same_as glob
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "$(tput setaf 3)another-branch $(tput sgr0)  2nd commit"
+        assert ${lines[2]} same_as "$(tput setaf 3)master         $(tput sgr0) 1st commit"
+        assert ${lines[3]} same_as "$(tput setaf 3)v1             $(tput sgr0) 1st commit"
+        assert ${lines[4]} same_as "$(tput setaf 3)v2             $(tput sgr0)  2nd commit"
+        assert ${lines[5]} same_as "$(tput setaf 3)3e209a3        $(tput sgr0) 1st commit"
     }
 
     prefix=
     _fzf_complete_git 'git pull --negotiation-tip '
-}
-
-@test 'Testing completion: git pull --gpg-sign=**' {
-    skip $'This completion isn\'t implemented yet'
-}
-
-@test 'Testing completion: git pull --gpg-sign **' {
-    run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
-    run git remote add upstream git@github.com:example-fork/fzf-zsh-completions
-    run git remote add example example
-
-    _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git pull --gpg-sign '
-
-        run cat
-        assert ${#lines} equals 3
-        assert ${lines[1]} same_as "$(tput setaf 3)example  $(tput sgr0) example (fetch)"
-        assert ${lines[2]} same_as "$(tput setaf 3)origin   $(tput sgr0) git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
-        assert ${lines[3]} same_as "$(tput setaf 3)upstream $(tput sgr0) git@github.com:example-fork/fzf-zsh-completions (fetch)"
-    }
-
-    prefix=
-    _fzf_complete_git 'git pull --gpg-sign '
-}
-
-@test 'Testing completion: git pull -S**' {
-    skip $'This completion isn\'t implemented yet'
-}
-
-@test 'Testing completion: git pull -S **' {
-    run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
-    run git remote add upstream git@github.com:example-fork/fzf-zsh-completions
-    run git remote add example example
-
-    _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git pull -S '
-
-        run cat
-        assert ${#lines} equals 3
-        assert ${lines[1]} same_as "$(tput setaf 3)example  $(tput sgr0) example (fetch)"
-        assert ${lines[2]} same_as "$(tput setaf 3)origin   $(tput sgr0) git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
-        assert ${lines[3]} same_as "$(tput setaf 3)upstream $(tput sgr0) git@github.com:example-fork/fzf-zsh-completions (fetch)"
-    }
-
-    prefix=
-    _fzf_complete_git 'git pull -S '
 }
 
 @test 'Testing completion: git pull -o **' {
@@ -1745,7 +1700,7 @@
 
 @test 'Testing completion: git pull --log **' {
     run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
-    run git remote add upstream git@github.com:example-fork/fzf-zsh-completions
+    run git remote add upstream git@example.com:example/fzf-zsh-completions
     run git remote add example example
 
     _fzf_complete() {
@@ -1757,7 +1712,7 @@
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "$(tput setaf 3)example  $(tput sgr0) example (fetch)"
         assert ${lines[2]} same_as "$(tput setaf 3)origin   $(tput sgr0) git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
-        assert ${lines[3]} same_as "$(tput setaf 3)upstream $(tput sgr0) git@github.com:example-fork/fzf-zsh-completions (fetch)"
+        assert ${lines[3]} same_as "$(tput setaf 3)upstream $(tput sgr0) git@example.com:example/fzf-zsh-completions (fetch)"
     }
 
     prefix=
@@ -1810,7 +1765,7 @@
 
 @test 'Testing completion: git pull **' {
     run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
-    run git remote add upstream git@github.com:example-fork/fzf-zsh-completions
+    run git remote add upstream git@example.com:example/fzf-zsh-completions
     run git remote add example example
 
     _fzf_complete() {
@@ -1822,7 +1777,7 @@
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "$(tput setaf 3)example  $(tput sgr0) example (fetch)"
         assert ${lines[2]} same_as "$(tput setaf 3)origin   $(tput sgr0) git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
-        assert ${lines[3]} same_as "$(tput setaf 3)upstream $(tput sgr0) git@github.com:example-fork/fzf-zsh-completions (fetch)"
+        assert ${lines[3]} same_as "$(tput setaf 3)upstream $(tput sgr0) git@example.com:example/fzf-zsh-completions (fetch)"
     }
 
     prefix=
@@ -1851,7 +1806,7 @@
 
 @test 'Testing completion: git pull --cleanup strip --rebase **' {
     run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
-    run git remote add upstream git@github.com:example-fork/fzf-zsh-completions
+    run git remote add upstream git@example.com:example/fzf-zsh-completions
     run git remote add example example
 
     _fzf_complete() {
@@ -1863,7 +1818,7 @@
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "$(tput setaf 3)example  $(tput sgr0) example (fetch)"
         assert ${lines[2]} same_as "$(tput setaf 3)origin   $(tput sgr0) git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
-        assert ${lines[3]} same_as "$(tput setaf 3)upstream $(tput sgr0) git@github.com:example-fork/fzf-zsh-completions (fetch)"
+        assert ${lines[3]} same_as "$(tput setaf 3)upstream $(tput sgr0) git@example.com:example/fzf-zsh-completions (fetch)"
     }
 
     prefix=
@@ -1892,7 +1847,7 @@
 
 @test 'Testing completion: git pull -- **' {
     run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
-    run git remote add upstream git@github.com:example-fork/fzf-zsh-completions
+    run git remote add upstream git@example.com:example/fzf-zsh-completions
     run git remote add example example
 
     _fzf_complete() {
@@ -1904,7 +1859,7 @@
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "$(tput setaf 3)example  $(tput sgr0) example (fetch)"
         assert ${lines[2]} same_as "$(tput setaf 3)origin   $(tput sgr0) git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
-        assert ${lines[3]} same_as "$(tput setaf 3)upstream $(tput sgr0) git@github.com:example-fork/fzf-zsh-completions (fetch)"
+        assert ${lines[3]} same_as "$(tput setaf 3)upstream $(tput sgr0) git@example.com:example/fzf-zsh-completions (fetch)"
     }
 
     prefix=

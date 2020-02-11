@@ -207,8 +207,7 @@ _fzf_complete_git() {
                 ;;
 
             --negotiation-tip)
-                local negotiation_tips=(commit glob)
-                _fzf_complete_git_git_constants '' "${(F)negotiation_tips}" $@
+                _fzf_complete_git-commits '' $@
                 ;;
 
             --gpg-sign|-S)
@@ -357,10 +356,8 @@ _fzf_complete_git-refs() {
 
     local ref=${${$(git config remote.$repository.fetch 2> /dev/null)#*:}%\*}
 
-    [[ -z $ref ]] && return
-
     _fzf_complete "--ansi --tiebreak=index $fzf_options" $@ < <(
-        git for-each-ref $ref --format='%(refname:short) %(contents:subject)' 2> /dev/null |
+        git for-each-ref "$ref" --format='%(refname:short) %(contents:subject)' 2> /dev/null |
         awk -v prefix=$prefix_option '{ print prefix $0 }' | _fzf_complete_git_tabularize
     )
 }
