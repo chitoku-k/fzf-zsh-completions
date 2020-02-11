@@ -562,7 +562,7 @@ _fzf_complete_git_tabularize() {
         }
         END {
             for (i = 1; i <= length(refnames); ++i) {
-                printf "%s%-" refname_max "s %s %s %s %s\n", yellow, refnames[i], green, kind[i], reset, messages[i]
+                printf "%s%-" refname_max "s %s%s%s %s\n", yellow, refnames[i], green, kind[i], reset, messages[i]
             }
         }
     '
