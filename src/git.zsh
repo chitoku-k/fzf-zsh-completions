@@ -273,7 +273,7 @@ _fzf_complete_git-commits() {
 
     _fzf_complete "--ansi --tiebreak=index $fzf_options" $@ < <({
         git for-each-ref refs/heads refs/remotes --format='%(refname:short) branch %(contents:subject)' 2> /dev/null
-        git for-each-ref refs/tags --format='%(refname:short) tag %(contents:subject)' 2> /dev/null
+        git for-each-ref refs/tags --format='%(refname:short) tag    %(contents:subject)' 2> /dev/null
         git log --format='%h commit %s' 2> /dev/null
     } | awk -v prefix=$prefix_option '{ print prefix $0 }' | _fzf_complete_git_tabularize)
 }
@@ -547,20 +547,22 @@ _fzf_complete_git_parse_argument() {
 _fzf_complete_git_tabularize() {
     awk \
         -v yellow=${fg[yellow]} \
+        -v green=${fg[green]} \
         -v reset=$reset_color '
         {
             refnames[NR] = $1
+            kind[NR] = $2
 
             if (length($1) > refname_max) {
                 refname_max = length($1)
             }
 
             match($0, / /)
-            messages[NR] = substr($0, RSTART + RLENGTH)
+            messages[NR] = substr($0, RSTART + RLENGTH + length(kind[NR]))
         }
         END {
             for (i = 1; i <= length(refnames); ++i) {
-                printf "%s%-" refname_max "s %s %s\n", yellow, refnames[i], reset, messages[i]
+                printf "%s%-" refname_max "s %s %s %s %s\n", yellow, refnames[i], green, kind[i], reset, messages[i]
             }
         }
     '
