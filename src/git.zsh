@@ -1,5 +1,8 @@
 #!/usr/bin/env zsh
 
+autoload -U colors
+colors
+
 _fzf_complete_awk_functions='
     function colorize_git_status(input, color1, color2, reset) {
         index_status = substr(input, 1, 1)
@@ -63,7 +66,7 @@ _fzf_complete_git() {
     local subcommand=${${(Q)${(z)arguments}}[2]}
     local last_argument=${${(Q)${(z)arguments}}[-1]}
 
-    if [[ $subcommand =~ '(checkout|log|rebase|reset)' ]]; then
+    if [[ $subcommand =~ '(checkout|log|rebase|reset|switch)' ]]; then
         if [[ ${${(Q)${(z)arguments}}[(r)--]} = -- ]]; then
             if [[ $subcommand = 'checkout' ]]; then
                 _fzf_complete_git-unstaged-files '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
@@ -82,6 +85,32 @@ _fzf_complete_git() {
 
     if [[ $subcommand =~ '(branch|cherry-pick|merge|revert)' ]]; then
         _fzf_complete_git-commits '--multi' $@
+        return
+    fi
+
+    if [[ $subcommand = 'restore' ]]; then
+        local prefix_option completing_option
+        local git_options_argument_required=(--source)
+        local git_options_argument_optional=()
+
+        if completing_option=$(_fzf_complete_git_parse_completing_option "$prefix" "$last_argument" "${(F)git_options_argument_required}" "${(F)git_options_argument_optional}"); then
+            if [[ $completing_option = --* ]]; then
+                prefix_option=$completing_option=
+            else
+                prefix_option=${prefix%%${completing_option[-1]}*}${completing_option[-1]}
+            fi
+        fi
+
+        case $completing_option in
+            --source)
+                _fzf_complete_git-commits '' $@
+                ;;
+
+            *)
+                _fzf_complete_git-ls-files '' '--multi' $@
+                ;;
+        esac
+
         return
     fi
 
@@ -230,6 +259,11 @@ _fzf_complete_git() {
         return
     fi
 
+    if [[ $subcommand = 'rm' ]]; then
+        _fzf_complete_git-ls-files '' '--multi' $@
+        return
+    fi
+
     _fzf_path_completion "$prefix" $@
 }
 
@@ -309,9 +343,9 @@ _fzf_complete_git-unstaged-files() {
             if [[ $previous_status != R ]]; then
                 awk \
                     -v RS='' \
-                    -v green=$(tput setaf 2) \
-                    -v red=$(tput setaf 1) \
-                    -v reset=$(tput sgr0) '
+                    -v green=${fg[green]} \
+                    -v red=${fg[red]} \
+                    -v reset=$reset_color '
                             '$_fzf_complete_awk_functions'
                             /^.[^ ]/ {
                             printf "%s%c", colorize_git_status($0, green, red, reset), 0
@@ -505,8 +539,8 @@ _fzf_complete_git_parse_argument() {
 
 _fzf_complete_git_tabularize() {
     awk \
-        -v yellow=$(tput setaf 3) \
-        -v reset=$(tput sgr0) '
+        -v yellow=${fg[yellow]} \
+        -v reset=$reset_color '
         {
             refnames[NR] = $1
 
