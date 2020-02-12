@@ -530,12 +530,12 @@ _fzf_complete_git_parse_argument() {
     local i
     local command_arguments=()
     for i in {3..${#arguments}}; do
-        if [[ ${(Q)arguments[$i]} == -(#c1,2)* ]]; then
+        if [[ ${(Q)arguments[$i]} = -(#c1,2)* ]]; then
             continue
         fi
 
-        local before_argument=$(_fzf_complete_git_parse_completing_option '' ${(Q)arguments[(( i - 1 ))]} $options_argument_required '' )
-        if [[ -n $before_argument ]] && [[ ${options_argument_required[(r)$before_argument]} == $before_argument ]]; then
+        local previous_argument=$(_fzf_complete_git_parse_completing_option '' ${(Q)arguments[(( i - 1 ))]} $options_argument_required '' )
+        if [[ -n $previous_argument ]] && [[ ${options_argument_required[(r)$previous_argument]} = $previous_argument ]]; then
             continue
         fi
 
