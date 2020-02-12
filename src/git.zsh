@@ -4,9 +4,9 @@ autoload -U colors
 colors
 
 _fzf_complete_awk_functions='
-    function colorize_git_status(input, color1, color2, reset) {
-        index_status = substr(input, 1, 1)
-        work_tree_status = substr(input, 2, 1)
+    function colorize_git_status(status, relative_from_top_level, relative_from_current, color1, color2, reset) {
+        index_status = substr(status, 1, 1)
+        work_tree_status = substr(status, 2, 1)
 
         if (index_status ~ /[MADRC]/) {
             index_status_color = color1
@@ -18,7 +18,19 @@ _fzf_complete_awk_functions='
             work_tree_status_color = color2
         }
 
-        return sprintf("%s%s%s%s%s%s %s", index_status_color, index_status, reset, work_tree_status_color, work_tree_status, reset, substr(input, 4))
+        path = substr(status, 4)
+        match(path, relative_from_top_level)
+        if (RLENGTH > 0) {
+            if (RSTART == 1) {
+                path = substr(path, RLENGTH + 1)
+            } else {
+                path = relative_from_current path
+            }
+        } else {
+            path = relative_from_current path
+        }
+
+        return sprintf("%s%s%s%s%s%s %s", index_status_color, index_status, reset, work_tree_status_color, work_tree_status, reset, path)
     }
 
     function trim_prefix(str, prefix) {
@@ -338,17 +350,21 @@ _fzf_complete_git-unstaged-files() {
         local previous_status
         local filename
         local files=$(git status --porcelain=v1 -z ${(Z+n+)git_options} 2> /dev/null)
+        local relative_from_current=$(git rev-parse --show-cdup 2> /dev/null)
+        local relative_from_top_level=$(git rev-parse --show-prefix 2> /dev/null)
 
         for filename in ${(0)files}; do
             if [[ $previous_status != R ]]; then
                 awk \
                     -v RS='' \
+                    -v relative_from_top_level=$relative_from_top_level \
+                    -v relative_from_current=$relative_from_current \
                     -v green=${fg[green]} \
                     -v red=${fg[red]} \
                     -v reset=$reset_color '
                             '$_fzf_complete_awk_functions'
                             /^.[^ ]/ {
-                            printf "%s%c", colorize_git_status($0, green, red, reset), 0
+                            printf "%s%c", colorize_git_status($0, relative_from_top_level, relative_from_current, green, red, reset), 0
                         }
                     ' <<< $filename
             fi
