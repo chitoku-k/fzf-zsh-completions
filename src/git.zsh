@@ -543,7 +543,7 @@ _fzf_complete_git_parse_argument() {
     done
 
     echo ${command_arguments[$index]}
-    return $(( $index > ${#command_arguments} ))
+    return $(( index > #command_arguments ))
 }
 
 _fzf_complete_git_tabularize() {
