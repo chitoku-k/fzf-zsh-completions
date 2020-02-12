@@ -523,14 +523,23 @@ _fzf_complete_git_parse_argument() {
     local options_argument_required=(${(z)3})
     shift 3
 
-    local argument_position=${arguments[(ib:3:)(^((|[\'])-(#c1,2)*))]}
+    if (( ${#arguments} <= 2 )); then
+        return 1
+    fi
+
+    local i
     local command_arguments=()
-    while (( argument_position <= ${#arguments} )); do
-        local argument=${$(_fzf_complete_git_parse_completing_option '' ${(Q)${arguments[(( argument_position - 1 ))]}} $options_argument_required '')##-##}
-        if [[ -z ${${options_argument_required##-##}[(r)${(Q)argument}]} ]] || [[ ${${options_argument_required##-##}[(r)${(Q)argument}]} != ${(Q)argument} ]]; then
-            command_arguments+=${arguments[$argument_position]}
+    for i in {3..${#arguments}}; do
+        if [[ ${(Q)arguments[$i]} == -(#c1,2)* ]]; then
+            continue
         fi
-        argument_position=${arguments[(ib:(( argument_position + 1 )):)(^((|[\'])-(#c1,2)*))]}
+
+        local before_argument=$(_fzf_complete_git_parse_completing_option '' ${(Q)arguments[(( i - 1 ))]} $options_argument_required '' )
+        if [[ -n $before_argument ]] && [[ ${options_argument_required[(r)$before_argument]} == $before_argument ]]; then
+            continue
+        fi
+
+        command_arguments+=${arguments[$i]}
     done
 
     echo ${command_arguments[$index]}
