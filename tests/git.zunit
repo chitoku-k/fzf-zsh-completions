@@ -1355,7 +1355,6 @@
     _fzf_complete_git 'git add '
 }
 
-<<<<<<< HEAD
 @test 'Testing completion: git pull --recurse-submodules=**' {
     _fzf_complete() {
         assert $# equals 2
@@ -1979,8 +1978,6 @@
     _fzf_complete_git 'git pull -- origin '
 }
 
-
-=======
 @test 'Testing completion: git rm **' {
     run git checkout another-branch
     echo >> ' file3 containing space '
@@ -2016,7 +2013,6 @@
     _fzf_complete_git 'git rm '
 }
 
->>>>>>> master
 @test 'Testing completion (alias): git commit --squash **' {
     run git config alias.squash 'commit --squash'
 
