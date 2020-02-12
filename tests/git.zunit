@@ -2479,12 +2479,12 @@
         '--strategy-option=subtree'
     )
 
-    run _fzf_complete_git_git_constants_post <<< ${(F)input}
+    run _fzf_complete_git_git_constants_post <<< ${(F)input} \| tr '\n' ' '
 
     assert $state equals 0
     assert ${#lines} equals 1
 
-    assert ${lines[1]} same_as '--strategy-option=subtree'
+    assert ${lines[1]} same_as '--strategy-option=subtree '
 }
 
 @test 'Testing post: git constants ending with equal' {
@@ -2492,7 +2492,7 @@
         '--strategy-option=subtree='
     )
 
-    run _fzf_complete_git_git_constants_post <<< ${(F)input}
+    run _fzf_complete_git_git_constants_post <<< ${(F)input} \| tr '\n' ' '
 
     assert $state equals 0
     assert ${#lines} equals 1
