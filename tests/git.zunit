@@ -1205,41 +1205,6 @@
     _fzf_complete_git 'git commit '
 }
 
-@test 'Testing completion: git commit --untracked-files **' {
-    run git checkout another-branch
-    echo >> ' file3 containing space '
-    echo >> directory2/$'file4\ncontaining\nnewlines'
-    echo >> ' file5 containing space '
-    echo >> directory2/$'file6\ncontaining\nnewlines'
-
-    _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --read0 --print0 --multi '
-        assert $2 same_as 'git commit --untracked-files '
-
-        run cat
-        assert ${#lines} equals 3
-
-        actual1=(${(0)lines[1]})
-        assert ${#actual1} equals 3
-        assert ${actual1[1]} same_as " $reset_color${fg[red]}M$reset_color  file3 containing space "
-        assert ${actual1[2]} same_as " $reset_color${fg[red]}M$reset_color directory1/file2"
-        assert ${actual1[3]} same_as " $reset_color${fg[red]}M$reset_color directory2/file4"
-
-        actual2=(${(0)lines[2]})
-        assert ${#actual2} equals 1
-        assert ${actual2[1]} same_as 'containing'
-
-        actual3=(${(0)lines[3]})
-        assert ${#actual3} equals 2
-        assert ${actual3[1]} same_as 'newlines'
-        assert ${actual3[2]} same_as " $reset_color${fg[red]}M$reset_color file1"
-    }
-
-    prefix=
-    _fzf_complete_git 'git commit --untracked-files '
-}
-
 @test 'Testing completion: git commit **' {
     run git checkout another-branch
     echo >> ' file3 containing space '
@@ -1370,27 +1335,6 @@
 
     prefix=--recurse-submodules=
     _fzf_complete_git 'git pull '
-}
-
-@test 'Testing completion: git pull --recurse-submodules **' {
-    run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
-    run git remote add upstream git@example.com:example/fzf-zsh-completions
-    run git remote add example example
-
-    _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git pull --recurse-submodules '
-
-        run cat
-        assert ${#lines} equals 3
-        assert ${lines[1]} same_as "${fg[yellow]}example  $reset_color example (fetch)"
-        assert ${lines[2]} same_as "${fg[yellow]}origin   $reset_color git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
-        assert ${lines[3]} same_as "${fg[yellow]}upstream $reset_color git@example.com:example/fzf-zsh-completions (fetch)"
-    }
-
-    prefix=
-    _fzf_complete_git 'git pull --recurse-submodules '
 }
 
 @test 'Testing completion: git pull --cleanup=**' {
@@ -1605,27 +1549,6 @@
     _fzf_complete_git 'git pull '
 }
 
-@test 'Testing completion: git pull --rebase **' {
-    run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
-    run git remote add upstream git@example.com:example/fzf-zsh-completions
-    run git remote add example example
-
-    _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git pull --rebase '
-
-        run cat
-        assert ${#lines} equals 3
-        assert ${lines[1]} same_as "${fg[yellow]}example  $reset_color example (fetch)"
-        assert ${lines[2]} same_as "${fg[yellow]}origin   $reset_color git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
-        assert ${lines[3]} same_as "${fg[yellow]}upstream $reset_color git@example.com:example/fzf-zsh-completions (fetch)"
-    }
-
-    prefix=
-    _fzf_complete_git 'git pull --rebase '
-}
-
 @test 'Testing completion: git pull --shallow-exclude=**' {
     _fzf_complete() {
         assert $# equals 2
@@ -1788,27 +1711,6 @@
     _fzf_complete_git 'git pull '
 
     assert $? equals 0
-}
-
-@test 'Testing completion: git pull --log **' {
-    run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
-    run git remote add upstream git@example.com:example/fzf-zsh-completions
-    run git remote add example example
-
-    _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git pull --log '
-
-        run cat
-        assert ${#lines} equals 3
-        assert ${lines[1]} same_as "${fg[yellow]}example  $reset_color example (fetch)"
-        assert ${lines[2]} same_as "${fg[yellow]}origin   $reset_color git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
-        assert ${lines[3]} same_as "${fg[yellow]}upstream $reset_color git@example.com:example/fzf-zsh-completions (fetch)"
-    }
-
-    prefix=
-    _fzf_complete_git 'git pull --log '
 }
 
 @test 'Testing completion: git pull --server-option=**' {
@@ -2106,43 +2008,6 @@
 
     prefix=
     _fzf_complete_git 'git commit-cleanup '
-}
-
-@test 'Testing completion (alias): git commit --untracked-files **' {
-    run git checkout another-branch
-    run git config alias.commit-untracked 'commit --untracked-files'
-
-    echo >> ' file3 containing space '
-    echo >> directory2/$'file4\ncontaining\nnewlines'
-    echo >> ' file5 containing space '
-    echo >> directory2/$'file6\ncontaining\nnewlines'
-
-    _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --read0 --print0 --multi '
-        assert $2 same_as 'git commit-untracked '
-
-        run cat
-        assert ${#lines} equals 3
-
-        actual1=(${(0)lines[1]})
-        assert ${#actual1} equals 3
-        assert ${actual1[1]} same_as " $reset_color${fg[red]}M$reset_color  file3 containing space "
-        assert ${actual1[2]} same_as " $reset_color${fg[red]}M$reset_color directory1/file2"
-        assert ${actual1[3]} same_as " $reset_color${fg[red]}M$reset_color directory2/file4"
-
-        actual2=(${(0)lines[2]})
-        assert ${#actual2} equals 1
-        assert ${actual2[1]} same_as 'containing'
-
-        actual3=(${(0)lines[3]})
-        assert ${#actual3} equals 2
-        assert ${actual3[1]} same_as 'newlines'
-        assert ${actual3[2]} same_as " $reset_color${fg[red]}M$reset_color file1"
-    }
-
-    prefix=
-    _fzf_complete_git 'git commit-untracked '
 }
 
 @test 'Testing completion (alias): git commit **' {
