@@ -150,12 +150,12 @@ _fzf_complete_git() {
 
             --cleanup)
                 local cleanup_modes=(strip whitespace verbatim scissors default)
-                _fzf_complete '' $@ < <(awk -v prefix=$prefix_option '{ print prefix $0 }' <<< ${(F)cleanup_modes})
+                _fzf_complete_git_git_constants '' "${(F)cleanup_modes}" $@
                 ;;
 
             -u|--untracked-files)
                 local untracked_file_modes=(no normal all)
-                _fzf_complete '' $@ < <(awk -v prefix=$prefix_option '{ print prefix $0 }' <<< ${(F)untracked_file_modes})
+                _fzf_complete_git_git_constants '' "${(F)untracked_file_modes}" $@
                 ;;
 
             *)
@@ -168,6 +168,94 @@ _fzf_complete_git() {
 
     if [[ $subcommand = 'add' ]]; then
         _fzf_complete_git-unstaged-files '--untracked-files=all' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
+        return
+    fi
+
+    if [[ $subcommand = 'pull' ]]; then
+        local prefix_option completing_option
+
+        local git_options_argument_required=(--cleanup --date --depth --deepen --negotiation-tip -o -s --server-option --shallow-exclude --shallow-since --strategy --strategy-option --strategy-option=diff-algorithm --upload-pack -X)
+        local git_options_argument_optional=(--gpg-sign --log --rebase --recurse-submodules -S)
+
+        if completing_option=$(_fzf_complete_git_parse_completing_option "$prefix" "$last_argument" ${(F)git_options_argument_required} ${(F)git_options_argument_optional}); then
+            if [[ $completing_option = --* ]]; then
+                prefix_option=$completing_option=
+            else
+                prefix_option=${prefix%%${completing_option[-1]}*}${completing_option[-1]}
+            fi
+        fi
+
+        case $completing_option in
+            --recurse-submodules)
+                local recurse_submodules=(yes on-demand no)
+                _fzf_complete_git_git_constants '' "${(F)recurse_submodules}" $@
+                ;;
+
+            --cleanup)
+                local cleanup_modes=(strip whitespace verbatim scissors default)
+                _fzf_complete_git_git_constants '' "${(F)cleanup_modes}" $@
+                ;;
+
+            -s|--strategy)
+                local strategies=(octopus ours subtree recursive resolve)
+                _fzf_complete_git_git_constants '' "${(F)strategies}" $@
+                ;;
+
+            --strategy-option|--strategy-option=diff-algorithm|-X)
+                local strategy_options=(
+                    diff-algorithm=histogram
+                    diff-algorithm=minimal
+                    diff-algorithm=myers
+                    diff-algorithm=patience
+                    find-renames
+                    find-renames=
+                    ignore-all-space
+                    ignore-cr-at-eol
+                    ignore-space-at-eol
+                    ignore-space-change
+                    no-renames
+                    no-renormalize
+                    ours
+                    patience
+                    rename-threshold=
+                    renormalize
+                    subtree
+                    subtree=
+                    theirs
+                )
+                prefix_option=${prefix_option/=*/=} _fzf_complete_git_git_constants '' "${(F)strategy_options}" $@
+                ;;
+
+            --rebase)
+                local rebases=(false interactive merges preserve true)
+                _fzf_complete_git_git_constants '' "${(F)rebases}" $@
+                ;;
+
+            --shallow-exclude)
+                _fzf_complete_git-commits '' $@
+                ;;
+
+            --negotiation-tip)
+                _fzf_complete_git-commits '' $@
+                ;;
+
+            --gpg-sign|-S)
+                ;;
+
+            --date|--depth|--deepen|--log|--server-option|--shallow-since|--upload-pack|-o)
+                ;;
+
+            *)
+                local repository
+                if ! repository=$(_fzf_complete_git_parse_argument "$arguments" 1 "${(F)git_options_argument_required}") && [[ -z $repository ]]; then
+                    _fzf_complete_git-remotes '' $@
+                    return
+                fi
+
+                repository=$repository _fzf_complete_git-refs '--multi' $@
+                ;;
+        esac
+
         return
     fi
 
@@ -279,6 +367,69 @@ _fzf_complete_git-unstaged-files_post() {
     done
 }
 
+_fzf_complete_git-remotes() {
+    local fzf_options=$1
+    shift
+
+    _fzf_complete "--ansi --tiebreak=index $fzf_options" $@ < <(git remote --verbose 2> /dev/null | awk '
+        /\(fetch\)$/ {
+            gsub("\t", " ")
+            print
+        }
+    ' | _fzf_complete_git_tabularize)
+}
+
+_fzf_complete_git-remotes_post() {
+    awk '{ print $1 }'
+}
+
+_fzf_complete_git-refs() {
+    local fzf_options=$1
+    shift
+
+    local ref=${${$(git config remote.$repository.fetch 2> /dev/null)#*:}%\*}
+
+    _fzf_complete "--ansi --tiebreak=index $fzf_options" $@ < <(
+        git for-each-ref "$ref" --format='%(refname:short) %(contents:subject)' 2> /dev/null |
+        awk -v prefix=$prefix_option '{ print prefix $0 }' | _fzf_complete_git_tabularize
+    )
+}
+
+_fzf_complete_git-refs_post() {
+    local ref
+    local input=$(cat)
+
+    if [[ -z $input ]]; then
+        return
+    fi
+
+    for ref in ${(f)input}; do
+        echo ${${ref#*/}%% *}
+    done
+}
+
+_fzf_complete_git_git_constants() {
+    local fzf_options=$1
+    local values=$2
+    shift 2
+
+    _fzf_complete "--ansi --tiebreak=index $fzf_options" $@ < <(awk -v prefix=$prefix_option '{ print prefix $0 }' <<< $values)
+}
+
+_fzf_complete_git_git_constants_post() {
+    local input=$(cat)
+
+    if [[ -z $input ]]; then
+        return
+    fi
+
+    if [[ $input = *= ]]; then
+        echo -n $input
+    else
+        echo $input
+    fi
+}
+
 _fzf_complete_git_resolve_alias() {
     local git_alias git_alias_resolved
     local git_aliases=$(git config --get-regexp '^alias\.')
@@ -359,6 +510,40 @@ _fzf_complete_git_parse_completing_option() {
             return 2
             ;;
     esac
+}
+
+_fzf_complete_remove_quotes_while_holding_emtpy() {
+    local tmp=(\\0${(Q)^${(z)@}})
+    echo ${(q+)tmp#\\0}
+}
+
+_fzf_complete_git_parse_argument() {
+    local arguments=(${(z)1})
+    local index=$2
+    local options_argument_required=(${(z)3})
+    shift 3
+
+    if (( ${#arguments} <= 2 )); then
+        return 1
+    fi
+
+    local i
+    local command_arguments=()
+    for i in {3..${#arguments}}; do
+        if [[ ${(Q)arguments[$i]} = -(#c1,2)* ]]; then
+            continue
+        fi
+
+        local previous_argument=$(_fzf_complete_git_parse_completing_option '' ${(Q)arguments[(( i - 1 ))]} $options_argument_required '' )
+        if [[ -n $previous_argument ]] && [[ ${options_argument_required[(r)$previous_argument]} = $previous_argument ]]; then
+            continue
+        fi
+
+        command_arguments+=${arguments[$i]}
+    done
+
+    echo ${command_arguments[$index]}
+    return $(( index > #command_arguments ))
 }
 
 _fzf_complete_git_tabularize() {

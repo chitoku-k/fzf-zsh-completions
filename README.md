@@ -35,6 +35,7 @@ zplug "chitoku-k/fzf-zsh-completions"
   - commit
   - log
   - merge
+  - pull
   - rebase
   - reset
   - restore
