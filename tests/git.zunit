@@ -1394,6 +1394,63 @@
     _fzf_complete_git 'git pull -s '
 }
 
+@test 'Testing completion: git pull -s**' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git pull '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as -soctopus
+        assert ${lines[2]} same_as -sours
+        assert ${lines[3]} same_as -ssubtree
+        assert ${lines[4]} same_as -srecursive
+        assert ${lines[5]} same_as -sresolve
+    }
+
+    prefix=-s
+    _fzf_complete_git 'git pull '
+}
+
+@test 'Testing completion: git pull -qs **' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git pull -qs '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as octopus
+        assert ${lines[2]} same_as ours
+        assert ${lines[3]} same_as subtree
+        assert ${lines[4]} same_as recursive
+        assert ${lines[5]} same_as resolve
+    }
+
+    prefix=
+    _fzf_complete_git 'git pull -qs '
+}
+
+@test 'Testing completion: git pull -qs**' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git pull '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as -qsoctopus
+        assert ${lines[2]} same_as -qsours
+        assert ${lines[3]} same_as -qssubtree
+        assert ${lines[4]} same_as -qsrecursive
+        assert ${lines[5]} same_as -qsresolve
+    }
+
+    prefix=-qs
+    _fzf_complete_git 'git pull '
+}
+
 @test 'Testing completion: git pull --strategy=**' {
     _fzf_complete() {
         assert $# equals 2
@@ -1463,6 +1520,105 @@
 
     prefix=
     _fzf_complete_git 'git pull -X '
+}
+
+@test 'Testing completion: git pull -X**' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git pull '
+
+        run cat
+        assert ${#lines} equals 19
+        assert ${lines[1]} same_as -Xdiff-algorithm=histogram
+        assert ${lines[2]} same_as -Xdiff-algorithm=minimal
+        assert ${lines[3]} same_as -Xdiff-algorithm=myers
+        assert ${lines[4]} same_as -Xdiff-algorithm=patience
+        assert ${lines[5]} same_as -Xfind-renames
+        assert ${lines[6]} same_as -Xfind-renames=
+        assert ${lines[7]} same_as -Xignore-all-space
+        assert ${lines[8]} same_as -Xignore-cr-at-eol
+        assert ${lines[9]} same_as -Xignore-space-at-eol
+        assert ${lines[10]} same_as -Xignore-space-change
+        assert ${lines[11]} same_as -Xno-renames
+        assert ${lines[12]} same_as -Xno-renormalize
+        assert ${lines[13]} same_as -Xours
+        assert ${lines[14]} same_as -Xpatience
+        assert ${lines[15]} same_as -Xrename-threshold=
+        assert ${lines[16]} same_as -Xrenormalize
+        assert ${lines[17]} same_as -Xsubtree
+        assert ${lines[18]} same_as -Xsubtree=
+        assert ${lines[19]} same_as -Xtheirs
+    }
+
+    prefix=-X
+    _fzf_complete_git 'git pull '
+}
+
+@test 'Testing completion: git pull -qX **' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git pull -qX '
+
+        run cat
+        assert ${#lines} equals 19
+        assert ${lines[1]} same_as diff-algorithm=histogram
+        assert ${lines[2]} same_as diff-algorithm=minimal
+        assert ${lines[3]} same_as diff-algorithm=myers
+        assert ${lines[4]} same_as diff-algorithm=patience
+        assert ${lines[5]} same_as find-renames
+        assert ${lines[6]} same_as find-renames=
+        assert ${lines[7]} same_as ignore-all-space
+        assert ${lines[8]} same_as ignore-cr-at-eol
+        assert ${lines[9]} same_as ignore-space-at-eol
+        assert ${lines[10]} same_as ignore-space-change
+        assert ${lines[11]} same_as no-renames
+        assert ${lines[12]} same_as no-renormalize
+        assert ${lines[13]} same_as ours
+        assert ${lines[14]} same_as patience
+        assert ${lines[15]} same_as rename-threshold=
+        assert ${lines[16]} same_as renormalize
+        assert ${lines[17]} same_as subtree
+        assert ${lines[18]} same_as subtree=
+        assert ${lines[19]} same_as theirs
+    }
+
+    prefix=
+    _fzf_complete_git 'git pull -qX '
+}
+
+@test 'Testing completion: git pull -qX**' {
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git pull '
+
+        run cat
+        assert ${#lines} equals 19
+        assert ${lines[1]} same_as -qXdiff-algorithm=histogram
+        assert ${lines[2]} same_as -qXdiff-algorithm=minimal
+        assert ${lines[3]} same_as -qXdiff-algorithm=myers
+        assert ${lines[4]} same_as -qXdiff-algorithm=patience
+        assert ${lines[5]} same_as -qXfind-renames
+        assert ${lines[6]} same_as -qXfind-renames=
+        assert ${lines[7]} same_as -qXignore-all-space
+        assert ${lines[8]} same_as -qXignore-cr-at-eol
+        assert ${lines[9]} same_as -qXignore-space-at-eol
+        assert ${lines[10]} same_as -qXignore-space-change
+        assert ${lines[11]} same_as -qXno-renames
+        assert ${lines[12]} same_as -qXno-renormalize
+        assert ${lines[13]} same_as -qXours
+        assert ${lines[14]} same_as -qXpatience
+        assert ${lines[15]} same_as -qXrename-threshold=
+        assert ${lines[16]} same_as -qXrenormalize
+        assert ${lines[17]} same_as -qXsubtree
+        assert ${lines[18]} same_as -qXsubtree=
+        assert ${lines[19]} same_as -qXtheirs
+    }
+
+    prefix=-qX
+    _fzf_complete_git 'git pull '
 }
 
 @test 'Testing completion: git pull --strategy-option=**' {
@@ -1632,6 +1788,39 @@
 
     prefix=
     _fzf_complete_git 'git pull -o '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git pull -o**' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=-o
+    _fzf_complete_git 'git pull '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git pull -qo **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_git 'git pull -qo '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git pull -qo**' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=-qo
+    _fzf_complete_git 'git pull '
 
     assert $? equals 0
 }
