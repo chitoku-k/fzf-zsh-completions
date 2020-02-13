@@ -1479,9 +1479,9 @@
         assert ${actual3[1]} same_as 'newlines'
         assert ${actual3[2]} same_as " $reset_color${fg[red]}M$reset_color ../../file1"
         assert ${actual3[3]} same_as "${fg[red]}?$reset_color${fg[red]}?$reset_color ../../ file5 containing space "
-        assert ${actual3[4]} same_as "${fg[red]}?$reset_color${fg[red]}?$reset_color directory4/file9"
-        assert ${actual3[5]} same_as "${fg[red]}?$reset_color${fg[red]}?$reset_color file7"
-        assert ${actual3[6]} same_as "${fg[red]}?$reset_color${fg[red]}?$reset_color file8"
+        assert ${actual3[4]} same_as "${fg[red]}?$reset_color${fg[red]}?$reset_color ../../directory2/directory3/directory4/file9"
+        assert ${actual3[5]} same_as "${fg[red]}?$reset_color${fg[red]}?$reset_color ../../directory2/directory3/file7"
+        assert ${actual3[6]} same_as "${fg[red]}?$reset_color${fg[red]}?$reset_color ../../directory2/directory3/file8"
 
         actual4=(${(0)lines[4]})
         assert ${#actual4} equals 1
