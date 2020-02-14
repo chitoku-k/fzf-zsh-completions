@@ -3,6 +3,7 @@
 @setup {
     load ../fzf-zsh-completions.plugin.zsh
     pushd tests/_support/git
+    DIR=$PWD
 
     {
         rm -rf .git
@@ -22,6 +23,8 @@
 }
 
 @teardown {
+    pushd $DIR
+
     {
         git reset --hard master
         git clean -d -f
@@ -138,7 +141,6 @@
 
     prefix=
     _fzf_complete_git 'git checkout -- '
-    cd ../../
 }
 
 @test 'Testing completion: git log **' {
@@ -1321,7 +1323,6 @@
 
     prefix=
     _fzf_complete_git 'git commit '
-    cd ../../
 }
 
 @test 'Testing completion: git commit -- **' {
@@ -1398,7 +1399,6 @@
 
     prefix=
     _fzf_complete_git 'git commit -- '
-    cd ../../
 }
 
 @test 'Testing completion: git add **' {
@@ -1506,7 +1506,6 @@
 
     prefix=
     _fzf_complete_git 'git add '
-    cd ../../
 }
 
 @test 'Testing completion: git pull --recurse-submodules=**' {

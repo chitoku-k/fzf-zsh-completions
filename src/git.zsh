@@ -4,9 +4,9 @@ autoload -U colors
 colors
 
 _fzf_complete_awk_functions='
-    function colorize_git_status(status, relative_from_current, color1, color2, reset) {
-        index_status = substr(status, 1, 1)
-        work_tree_status = substr(status, 2, 1)
+    function colorize_git_status(input, relative_from_current, color1, color2, reset) {
+        index_status = substr(input, 1, 1)
+        work_tree_status = substr(input, 2, 1)
 
         if (index_status ~ /[MADRC]/) {
             index_status_color = color1
@@ -18,7 +18,7 @@ _fzf_complete_awk_functions='
             work_tree_status_color = color2
         }
 
-        return sprintf("%s%s%s%s%s%s %s", index_status_color, index_status, reset, work_tree_status_color, work_tree_status, reset, relative_from_current substr(status, 4))
+        return sprintf("%s%s%s%s%s%s %s", index_status_color, index_status, reset, work_tree_status_color, work_tree_status, reset, relative_from_current substr(input, 4))
     }
 
     function trim_prefix(str, prefix) {
