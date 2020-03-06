@@ -11,7 +11,7 @@ PREVIEW_OPTIONS
 
 _fzf_complete_systemctl() {
     _fzf_complete "--ansi --tiebreak=index $_fzf_complete_preview_systemctl_status $FZF_DEFAULT_OPTS" $@ < \
-        <(systemctl list-units --full --no-legend --no-pager "$prefix*" | sort | awk \
+        <(systemctl list-units --full --no-legend --no-pager "$prefix*" | LC_ALL=C sort | awk \
             -v green=${fg[green]} \
             -v red=${fg[red]} \
             -v reset=$reset_color '
@@ -19,14 +19,11 @@ _fzf_complete_systemctl() {
                 unitname = $1
                 status = $3
 
-                switch (status) {
-                    case "active":
-                        active_color = green
-                        break
-
-                    case "failed":
-                        active_color = red
-                        break
+                if (status == "active") {
+                    active_color = green
+                }
+                if (status == "failed") {
+                    active_color = red
                 }
 
                 printf("%s●%s %s\n", active_color, reset, unitname)
