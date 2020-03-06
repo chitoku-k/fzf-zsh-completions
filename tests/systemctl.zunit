@@ -1,10 +1,6 @@
 #!/usr/bin/env zunit
 
 @setup {
-    if ! (( $+commands[systemctl] )); then
-        skip 'This test requires systemctl'
-    fi
-
     load ../fzf-zsh-completions.plugin.zsh
 
     preview() {
@@ -16,8 +12,38 @@
     }
 }
 
+@teardown {
+    rm -f systemctl_mock_times
+    rm -f xargs_mock_times
+}
+
 @test 'Testing completion: systemctl status **' {
-    units=$(systemctl list-units --full --no-legend --no-pager | sort)
+    echo 0 > systemctl_mock_times
+
+    systemctl() {
+        systemctl_mock_times=$(($(cat systemctl_mock_times) + 1))
+        echo $systemctl_mock_times > systemctl_mock_times
+
+        systemctl_mock_$systemctl_mock_times $@
+    }
+
+    systemctl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'list-units'
+        assert $2 same_as '--full'
+        assert $3 same_as '--no-legend'
+        assert $4 same_as '--no-pager'
+        assert $5 same_as '*'
+
+        echo '-.mount      loaded active mounted Root Mount'
+        echo 'boot.mount   loaded active mounted /boot'
+        echo 'dbus.service loaded active running D-Bus System Message Bus'
+        echo '-.slice      loaded active active  Root Slice'
+        echo 'system.slice loaded active active  System Slice'
+        echo 'user.slice   loaded active active  User and Session Slice'
+        echo 'basic.target loaded active active  Basic System'
+        echo 'dbus.socket  loaded failed running D-Bus System Message Bus Socket'
+    }
 
     _fzf_complete() {
         assert $# equals 2
@@ -25,8 +51,15 @@
         assert $2 same_as 'systemctl status '
 
         run cat
-        assert ${#lines} equals ${#${(f)units}}
-        assert ${#lines} is_greater_than 0
+        assert ${#lines} equals 8
+        assert ${lines[1]} same_as "${fg[green]}●${reset_color} basic.target"
+        assert ${lines[2]} same_as "${fg[green]}●${reset_color} boot.mount"
+        assert ${lines[3]} same_as "${fg[green]}●${reset_color} dbus.service"
+        assert ${lines[4]} same_as "${fg[red]}●${reset_color} dbus.socket"
+        assert ${lines[5]} same_as "${fg[green]}●${reset_color} -.mount"
+        assert ${lines[6]} same_as "${fg[green]}●${reset_color} -.slice"
+        assert ${lines[7]} same_as "${fg[green]}●${reset_color} system.slice"
+        assert ${lines[8]} same_as "${fg[green]}●${reset_color} user.slice"
     }
 
     prefix=
@@ -34,18 +67,76 @@
 }
 
 @test 'Testing preview: systemctl status **' {
+    echo 0 > xargs_mock_times
+
+    xargs() {
+        xargs_mock_times=$(($(cat xargs_mock_times) + 1))
+        echo $xargs_mock_times > xargs_mock_times
+
+        xargs_mock_$xargs_mock_times $@
+    }
+
+    xargs_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'systemctl'
+        assert $2 same_as 'status'
+        assert $3 same_as '--'
+
+        run cat
+        assert ${#lines} equals 1
+        assert ${lines[1]} same_as 'basic.target'
+
+        echo '● basic.target - Basic System'
+        echo '     Loaded: loaded (/usr/lib/systemd/system/basic.target; static; vendor preset: disabled)'
+        echo '     Active: active since Wed 2020-01-01 00:00:00 JST; 2h ago'
+        echo '       Docs: man:systemd.special(7)'
+    }
+
+    xargs_mock_2() {
+        assert $# equals 3
+        assert $1 same_as 'systemctl'
+        assert $2 same_as 'status'
+        assert $3 same_as '--'
+
+        run cat
+        assert ${#lines} equals 1
+        assert ${lines[1]} same_as 'boot.mount'
+
+        echo '● boot.mount - /boot'
+        echo '     Loaded: loaded (/etc/fstab; generated)'
+        echo '     Active: active (mounted) since Wed 2020-01-01 00:00:00 JST; 2h ago'
+        echo '       Docs: man:systemd.special(7)'
+        echo '      Where: /boot'
+        echo '       What: /dev/sda2'
+        echo '       Docs: man:fstab(5)'
+        echo '             man:systemd-fstab-generator(8)'
+        echo '      Tasks: 0 (limit: 2367)'
+        echo '     Memory: 120.0K'
+        echo '     CGroup: /system.slice/boot.mount'
+    }
+
     _fzf_complete() {
-        fzf_options=$1 run preview '● basic.target'
-        assert $output is_not_empty
+        output=$(fzf_options=$1 preview '● basic.target')
+        lines=(${(f)output})
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as '● basic.target - Basic System'
+        assert ${lines[2]} same_as '     Loaded: loaded (/usr/lib/systemd/system/basic.target; static; vendor preset: disabled)'
+        assert ${lines[3]} same_as '     Active: active since Wed 2020-01-01 00:00:00 JST; 2h ago'
+        assert ${lines[4]} same_as '       Docs: man:systemd.special(7)'
 
-        fzf_options=$1 run preview '● boot.mount'
-        assert $output is_not_empty
-
-        fzf_options=$1 run preview '● dbus.service'
-        assert $output is_not_empty
-
-        fzf_options=$1 run preview '● dbus.socket'
-        assert $output is_not_empty
+        output=$(fzf_options=$1 preview '● boot.mount')
+        lines=(${(f)output})
+        assert ${lines[1]} same_as '● boot.mount - /boot'
+        assert ${lines[2]} same_as '     Loaded: loaded (/etc/fstab; generated)'
+        assert ${lines[3]} same_as '     Active: active (mounted) since Wed 2020-01-01 00:00:00 JST; 2h ago'
+        assert ${lines[4]} same_as '       Docs: man:systemd.special(7)'
+        assert ${lines[5]} same_as '      Where: /boot'
+        assert ${lines[6]} same_as '       What: /dev/sda2'
+        assert ${lines[7]} same_as '       Docs: man:fstab(5)'
+        assert ${lines[8]} same_as '             man:systemd-fstab-generator(8)'
+        assert ${lines[9]} same_as '      Tasks: 0 (limit: 2367)'
+        assert ${lines[10]} same_as '     Memory: 120.0K'
+        assert ${lines[11]} same_as '     CGroup: /system.slice/boot.mount'
     }
 
     prefix=
