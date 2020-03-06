@@ -150,12 +150,12 @@ _fzf_complete_git() {
 
             --cleanup)
                 local cleanup_modes=(strip whitespace verbatim scissors default)
-                _fzf_complete_git_git_constants '' "${(F)cleanup_modes}" $@
+                _fzf_complete_git_constants '' "${(F)cleanup_modes}" $@
                 ;;
 
             -u|--untracked-files)
                 local untracked_file_modes=(no normal all)
-                _fzf_complete_git_git_constants '' "${(F)untracked_file_modes}" $@
+                _fzf_complete_git_constants '' "${(F)untracked_file_modes}" $@
                 ;;
 
             *)
@@ -188,17 +188,17 @@ _fzf_complete_git() {
         case $completing_option in
             --recurse-submodules)
                 local recurse_submodules=(yes on-demand no)
-                _fzf_complete_git_git_constants '' "${(F)recurse_submodules}" $@
+                _fzf_complete_git_constants '' "${(F)recurse_submodules}" $@
                 ;;
 
             --cleanup)
                 local cleanup_modes=(strip whitespace verbatim scissors default)
-                _fzf_complete_git_git_constants '' "${(F)cleanup_modes}" $@
+                _fzf_complete_git_constants '' "${(F)cleanup_modes}" $@
                 ;;
 
             -s|--strategy)
                 local strategies=(octopus ours subtree recursive resolve)
-                _fzf_complete_git_git_constants '' "${(F)strategies}" $@
+                _fzf_complete_git_constants '' "${(F)strategies}" $@
                 ;;
 
             --strategy-option|--strategy-option=diff-algorithm|-X)
@@ -223,12 +223,12 @@ _fzf_complete_git() {
                     subtree=
                     theirs
                 )
-                prefix_option=${prefix_option/=*/=} _fzf_complete_git_git_constants '' "${(F)strategy_options}" $@
+                prefix_option=${prefix_option/=*/=} _fzf_complete_git_constants '' "${(F)strategy_options}" $@
                 ;;
 
             --rebase)
                 local rebases=(false interactive merges preserve true)
-                _fzf_complete_git_git_constants '' "${(F)rebases}" $@
+                _fzf_complete_git_constants '' "${(F)rebases}" $@
                 ;;
 
             --shallow-exclude)
@@ -348,10 +348,10 @@ _fzf_complete_git-unstaged-files() {
                     -v green=${fg[green]} \
                     -v red=${fg[red]} \
                     -v reset=$reset_color '
-                            '$_fzf_complete_awk_functions'
-                            /^.[^ ]/ {
-                                printf "%s%c", colorize_git_status($0, cdup, green, red, reset), 0
-                            }
+                        '$_fzf_complete_awk_functions'
+                        /^.[^ ]/ {
+                            printf "%s%c", colorize_git_status($0, cdup, green, red, reset), 0
+                        }
                     ' <<< $filename
             fi
 
@@ -410,7 +410,7 @@ _fzf_complete_git-refs_post() {
     done
 }
 
-_fzf_complete_git_git_constants() {
+_fzf_complete_git_constants() {
     local fzf_options=$1
     local values=$2
     shift 2
@@ -418,7 +418,7 @@ _fzf_complete_git_git_constants() {
     _fzf_complete "--ansi --tiebreak=index $fzf_options" $@ < <(awk -v prefix=$prefix_option '{ print prefix $0 }' <<< $values)
 }
 
-_fzf_complete_git_git_constants_post() {
+_fzf_complete_git_constants_post() {
     local input=$(cat)
 
     if [[ -z $input ]]; then
@@ -434,7 +434,7 @@ _fzf_complete_git_git_constants_post() {
 
 _fzf_complete_git_resolve_alias() {
     local git_alias git_alias_resolved
-    local git_aliases=$(git config --get-regexp '^alias\.')
+    local git_aliases=$(git config --get-regexp '^alias\.' 2> /dev/null)
 
     for git_alias in ${(f)git_aliases}; do
         if [[ ${${git_alias#alias.}%% *} = $2 ]]; then
@@ -512,11 +512,6 @@ _fzf_complete_git_parse_completing_option() {
             return 2
             ;;
     esac
-}
-
-_fzf_complete_remove_quotes_while_holding_emtpy() {
-    local tmp=(\\0${(Q)^${(z)@}})
-    echo ${(q+)tmp#\\0}
 }
 
 _fzf_complete_git_parse_argument() {
