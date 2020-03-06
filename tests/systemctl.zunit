@@ -52,12 +52,12 @@
 
         run cat
         assert ${#lines} equals 8
-        assert ${lines[1]} same_as "${fg[green]}●${reset_color} basic.target"
-        assert ${lines[2]} same_as "${fg[green]}●${reset_color} boot.mount"
-        assert ${lines[3]} same_as "${fg[green]}●${reset_color} dbus.service"
-        assert ${lines[4]} same_as "${fg[red]}●${reset_color} dbus.socket"
-        assert ${lines[5]} same_as "${fg[green]}●${reset_color} -.mount"
-        assert ${lines[6]} same_as "${fg[green]}●${reset_color} -.slice"
+        assert ${lines[1]} same_as "${fg[green]}●${reset_color} -.mount"
+        assert ${lines[2]} same_as "${fg[green]}●${reset_color} -.slice"
+        assert ${lines[3]} same_as "${fg[green]}●${reset_color} basic.target"
+        assert ${lines[4]} same_as "${fg[green]}●${reset_color} boot.mount"
+        assert ${lines[5]} same_as "${fg[green]}●${reset_color} dbus.service"
+        assert ${lines[6]} same_as "${fg[red]}●${reset_color} dbus.socket"
         assert ${lines[7]} same_as "${fg[green]}●${reset_color} system.slice"
         assert ${lines[8]} same_as "${fg[green]}●${reset_color} user.slice"
     }
