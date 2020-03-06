@@ -19,14 +19,11 @@ _fzf_complete_systemctl() {
                 unitname = $1
                 status = $3
 
-                switch (status) {
-                    case "active":
-                        active_color = green
-                        break
-
-                    case "failed":
-                        active_color = red
-                        break
+                if (status == "active") {
+                    active_color = green
+                }
+                if (status == "failed") {
+                    active_color = red
                 }
 
                 printf("%s●%s %s\n", active_color, reset, unitname)
