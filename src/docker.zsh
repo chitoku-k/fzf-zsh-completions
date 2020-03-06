@@ -28,7 +28,7 @@ _fzf_complete_docker-images() {
 }
 
 _fzf_complete_docker-images_post() {
-    awk '{ print $1 }'
+    awk '{ if ($1 == "<none>") { print $3; next; } print $1 }'
 }
 
 _fzf_complete_docker_tabularize() {
