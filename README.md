@@ -48,6 +48,12 @@ zplug "chitoku-k/fzf-zsh-completions"
 - systemctl
 - yarn
   - run
+- docker
+  - create
+  - history
+  - run
+  - rmi
+  - save
 
 ## Usage
 
