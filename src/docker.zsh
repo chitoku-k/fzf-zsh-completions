@@ -23,7 +23,7 @@ _fzf_complete_docker-images() {
 
     _fzf_complete "--ansi --tiebreak=index --header-lines=1 $fzf_options" $@ < <(
         docker images --format 'table {{.Repository}};{{.Tag}};{{.ID}};{{if .CreatedSince }}{{.CreatedSince}}{{else}}N/A{{end}};{{.Size}}' 2> /dev/null \
-            | FS=';' _fzf_complete_docker_tabularize $fg[yellow] $reset_color{,,,}
+            | FS=';' _fzf_complete_docker_tabularize $fg[yellow] $reset_color{,,}
     )
 }
 
@@ -51,7 +51,9 @@ _fzf_complete_docker_tabularize() {
                 match(str, FS)
                 str = substr(str, RSTART + RLENGTH)
             }
-            fields[NR, i] = str
+            if (RSTART != 0) {
+                fields[NR, i] = str
+            }
         }
         END {
             for (record_number = 1; record_number <= NR; ++record_number) {

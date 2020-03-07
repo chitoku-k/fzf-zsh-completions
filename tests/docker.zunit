@@ -1,0 +1,240 @@
+#!/usr/bin/env zunit
+
+@setup {
+    load ../fzf-zsh-completions.plugin.zsh
+}
+
+@teardown {
+    rm -f docker_mock_times
+}
+
+@test 'Testing completion: docker create **' {
+    echo 0 > docker_mock_times
+
+    docker() {
+        docker_mock_times=$(($(cat docker_mock_times) + 1))
+        echo $docker_mock_times > docker_mock_times
+
+        docker_mock_$docker_mock_times $@
+    }
+
+    docker_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'images'
+        assert $2 same_as '--format'
+        assert $3 same_as 'table {{.Repository}};{{.Tag}};{{.ID}};{{if .CreatedSince }}{{.CreatedSince}}{{else}}N/A{{end}};{{.Size}}'
+
+        echo 'REPOSITORY;TAG;IMAGE ID;CREATED;SIZE'
+        echo 'alpine;latest;e7d92cdc71fe;18 hours ago;5.59MB'
+        echo '<none>;<none>;5425b1e460b6;1 weeks ago;5.59MB'
+        echo 'ubuntu;latest;ccc6e87d482b;7 weeks ago;64.2MB'
+        echo 'zshusers/zsh;master;f17f844b1558;8 weeks ago;64.3MB'
+        echo 'archlinux;latest;0152bf6f0800;18 months ago;409MB'
+    }
+
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 matches '--ansi --tiebreak=index --header-lines=1 '
+        assert $2 same_as 'docker create '
+
+        run cat
+        assert ${#lines} equals 6
+        assert ${lines[1]} same_as "${fg[yellow]}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}IMAGE ID    ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
+        assert ${lines[2]} same_as "${fg[yellow]}alpine      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}e7d92cdc71fe${reset_color}  ${reset_color}18 hours ago ${reset_color}  5.59MB"
+        assert ${lines[3]} same_as "${fg[yellow]}<none>      ${reset_color}  ${reset_color}<none>${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}1 weeks ago  ${reset_color}  5.59MB"
+        assert ${lines[4]} same_as "${fg[yellow]}ubuntu      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}ccc6e87d482b${reset_color}  ${reset_color}7 weeks ago  ${reset_color}  64.2MB"
+        assert ${lines[5]} same_as "${fg[yellow]}zshusers/zsh${reset_color}  ${reset_color}master${reset_color}  ${reset_color}f17f844b1558${reset_color}  ${reset_color}8 weeks ago  ${reset_color}  64.3MB"
+        assert ${lines[6]} same_as "${fg[yellow]}archlinux   ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}0152bf6f0800${reset_color}  ${reset_color}18 months ago${reset_color}  409MB"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker create '
+}
+
+@test 'Testing completion: docker history **' {
+    echo 0 > docker_mock_times
+
+    docker() {
+        docker_mock_times=$(($(cat docker_mock_times) + 1))
+        echo $docker_mock_times > docker_mock_times
+
+        docker_mock_$docker_mock_times $@
+    }
+
+    docker_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'images'
+        assert $2 same_as '--format'
+        assert $3 same_as 'table {{.Repository}};{{.Tag}};{{.ID}};{{if .CreatedSince }}{{.CreatedSince}}{{else}}N/A{{end}};{{.Size}}'
+
+        echo 'REPOSITORY;TAG;IMAGE ID;CREATED;SIZE'
+        echo 'alpine;latest;e7d92cdc71fe;18 hours ago;5.59MB'
+        echo '<none>;<none>;5425b1e460b6;1 weeks ago;5.59MB'
+        echo 'ubuntu;latest;ccc6e87d482b;7 weeks ago;64.2MB'
+        echo 'zshusers/zsh;master;f17f844b1558;8 weeks ago;64.3MB'
+        echo 'archlinux;latest;0152bf6f0800;18 months ago;409MB'
+    }
+
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 matches '--ansi --tiebreak=index --header-lines=1 '
+        assert $2 same_as 'docker history '
+
+        run cat
+        assert ${#lines} equals 6
+        assert ${lines[1]} same_as "${fg[yellow]}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}IMAGE ID    ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
+        assert ${lines[2]} same_as "${fg[yellow]}alpine      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}e7d92cdc71fe${reset_color}  ${reset_color}18 hours ago ${reset_color}  5.59MB"
+        assert ${lines[3]} same_as "${fg[yellow]}<none>      ${reset_color}  ${reset_color}<none>${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}1 weeks ago  ${reset_color}  5.59MB"
+        assert ${lines[4]} same_as "${fg[yellow]}ubuntu      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}ccc6e87d482b${reset_color}  ${reset_color}7 weeks ago  ${reset_color}  64.2MB"
+        assert ${lines[5]} same_as "${fg[yellow]}zshusers/zsh${reset_color}  ${reset_color}master${reset_color}  ${reset_color}f17f844b1558${reset_color}  ${reset_color}8 weeks ago  ${reset_color}  64.3MB"
+        assert ${lines[6]} same_as "${fg[yellow]}archlinux   ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}0152bf6f0800${reset_color}  ${reset_color}18 months ago${reset_color}  409MB"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker history '
+}
+
+@test 'Testing completion: docker run **' {
+    echo 0 > docker_mock_times
+
+    docker() {
+        docker_mock_times=$(($(cat docker_mock_times) + 1))
+        echo $docker_mock_times > docker_mock_times
+
+        docker_mock_$docker_mock_times $@
+    }
+
+    docker_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'images'
+        assert $2 same_as '--format'
+        assert $3 same_as 'table {{.Repository}};{{.Tag}};{{.ID}};{{if .CreatedSince }}{{.CreatedSince}}{{else}}N/A{{end}};{{.Size}}'
+
+        echo 'REPOSITORY;TAG;IMAGE ID;CREATED;SIZE'
+        echo 'alpine;latest;e7d92cdc71fe;18 hours ago;5.59MB'
+        echo '<none>;<none>;5425b1e460b6;1 weeks ago;5.59MB'
+        echo 'ubuntu;latest;ccc6e87d482b;7 weeks ago;64.2MB'
+        echo 'zshusers/zsh;master;f17f844b1558;8 weeks ago;64.3MB'
+        echo 'archlinux;latest;0152bf6f0800;18 months ago;409MB'
+    }
+
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 matches '--ansi --tiebreak=index --header-lines=1 '
+        assert $2 same_as 'docker run '
+
+        run cat
+        assert ${#lines} equals 6
+        assert ${lines[1]} same_as "${fg[yellow]}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}IMAGE ID    ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
+        assert ${lines[2]} same_as "${fg[yellow]}alpine      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}e7d92cdc71fe${reset_color}  ${reset_color}18 hours ago ${reset_color}  5.59MB"
+        assert ${lines[3]} same_as "${fg[yellow]}<none>      ${reset_color}  ${reset_color}<none>${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}1 weeks ago  ${reset_color}  5.59MB"
+        assert ${lines[4]} same_as "${fg[yellow]}ubuntu      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}ccc6e87d482b${reset_color}  ${reset_color}7 weeks ago  ${reset_color}  64.2MB"
+        assert ${lines[5]} same_as "${fg[yellow]}zshusers/zsh${reset_color}  ${reset_color}master${reset_color}  ${reset_color}f17f844b1558${reset_color}  ${reset_color}8 weeks ago  ${reset_color}  64.3MB"
+        assert ${lines[6]} same_as "${fg[yellow]}archlinux   ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}0152bf6f0800${reset_color}  ${reset_color}18 months ago${reset_color}  409MB"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker run '
+}
+
+@test 'Testing completion: docker rmi **' {
+    echo 0 > docker_mock_times
+
+    docker() {
+        docker_mock_times=$(($(cat docker_mock_times) + 1))
+        echo $docker_mock_times > docker_mock_times
+
+        docker_mock_$docker_mock_times $@
+    }
+
+    docker_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'images'
+        assert $2 same_as '--format'
+        assert $3 same_as 'table {{.Repository}};{{.Tag}};{{.ID}};{{if .CreatedSince }}{{.CreatedSince}}{{else}}N/A{{end}};{{.Size}}'
+
+        echo 'REPOSITORY;TAG;IMAGE ID;CREATED;SIZE'
+        echo 'alpine;latest;e7d92cdc71fe;18 hours ago;5.59MB'
+        echo '<none>;<none>;5425b1e460b6;1 weeks ago;5.59MB'
+        echo 'ubuntu;latest;ccc6e87d482b;7 weeks ago;64.2MB'
+        echo 'zshusers/zsh;master;f17f844b1558;8 weeks ago;64.3MB'
+        echo 'archlinux;latest;0152bf6f0800;18 months ago;409MB'
+    }
+
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 matches '--ansi --tiebreak=index --header-lines=1 '
+        assert $2 same_as 'docker rmi '
+
+        run cat
+        assert ${#lines} equals 6
+        assert ${lines[1]} same_as "${fg[yellow]}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}IMAGE ID    ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
+        assert ${lines[2]} same_as "${fg[yellow]}alpine      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}e7d92cdc71fe${reset_color}  ${reset_color}18 hours ago ${reset_color}  5.59MB"
+        assert ${lines[3]} same_as "${fg[yellow]}<none>      ${reset_color}  ${reset_color}<none>${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}1 weeks ago  ${reset_color}  5.59MB"
+        assert ${lines[4]} same_as "${fg[yellow]}ubuntu      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}ccc6e87d482b${reset_color}  ${reset_color}7 weeks ago  ${reset_color}  64.2MB"
+        assert ${lines[5]} same_as "${fg[yellow]}zshusers/zsh${reset_color}  ${reset_color}master${reset_color}  ${reset_color}f17f844b1558${reset_color}  ${reset_color}8 weeks ago  ${reset_color}  64.3MB"
+        assert ${lines[6]} same_as "${fg[yellow]}archlinux   ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}0152bf6f0800${reset_color}  ${reset_color}18 months ago${reset_color}  409MB"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker rmi '
+}
+
+@test 'Testing completion: docker save **' {
+    echo 0 > docker_mock_times
+
+    docker() {
+        docker_mock_times=$(($(cat docker_mock_times) + 1))
+        echo $docker_mock_times > docker_mock_times
+
+        docker_mock_$docker_mock_times $@
+    }
+
+    docker_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'images'
+        assert $2 same_as '--format'
+        assert $3 same_as 'table {{.Repository}};{{.Tag}};{{.ID}};{{if .CreatedSince }}{{.CreatedSince}}{{else}}N/A{{end}};{{.Size}}'
+
+        echo 'REPOSITORY;TAG;IMAGE ID;CREATED;SIZE'
+        echo 'alpine;latest;e7d92cdc71fe;18 hours ago;5.59MB'
+        echo '<none>;<none>;5425b1e460b6;1 weeks ago;5.59MB'
+        echo 'ubuntu;latest;ccc6e87d482b;7 weeks ago;64.2MB'
+        echo 'zshusers/zsh;master;f17f844b1558;8 weeks ago;64.3MB'
+        echo 'archlinux;latest;0152bf6f0800;18 months ago;409MB'
+    }
+
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 matches '--ansi --tiebreak=index --header-lines=1 '
+        assert $2 same_as 'docker save '
+
+        run cat
+        assert ${#lines} equals 6
+        assert ${lines[1]} same_as "${fg[yellow]}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}IMAGE ID    ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
+        assert ${lines[2]} same_as "${fg[yellow]}alpine      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}e7d92cdc71fe${reset_color}  ${reset_color}18 hours ago ${reset_color}  5.59MB"
+        assert ${lines[3]} same_as "${fg[yellow]}<none>      ${reset_color}  ${reset_color}<none>${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}1 weeks ago  ${reset_color}  5.59MB"
+        assert ${lines[4]} same_as "${fg[yellow]}ubuntu      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}ccc6e87d482b${reset_color}  ${reset_color}7 weeks ago  ${reset_color}  64.2MB"
+        assert ${lines[5]} same_as "${fg[yellow]}zshusers/zsh${reset_color}  ${reset_color}master${reset_color}  ${reset_color}f17f844b1558${reset_color}  ${reset_color}8 weeks ago  ${reset_color}  64.3MB"
+        assert ${lines[6]} same_as "${fg[yellow]}archlinux   ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}0152bf6f0800${reset_color}  ${reset_color}18 months ago${reset_color}  409MB"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker save '
+}
+
+@test 'Testing post: docker' {
+    input=(
+        'alpine        latest  e7d92cdc71fe  18 hours ago   5.59MB'
+        '<none>        <none>  5425b1e460b6  1 weeks ago    5.59MB'
+        'ubuntu        latest  ccc6e87d482b  7 weeks ago    64.2MB'
+    )
+
+    run _fzf_complete_docker-images_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 3
+    assert ${lines[1]} same_as 'alpine'
+    assert ${lines[2]} same_as '5425b1e460b6'
+    assert ${lines[3]} same_as 'ubuntu'
+}
