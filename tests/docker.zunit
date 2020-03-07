@@ -163,7 +163,7 @@
 
     _fzf_complete() {
         assert $# equals 2
-        assert $1 matches '--ansi --tiebreak=index --header-lines=1 '
+        assert $1 matches '--ansi --tiebreak=index --header-lines=1 --multi'
         assert $2 same_as 'docker rmi '
 
         run cat
@@ -206,7 +206,7 @@
 
     _fzf_complete() {
         assert $# equals 2
-        assert $1 matches '--ansi --tiebreak=index --header-lines=1 '
+        assert $1 matches '--ansi --tiebreak=index --header-lines=1 --multi'
         assert $2 same_as 'docker save '
 
         run cat
