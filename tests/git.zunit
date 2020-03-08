@@ -2148,15 +2148,16 @@
 
         run cat
         assert ${#lines} equals 3
-        assert ${lines[1]} same_as "${fg[yellow]}example  ${fg[green]}example (fetch)"
-        assert ${lines[2]} same_as "${fg[yellow]}origin   ${fg[green]}git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
-        assert ${lines[3]} same_as "${fg[yellow]}upstream ${fg[green]}git@example.com:example/fzf-zsh-completions (fetch)"
+        assert ${lines[1]} same_as "${fg[yellow]}example  ${fg[green]}example$reset_color  (fetch)"
+        assert ${lines[2]} same_as "${fg[yellow]}origin   ${fg[green]}git@github.com:chitoku-k/fzf-zsh-completions$reset_color  (fetch)"
+        assert ${lines[3]} same_as "${fg[yellow]}upstream ${fg[green]}git@example.com:example/fzf-zsh-completions$reset_color  (fetch)"
     }
 
     prefix=
     _fzf_complete_git 'git pull '
 }
 
+# このテストケースどうすんだろこれw
 @test 'Testing completion: git pull origin **' {
     run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
     run git symbolic-ref refs/remotes/origin/master refs/heads/master
@@ -2189,15 +2190,17 @@
 
         run cat
         assert ${#lines} equals 3
-        assert ${lines[1]} same_as "${fg[yellow]}example  $reset_color example (fetch)"
-        assert ${lines[2]} same_as "${fg[yellow]}origin   $reset_color git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
-        assert ${lines[3]} same_as "${fg[yellow]}upstream $reset_color git@example.com:example/fzf-zsh-completions (fetch)"
+
+        assert ${lines[1]} same_as "${fg[yellow]}example  ${fg[green]}example$reset_color  (fetch)"
+        assert ${lines[2]} same_as "${fg[yellow]}origin   ${fg[green]}git@github.com:chitoku-k/fzf-zsh-completions$reset_color  (fetch)"
+        assert ${lines[3]} same_as "${fg[yellow]}upstream ${fg[green]}git@example.com:example/fzf-zsh-completions$reset_color  (fetch)"
     }
 
     prefix=
     _fzf_complete_git 'git pull --cleanup strip --rebase '
 }
 
+# このテストケースどうすんだろこれw
 @test 'Testing completion: git pull origin --cleanup strip --quiet **' {
     run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
     run git symbolic-ref refs/remotes/origin/master refs/heads/master
@@ -2230,15 +2233,16 @@
 
         run cat
         assert ${#lines} equals 3
-        assert ${lines[1]} same_as "${fg[yellow]}example  $reset_color example (fetch)"
-        assert ${lines[2]} same_as "${fg[yellow]}origin   $reset_color git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
-        assert ${lines[3]} same_as "${fg[yellow]}upstream $reset_color git@example.com:example/fzf-zsh-completions (fetch)"
+        assert ${lines[1]} same_as "${fg[yellow]}example  ${fg[green]}example$reset_color  (fetch)"
+        assert ${lines[2]} same_as "${fg[yellow]}origin   ${fg[green]}git@github.com:chitoku-k/fzf-zsh-completions$reset_color  (fetch)"
+        assert ${lines[3]} same_as "${fg[yellow]}upstream ${fg[green]}git@example.com:example/fzf-zsh-completions$reset_color  (fetch)"
     }
 
     prefix=
     _fzf_complete_git 'git pull -- '
 }
 
+# このテストケースどうすんだろこれw
 @test 'Testing completion: git pull -- origin **' {
     run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
     run git symbolic-ref refs/remotes/origin/master refs/heads/master
