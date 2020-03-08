@@ -2148,9 +2148,9 @@
 
         run cat
         assert ${#lines} equals 3
-        assert ${lines[1]} same_as "${fg[yellow]}example  $reset_color example (fetch)"
-        assert ${lines[2]} same_as "${fg[yellow]}origin   $reset_color git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
-        assert ${lines[3]} same_as "${fg[yellow]}upstream $reset_color git@example.com:example/fzf-zsh-completions (fetch)"
+        assert ${lines[1]} same_as "${fg[yellow]}example  ${fg[green]}example (fetch)"
+        assert ${lines[2]} same_as "${fg[yellow]}origin   ${fg[green]}git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
+        assert ${lines[3]} same_as "${fg[yellow]}upstream ${fg[green]}git@example.com:example/fzf-zsh-completions (fetch)"
     }
 
     prefix=
