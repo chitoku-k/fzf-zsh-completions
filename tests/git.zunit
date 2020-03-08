@@ -522,11 +522,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}another-branch $reset_color  2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}master         $reset_color 1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1             $reset_color 1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2             $reset_color  2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}3e209a3        $reset_color 1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=
@@ -541,11 +541,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}-canother-branch $reset_color  2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}-cmaster         $reset_color 1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}-cv1             $reset_color 1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}-cv2             $reset_color  2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}-c3e209a3        $reset_color 1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}-canother-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}-cmaster         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}-cv1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}-cv2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}-c3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=-c
@@ -560,11 +560,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}another-branch $reset_color  2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}master         $reset_color 1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1             $reset_color 1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2             $reset_color  2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}3e209a3        $reset_color 1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=
@@ -579,11 +579,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}-qcanother-branch $reset_color  2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}-qcmaster         $reset_color 1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}-qcv1             $reset_color 1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}-qcv2             $reset_color  2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}-qc3e209a3        $reset_color 1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}-qcanother-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}-qcmaster         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}-qcv1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}-qcv2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}-qc3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=-qc
@@ -2486,11 +2486,11 @@ assert ${lines[5]} same_as "${fg[yellow]}3e209a3        ${fg[green]}commit$reset
         run cat
         assert ${#lines} equals 5
 
-        assert ${lines[1]} same_as "${fg[yellow]}another-branch ${fg[green]}branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}master         ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1             ${fg[green]}tag$reset_color     1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2             ${fg[green]}tag$reset_color      2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}3e209a3        ${fg[green]}commit$reset_color  1st commit"
+    assert ${lines[1]} same_as "${fg[yellow]}another-branch ${fg[green]}branch$reset_color   2nd commit"
+    assert ${lines[2]} same_as "${fg[yellow]}master         ${fg[green]}branch$reset_color  1st commit"
+    assert ${lines[3]} same_as "${fg[yellow]}v1             ${fg[green]}tag$reset_color     1st commit"
+    assert ${lines[4]} same_as "${fg[yellow]}v2             ${fg[green]}tag$reset_color      2nd commit"
+    assert ${lines[5]} same_as "${fg[yellow]}3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=
