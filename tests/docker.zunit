@@ -227,7 +227,7 @@
     input=(
         'e7d92cdc71fe  alpine        latest  18 hours ago   5.59MB'
         '5425b1e460b6  <none>        <none>  1 weeks ago    5.59MB'
-        'ccc6e87d482b  ubuntu        latest  7 weeks ago    64.2MB'
+        'f17f844b1558  zshusers/zsh  latest  8 weeks ago    64.3MB'
     )
 
     run _fzf_complete_docker-images_post <<< ${(F)input}
@@ -236,5 +236,5 @@
     assert ${#lines} equals 3
     assert ${lines[1]} same_as 'e7d92cdc71fe'
     assert ${lines[2]} same_as '5425b1e460b6'
-    assert ${lines[3]} same_as 'ccc6e87d482b'
+    assert ${lines[3]} same_as 'f17f844b1558'
 }
