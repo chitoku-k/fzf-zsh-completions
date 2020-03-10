@@ -8,6 +8,21 @@
     rm -f docker_mock_times
 }
 
+@test 'Testing completion: docker **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'docker '
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker '
+}
+
 @test 'Testing completion: docker create **' {
     echo 0 > docker_mock_times
 
