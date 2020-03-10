@@ -34,36 +34,32 @@ _fzf_complete_docker-images_post() {
 _fzf_complete_docker_tabularize() {
     awk \
         -v FS=${FS:- } \
-        -v colors_string=${(pj: :)@} \
+        -v colors_args=${(pj: :)@} \
         -v reset=$reset_color '
         BEGIN {
-            color_number = 0
-            if (colors_string != "") {
-                split(colors_string, colors, " ")
-                color_number = length(colors)
-            }
+            split(colors_args, colors, " ")
         }
         {
             str = $0
-            for (i = 1; i <= color_number; ++i) {
+            for (i = 1; i <= length(colors); ++i) {
                 field_max[i] = length($i) > field_max[i] ? length($i) : field_max[i]
                 fields[NR, i] = $i
-                match(str, FS)
-                str = substr(str, RSTART + RLENGTH)
+                pos = index(str, FS)
+                str = substr(str, pos + 1)
             }
-            if (RSTART != 0) {
+            if (pos != 0) {
                 fields[NR, i] = str
             }
         }
         END {
-            for (record_number = 1; record_number <= NR; ++record_number) {
-                for (field_number = 1; field_number <= color_number; ++field_number) {
-                    if (fields[record_number, field_number] == "") {
+            for (i = 1; i <= NR; ++i) {
+                for (j = 1; j <= length(colors); ++j) {
+                    if (fields[i, j] == "") {
                         break
                     }
-                    printf "%s%-" field_max[field_number] "s%s  ", colors[field_number], fields[record_number, field_number], reset
+                    printf "%s%-" field_max[j] "s%s  ", colors[j], fields[i, j], reset
                 }
-                print fields[record_number, field_number]
+                print fields[i, j]
             }
         }
     '
