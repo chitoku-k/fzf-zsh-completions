@@ -15,6 +15,8 @@ _fzf_complete_docker() {
         _fzf_complete_docker-images '--multi' $@
         return
     fi
+
+    _fzf_path_completion "$prefix" $@
 }
 
 _fzf_complete_docker-images() {
@@ -22,13 +24,13 @@ _fzf_complete_docker-images() {
     shift 1
 
     _fzf_complete "--ansi --tiebreak=index --header-lines=1 $fzf_options" $@ < <(
-        docker images --format 'table {{.Repository}};{{.Tag}};{{.ID}};{{if .CreatedSince }}{{.CreatedSince}}{{else}}N/A{{end}};{{.Size}}' 2> /dev/null \
+        docker images --format 'table {{.ID}};{{.Repository}};{{.Tag}};{{if .CreatedSince}}{{.CreatedSince}}{{else}}N/A{{end}};{{.Size}}' 2> /dev/null \
             | FS=';' _fzf_complete_docker_tabularize $fg[yellow] $reset_color{,,}
     )
 }
 
 _fzf_complete_docker-images_post() {
-    awk '{ if ($1 == "<none>") { print $3; next; } print $1 }'
+    awk '{ print $1 }'
 }
 
 _fzf_complete_docker_tabularize() {

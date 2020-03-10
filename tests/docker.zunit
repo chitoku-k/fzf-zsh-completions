@@ -22,14 +22,14 @@
         assert $# equals 3
         assert $1 same_as 'images'
         assert $2 same_as '--format'
-        assert $3 same_as 'table {{.Repository}};{{.Tag}};{{.ID}};{{if .CreatedSince }}{{.CreatedSince}}{{else}}N/A{{end}};{{.Size}}'
+        assert $3 same_as 'table {{.ID}};{{.Repository}};{{.Tag}};{{if .CreatedSince}}{{.CreatedSince}}{{else}}N/A{{end}};{{.Size}}'
 
-        echo 'REPOSITORY;TAG;IMAGE ID;CREATED;SIZE'
-        echo 'alpine;latest;e7d92cdc71fe;18 hours ago;5.59MB'
-        echo '<none>;<none>;5425b1e460b6;1 weeks ago;5.59MB'
-        echo 'ubuntu;latest;ccc6e87d482b;7 weeks ago;64.2MB'
-        echo 'zshusers/zsh;master;f17f844b1558;8 weeks ago;64.3MB'
-        echo 'archlinux;latest;0152bf6f0800;18 months ago;409MB'
+        echo 'IMAGE ID;REPOSITORY;TAG;CREATED;SIZE'
+        echo 'e7d92cdc71fe;alpine;latest;18 hours ago;5.59MB'
+        echo '5425b1e460b6;<none>;<none>;1 weeks ago;5.59MB'
+        echo 'ccc6e87d482b;ubuntu;latest;7 weeks ago;64.2MB'
+        echo 'f17f844b1558;zshusers/zsh;master;8 weeks ago;64.3MB'
+        echo '0152bf6f0800;archlinux;latest;18 months ago;409MB'
     }
 
     _fzf_complete() {
@@ -39,12 +39,12 @@
 
         run cat
         assert ${#lines} equals 6
-        assert ${lines[1]} same_as "${fg[yellow]}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}IMAGE ID    ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
-        assert ${lines[2]} same_as "${fg[yellow]}alpine      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}e7d92cdc71fe${reset_color}  ${reset_color}18 hours ago ${reset_color}  5.59MB"
-        assert ${lines[3]} same_as "${fg[yellow]}<none>      ${reset_color}  ${reset_color}<none>${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}1 weeks ago  ${reset_color}  5.59MB"
-        assert ${lines[4]} same_as "${fg[yellow]}ubuntu      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}ccc6e87d482b${reset_color}  ${reset_color}7 weeks ago  ${reset_color}  64.2MB"
-        assert ${lines[5]} same_as "${fg[yellow]}zshusers/zsh${reset_color}  ${reset_color}master${reset_color}  ${reset_color}f17f844b1558${reset_color}  ${reset_color}8 weeks ago  ${reset_color}  64.3MB"
-        assert ${lines[6]} same_as "${fg[yellow]}archlinux   ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}0152bf6f0800${reset_color}  ${reset_color}18 months ago${reset_color}  409MB"
+        assert ${lines[1]} same_as "${fg[yellow]}IMAGE ID    ${reset_color}  ${reset_color}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
+        assert ${lines[2]} same_as "${fg[yellow]}e7d92cdc71fe${reset_color}  ${reset_color}alpine      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 hours ago ${reset_color}  5.59MB"
+        assert ${lines[3]} same_as "${fg[yellow]}5425b1e460b6${reset_color}  ${reset_color}<none>      ${reset_color}  ${reset_color}<none>${reset_color}  ${reset_color}1 weeks ago  ${reset_color}  5.59MB"
+        assert ${lines[4]} same_as "${fg[yellow]}ccc6e87d482b${reset_color}  ${reset_color}ubuntu      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}7 weeks ago  ${reset_color}  64.2MB"
+        assert ${lines[5]} same_as "${fg[yellow]}f17f844b1558${reset_color}  ${reset_color}zshusers/zsh${reset_color}  ${reset_color}master${reset_color}  ${reset_color}8 weeks ago  ${reset_color}  64.3MB"
+        assert ${lines[6]} same_as "${fg[yellow]}0152bf6f0800${reset_color}  ${reset_color}archlinux   ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 months ago${reset_color}  409MB"
     }
 
     prefix=
@@ -65,14 +65,14 @@
         assert $# equals 3
         assert $1 same_as 'images'
         assert $2 same_as '--format'
-        assert $3 same_as 'table {{.Repository}};{{.Tag}};{{.ID}};{{if .CreatedSince }}{{.CreatedSince}}{{else}}N/A{{end}};{{.Size}}'
+        assert $3 same_as 'table {{.ID}};{{.Repository}};{{.Tag}};{{if .CreatedSince}}{{.CreatedSince}}{{else}}N/A{{end}};{{.Size}}'
 
-        echo 'REPOSITORY;TAG;IMAGE ID;CREATED;SIZE'
-        echo 'alpine;latest;e7d92cdc71fe;18 hours ago;5.59MB'
-        echo '<none>;<none>;5425b1e460b6;1 weeks ago;5.59MB'
-        echo 'ubuntu;latest;ccc6e87d482b;7 weeks ago;64.2MB'
-        echo 'zshusers/zsh;master;f17f844b1558;8 weeks ago;64.3MB'
-        echo 'archlinux;latest;0152bf6f0800;18 months ago;409MB'
+        echo 'IMAGE ID;REPOSITORY;TAG;CREATED;SIZE'
+        echo 'e7d92cdc71fe;alpine;latest;18 hours ago;5.59MB'
+        echo '5425b1e460b6;<none>;<none>;1 weeks ago;5.59MB'
+        echo 'ccc6e87d482b;ubuntu;latest;7 weeks ago;64.2MB'
+        echo 'f17f844b1558;zshusers/zsh;master;8 weeks ago;64.3MB'
+        echo '0152bf6f0800;archlinux;latest;18 months ago;409MB'
     }
 
     _fzf_complete() {
@@ -82,12 +82,12 @@
 
         run cat
         assert ${#lines} equals 6
-        assert ${lines[1]} same_as "${fg[yellow]}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}IMAGE ID    ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
-        assert ${lines[2]} same_as "${fg[yellow]}alpine      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}e7d92cdc71fe${reset_color}  ${reset_color}18 hours ago ${reset_color}  5.59MB"
-        assert ${lines[3]} same_as "${fg[yellow]}<none>      ${reset_color}  ${reset_color}<none>${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}1 weeks ago  ${reset_color}  5.59MB"
-        assert ${lines[4]} same_as "${fg[yellow]}ubuntu      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}ccc6e87d482b${reset_color}  ${reset_color}7 weeks ago  ${reset_color}  64.2MB"
-        assert ${lines[5]} same_as "${fg[yellow]}zshusers/zsh${reset_color}  ${reset_color}master${reset_color}  ${reset_color}f17f844b1558${reset_color}  ${reset_color}8 weeks ago  ${reset_color}  64.3MB"
-        assert ${lines[6]} same_as "${fg[yellow]}archlinux   ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}0152bf6f0800${reset_color}  ${reset_color}18 months ago${reset_color}  409MB"
+        assert ${lines[1]} same_as "${fg[yellow]}IMAGE ID    ${reset_color}  ${reset_color}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
+        assert ${lines[2]} same_as "${fg[yellow]}e7d92cdc71fe${reset_color}  ${reset_color}alpine      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 hours ago ${reset_color}  5.59MB"
+        assert ${lines[3]} same_as "${fg[yellow]}5425b1e460b6${reset_color}  ${reset_color}<none>      ${reset_color}  ${reset_color}<none>${reset_color}  ${reset_color}1 weeks ago  ${reset_color}  5.59MB"
+        assert ${lines[4]} same_as "${fg[yellow]}ccc6e87d482b${reset_color}  ${reset_color}ubuntu      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}7 weeks ago  ${reset_color}  64.2MB"
+        assert ${lines[5]} same_as "${fg[yellow]}f17f844b1558${reset_color}  ${reset_color}zshusers/zsh${reset_color}  ${reset_color}master${reset_color}  ${reset_color}8 weeks ago  ${reset_color}  64.3MB"
+        assert ${lines[6]} same_as "${fg[yellow]}0152bf6f0800${reset_color}  ${reset_color}archlinux   ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 months ago${reset_color}  409MB"
     }
 
     prefix=
@@ -108,14 +108,14 @@
         assert $# equals 3
         assert $1 same_as 'images'
         assert $2 same_as '--format'
-        assert $3 same_as 'table {{.Repository}};{{.Tag}};{{.ID}};{{if .CreatedSince }}{{.CreatedSince}}{{else}}N/A{{end}};{{.Size}}'
+        assert $3 same_as 'table {{.ID}};{{.Repository}};{{.Tag}};{{if .CreatedSince}}{{.CreatedSince}}{{else}}N/A{{end}};{{.Size}}'
 
-        echo 'REPOSITORY;TAG;IMAGE ID;CREATED;SIZE'
-        echo 'alpine;latest;e7d92cdc71fe;18 hours ago;5.59MB'
-        echo '<none>;<none>;5425b1e460b6;1 weeks ago;5.59MB'
-        echo 'ubuntu;latest;ccc6e87d482b;7 weeks ago;64.2MB'
-        echo 'zshusers/zsh;master;f17f844b1558;8 weeks ago;64.3MB'
-        echo 'archlinux;latest;0152bf6f0800;18 months ago;409MB'
+        echo 'IMAGE ID;REPOSITORY;TAG;CREATED;SIZE'
+        echo 'e7d92cdc71fe;alpine;latest;18 hours ago;5.59MB'
+        echo '5425b1e460b6;<none>;<none>;1 weeks ago;5.59MB'
+        echo 'ccc6e87d482b;ubuntu;latest;7 weeks ago;64.2MB'
+        echo 'f17f844b1558;zshusers/zsh;master;8 weeks ago;64.3MB'
+        echo '0152bf6f0800;archlinux;latest;18 months ago;409MB'
     }
 
     _fzf_complete() {
@@ -125,12 +125,12 @@
 
         run cat
         assert ${#lines} equals 6
-        assert ${lines[1]} same_as "${fg[yellow]}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}IMAGE ID    ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
-        assert ${lines[2]} same_as "${fg[yellow]}alpine      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}e7d92cdc71fe${reset_color}  ${reset_color}18 hours ago ${reset_color}  5.59MB"
-        assert ${lines[3]} same_as "${fg[yellow]}<none>      ${reset_color}  ${reset_color}<none>${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}1 weeks ago  ${reset_color}  5.59MB"
-        assert ${lines[4]} same_as "${fg[yellow]}ubuntu      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}ccc6e87d482b${reset_color}  ${reset_color}7 weeks ago  ${reset_color}  64.2MB"
-        assert ${lines[5]} same_as "${fg[yellow]}zshusers/zsh${reset_color}  ${reset_color}master${reset_color}  ${reset_color}f17f844b1558${reset_color}  ${reset_color}8 weeks ago  ${reset_color}  64.3MB"
-        assert ${lines[6]} same_as "${fg[yellow]}archlinux   ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}0152bf6f0800${reset_color}  ${reset_color}18 months ago${reset_color}  409MB"
+        assert ${lines[1]} same_as "${fg[yellow]}IMAGE ID    ${reset_color}  ${reset_color}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
+        assert ${lines[2]} same_as "${fg[yellow]}e7d92cdc71fe${reset_color}  ${reset_color}alpine      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 hours ago ${reset_color}  5.59MB"
+        assert ${lines[3]} same_as "${fg[yellow]}5425b1e460b6${reset_color}  ${reset_color}<none>      ${reset_color}  ${reset_color}<none>${reset_color}  ${reset_color}1 weeks ago  ${reset_color}  5.59MB"
+        assert ${lines[4]} same_as "${fg[yellow]}ccc6e87d482b${reset_color}  ${reset_color}ubuntu      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}7 weeks ago  ${reset_color}  64.2MB"
+        assert ${lines[5]} same_as "${fg[yellow]}f17f844b1558${reset_color}  ${reset_color}zshusers/zsh${reset_color}  ${reset_color}master${reset_color}  ${reset_color}8 weeks ago  ${reset_color}  64.3MB"
+        assert ${lines[6]} same_as "${fg[yellow]}0152bf6f0800${reset_color}  ${reset_color}archlinux   ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 months ago${reset_color}  409MB"
     }
 
     prefix=
@@ -151,14 +151,14 @@
         assert $# equals 3
         assert $1 same_as 'images'
         assert $2 same_as '--format'
-        assert $3 same_as 'table {{.Repository}};{{.Tag}};{{.ID}};{{if .CreatedSince }}{{.CreatedSince}}{{else}}N/A{{end}};{{.Size}}'
+        assert $3 same_as 'table {{.ID}};{{.Repository}};{{.Tag}};{{if .CreatedSince}}{{.CreatedSince}}{{else}}N/A{{end}};{{.Size}}'
 
-        echo 'REPOSITORY;TAG;IMAGE ID;CREATED;SIZE'
-        echo 'alpine;latest;e7d92cdc71fe;18 hours ago;5.59MB'
-        echo '<none>;<none>;5425b1e460b6;1 weeks ago;5.59MB'
-        echo 'ubuntu;latest;ccc6e87d482b;7 weeks ago;64.2MB'
-        echo 'zshusers/zsh;master;f17f844b1558;8 weeks ago;64.3MB'
-        echo 'archlinux;latest;0152bf6f0800;18 months ago;409MB'
+        echo 'IMAGE ID;REPOSITORY;TAG;CREATED;SIZE'
+        echo 'e7d92cdc71fe;alpine;latest;18 hours ago;5.59MB'
+        echo '5425b1e460b6;<none>;<none>;1 weeks ago;5.59MB'
+        echo 'ccc6e87d482b;ubuntu;latest;7 weeks ago;64.2MB'
+        echo 'f17f844b1558;zshusers/zsh;master;8 weeks ago;64.3MB'
+        echo '0152bf6f0800;archlinux;latest;18 months ago;409MB'
     }
 
     _fzf_complete() {
@@ -168,12 +168,12 @@
 
         run cat
         assert ${#lines} equals 6
-        assert ${lines[1]} same_as "${fg[yellow]}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}IMAGE ID    ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
-        assert ${lines[2]} same_as "${fg[yellow]}alpine      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}e7d92cdc71fe${reset_color}  ${reset_color}18 hours ago ${reset_color}  5.59MB"
-        assert ${lines[3]} same_as "${fg[yellow]}<none>      ${reset_color}  ${reset_color}<none>${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}1 weeks ago  ${reset_color}  5.59MB"
-        assert ${lines[4]} same_as "${fg[yellow]}ubuntu      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}ccc6e87d482b${reset_color}  ${reset_color}7 weeks ago  ${reset_color}  64.2MB"
-        assert ${lines[5]} same_as "${fg[yellow]}zshusers/zsh${reset_color}  ${reset_color}master${reset_color}  ${reset_color}f17f844b1558${reset_color}  ${reset_color}8 weeks ago  ${reset_color}  64.3MB"
-        assert ${lines[6]} same_as "${fg[yellow]}archlinux   ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}0152bf6f0800${reset_color}  ${reset_color}18 months ago${reset_color}  409MB"
+        assert ${lines[1]} same_as "${fg[yellow]}IMAGE ID    ${reset_color}  ${reset_color}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
+        assert ${lines[2]} same_as "${fg[yellow]}e7d92cdc71fe${reset_color}  ${reset_color}alpine      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 hours ago ${reset_color}  5.59MB"
+        assert ${lines[3]} same_as "${fg[yellow]}5425b1e460b6${reset_color}  ${reset_color}<none>      ${reset_color}  ${reset_color}<none>${reset_color}  ${reset_color}1 weeks ago  ${reset_color}  5.59MB"
+        assert ${lines[4]} same_as "${fg[yellow]}ccc6e87d482b${reset_color}  ${reset_color}ubuntu      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}7 weeks ago  ${reset_color}  64.2MB"
+        assert ${lines[5]} same_as "${fg[yellow]}f17f844b1558${reset_color}  ${reset_color}zshusers/zsh${reset_color}  ${reset_color}master${reset_color}  ${reset_color}8 weeks ago  ${reset_color}  64.3MB"
+        assert ${lines[6]} same_as "${fg[yellow]}0152bf6f0800${reset_color}  ${reset_color}archlinux   ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 months ago${reset_color}  409MB"
     }
 
     prefix=
@@ -194,14 +194,14 @@
         assert $# equals 3
         assert $1 same_as 'images'
         assert $2 same_as '--format'
-        assert $3 same_as 'table {{.Repository}};{{.Tag}};{{.ID}};{{if .CreatedSince }}{{.CreatedSince}}{{else}}N/A{{end}};{{.Size}}'
+        assert $3 same_as 'table {{.ID}};{{.Repository}};{{.Tag}};{{if .CreatedSince}}{{.CreatedSince}}{{else}}N/A{{end}};{{.Size}}'
 
-        echo 'REPOSITORY;TAG;IMAGE ID;CREATED;SIZE'
-        echo 'alpine;latest;e7d92cdc71fe;18 hours ago;5.59MB'
-        echo '<none>;<none>;5425b1e460b6;1 weeks ago;5.59MB'
-        echo 'ubuntu;latest;ccc6e87d482b;7 weeks ago;64.2MB'
-        echo 'zshusers/zsh;master;f17f844b1558;8 weeks ago;64.3MB'
-        echo 'archlinux;latest;0152bf6f0800;18 months ago;409MB'
+        echo 'IMAGE ID;REPOSITORY;TAG;CREATED;SIZE'
+        echo 'e7d92cdc71fe;alpine;latest;18 hours ago;5.59MB'
+        echo '5425b1e460b6;<none>;<none>;1 weeks ago;5.59MB'
+        echo 'ccc6e87d482b;ubuntu;latest;7 weeks ago;64.2MB'
+        echo 'f17f844b1558;zshusers/zsh;master;8 weeks ago;64.3MB'
+        echo '0152bf6f0800;archlinux;latest;18 months ago;409MB'
     }
 
     _fzf_complete() {
@@ -211,12 +211,12 @@
 
         run cat
         assert ${#lines} equals 6
-        assert ${lines[1]} same_as "${fg[yellow]}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}IMAGE ID    ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
-        assert ${lines[2]} same_as "${fg[yellow]}alpine      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}e7d92cdc71fe${reset_color}  ${reset_color}18 hours ago ${reset_color}  5.59MB"
-        assert ${lines[3]} same_as "${fg[yellow]}<none>      ${reset_color}  ${reset_color}<none>${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}1 weeks ago  ${reset_color}  5.59MB"
-        assert ${lines[4]} same_as "${fg[yellow]}ubuntu      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}ccc6e87d482b${reset_color}  ${reset_color}7 weeks ago  ${reset_color}  64.2MB"
-        assert ${lines[5]} same_as "${fg[yellow]}zshusers/zsh${reset_color}  ${reset_color}master${reset_color}  ${reset_color}f17f844b1558${reset_color}  ${reset_color}8 weeks ago  ${reset_color}  64.3MB"
-        assert ${lines[6]} same_as "${fg[yellow]}archlinux   ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}0152bf6f0800${reset_color}  ${reset_color}18 months ago${reset_color}  409MB"
+        assert ${lines[1]} same_as "${fg[yellow]}IMAGE ID    ${reset_color}  ${reset_color}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
+        assert ${lines[2]} same_as "${fg[yellow]}e7d92cdc71fe${reset_color}  ${reset_color}alpine      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 hours ago ${reset_color}  5.59MB"
+        assert ${lines[3]} same_as "${fg[yellow]}5425b1e460b6${reset_color}  ${reset_color}<none>      ${reset_color}  ${reset_color}<none>${reset_color}  ${reset_color}1 weeks ago  ${reset_color}  5.59MB"
+        assert ${lines[4]} same_as "${fg[yellow]}ccc6e87d482b${reset_color}  ${reset_color}ubuntu      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}7 weeks ago  ${reset_color}  64.2MB"
+        assert ${lines[5]} same_as "${fg[yellow]}f17f844b1558${reset_color}  ${reset_color}zshusers/zsh${reset_color}  ${reset_color}master${reset_color}  ${reset_color}8 weeks ago  ${reset_color}  64.3MB"
+        assert ${lines[6]} same_as "${fg[yellow]}0152bf6f0800${reset_color}  ${reset_color}archlinux   ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 months ago${reset_color}  409MB"
     }
 
     prefix=
@@ -225,16 +225,16 @@
 
 @test 'Testing post: docker' {
     input=(
-        'alpine        latest  e7d92cdc71fe  18 hours ago   5.59MB'
-        '<none>        <none>  5425b1e460b6  1 weeks ago    5.59MB'
-        'ubuntu        latest  ccc6e87d482b  7 weeks ago    64.2MB'
+        'e7d92cdc71fe  alpine        latest  18 hours ago   5.59MB'
+        '5425b1e460b6  <none>        <none>  1 weeks ago    5.59MB'
+        'ccc6e87d482b  ubuntu        latest  7 weeks ago    64.2MB'
     )
 
     run _fzf_complete_docker-images_post <<< ${(F)input}
 
     assert $state equals 0
     assert ${#lines} equals 3
-    assert ${lines[1]} same_as 'alpine'
+    assert ${lines[1]} same_as 'e7d92cdc71fe'
     assert ${lines[2]} same_as '5425b1e460b6'
-    assert ${lines[3]} same_as 'ubuntu'
+    assert ${lines[3]} same_as 'ccc6e87d482b'
 }
