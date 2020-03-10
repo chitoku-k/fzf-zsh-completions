@@ -33,6 +33,7 @@ zplug "chitoku-k/fzf-zsh-completions"
   - checkout
   - cherry-pick
   - commit
+  - diff
   - log
   - merge
   - pull
