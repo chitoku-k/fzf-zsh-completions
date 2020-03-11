@@ -56,9 +56,6 @@ _fzf_complete_docker_tabularize() {
         END {
             for (i = 1; i <= NR; ++i) {
                 for (j = 1; j <= length(colors); ++j) {
-                    if (fields[i, j] == "") {
-                        break
-                    }
                     printf "%s%-" field_max[j] "s%s  ", colors[j], fields[i, j], reset
                 }
                 print fields[i, j]
