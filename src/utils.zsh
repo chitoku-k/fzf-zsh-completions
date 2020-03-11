@@ -13,6 +13,7 @@ _fzf_complete_tabularize() {
         }
         {
             str = $0
+            pos = -1
             for (i = 1; i <= length(colors); ++i) {
                 field_max[i] = length($i) > field_max[i] ? length($i) : field_max[i]
                 fields[NR, i] = $i
