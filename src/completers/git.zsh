@@ -274,7 +274,7 @@ _fzf_complete_git-commits() {
     _fzf_complete "--ansi --tiebreak=index $fzf_options" $@ < <({
         git for-each-ref refs/heads refs/remotes refs/tags --format='%(refname:short) %(contents:subject)' 2> /dev/null
         git log --format='%h %s' 2> /dev/null
-    } | awk -v prefix=$prefix_option '{ print prefix $0 }' | _fzf_complete_git_tabularize)
+    } | awk -v prefix=$prefix_option '{ print prefix $0 }' | _fzf_complete_tabularize ${fg[yellow]})
 }
 
 _fzf_complete_git-commits_post() {
@@ -292,7 +292,7 @@ _fzf_complete_git-commit-messages() {
                 match($0, / /)
                 print $1, prefix substr($0, RSTART + RLENGTH)
             }
-        ' | _fzf_complete_git_tabularize
+        ' | _fzf_complete_tabularize ${fg[yellow]}
     )
 }
 
@@ -378,7 +378,7 @@ _fzf_complete_git-remotes() {
             gsub("\t", " ")
             print
         }
-    ' | _fzf_complete_git_tabularize)
+    ' | _fzf_complete_tabularize ${fg[yellow]})
 }
 
 _fzf_complete_git-remotes_post() {
@@ -393,7 +393,7 @@ _fzf_complete_git-refs() {
 
     _fzf_complete "--ansi --tiebreak=index $fzf_options" $@ < <(
         git for-each-ref "$ref" --format='%(refname:short) %(contents:subject)' 2> /dev/null |
-        awk -v prefix=$prefix_option '{ print prefix $0 }' | _fzf_complete_git_tabularize
+        awk -v prefix=$prefix_option '{ print prefix $0 }' | _fzf_complete_tabularize ${fg[yellow]}
     )
 }
 
@@ -541,26 +541,4 @@ _fzf_complete_git_parse_argument() {
 
     echo ${command_arguments[$index]}
     return $(( index > #command_arguments ))
-}
-
-_fzf_complete_git_tabularize() {
-    awk \
-        -v yellow=${fg[yellow]} \
-        -v reset=$reset_color '
-        {
-            refnames[NR] = $1
-
-            if (length($1) > refname_max) {
-                refname_max = length($1)
-            }
-
-            match($0, / /)
-            messages[NR] = substr($0, RSTART + RLENGTH)
-        }
-        END {
-            for (i = 1; i <= length(refnames); ++i) {
-                printf "%s%-" refname_max "s %s %s\n", yellow, refnames[i], reset, messages[i]
-            }
-        }
-    '
 }
