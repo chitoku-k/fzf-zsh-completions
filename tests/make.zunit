@@ -58,7 +58,6 @@
     prefix=
     _fzf_complete_make 'make ' 2> $tmpfile
 
-    run cat $tmpfile
-    assert ${#lines} equals 1
-    assert ${lines[1]} same_as ''
+    zmodload zsh/stat
+    assert $(stat +size $tmpfile) equals 0
 }
