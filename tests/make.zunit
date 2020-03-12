@@ -3,6 +3,11 @@
 @setup {
     load ../fzf-zsh-completions.plugin.zsh
     pushd tests/_support/make
+    tmpfile=$(mktemp)
+}
+
+@teardown {
+    rm -f $tmpfile
 }
 
 @test 'Testing completion: make **' {
@@ -19,4 +24,24 @@
 
     prefix=
     _fzf_complete_make 'make '
+}
+
+@test 'Testing completion (Makefile doesn'\''t exist): make **' {
+    pushd nomakefile
+
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 matches '--ansi --tiebreak=index '
+        assert $2 same_as 'make '
+
+        run cat
+        assert ${#lines} equals 1
+    }
+
+    prefix=
+    _fzf_complete_make 'make ' 2> $tmpfile
+
+    run cat $tmpfile
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as ''
 }
