@@ -4,6 +4,7 @@
     load ../fzf-zsh-completions.plugin.zsh
     pushd tests/_support/make
     tmpfile=$(mktemp)
+    zmodload zsh/stat
 }
 
 @teardown {
@@ -58,6 +59,5 @@
     prefix=
     _fzf_complete_make 'make ' 2> $tmpfile
 
-    zmodload zsh/stat
     assert $(stat +size $tmpfile) equals 0
 }
