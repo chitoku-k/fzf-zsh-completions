@@ -6,32 +6,32 @@ colors
 _fzf_complete_docker() {
     local subcommand=${${(Q)${(z)@}}[2]}
 
-    if [[ $subcommand =~ (create|history|run) ]]; then
+    if [[ $subcommand =~ ^(create|history|run)$ ]]; then
         _fzf_complete_docker-images '' $@
         return
     fi
 
-    if [[ $subcommand =~ (rmi|save) ]]; then
+    if [[ $subcommand =~ ^(rmi|save)$ ]]; then
         _fzf_complete_docker-images '--multi' $@
         return
     fi
 
-    if [[ $subcommand =~ (attach|exec|top) ]]; then
+    if [[ $subcommand =~ ^(attach|exec|top)$ ]]; then
         _fzf_complete_docker-containers '' '' $@
         return
     fi
 
-    if [[ $subcommand =~ (kill|pause|stop|unpause) ]]; then
+    if [[ $subcommand =~ ^(kill|pause|stop|unpause)$ ]]; then
         _fzf_complete_docker-containers '' '--multi' $@
         return
     fi
 
-    if [[ $subcommand =~ (commit|cp|diff|export|logs|port|rename) ]]; then
+    if [[ $subcommand =~ ^(commit|cp|diff|export|logs|port|rename)$ ]]; then
         _fzf_complete_docker-containers '--all' '' $@
         return
     fi
 
-    if [[ $subcommand =~ (restart|rm|start|stats|update|wait) ]]; then
+    if [[ $subcommand =~ ^(restart|rm|start|stats|update|wait)$ ]]; then
         _fzf_complete_docker-containers '--all' '--multi' $@
         return
     fi
