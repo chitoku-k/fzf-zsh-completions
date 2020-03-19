@@ -50,16 +50,13 @@ zplug "chitoku-k/fzf-zsh-completions"
 - yarn
   - run
 - docker
-  - create
-  - history
-  - run
-  - rmi
-  - save
   - attach
   - commit
+  - create
   - diff
   - exec
   - export
+  - history
   - kill
   - logs
   - pause
@@ -67,6 +64,9 @@ zplug "chitoku-k/fzf-zsh-completions"
   - rename
   - restart
   - rm
+  - rmi
+  - run
+  - save
   - start
   - stats
   - stop
