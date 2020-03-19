@@ -55,6 +55,25 @@ zplug "chitoku-k/fzf-zsh-completions"
   - run
   - rmi
   - save
+  - attach
+  - commit
+  - diff
+  - exec
+  - export
+  - kill
+  - logs
+  - pause
+  - port
+  - rename
+  - restart
+  - rm
+  - start
+  - stats
+  - stop
+  - top
+  - unpause
+  - update
+  - wait
 
 ## Usage
 
