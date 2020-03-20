@@ -11,7 +11,7 @@ _fzf_complete_docker() {
         return
     fi
 
-    if [[ $subcommand =~ ^(rmi|save)$ ]]; then
+    if [[ $subcommand =~ ^(rmi|save|tag)$ ]]; then
         _fzf_complete_docker-images '--multi' $@
         return
     fi

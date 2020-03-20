@@ -70,6 +70,7 @@ zplug "chitoku-k/fzf-zsh-completions"
   - start
   - stats
   - stop
+  - tag
   - top
   - unpause
   - update
