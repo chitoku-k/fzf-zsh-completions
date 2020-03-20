@@ -26,7 +26,7 @@ _fzf_complete_docker() {
         return
     fi
 
-    if [[ $subcommand =~ ^(commit|diff|export|logs|port|rename)$ ]]; then
+    if [[ $subcommand =~ ^(commit|cp|diff|export|logs|port|rename)$ ]]; then
         _fzf_complete_docker-containers '--all' '' $@
         return
     fi
