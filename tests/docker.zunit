@@ -621,6 +621,51 @@
     _fzf_complete_docker 'docker commit '
 }
 
+@test 'Testing completion: docker cp **' {
+    echo 0 > docker_mock_times
+
+    docker() {
+        docker_mock_times=$(($(cat docker_mock_times) + 1))
+        echo $docker_mock_times > docker_mock_times
+
+        docker_mock_$docker_mock_times $@
+    }
+
+    docker_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'container'
+        assert $2 same_as 'list'
+        assert $3 same_as '--all'
+        assert $4 same_as '--format'
+        assert $5 same_as 'table {{.ID}};{{.Image}};{{.Command}};{{.RunningFor}};{{.Status}};{{.Ports}};{{.Names}}'
+
+        echo 'CONTAINER ID;IMAGE;COMMAND;CREATED;STATUS;PORTS;NAME'
+        echo '728e677dd292;5425b1e460b6;"/bin/sh";12 days ago;Exited (0) 12 days ago;;affectionate_curie'
+        echo '5dbce56c9f3c;app;"/bin/sh";12 days ago;Exited (0) 12 days ago;;priceless_euler'
+        echo '862e5e30b1a7;app;"/bin/sh";12 days ago;Exited (0) 12 days ago;;gifted_elion'
+        echo '61858546cc23;5425b1e460b6;"/bin/sh";12 days ago;Exited (0) 12 days ago;;wonderful_tesla'
+        echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
+    }
+
+    _fzf_complete() {
+        assert $# equals 2
+        assert $1 matches '--ansi --tiebreak=index --header-lines=1 '
+        assert $2 same_as 'docker cp '
+
+        run cat
+        assert ${#lines} equals 6
+        assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
+        assert ${lines[2]} same_as "${fg[yellow]}728e677dd292${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  affectionate_curie"
+        assert ${lines[3]} same_as "${fg[yellow]}5dbce56c9f3c${reset_color}  ${reset_color}app         ${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  priceless_euler"
+        assert ${lines[4]} same_as "${fg[yellow]}862e5e30b1a7${reset_color}  ${reset_color}app         ${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  gifted_elion"
+        assert ${lines[5]} same_as "${fg[yellow]}61858546cc23${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  wonderful_tesla"
+        assert ${lines[6]} same_as "${fg[yellow]}295e3ea0de41${reset_color}  ${reset_color}archlinux   ${reset_color}  ${reset_color}\"/bin/zsh --login\"${reset_color}  ${reset_color}4 weeks ago${reset_color}  ${reset_color}Up 1 second           ${reset_color}  ${reset_color}     ${reset_color}  thankful_smyth"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker cp '
+}
+
 @test 'Testing completion: docker diff **' {
     echo 0 > docker_mock_times
 
@@ -1145,18 +1190,29 @@
     assert ${lines[1]} same_as 'zshusers/zsh'
 }
 
-@test 'Testing post: docker-containers' {
+@test 'Testing post: docker-containers when subcommand is not cp' {
     input=(
         '862e5e30b1a7  app           "/bin/sh"           12 days ago  Exited (0) 12 days ago         gifted_elion'
         '61858546cc23  5425b1e460b6  "/bin/sh"           12 days ago  Exited (0) 12 days ago         wonderful_tesla'
         '295e3ea0de41  archlinux     "/bin/zsh --login"  4 weeks ago  Up 1 second                    thankful_smyth'
     )
 
-    run _fzf_complete_docker-containers_post <<< ${(F)input}
+    run _fzf_complete_docker-containers_post <<< ${(F)input} \| tr '\n' ' '
 
     assert $state equals 0
-    assert ${#lines} equals 3
-    assert ${lines[1]} same_as '862e5e30b1a7'
-    assert ${lines[2]} same_as '61858546cc23'
-    assert ${lines[3]} same_as '295e3ea0de41'
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as '862e5e30b1a7 61858546cc23 295e3ea0de41 '
+}
+
+@test 'Testing post: docker-containers when subcommand is cp' {
+    subcommand=cp
+    input=(
+        '295e3ea0de41  archlinux  "/bin/zsh --login"  4 weeks ago  Up 1 second         thankful_smyth'
+    )
+
+    run _fzf_complete_docker-containers_post <<< ${(F)input} \| tr '\n' ' '
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as '295e3ea0de41:'
 }
