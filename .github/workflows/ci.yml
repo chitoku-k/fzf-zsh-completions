@@ -18,4 +18,5 @@ jobs:
         with:
           submodules: true
       - name: Run unit tests
-        shell: tests/test.zsh
+        shell: 'bash -i -l -c {0}'
+        run: tests/test.zsh
