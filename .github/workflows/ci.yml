@@ -12,11 +12,12 @@ jobs:
         os:
           - ubuntu-latest
           - macos-latest
+    container:
+      options: --tty
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
           submodules: true
       - name: Run unit tests
-        shell: 'bash -i -l -c {0}'
         run: tests/test.zsh
