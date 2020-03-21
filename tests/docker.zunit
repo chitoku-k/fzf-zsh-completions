@@ -120,14 +120,15 @@
     }
 
     docker_mock_1() {
-        assert $# equals 3
+        assert $# equals 5
         assert $1 same_as 'images'
-        assert $2 same_as '--format'
-        assert $3 same_as 'table {{.Repository}};{{.ID}};{{.Tag}};{{if .CreatedSince}}{{.CreatedSince}}{{else}}N/A{{end}};{{.Size}}'
+        assert $2 same_as '--filter'
+        assert $3 same_as 'dangling=false'
+        assert $4 same_as '--format'
+        assert $5 same_as 'table {{.Repository}};{{.ID}};{{.Tag}};{{if .CreatedSince}}{{.CreatedSince}}{{else}}N/A{{end}};{{.Size}}'
 
         echo 'REPOSITORY;IMAGE ID;TAG;CREATED;SIZE'
         echo 'alpine;e7d92cdc71fe;latest;18 hours ago;5.59MB'
-        echo '<none>;5425b1e460b6;<none>;1 weeks ago;5.59MB'
         echo 'ubuntu;ccc6e87d482b;latest;7 weeks ago;64.2MB'
         echo 'zshusers/zsh;f17f844b1558;master;8 weeks ago;64.3MB'
         echo 'archlinux;0152bf6f0800;latest;18 months ago;409MB'
@@ -139,13 +140,12 @@
         assert $2 same_as 'docker push '
 
         run cat
-        assert ${#lines} equals 6
+        assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}REPOSITORY  ${reset_color}  ${reset_color}IMAGE ID    ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
         assert ${lines[2]} same_as "${fg[yellow]}alpine      ${reset_color}  ${reset_color}e7d92cdc71fe${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 hours ago ${reset_color}  5.59MB"
-        assert ${lines[3]} same_as "${fg[yellow]}<none>      ${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}<none>${reset_color}  ${reset_color}1 weeks ago  ${reset_color}  5.59MB"
-        assert ${lines[4]} same_as "${fg[yellow]}ubuntu      ${reset_color}  ${reset_color}ccc6e87d482b${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}7 weeks ago  ${reset_color}  64.2MB"
-        assert ${lines[5]} same_as "${fg[yellow]}zshusers/zsh${reset_color}  ${reset_color}f17f844b1558${reset_color}  ${reset_color}master${reset_color}  ${reset_color}8 weeks ago  ${reset_color}  64.3MB"
-        assert ${lines[6]} same_as "${fg[yellow]}archlinux   ${reset_color}  ${reset_color}0152bf6f0800${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 months ago${reset_color}  409MB"
+        assert ${lines[3]} same_as "${fg[yellow]}ubuntu      ${reset_color}  ${reset_color}ccc6e87d482b${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}7 weeks ago  ${reset_color}  64.2MB"
+        assert ${lines[4]} same_as "${fg[yellow]}zshusers/zsh${reset_color}  ${reset_color}f17f844b1558${reset_color}  ${reset_color}master${reset_color}  ${reset_color}8 weeks ago  ${reset_color}  64.3MB"
+        assert ${lines[5]} same_as "${fg[yellow]}archlinux   ${reset_color}  ${reset_color}0152bf6f0800${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 months ago${reset_color}  409MB"
     }
 
     prefix=
