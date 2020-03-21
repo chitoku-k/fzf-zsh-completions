@@ -12,12 +12,10 @@ jobs:
         os:
           - ubuntu-latest
           - macos-latest
-    container:
-      options: --tty
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
           submodules: true
       - name: Run unit tests
-        run: tests/test.zsh
+        run: TERM=xterm tests/test.zsh
