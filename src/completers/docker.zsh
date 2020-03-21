@@ -6,7 +6,7 @@ colors
 _fzf_complete_docker() {
     local subcommand=${${(Q)${(z)@}}[2]}
 
-    if [[ $subcommand =~ ^(create|history|run)$ ]]; then
+    if [[ $subcommand =~ ^(create|history|push|run)$ ]]; then
         _fzf_complete_docker-images '' $@
         return
     fi
