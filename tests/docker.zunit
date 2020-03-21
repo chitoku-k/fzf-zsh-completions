@@ -1073,7 +1073,7 @@
     _fzf_complete_docker 'docker wait '
 }
 
-@test 'Testing post: docker-images' {
+@test 'Testing post: docker-images when subcommand is not push' {
     input=(
         'e7d92cdc71fe  alpine        latest  18 hours ago   5.59MB'
         '5425b1e460b6  <none>        <none>  1 weeks ago    5.59MB'
@@ -1087,6 +1087,19 @@
     assert ${lines[1]} same_as 'e7d92cdc71fe'
     assert ${lines[2]} same_as '5425b1e460b6'
     assert ${lines[3]} same_as 'f17f844b1558'
+}
+
+@test 'Testing post: docker-images when subcommand is push' {
+    subcommand=push
+    input=(
+        'f17f844b1558  zshusers/zsh  latest  8 weeks ago  64.3MB'
+    )
+
+    run _fzf_complete_docker-images_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'zshusers/zsh'
 }
 
 @test 'Testing post: docker-containers' {

@@ -50,7 +50,11 @@ _fzf_complete_docker-images() {
 }
 
 _fzf_complete_docker-images_post() {
-    awk '{ print $1 }'
+    if [[ $subcommand = push ]]; then
+        awk '{ print $2 }'
+    else
+        awk '{ print $1 }'
+    fi
 }
 
 _fzf_complete_docker-containers() {
