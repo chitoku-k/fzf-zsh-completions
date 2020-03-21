@@ -123,14 +123,14 @@
         assert $# equals 3
         assert $1 same_as 'images'
         assert $2 same_as '--format'
-        assert $3 same_as 'table {{.ID}};{{.Repository}};{{.Tag}};{{if .CreatedSince}}{{.CreatedSince}}{{else}}N/A{{end}};{{.Size}}'
+        assert $3 same_as 'table {{.Repository}};{{.ID}};{{.Tag}};{{if .CreatedSince}}{{.CreatedSince}}{{else}}N/A{{end}};{{.Size}}'
 
-        echo 'IMAGE ID;REPOSITORY;TAG;CREATED;SIZE'
-        echo 'e7d92cdc71fe;alpine;latest;18 hours ago;5.59MB'
-        echo '5425b1e460b6;<none>;<none>;1 weeks ago;5.59MB'
-        echo 'ccc6e87d482b;ubuntu;latest;7 weeks ago;64.2MB'
-        echo 'f17f844b1558;zshusers/zsh;master;8 weeks ago;64.3MB'
-        echo '0152bf6f0800;archlinux;latest;18 months ago;409MB'
+        echo 'REPOSITORY;IMAGE ID;TAG;CREATED;SIZE'
+        echo 'alpine;e7d92cdc71fe;latest;18 hours ago;5.59MB'
+        echo '<none>;5425b1e460b6;<none>;1 weeks ago;5.59MB'
+        echo 'ubuntu;ccc6e87d482b;latest;7 weeks ago;64.2MB'
+        echo 'zshusers/zsh;f17f844b1558;master;8 weeks ago;64.3MB'
+        echo 'archlinux;0152bf6f0800;latest;18 months ago;409MB'
     }
 
     _fzf_complete() {
@@ -140,12 +140,12 @@
 
         run cat
         assert ${#lines} equals 6
-        assert ${lines[1]} same_as "${fg[yellow]}IMAGE ID    ${reset_color}  ${reset_color}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
-        assert ${lines[2]} same_as "${fg[yellow]}e7d92cdc71fe${reset_color}  ${reset_color}alpine      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 hours ago ${reset_color}  5.59MB"
-        assert ${lines[3]} same_as "${fg[yellow]}5425b1e460b6${reset_color}  ${reset_color}<none>      ${reset_color}  ${reset_color}<none>${reset_color}  ${reset_color}1 weeks ago  ${reset_color}  5.59MB"
-        assert ${lines[4]} same_as "${fg[yellow]}ccc6e87d482b${reset_color}  ${reset_color}ubuntu      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}7 weeks ago  ${reset_color}  64.2MB"
-        assert ${lines[5]} same_as "${fg[yellow]}f17f844b1558${reset_color}  ${reset_color}zshusers/zsh${reset_color}  ${reset_color}master${reset_color}  ${reset_color}8 weeks ago  ${reset_color}  64.3MB"
-        assert ${lines[6]} same_as "${fg[yellow]}0152bf6f0800${reset_color}  ${reset_color}archlinux   ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 months ago${reset_color}  409MB"
+        assert ${lines[1]} same_as "${fg[yellow]}REPOSITORY  ${reset_color}  ${reset_color}IMAGE ID    ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
+        assert ${lines[2]} same_as "${fg[yellow]}alpine      ${reset_color}  ${reset_color}e7d92cdc71fe${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 hours ago ${reset_color}  5.59MB"
+        assert ${lines[3]} same_as "${fg[yellow]}<none>      ${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}<none>${reset_color}  ${reset_color}1 weeks ago  ${reset_color}  5.59MB"
+        assert ${lines[4]} same_as "${fg[yellow]}ubuntu      ${reset_color}  ${reset_color}ccc6e87d482b${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}7 weeks ago  ${reset_color}  64.2MB"
+        assert ${lines[5]} same_as "${fg[yellow]}zshusers/zsh${reset_color}  ${reset_color}f17f844b1558${reset_color}  ${reset_color}master${reset_color}  ${reset_color}8 weeks ago  ${reset_color}  64.3MB"
+        assert ${lines[6]} same_as "${fg[yellow]}archlinux   ${reset_color}  ${reset_color}0152bf6f0800${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 months ago${reset_color}  409MB"
     }
 
     prefix=
@@ -1116,7 +1116,7 @@
     _fzf_complete_docker 'docker wait '
 }
 
-@test 'Testing post: docker-images when subcommand is not push' {
+@test 'Testing post: docker-images' {
     input=(
         'e7d92cdc71fe  alpine        latest  18 hours ago   5.59MB'
         '5425b1e460b6  <none>        <none>  1 weeks ago    5.59MB'
@@ -1132,10 +1132,10 @@
     assert ${lines[3]} same_as 'f17f844b1558'
 }
 
-@test 'Testing post: docker-images when subcommand is push' {
+@test 'Testing post: docker-images-repository' {
     subcommand=push
     input=(
-        'f17f844b1558  zshusers/zsh  latest  8 weeks ago  64.3MB'
+        'zshusers/zsh  f17f844b1558  latest  8 weeks ago  64.3MB'
     )
 
     run _fzf_complete_docker-images_post <<< ${(F)input}

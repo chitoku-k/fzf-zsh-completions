@@ -6,8 +6,13 @@ colors
 _fzf_complete_docker() {
     local subcommand=${${(Q)${(z)@}}[2]}
 
-    if [[ $subcommand =~ ^(create|history|push|run)$ ]]; then
+    if [[ $subcommand =~ ^(create|history|run)$ ]]; then
         _fzf_complete_docker-images '' $@
+        return
+    fi
+
+    if [[ $subcommand = push ]]; then
+        _fzf_complete_docker-images-repository '' $@
         return
     fi
 
@@ -50,11 +55,21 @@ _fzf_complete_docker-images() {
 }
 
 _fzf_complete_docker-images_post() {
-    if [[ $subcommand = push ]]; then
-        awk '{ print $2 }'
-    else
-        awk '{ print $1 }'
-    fi
+    awk '{ print $1 }'
+}
+
+_fzf_complete_docker-images-repository() {
+    local fzf_options=$1
+    shift 1
+
+    _fzf_complete "--ansi --tiebreak=index --header-lines=1 $fzf_options" $@ < <(
+        docker images --format 'table {{.Repository}};{{.ID}};{{.Tag}};{{if .CreatedSince}}{{.CreatedSince}}{{else}}N/A{{end}};{{.Size}}' 2> /dev/null \
+            | FS=';' _fzf_complete_tabularize $fg[yellow] $reset_color{,,}
+    )
+}
+
+_fzf_complete_docker-images-repository_post() {
+    awk '{ print $1 }'
 }
 
 _fzf_complete_docker-containers() {
