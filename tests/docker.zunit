@@ -1183,7 +1183,7 @@
         'zshusers/zsh  f17f844b1558  latest  8 weeks ago  64.3MB'
     )
 
-    run _fzf_complete_docker-images_post <<< ${(F)input}
+    run _fzf_complete_docker-images-repository_post <<< ${(F)input} \| tr '\n' ' '
 
     assert $state equals 0
     assert ${#lines} equals 1

@@ -78,7 +78,13 @@ _fzf_complete_docker-images-repository() {
 }
 
 _fzf_complete_docker-images-repository_post() {
-    awk '{ print $1 }'
+    local input=$(awk '{ print $1 }')
+
+    if [[ -z $input ]]; then
+        return
+    fi
+
+    echo -n $input
 }
 
 _fzf_complete_docker-containers() {
