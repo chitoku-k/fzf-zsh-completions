@@ -17,5 +17,10 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: true
+      - name: Install Zsh
+        if: startsWith(matrix.os, 'ubuntu')
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y zsh
       - name: Run unit tests
         run: TERM=xterm tests/test.zsh
