@@ -31,6 +31,15 @@ _fzf_complete_docker() {
         return
     fi
 
+    if [[ $subcommand = cp ]]; then
+        if [[ $prefix = */* ]]; then
+            _fzf_path_completion "$prefix" $@
+        else
+            _fzf_complete_docker-containers '--all' '' $@
+        fi
+        return
+    fi
+
     if [[ $subcommand =~ ^(restart|rm|start|stats|update|wait)$ ]]; then
         _fzf_complete_docker-containers '--all' '--multi' $@
         return
@@ -66,5 +75,15 @@ _fzf_complete_docker-containers() {
 }
 
 _fzf_complete_docker-containers_post() {
-    awk '{ print $1 }'
+    local input=$(awk '{ print $1 }')
+
+    if [[ -z $input ]]; then
+        return
+    fi
+
+    if [[ $subcommand = cp ]]; then
+        echo -n $input:
+    else
+        echo $input
+    fi
 }

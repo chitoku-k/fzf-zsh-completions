@@ -52,6 +52,7 @@ zplug "chitoku-k/fzf-zsh-completions"
 - docker
   - attach
   - commit
+  - cp
   - create
   - diff
   - exec
