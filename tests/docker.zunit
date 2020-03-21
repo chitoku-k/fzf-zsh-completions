@@ -1106,7 +1106,7 @@
 }
 
 @test 'Testing post: docker-containers when subcommand is cp' {
-    local subcommand=cp
+    subcommand=cp
     input=(
         '295e3ea0de41  archlinux  "/bin/zsh --login"  4 weeks ago  Up 1 second         thankful_smyth'
     )
