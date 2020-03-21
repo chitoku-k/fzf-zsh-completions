@@ -26,9 +26,19 @@ _fzf_complete_docker() {
         return
     fi
 
-    if [[ $subcommand =~ ^(commit|cp|diff|export|logs|port|rename)$ ]]; then
+    if [[ $subcommand =~ ^(commit|diff|export|logs|port|rename)$ ]]; then
         _fzf_complete_docker-containers '--all' '' $@
         return
+    fi
+
+    if [[ $subcommand = cp ]]; then
+        if [[ $prefix = */* ]]; then
+            _fzf_path_completion "$prefix" $@
+            return
+        else
+            _fzf_complete_docker-containers '--all' '' $@
+            return
+        fi
     fi
 
     if [[ $subcommand =~ ^(restart|rm|start|stats|update|wait)$ ]]; then
@@ -66,5 +76,15 @@ _fzf_complete_docker-containers() {
 }
 
 _fzf_complete_docker-containers_post() {
-    awk '{ print $1 }'
+    local input=$(cat | awk '{ print $1 }')
+
+    if [[ -z $input ]]; then
+        return
+    fi
+
+    if [[ $subcommand = cp ]]; then
+        echo -n $input:
+    else
+        echo $input
+    fi
 }

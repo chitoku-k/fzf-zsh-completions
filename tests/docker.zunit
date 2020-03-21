@@ -1091,18 +1091,29 @@
     assert ${lines[3]} same_as 'f17f844b1558'
 }
 
-@test 'Testing post: docker-containers' {
+@test 'Testing post: docker-containers whose subcommand is not cp' {
     input=(
         '862e5e30b1a7  app           "/bin/sh"           12 days ago  Exited (0) 12 days ago         gifted_elion'
         '61858546cc23  5425b1e460b6  "/bin/sh"           12 days ago  Exited (0) 12 days ago         wonderful_tesla'
         '295e3ea0de41  archlinux     "/bin/zsh --login"  4 weeks ago  Up 1 second                    thankful_smyth'
     )
 
-    run _fzf_complete_docker-containers_post <<< ${(F)input}
+    run _fzf_complete_docker-containers_post <<< ${(F)input} \| tr '\n' ' '
 
     assert $state equals 0
-    assert ${#lines} equals 3
-    assert ${lines[1]} same_as '862e5e30b1a7'
-    assert ${lines[2]} same_as '61858546cc23'
-    assert ${lines[3]} same_as '295e3ea0de41'
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as '862e5e30b1a7 61858546cc23 295e3ea0de41 '
+}
+
+@test 'Testing post: docker-containers whose subcommand is cp' {
+    local subcommand=cp
+    input=(
+        '295e3ea0de41  archlinux  "/bin/zsh --login"  4 weeks ago  Up 1 second         thankful_smyth'
+    )
+
+    run _fzf_complete_docker-containers_post <<< ${(F)input} \| tr '\n' ' '
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as '295e3ea0de41:'
 }
