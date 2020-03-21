@@ -34,11 +34,10 @@ _fzf_complete_docker() {
     if [[ $subcommand = cp ]]; then
         if [[ $prefix = */* ]]; then
             _fzf_path_completion "$prefix" $@
-            return
         else
             _fzf_complete_docker-containers '--all' '' $@
-            return
         fi
+        return
     fi
 
     if [[ $subcommand =~ ^(restart|rm|start|stats|update|wait)$ ]]; then
