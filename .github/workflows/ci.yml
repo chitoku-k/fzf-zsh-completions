@@ -1,0 +1,28 @@
+name: CI Workflow
+on:
+  - push
+
+jobs:
+  build:
+    name: Unit Tests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Install Zsh
+        if: startsWith(matrix.os, 'ubuntu')
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y zsh
+      - name: Run unit tests
+        run: tests/test.zsh --tap tests/*.zunit
+        env:
+          TERM: xterm

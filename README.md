@@ -1,7 +1,7 @@
 fzf-zsh-completions
 ===============
 
-[![][travis-badge]][travis-link]
+[![][workflow-badge]][workflow-link]
 
 Fuzzy completions for [fzf][] and [Zsh][] that can be triggered by the trigger
 sequence that defaults to `**`.
@@ -92,8 +92,8 @@ For contributing to this project, be sure to update `tests/` and run following:
 tests/test.zsh
 ```
 
-[travis-link]:     https://travis-ci.com/chitoku-k/fzf-zsh-completions
-[travis-badge]:    https://img.shields.io/travis/com/chitoku-k/fzf-zsh-completions/master.svg?style=flat-square
+[workflow-link]:   https://travis-ci.com/chitoku-k/fzf-zsh-completions
+[workflow-badge]:  https://img.shields.io/github/workflow/status/chitoku-k/fzf-zsh-completions/ci/master.svg?style=flat-square
 [fzf]:             https://github.com/junegunn/fzf
 [fzf-completions]: https://github.com/junegunn/fzf/blob/master/README.md#fuzzy-completion-for-bash-and-zsh
 [Zsh]:             https://www.zsh.org/
