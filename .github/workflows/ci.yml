@@ -1,0 +1,16 @@
+name: CI Workflow
+on:
+  - push
+
+jobs:
+  build:
+    name: Unit Tests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+    steps:
+      - name: Run unit tests
+        run: tests/test.zsh
