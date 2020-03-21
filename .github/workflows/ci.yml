@@ -23,4 +23,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y zsh
       - name: Run unit tests
-        run: TERM=xterm tests/test.zsh
+        run: tests/test.zsh --tap tests/*.zunit
+        env:
+          TERM: xterm
