@@ -12,5 +12,7 @@ jobs:
           - ubuntu-latest
           - macos-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
       - name: Run unit tests
         run: tests/test.zsh
