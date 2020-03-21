@@ -76,7 +76,7 @@ _fzf_complete_docker-containers() {
 }
 
 _fzf_complete_docker-containers_post() {
-    local input=$(cat | awk '{ print $1 }')
+    local input=$(awk '{ print $1 }')
 
     if [[ -z $input ]]; then
         return
