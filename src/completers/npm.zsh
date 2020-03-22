@@ -18,7 +18,7 @@ _fzf_complete_npm-run() {
         return
     fi
 
-    _fzf_complete "--ansi --read0 --print0 --tiebreak=index $fzf_options" $@ < <(node -e '
+    _fzf_complete --ansi --read0 --print0 --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@ < <(node -e '
         process.stdout.write(
             Object.keys(
                 JSON.parse(

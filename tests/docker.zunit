@@ -48,9 +48,12 @@
     }
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --tiebreak=index --header-lines=1 '
-        assert $2 same_as 'docker create '
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'docker create '
 
         run cat
         assert ${#lines} equals 6
@@ -91,9 +94,12 @@
     }
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --tiebreak=index --header-lines=1 '
-        assert $2 same_as 'docker history '
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'docker history '
 
         run cat
         assert ${#lines} equals 6
@@ -135,9 +141,12 @@
     }
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --tiebreak=index --header-lines=1 '
-        assert $2 same_as 'docker push '
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'docker push '
 
         run cat
         assert ${#lines} equals 5
@@ -177,9 +186,12 @@
     }
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --tiebreak=index --header-lines=1 '
-        assert $2 same_as 'docker run '
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'docker run '
 
         run cat
         assert ${#lines} equals 6
@@ -220,9 +232,13 @@
     }
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --tiebreak=index --header-lines=1 --multi'
-        assert $2 same_as 'docker rmi '
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker rmi '
 
         run cat
         assert ${#lines} equals 6
@@ -263,9 +279,13 @@
     }
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --tiebreak=index --header-lines=1 --multi'
-        assert $2 same_as 'docker save '
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker save '
 
         run cat
         assert ${#lines} equals 6
@@ -306,9 +326,13 @@
     }
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --tiebreak=index --header-lines=1 --multi'
-        assert $2 same_as 'docker tag '
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker tag '
 
         run cat
         assert ${#lines} equals 6
@@ -346,9 +370,12 @@
     }
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --tiebreak=index --header-lines=1 '
-        assert $2 same_as 'docker attach '
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'docker attach '
 
         run cat
         assert ${#lines} equals 2
@@ -382,9 +409,12 @@
     }
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --tiebreak=index --header-lines=1 '
-        assert $2 same_as 'docker exec '
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'docker exec '
 
         run cat
         assert ${#lines} equals 2
@@ -418,9 +448,12 @@
     }
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --tiebreak=index --header-lines=1 '
-        assert $2 same_as 'docker top '
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'docker top '
 
         run cat
         assert ${#lines} equals 2
@@ -454,9 +487,13 @@
     }
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --tiebreak=index --header-lines=1 --multi'
-        assert $2 same_as 'docker kill '
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker kill '
 
         run cat
         assert ${#lines} equals 2
@@ -490,9 +527,13 @@
     }
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --tiebreak=index --header-lines=1 --multi'
-        assert $2 same_as 'docker pause '
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker pause '
 
         run cat
         assert ${#lines} equals 2
@@ -526,9 +567,13 @@
     }
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --tiebreak=index --header-lines=1 --multi'
-        assert $2 same_as 'docker stop '
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker stop '
 
         run cat
         assert ${#lines} equals 2
@@ -562,9 +607,13 @@
     }
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --tiebreak=index --header-lines=1 --multi'
-        assert $2 same_as 'docker unpause '
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker unpause '
 
         run cat
         assert ${#lines} equals 2
@@ -603,9 +652,12 @@
     }
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --tiebreak=index --header-lines=1 '
-        assert $2 same_as 'docker commit '
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'docker commit '
 
         run cat
         assert ${#lines} equals 6
@@ -648,9 +700,12 @@
     }
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --tiebreak=index --header-lines=1 '
-        assert $2 same_as 'docker cp '
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'docker cp '
 
         run cat
         assert ${#lines} equals 6
@@ -693,9 +748,12 @@
     }
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --tiebreak=index --header-lines=1 '
-        assert $2 same_as 'docker diff '
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'docker diff '
 
         run cat
         assert ${#lines} equals 6
@@ -738,9 +796,12 @@
     }
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --tiebreak=index --header-lines=1 '
-        assert $2 same_as 'docker export '
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'docker export '
 
         run cat
         assert ${#lines} equals 6
@@ -783,9 +844,12 @@
     }
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --tiebreak=index --header-lines=1 '
-        assert $2 same_as 'docker logs '
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'docker logs '
 
         run cat
         assert ${#lines} equals 6
@@ -828,9 +892,12 @@
     }
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --tiebreak=index --header-lines=1 '
-        assert $2 same_as 'docker port '
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'docker port '
 
         run cat
         assert ${#lines} equals 6
@@ -873,9 +940,12 @@
     }
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --tiebreak=index --header-lines=1 '
-        assert $2 same_as 'docker rename '
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'docker rename '
 
         run cat
         assert ${#lines} equals 6
@@ -918,9 +988,13 @@
     }
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --tiebreak=index --header-lines=1 --multi'
-        assert $2 same_as 'docker restart '
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker restart '
 
         run cat
         assert ${#lines} equals 6
@@ -963,9 +1037,13 @@
     }
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --tiebreak=index --header-lines=1 --multi'
-        assert $2 same_as 'docker rm '
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker rm '
 
         run cat
         assert ${#lines} equals 6
@@ -1008,9 +1086,13 @@
     }
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --tiebreak=index --header-lines=1 --multi'
-        assert $2 same_as 'docker start '
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker start '
 
         run cat
         assert ${#lines} equals 6
@@ -1053,9 +1135,13 @@
     }
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --tiebreak=index --header-lines=1 --multi'
-        assert $2 same_as 'docker stats '
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker stats '
 
         run cat
         assert ${#lines} equals 6
@@ -1098,9 +1184,13 @@
     }
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --tiebreak=index --header-lines=1 --multi'
-        assert $2 same_as 'docker update '
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker update '
 
         run cat
         assert ${#lines} equals 6
@@ -1143,9 +1233,13 @@
     }
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --tiebreak=index --header-lines=1 --multi'
-        assert $2 same_as 'docker wait '
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker wait '
 
         run cat
         assert ${#lines} equals 6

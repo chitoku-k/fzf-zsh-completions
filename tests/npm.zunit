@@ -22,9 +22,13 @@
 
 @test 'Testing completion: npm run **' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --read0 --print0 --tiebreak=index '
-        assert $2 same_as 'npm run '
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--read0'
+        assert $3 same_as '--print0'
+        assert $4 same_as '--tiebreak=index'
+        assert $5 same_as '--'
+        assert $6 same_as 'npm run '
 
         run cat
         assert ${#lines} equals 6

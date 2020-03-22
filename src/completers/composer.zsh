@@ -18,7 +18,7 @@ _fzf_complete_composer-run-script() {
         return
     fi
 
-    _fzf_complete "--ansi --read0 --print0 --tiebreak=index $fzf_options" $@ < <(php -r '
+    _fzf_complete --ansi --read0 --print0 --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@ < <(php -r '
         echo implode(
             "\0",
             array_keys(
