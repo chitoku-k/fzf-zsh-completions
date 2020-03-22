@@ -415,7 +415,7 @@ _fzf_complete_git_constants() {
     local values=$2
     shift 2
 
-    _fzf_complete --ansi --tiebreak=index ${(Z+n+)fzf_options} -- $@ < <(awk -v prefix=$prefix_option '{ print prefix $0 }' <<< $values)
+    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@ < <(awk -v prefix=$prefix_option '{ print prefix $0 }' <<< $values)
 }
 
 _fzf_complete_git_constants_post() {
