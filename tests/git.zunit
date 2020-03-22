@@ -4,6 +4,7 @@
     load ../fzf-zsh-completions.plugin.zsh
     pushd tests/_support/git
     DIR=$PWD
+    FZF_DEFAULT_OPTS=--reverse
 
     {
         rm -rf .git
@@ -14,7 +15,7 @@
     } &> /dev/null
 
     preview() {
-        for opt in ${(Q)${(Z+n+)fzf_options}}; do
+        for opt in $fzf_options; do
             if [[ $opt = --preview=* ]]; then
                 eval ${${opt/--preview=/}/\{\}/${(q)@}} 2>&1
             fi
@@ -50,9 +51,11 @@
 
 @test 'Testing completion: git checkout **' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git checkout '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git checkout '
 
         run cat
         assert ${#lines} equals 5
@@ -75,9 +78,16 @@
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --read0 --print0 --multi '
-        assert $2 same_as 'git checkout -- '
+        assert $# equals 9
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--read0'
+        assert $3 same_as '--print0'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--preview-window=right:70%:wrap'
+        assert $6 matches '--preview=*'
+        assert $7 same_as '--reverse'
+        assert $8 same_as '--'
+        assert $9 same_as 'git checkout -- '
 
         run cat
         assert ${#lines} equals 3
@@ -116,9 +126,16 @@
     cd directory2/directory3
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --read0 --print0 --multi '
-        assert $2 same_as 'git checkout -- '
+        assert $# equals 9
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--read0'
+        assert $3 same_as '--print0'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--preview-window=right:70%:wrap'
+        assert $6 matches '--preview=*'
+        assert $7 same_as '--reverse'
+        assert $8 same_as '--'
+        assert $9 same_as 'git checkout -- '
 
         run cat
         assert ${#lines} equals 3
@@ -145,9 +162,11 @@
 
 @test 'Testing completion: git diff **' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git diff '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git diff '
 
         run cat
         assert ${#lines} equals 5
@@ -170,9 +189,16 @@
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --read0 --print0 --multi '
-        assert $2 same_as 'git diff -- '
+        assert $# equals 9
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--read0'
+        assert $3 same_as '--print0'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--preview-window=right:70%:wrap'
+        assert $6 matches '--preview=*'
+        assert $7 same_as '--reverse'
+        assert $8 same_as '--'
+        assert $9 same_as 'git diff -- '
 
         run cat
         assert ${#lines} equals 3
@@ -211,9 +237,16 @@
     cd directory2/directory3
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --read0 --print0 --multi '
-        assert $2 same_as 'git diff -- '
+        assert $# equals 9
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--read0'
+        assert $3 same_as '--print0'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--preview-window=right:70%:wrap'
+        assert $6 matches '--preview=*'
+        assert $7 same_as '--reverse'
+        assert $8 same_as '--'
+        assert $9 same_as 'git diff -- '
 
         run cat
         assert ${#lines} equals 3
@@ -240,9 +273,11 @@
 
 @test 'Testing completion: git log **' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git log '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git log '
 
         run cat
         assert ${#lines} equals 5
@@ -265,9 +300,13 @@
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --read0 --print0 --multi'
-        assert $2 same_as 'git log -- '
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--read0'
+        assert $3 same_as '--print0'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'git log -- '
 
         run cat
         assert ${#lines} equals 3
@@ -294,9 +333,11 @@
 
 @test 'Testing completion: git rebase **' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git rebase '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git rebase '
 
         run cat
         assert ${#lines} equals 5
@@ -313,9 +354,11 @@
 
 @test 'Testing completion: git reset **' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git reset '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git reset '
 
         run cat
         assert ${#lines} equals 5
@@ -338,9 +381,13 @@
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --read0 --print0 --multi'
-        assert $2 same_as 'git reset -- '
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--read0'
+        assert $3 same_as '--print0'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'git reset -- '
 
         run cat
         assert ${#lines} equals 3
@@ -367,9 +414,11 @@
 
 @test 'Testing completion: git switch **' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git switch '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git switch '
 
         run cat
         assert ${#lines} equals 5
@@ -386,9 +435,12 @@
 
 @test 'Testing completion: git branch **' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index --multi'
-        assert $2 same_as 'git branch -D '
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--multi'
+        assert $4 same_as '--'
+        assert $5 same_as 'git branch -D '
 
         run cat
         assert ${#lines} equals 5
@@ -405,9 +457,12 @@
 
 @test 'Testing completion: git cherry-pick **' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index --multi'
-        assert $2 same_as 'git cherry-pick '
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--multi'
+        assert $4 same_as '--'
+        assert $5 same_as 'git cherry-pick '
 
         run cat
         assert ${#lines} equals 5
@@ -424,9 +479,12 @@
 
 @test 'Testing completion: git merge **' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index --multi'
-        assert $2 same_as 'git merge '
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--multi'
+        assert $4 same_as '--'
+        assert $5 same_as 'git merge '
 
         run cat
         assert ${#lines} equals 5
@@ -443,9 +501,12 @@
 
 @test 'Testing completion: git revert **' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index --multi'
-        assert $2 same_as 'git revert '
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--multi'
+        assert $4 same_as '--'
+        assert $5 same_as 'git revert '
 
         run cat
         assert ${#lines} equals 5
@@ -468,9 +529,13 @@
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --read0 --print0 --multi'
-        assert $2 same_as 'git restore '
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--read0'
+        assert $3 same_as '--print0'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'git restore '
 
         run cat
         assert ${#lines} equals 3
@@ -497,9 +562,11 @@
 
 @test 'Testing completion: git restore --source=**' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git restore '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git restore '
 
         run cat
         assert ${#lines} equals 5
@@ -516,9 +583,11 @@
 
 @test 'Testing completion: git restore --source **' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git restore --source '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git restore --source '
 
         run cat
         assert ${#lines} equals 5
@@ -535,9 +604,11 @@
 
 @test 'Testing completion: git commit --fixup=**' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git commit '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 5
@@ -554,9 +625,11 @@
 
 @test 'Testing completion: git commit --reedit-message=**' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git commit '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 5
@@ -573,9 +646,11 @@
 
 @test 'Testing completion: git commit --reuse-message=**' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git commit '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 5
@@ -592,9 +667,11 @@
 
 @test 'Testing completion: git commit --squash=**' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git commit '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 5
@@ -611,9 +688,11 @@
 
 @test 'Testing completion: git commit -c **' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git commit -c '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git commit -c '
 
         run cat
         assert ${#lines} equals 5
@@ -630,9 +709,11 @@
 
 @test 'Testing completion: git commit -c**' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git commit '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 5
@@ -649,9 +730,11 @@
 
 @test 'Testing completion: git commit -qc **' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git commit -qc '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git commit -qc '
 
         run cat
         assert ${#lines} equals 5
@@ -668,9 +751,11 @@
 
 @test 'Testing completion: git commit -qc**' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git commit '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 5
@@ -687,9 +772,11 @@
 
 @test 'Testing completion: git commit -C **' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git commit -C '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git commit -C '
 
         run cat
         assert ${#lines} equals 5
@@ -706,9 +793,11 @@
 
 @test 'Testing completion: git commit -C**' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git commit '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 5
@@ -725,9 +814,11 @@
 
 @test 'Testing completion: git commit -qC **' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git commit -qC '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git commit -qC '
 
         run cat
         assert ${#lines} equals 5
@@ -744,9 +835,11 @@
 
 @test 'Testing completion: git commit -qC**' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git commit '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 5
@@ -763,9 +856,11 @@
 
 @test 'Testing completion: git commit --fixup **' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git commit --fixup '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git commit --fixup '
 
         run cat
         assert ${#lines} equals 5
@@ -782,9 +877,11 @@
 
 @test 'Testing completion: git commit --reedit-message **' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git commit --reedit-message '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git commit --reedit-message '
 
         run cat
         assert ${#lines} equals 5
@@ -801,9 +898,11 @@
 
 @test 'Testing completion: git commit --reuse-message **' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git commit --reuse-message '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git commit --reuse-message '
 
         run cat
         assert ${#lines} equals 5
@@ -820,9 +919,11 @@
 
 @test 'Testing completion: git commit --squash **' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git commit --squash '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git commit --squash '
 
         run cat
         assert ${#lines} equals 5
@@ -841,9 +942,11 @@
     run git checkout another-branch
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git commit '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 2
@@ -859,9 +962,11 @@
     run git checkout another-branch
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git commit -m '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git commit -m '
 
         run cat
         assert ${#lines} equals 2
@@ -877,9 +982,11 @@
     run git checkout another-branch
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git commit '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 2
@@ -895,9 +1002,11 @@
     run git checkout another-branch
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git commit -qm '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git commit -qm '
 
         run cat
         assert ${#lines} equals 2
@@ -913,9 +1022,11 @@
     run git checkout another-branch
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git commit '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 2
@@ -931,9 +1042,11 @@
     run git checkout another-branch
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git commit --message '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git commit --message '
 
         run cat
         assert ${#lines} equals 2
@@ -1257,9 +1370,11 @@
 
 @test 'Testing completion: git commit --cleanup=**' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git commit '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 5
@@ -1276,9 +1391,11 @@
 
 @test 'Testing completion: git commit --cleanup **' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git commit --cleanup '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git commit --cleanup '
 
         run cat
         assert ${#lines} equals 5
@@ -1295,9 +1412,11 @@
 
 @test 'Testing completion: git commit -u**' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git commit '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 3
@@ -1312,9 +1431,11 @@
 
 @test 'Testing completion: git commit -qu**' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git commit '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 3
@@ -1329,9 +1450,11 @@
 
 @test 'Testing completion: git commit --untracked-files=**' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git commit '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 3
@@ -1352,9 +1475,16 @@
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --read0 --print0 --multi '
-        assert $2 same_as 'git commit '
+        assert $# equals 9
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--read0'
+        assert $3 same_as '--print0'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--preview-window=right:70%:wrap'
+        assert $6 matches '--preview=*'
+        assert $7 same_as '--reverse'
+        assert $8 same_as '--'
+        assert $9 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 3
@@ -1393,9 +1523,16 @@
     cd directory2/directory3
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --read0 --print0 --multi '
-        assert $2 same_as 'git commit '
+        assert $# equals 9
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--read0'
+        assert $3 same_as '--print0'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--preview-window=right:70%:wrap'
+        assert $6 matches '--preview=*'
+        assert $7 same_as '--reverse'
+        assert $8 same_as '--'
+        assert $9 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 3
@@ -1428,9 +1565,16 @@
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --read0 --print0 --multi '
-        assert $2 same_as 'git commit -- '
+        assert $# equals 9
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--read0'
+        assert $3 same_as '--print0'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--preview-window=right:70%:wrap'
+        assert $6 matches '--preview=*'
+        assert $7 same_as '--reverse'
+        assert $8 same_as '--'
+        assert $9 same_as 'git commit -- '
 
         run cat
         assert ${#lines} equals 3
@@ -1469,9 +1613,16 @@
     cd directory2/directory3
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --read0 --print0 --multi '
-        assert $2 same_as 'git commit -- '
+        assert $# equals 9
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--read0'
+        assert $3 same_as '--print0'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--preview-window=right:70%:wrap'
+        assert $6 matches '--preview=*'
+        assert $7 same_as '--reverse'
+        assert $8 same_as '--'
+        assert $9 same_as 'git commit -- '
 
         run cat
         assert ${#lines} equals 3
@@ -1504,9 +1655,16 @@
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --read0 --print0 --multi '
-        assert $2 same_as 'git add '
+        assert $# equals 9
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--read0'
+        assert $3 same_as '--print0'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--preview-window=right:70%:wrap'
+        assert $6 matches '--preview=*'
+        assert $7 same_as '--reverse'
+        assert $8 same_as '--'
+        assert $9 same_as 'git add '
 
         run cat
         assert ${#lines} equals 5
@@ -1555,9 +1713,16 @@
     cd directory2/directory3
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --read0 --print0 --multi '
-        assert $2 same_as 'git add '
+        assert $# equals 9
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--read0'
+        assert $3 same_as '--print0'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--preview-window=right:70%:wrap'
+        assert $6 matches '--preview=*'
+        assert $7 same_as '--reverse'
+        assert $8 same_as '--'
+        assert $9 same_as 'git add '
 
         run cat
         assert ${#lines} equals 7
@@ -1605,9 +1770,11 @@
 
 @test 'Testing completion: git pull --recurse-submodules=**' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git pull '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git pull '
 
         run cat
         assert ${#lines} equals 3
@@ -1622,9 +1789,11 @@
 
 @test 'Testing completion: git pull --cleanup=**' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git pull '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git pull '
 
         run cat
         assert ${#lines} equals 5
@@ -1641,9 +1810,11 @@
 
 @test 'Testing completion: git pull --cleanup **' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git pull --cleanup '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git pull --cleanup '
 
         run cat
         assert ${#lines} equals 5
@@ -1660,9 +1831,11 @@
 
 @test 'Testing completion: git pull -s **' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git pull -s '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git pull -s '
 
         run cat
         assert ${#lines} equals 5
@@ -1679,9 +1852,11 @@
 
 @test 'Testing completion: git pull -s**' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git pull '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git pull '
 
         run cat
         assert ${#lines} equals 5
@@ -1698,9 +1873,11 @@
 
 @test 'Testing completion: git pull -qs **' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git pull -qs '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git pull -qs '
 
         run cat
         assert ${#lines} equals 5
@@ -1717,9 +1894,11 @@
 
 @test 'Testing completion: git pull -qs**' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git pull '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git pull '
 
         run cat
         assert ${#lines} equals 5
@@ -1736,9 +1915,11 @@
 
 @test 'Testing completion: git pull --strategy=**' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git pull '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git pull '
 
         run cat
         assert ${#lines} equals 5
@@ -1755,9 +1936,11 @@
 
 @test 'Testing completion: git pull --strategy **' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git pull --strategy '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git pull --strategy '
 
         run cat
         assert ${#lines} equals 5
@@ -1774,9 +1957,11 @@
 
 @test 'Testing completion: git pull -X **' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git pull -X '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git pull -X '
 
         run cat
         assert ${#lines} equals 19
@@ -1807,9 +1992,11 @@
 
 @test 'Testing completion: git pull -X**' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git pull '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git pull '
 
         run cat
         assert ${#lines} equals 19
@@ -1840,9 +2027,11 @@
 
 @test 'Testing completion: git pull -qX **' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git pull -qX '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git pull -qX '
 
         run cat
         assert ${#lines} equals 19
@@ -1873,9 +2062,11 @@
 
 @test 'Testing completion: git pull -qX**' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git pull '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git pull '
 
         run cat
         assert ${#lines} equals 19
@@ -1906,9 +2097,11 @@
 
 @test 'Testing completion: git pull --strategy-option=**' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git pull '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git pull '
 
         run cat
         assert ${#lines} equals 19
@@ -1938,9 +2131,11 @@
 
 @test 'Testing completion: git pull --strategy-option **' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git pull --strategy-option '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git pull --strategy-option '
 
         run cat
         assert ${#lines} equals 19
@@ -1971,9 +2166,11 @@
 
 @test 'Testing completion: git pull --rebase=**' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git pull '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git pull '
 
         run cat
         assert ${#lines} equals 5
@@ -1990,9 +2187,11 @@
 
 @test 'Testing completion: git pull --shallow-exclude=**' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git pull '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git pull '
 
         run cat
         assert ${#lines} equals 5
@@ -2009,9 +2208,11 @@
 
 @test 'Testing completion: git pull --shallow-exclude **' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git pull --shallow-exclude '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git pull --shallow-exclude '
 
         run cat
         assert ${#lines} equals 5
@@ -2028,9 +2229,11 @@
 
 @test 'Testing completion: git pull --negotiation-tip=**' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git pull '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git pull '
 
         run cat
         assert ${#lines} equals 5
@@ -2047,9 +2250,11 @@
 
 @test 'Testing completion: git pull --negotiation-tip **' {
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git pull --negotiation-tip '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git pull --negotiation-tip '
 
         run cat
         assert ${#lines} equals 5
@@ -2235,9 +2440,11 @@
     run git remote add example example
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git pull '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git pull '
 
         run cat
         assert ${#lines} equals 3
@@ -2256,9 +2463,12 @@
     run git symbolic-ref refs/remotes/origin/another-branch refs/heads/another-branch
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index --multi'
-        assert $2 same_as 'git pull origin '
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--multi'
+        assert $4 same_as '--'
+        assert $5 same_as 'git pull origin '
 
         run cat
         assert ${#lines} equals 2
@@ -2276,9 +2486,11 @@
     run git remote add example example
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git pull --cleanup strip --rebase '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git pull --cleanup strip --rebase '
 
         run cat
         assert ${#lines} equals 3
@@ -2297,9 +2509,12 @@
     run git symbolic-ref refs/remotes/origin/another-branch refs/heads/another-branch
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index --multi'
-        assert $2 same_as 'git pull origin --cleanup strip --quiet '
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--multi'
+        assert $4 same_as '--'
+        assert $5 same_as 'git pull origin --cleanup strip --quiet '
 
         run cat
         assert ${#lines} equals 2
@@ -2317,9 +2532,11 @@
     run git remote add example example
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git pull -- '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git pull -- '
 
         run cat
         assert ${#lines} equals 3
@@ -2338,9 +2555,12 @@
     run git symbolic-ref refs/remotes/origin/another-branch refs/heads/another-branch
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index --multi'
-        assert $2 same_as 'git pull -- origin '
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--multi'
+        assert $4 same_as '--'
+        assert $5 same_as 'git pull -- origin '
 
         run cat
         assert ${#lines} equals 2
@@ -2360,9 +2580,13 @@
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --read0 --print0 --multi'
-        assert $2 same_as 'git rm '
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--read0'
+        assert $3 same_as '--print0'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'git rm '
 
         run cat
         assert ${#lines} equals 3
@@ -2391,9 +2615,11 @@
     run git config alias.squash 'commit --squash'
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git squash '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git squash '
 
         run cat
         assert ${#lines} equals 5
@@ -2413,9 +2639,11 @@
     run git checkout another-branch
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git amend '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git amend '
 
         run cat
         assert ${#lines} equals 2
@@ -2465,9 +2693,11 @@
     run git config alias.commit-cleanup 'commit --cleanup'
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git commit-cleanup '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git commit-cleanup '
 
         run cat
         assert ${#lines} equals 5
@@ -2492,9 +2722,16 @@
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 matches '--ansi --read0 --print0 --multi '
-        assert $2 same_as 'git commit-all '
+        assert $# equals 9
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--read0'
+        assert $3 same_as '--print0'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--preview-window=right:70%:wrap'
+        assert $6 matches '--preview=*'
+        assert $7 same_as '--reverse'
+        assert $8 same_as '--'
+        assert $9 same_as 'git commit-all '
 
         run cat
         assert ${#lines} equals 3
@@ -2524,9 +2761,11 @@
     run git config alias.bar 'commit --squash'
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as 'git foo '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git foo '
 
         run cat
         assert ${#lines} equals 5
@@ -2564,9 +2803,11 @@
     run git config alias.squash 'commit --squash'
 
     _fzf_complete() {
-        assert $# equals 2
-        assert $1 same_as '--ansi --tiebreak=index '
-        assert $2 same_as '"git"  "squash" '
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as '"git"  "squash" '
 
         run cat
         assert ${#lines} equals 5
@@ -2589,16 +2830,16 @@
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
     _fzf_complete() {
-        fzf_options=$1 run preview ' M  file3 containing space '
+        fzf_options=($@) run preview ' M  file3 containing space '
         assert $output is_not_empty
 
-        fzf_options=$1 run preview ' M directory1/file2'
+        fzf_options=($@) run preview ' M directory1/file2'
         assert $output is_not_empty
 
-        fzf_options=$1 run preview $' M directory2/file4\ncontaining\nnewlines'
+        fzf_options=($@) run preview $' M directory2/file4\ncontaining\nnewlines'
         assert $output is_not_empty
 
-        fzf_options=$1 run preview ' M file1'
+        fzf_options=($@) run preview ' M file1'
         assert $output is_not_empty
     }
 
@@ -2614,16 +2855,16 @@
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
     _fzf_complete() {
-        fzf_options=$1 run preview ' M  file3 containing space '
+        fzf_options=($@) run preview ' M  file3 containing space '
         assert $output is_not_empty
 
-        fzf_options=$1 run preview ' M directory1/file2'
+        fzf_options=($@) run preview ' M directory1/file2'
         assert $output is_not_empty
 
-        fzf_options=$1 run preview $' M directory2/file4\ncontaining\nnewlines'
+        fzf_options=($@) run preview $' M directory2/file4\ncontaining\nnewlines'
         assert $output is_not_empty
 
-        fzf_options=$1 run preview ' M file1'
+        fzf_options=($@) run preview ' M file1'
         assert $output is_not_empty
     }
 
@@ -2639,22 +2880,22 @@
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
     _fzf_complete() {
-        fzf_options=$1 run preview ' M  file3 containing space '
+        fzf_options=($@) run preview ' M  file3 containing space '
         assert $output is_not_empty
 
-        fzf_options=$1 run preview ' M directory1/file2'
+        fzf_options=($@) run preview ' M directory1/file2'
         assert $output is_not_empty
 
-        fzf_options=$1 run preview $' M directory2/file4\ncontaining\nnewlines'
+        fzf_options=($@) run preview $' M directory2/file4\ncontaining\nnewlines'
         assert $output is_not_empty
 
-        fzf_options=$1 run preview ' M file1'
+        fzf_options=($@) run preview ' M file1'
         assert $output is_not_empty
 
-        fzf_options=$1 run preview '??  file5 containing space '
+        fzf_options=($@) run preview '??  file5 containing space '
         assert $output is_not_empty
 
-        fzf_options=$1 run preview $'?? directory2/file6\ncontaining\nnewlines'
+        fzf_options=($@) run preview $'?? directory2/file6\ncontaining\nnewlines'
         assert $output is_not_empty
     }
 

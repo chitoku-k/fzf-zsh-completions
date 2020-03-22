@@ -10,7 +10,7 @@ PREVIEW_OPTIONS
 )
 
 _fzf_complete_systemctl() {
-    _fzf_complete "--ansi --tiebreak=index $_fzf_complete_preview_systemctl_status $FZF_DEFAULT_OPTS" $@ < \
+    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)_fzf_complete_preview_systemctl_status}} ${(Q)${(Z+n+)FZF_DEFAULT_OPTS}} -- $@ < \
         <(systemctl list-units --full --no-legend --no-pager "$prefix*" | LC_ALL=C sort | awk \
             -v green=${fg[green]} \
             -v red=${fg[red]} \

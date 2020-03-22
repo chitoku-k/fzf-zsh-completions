@@ -57,7 +57,7 @@ _fzf_complete_docker-images() {
     local fzf_options=$1
     shift 1
 
-    _fzf_complete "--ansi --tiebreak=index --header-lines=1 $fzf_options" $@ < <(
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@ < <(
         docker images --format 'table {{.ID}};{{.Repository}};{{.Tag}};{{if .CreatedSince}}{{.CreatedSince}}{{else}}N/A{{end}};{{.Size}}' 2> /dev/null \
             | FS=';' _fzf_complete_tabularize $fg[yellow] $reset_color{,,}
     )
@@ -71,7 +71,7 @@ _fzf_complete_docker-images-repository() {
     local fzf_options=$1
     shift 1
 
-    _fzf_complete "--ansi --tiebreak=index --header-lines=1 $fzf_options" $@ < <(
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@ < <(
         docker images --filter 'dangling=false' --format 'table {{.Repository}};{{.ID}};{{.Tag}};{{if .CreatedSince}}{{.CreatedSince}}{{else}}N/A{{end}};{{.Size}}' 2> /dev/null \
             | FS=';' _fzf_complete_tabularize $fg[yellow] $reset_color{,,}
     )
@@ -92,8 +92,8 @@ _fzf_complete_docker-containers() {
     local fzf_options=$2
     shift 2
 
-    _fzf_complete "--ansi --tiebreak=index --header-lines=1 $fzf_options" $@ < <(
-        docker container list ${(Z+n+)docker_options} \
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@ < <(
+        docker container list ${(Q)${(Z+n+)docker_options}} \
             --format 'table {{.ID}};{{.Image}};{{.Command}};{{.RunningFor}};{{.Status}};{{.Ports}};{{.Names}}' 2> /dev/null \
                 | FS=';' _fzf_complete_tabularize $fg[yellow] $reset_color{,,,,}
     )

@@ -271,7 +271,7 @@ _fzf_complete_git-commits() {
     local fzf_options=$1
     shift
 
-    _fzf_complete "--ansi --tiebreak=index $fzf_options" $@ < <({
+    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@ < <({
         git for-each-ref refs/heads refs/remotes refs/tags --format='%(refname:short) %(contents:subject)' 2> /dev/null
         git log --format='%h %s' 2> /dev/null
     } | awk -v prefix=$prefix_option '{ print prefix $0 }' | _fzf_complete_tabularize ${fg[yellow]})
@@ -285,7 +285,7 @@ _fzf_complete_git-commit-messages() {
     local fzf_options=$1
     shift
 
-    _fzf_complete "--ansi --tiebreak=index $fzf_options" $@ < <(
+    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@ < <(
         git log --format='%h %s' 2> /dev/null |
         awk -v prefix=$prefix_option '
             {
@@ -317,7 +317,7 @@ _fzf_complete_git-ls-files() {
     local fzf_options=$2
     shift 2
 
-    _fzf_complete "--ansi --read0 --print0 $fzf_options" $@ < <(git ls-files -z ${(Z+n+)git_options} 2> /dev/null)
+    _fzf_complete --ansi --read0 --print0 ${(Q)${(Z+n+)fzf_options}} -- $@ < <(git ls-files -z ${(Z+n+)git_options} 2> /dev/null)
 }
 
 _fzf_complete_git-ls-files_post() {
@@ -334,7 +334,7 @@ _fzf_complete_git-unstaged-files() {
     local fzf_options=$2
     shift 2
 
-    _fzf_complete "--ansi --read0 --print0 $fzf_options" $@ < <({
+    _fzf_complete --ansi --read0 --print0 ${(Q)${(Z+n+)fzf_options}} -- $@ < <({
         local previous_status
         local filename
         local files=$(git status --porcelain=v1 -z ${(Z+n+)git_options} 2> /dev/null)
@@ -373,7 +373,7 @@ _fzf_complete_git-remotes() {
     local fzf_options=$1
     shift
 
-    _fzf_complete "--ansi --tiebreak=index $fzf_options" $@ < <(git remote --verbose 2> /dev/null | awk '
+    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@ < <(git remote --verbose 2> /dev/null | awk '
         /\(fetch\)$/ {
             gsub("\t", " ")
             print
@@ -391,7 +391,7 @@ _fzf_complete_git-refs() {
 
     local ref=${${$(git config remote.$repository.fetch 2> /dev/null)#*:}%\*}
 
-    _fzf_complete "--ansi --tiebreak=index $fzf_options" $@ < <(
+    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@ < <(
         git for-each-ref "$ref" --format='%(refname:short) %(contents:subject)' 2> /dev/null |
         awk -v prefix=$prefix_option '{ print prefix $0 }' | _fzf_complete_tabularize ${fg[yellow]}
     )
@@ -415,7 +415,7 @@ _fzf_complete_git_constants() {
     local values=$2
     shift 2
 
-    _fzf_complete "--ansi --tiebreak=index $fzf_options" $@ < <(awk -v prefix=$prefix_option '{ print prefix $0 }' <<< $values)
+    _fzf_complete --ansi --tiebreak=index ${(Z+n+)fzf_options} -- $@ < <(awk -v prefix=$prefix_option '{ print prefix $0 }' <<< $values)
 }
 
 _fzf_complete_git_constants_post() {
