@@ -18,10 +18,24 @@ Load `fzf-zsh-completions.plugin.zsh`.
 For those who prefer to install via package managers, see the instructions
 below.
 
+### Antigen
+
+```zsh
+antigen bundle "chitoku-k/fzf-zsh-completions"
+```
+
 ### zplug
 
 ```zsh
 zplug "chitoku-k/fzf-zsh-completions"
+```
+
+## Usage
+
+For further information, please refer to [Fuzzy completions for bash and zsh][fzf-completions].
+
+```zsh
+git rebase -i **<TAB>
 ```
 
 ## Supported commands
@@ -76,14 +90,6 @@ zplug "chitoku-k/fzf-zsh-completions"
   - unpause
   - update
   - wait
-
-## Usage
-
-For further information, please refer to [Fuzzy completions for bash and zsh][fzf-completions].
-
-```zsh
-git rebase -i **<TAB>
-```
 
 ## Testing
 
