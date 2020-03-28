@@ -4,7 +4,6 @@
     load ../fzf-zsh-completions.plugin.zsh
     pushd tests/_support/git
     DIR=$PWD
-    FZF_DEFAULT_OPTS=--reverse
 
     {
         rm -rf .git
@@ -15,7 +14,7 @@
     } &> /dev/null
 
     preview() {
-        for opt in $fzf_options; do
+        for opt in ${(Q)${(Z+n+)fzf_options}}; do
             if [[ $opt = --preview=* ]]; then
                 eval ${${opt/--preview=/}/\{\}/${(q)@}} 2>&1
             fi
@@ -51,19 +50,17 @@
 
 @test 'Testing completion: git checkout **' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git checkout '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git checkout '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=
@@ -78,16 +75,9 @@
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
     _fzf_complete() {
-        assert $# equals 9
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--read0'
-        assert $3 same_as '--print0'
-        assert $4 same_as '--multi'
-        assert $5 same_as '--preview-window=right:70%:wrap'
-        assert $6 matches '--preview=*'
-        assert $7 same_as '--reverse'
-        assert $8 same_as '--'
-        assert $9 same_as 'git checkout -- '
+        assert $# equals 2
+        assert $1 matches '--ansi --read0 --print0 --multi '
+        assert $2 same_as 'git checkout -- '
 
         run cat
         assert ${#lines} equals 3
@@ -126,16 +116,9 @@
     cd directory2/directory3
 
     _fzf_complete() {
-        assert $# equals 9
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--read0'
-        assert $3 same_as '--print0'
-        assert $4 same_as '--multi'
-        assert $5 same_as '--preview-window=right:70%:wrap'
-        assert $6 matches '--preview=*'
-        assert $7 same_as '--reverse'
-        assert $8 same_as '--'
-        assert $9 same_as 'git checkout -- '
+        assert $# equals 2
+        assert $1 matches '--ansi --read0 --print0 --multi '
+        assert $2 same_as 'git checkout -- '
 
         run cat
         assert ${#lines} equals 3
@@ -160,132 +143,19 @@
     _fzf_complete_git 'git checkout -- '
 }
 
-@test 'Testing completion: git diff **' {
-    _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git diff '
-
-        run cat
-        assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  1st commit"
-    }
-
-    prefix=
-    _fzf_complete_git 'git diff '
-}
-
-@test 'Testing completion: git diff -- **' {
-    run git checkout another-branch
-    echo >> ' file3 containing space '
-    echo >> directory2/$'file4\ncontaining\nnewlines'
-    echo >> ' file5 containing space '
-    echo >> directory2/$'file6\ncontaining\nnewlines'
-
-    _fzf_complete() {
-        assert $# equals 9
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--read0'
-        assert $3 same_as '--print0'
-        assert $4 same_as '--multi'
-        assert $5 same_as '--preview-window=right:70%:wrap'
-        assert $6 matches '--preview=*'
-        assert $7 same_as '--reverse'
-        assert $8 same_as '--'
-        assert $9 same_as 'git diff -- '
-
-        run cat
-        assert ${#lines} equals 3
-
-        actual1=(${(0)lines[1]})
-        assert ${#actual1} equals 3
-        assert ${actual1[1]} same_as " $reset_color${fg[red]}M$reset_color  file3 containing space "
-        assert ${actual1[2]} same_as " $reset_color${fg[red]}M$reset_color directory1/file2"
-        assert ${actual1[3]} same_as " $reset_color${fg[red]}M$reset_color directory2/file4"
-
-        actual2=(${(0)lines[2]})
-        assert ${#actual2} equals 1
-        assert ${actual2[1]} same_as 'containing'
-
-        actual3=(${(0)lines[3]})
-        assert ${#actual3} equals 2
-        assert ${actual3[1]} same_as 'newlines'
-        assert ${actual3[2]} same_as " $reset_color${fg[red]}M$reset_color file1"
-    }
-
-    prefix=
-    _fzf_complete_git 'git diff -- '
-}
-
-@test 'Testing completion in subdirectory: git diff -- **' {
-    run git checkout another-branch
-    mkdir -p directory2/directory3/directory4
-    echo >> ' file3 containing space '
-    echo >> directory2/$'file4\ncontaining\nnewlines'
-    echo >> ' file5 containing space '
-    echo >> directory2/$'file6\ncontaining\nnewlines'
-    echo >> directory2/directory3/file7
-    echo >> directory2/directory3/$'file8\ncontaining\nnewlines'
-    echo >> directory2/directory3/directory4/file9
-
-    cd directory2/directory3
-
-    _fzf_complete() {
-        assert $# equals 9
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--read0'
-        assert $3 same_as '--print0'
-        assert $4 same_as '--multi'
-        assert $5 same_as '--preview-window=right:70%:wrap'
-        assert $6 matches '--preview=*'
-        assert $7 same_as '--reverse'
-        assert $8 same_as '--'
-        assert $9 same_as 'git diff -- '
-
-        run cat
-        assert ${#lines} equals 3
-
-        actual1=(${(0)lines[1]})
-        assert ${#actual1} equals 3
-        assert ${actual1[1]} same_as " $reset_color${fg[red]}M$reset_color ../../ file3 containing space "
-        assert ${actual1[2]} same_as " $reset_color${fg[red]}M$reset_color ../../directory1/file2"
-        assert ${actual1[3]} same_as " $reset_color${fg[red]}M$reset_color ../../directory2/file4"
-
-        actual2=(${(0)lines[2]})
-        assert ${#actual2} equals 1
-        assert ${actual2[1]} same_as 'containing'
-
-        actual3=(${(0)lines[3]})
-        assert ${#actual3} equals 2
-        assert ${actual3[1]} same_as 'newlines'
-        assert ${actual3[2]} same_as " $reset_color${fg[red]}M$reset_color ../../file1"
-    }
-
-    prefix=
-    _fzf_complete_git 'git diff -- '
-}
-
 @test 'Testing completion: git log **' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git log '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git log '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=
@@ -300,13 +170,9 @@
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
     _fzf_complete() {
-        assert $# equals 6
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--read0'
-        assert $3 same_as '--print0'
-        assert $4 same_as '--multi'
-        assert $5 same_as '--'
-        assert $6 same_as 'git log -- '
+        assert $# equals 2
+        assert $1 same_as '--ansi --read0 --print0 --multi'
+        assert $2 same_as 'git log -- '
 
         run cat
         assert ${#lines} equals 3
@@ -333,19 +199,17 @@
 
 @test 'Testing completion: git rebase **' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git rebase '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git rebase '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=
@@ -354,19 +218,17 @@
 
 @test 'Testing completion: git reset **' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git reset '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git reset '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=
@@ -381,13 +243,9 @@
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
     _fzf_complete() {
-        assert $# equals 6
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--read0'
-        assert $3 same_as '--print0'
-        assert $4 same_as '--multi'
-        assert $5 same_as '--'
-        assert $6 same_as 'git reset -- '
+        assert $# equals 2
+        assert $1 same_as '--ansi --read0 --print0 --multi'
+        assert $2 same_as 'git reset -- '
 
         run cat
         assert ${#lines} equals 3
@@ -414,19 +272,17 @@
 
 @test 'Testing completion: git switch **' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git switch '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git switch '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=
@@ -435,20 +291,17 @@
 
 @test 'Testing completion: git branch **' {
     _fzf_complete() {
-        assert $# equals 5
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--multi'
-        assert $4 same_as '--'
-        assert $5 same_as 'git branch -D '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index --multi'
+        assert $2 same_as 'git branch -D '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=
@@ -457,20 +310,17 @@
 
 @test 'Testing completion: git cherry-pick **' {
     _fzf_complete() {
-        assert $# equals 5
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--multi'
-        assert $4 same_as '--'
-        assert $5 same_as 'git cherry-pick '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index --multi'
+        assert $2 same_as 'git cherry-pick '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=
@@ -479,20 +329,17 @@
 
 @test 'Testing completion: git merge **' {
     _fzf_complete() {
-        assert $# equals 5
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--multi'
-        assert $4 same_as '--'
-        assert $5 same_as 'git merge '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index --multi'
+        assert $2 same_as 'git merge '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=
@@ -501,20 +348,17 @@
 
 @test 'Testing completion: git revert **' {
     _fzf_complete() {
-        assert $# equals 5
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--multi'
-        assert $4 same_as '--'
-        assert $5 same_as 'git revert '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index --multi'
+        assert $2 same_as 'git revert '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=
@@ -529,13 +373,9 @@
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
     _fzf_complete() {
-        assert $# equals 6
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--read0'
-        assert $3 same_as '--print0'
-        assert $4 same_as '--multi'
-        assert $5 same_as '--'
-        assert $6 same_as 'git restore '
+        assert $# equals 2
+        assert $1 same_as '--ansi --read0 --print0 --multi'
+        assert $2 same_as 'git restore '
 
         run cat
         assert ${#lines} equals 3
@@ -562,19 +402,17 @@
 
 @test 'Testing completion: git restore --source=**' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git restore '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git restore '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}--source=another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}--source=master        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}--source=v1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}--source=v2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}--source=3e209a3       $reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}--source=another-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}--source=master         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}--source=v1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}--source=v2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}--source=3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=--source=
@@ -583,19 +421,17 @@
 
 @test 'Testing completion: git restore --source **' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git restore --source '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git restore --source '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=
@@ -604,19 +440,17 @@
 
 @test 'Testing completion: git commit --fixup=**' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git commit '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}--fixup=another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}--fixup=master        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}--fixup=v1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}--fixup=v2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}--fixup=3e209a3       $reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}--fixup=another-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}--fixup=master         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}--fixup=v1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}--fixup=v2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}--fixup=3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=--fixup=
@@ -625,19 +459,17 @@
 
 @test 'Testing completion: git commit --reedit-message=**' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git commit '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}--reedit-message=another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}--reedit-message=master        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}--reedit-message=v1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}--reedit-message=v2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}--reedit-message=3e209a3       $reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}--reedit-message=another-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}--reedit-message=master         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}--reedit-message=v1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}--reedit-message=v2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}--reedit-message=3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=--reedit-message=
@@ -646,19 +478,17 @@
 
 @test 'Testing completion: git commit --reuse-message=**' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git commit '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}--reuse-message=another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}--reuse-message=master        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}--reuse-message=v1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}--reuse-message=v2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}--reuse-message=3e209a3       $reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}--reuse-message=another-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}--reuse-message=master         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}--reuse-message=v1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}--reuse-message=v2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}--reuse-message=3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=--reuse-message=
@@ -667,19 +497,17 @@
 
 @test 'Testing completion: git commit --squash=**' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git commit '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}--squash=another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}--squash=master        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}--squash=v1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}--squash=v2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}--squash=3e209a3       $reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}--squash=another-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}--squash=master         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}--squash=v1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}--squash=v2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}--squash=3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=--squash=
@@ -688,19 +516,17 @@
 
 @test 'Testing completion: git commit -c **' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git commit -c '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit -c '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=
@@ -709,19 +535,17 @@
 
 @test 'Testing completion: git commit -c**' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git commit '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}-canother-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}-cmaster        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}-cv1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}-cv2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}-c3e209a3       $reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}-canother-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}-cmaster         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}-cv1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}-cv2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}-c3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=-c
@@ -730,19 +554,17 @@
 
 @test 'Testing completion: git commit -qc **' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git commit -qc '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit -qc '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=
@@ -751,19 +573,17 @@
 
 @test 'Testing completion: git commit -qc**' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git commit '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}-qcanother-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}-qcmaster        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}-qcv1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}-qcv2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}-qc3e209a3       $reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}-qcanother-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}-qcmaster         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}-qcv1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}-qcv2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}-qc3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=-qc
@@ -772,19 +592,17 @@
 
 @test 'Testing completion: git commit -C **' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git commit -C '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit -C '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=
@@ -793,19 +611,17 @@
 
 @test 'Testing completion: git commit -C**' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git commit '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}-Canother-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}-Cmaster        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}-Cv1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}-Cv2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}-C3e209a3       $reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}-Canother-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}-Cmaster         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}-Cv1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}-Cv2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}-C3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=-C
@@ -814,19 +630,17 @@
 
 @test 'Testing completion: git commit -qC **' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git commit -qC '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit -qC '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=
@@ -835,19 +649,17 @@
 
 @test 'Testing completion: git commit -qC**' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git commit '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}-qCanother-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}-qCmaster        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}-qCv1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}-qCv2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}-qC3e209a3       $reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}-qCanother-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}-qCmaster         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}-qCv1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}-qCv2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}-qC3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=-qC
@@ -856,19 +668,17 @@
 
 @test 'Testing completion: git commit --fixup **' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git commit --fixup '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit --fixup '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=
@@ -877,19 +687,17 @@
 
 @test 'Testing completion: git commit --reedit-message **' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git commit --reedit-message '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit --reedit-message '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=
@@ -898,19 +706,17 @@
 
 @test 'Testing completion: git commit --reuse-message **' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git commit --reuse-message '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit --reuse-message '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=
@@ -919,19 +725,17 @@
 
 @test 'Testing completion: git commit --squash **' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git commit --squash '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit --squash '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=
@@ -942,16 +746,14 @@
     run git checkout another-branch
 
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git commit '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 2
-        assert ${lines[1]} same_as "${fg[yellow]}6088ecf$reset_color  --message= 2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}3e209a3$reset_color  --message=1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}6088ecf $reset_color --message= 2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}3e209a3 $reset_color --message=1st commit"
     }
 
     prefix=--message=
@@ -962,16 +764,14 @@
     run git checkout another-branch
 
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git commit -m '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit -m '
 
         run cat
         assert ${#lines} equals 2
-        assert ${lines[1]} same_as "${fg[yellow]}6088ecf$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}3e209a3$reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}6088ecf $reset_color  2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}3e209a3 $reset_color 1st commit"
     }
 
     prefix=
@@ -982,16 +782,14 @@
     run git checkout another-branch
 
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git commit '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 2
-        assert ${lines[1]} same_as "${fg[yellow]}6088ecf$reset_color  -m 2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}3e209a3$reset_color  -m1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}6088ecf $reset_color -m 2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}3e209a3 $reset_color -m1st commit"
     }
 
     prefix=-m
@@ -1002,16 +800,14 @@
     run git checkout another-branch
 
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git commit -qm '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit -qm '
 
         run cat
         assert ${#lines} equals 2
-        assert ${lines[1]} same_as "${fg[yellow]}6088ecf$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}3e209a3$reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}6088ecf $reset_color  2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}3e209a3 $reset_color 1st commit"
     }
 
     prefix=
@@ -1022,16 +818,14 @@
     run git checkout another-branch
 
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git commit '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 2
-        assert ${lines[1]} same_as "${fg[yellow]}6088ecf$reset_color  -qm 2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}3e209a3$reset_color  -qm1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}6088ecf $reset_color -qm 2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}3e209a3 $reset_color -qm1st commit"
     }
 
     prefix=-qm
@@ -1042,16 +836,14 @@
     run git checkout another-branch
 
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git commit --message '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit --message '
 
         run cat
         assert ${#lines} equals 2
-        assert ${lines[1]} same_as "${fg[yellow]}6088ecf$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}3e209a3$reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}6088ecf $reset_color  2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}3e209a3 $reset_color 1st commit"
     }
 
     prefix=
@@ -1370,11 +1162,9 @@
 
 @test 'Testing completion: git commit --cleanup=**' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git commit '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 5
@@ -1391,11 +1181,9 @@
 
 @test 'Testing completion: git commit --cleanup **' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git commit --cleanup '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit --cleanup '
 
         run cat
         assert ${#lines} equals 5
@@ -1412,11 +1200,9 @@
 
 @test 'Testing completion: git commit -u**' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git commit '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 3
@@ -1431,11 +1217,9 @@
 
 @test 'Testing completion: git commit -qu**' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git commit '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 3
@@ -1450,11 +1234,9 @@
 
 @test 'Testing completion: git commit --untracked-files=**' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git commit '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 3
@@ -1475,16 +1257,9 @@
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
     _fzf_complete() {
-        assert $# equals 9
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--read0'
-        assert $3 same_as '--print0'
-        assert $4 same_as '--multi'
-        assert $5 same_as '--preview-window=right:70%:wrap'
-        assert $6 matches '--preview=*'
-        assert $7 same_as '--reverse'
-        assert $8 same_as '--'
-        assert $9 same_as 'git commit '
+        assert $# equals 2
+        assert $1 matches '--ansi --read0 --print0 --multi '
+        assert $2 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 3
@@ -1523,16 +1298,9 @@
     cd directory2/directory3
 
     _fzf_complete() {
-        assert $# equals 9
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--read0'
-        assert $3 same_as '--print0'
-        assert $4 same_as '--multi'
-        assert $5 same_as '--preview-window=right:70%:wrap'
-        assert $6 matches '--preview=*'
-        assert $7 same_as '--reverse'
-        assert $8 same_as '--'
-        assert $9 same_as 'git commit '
+        assert $# equals 2
+        assert $1 matches '--ansi --read0 --print0 --multi '
+        assert $2 same_as 'git commit '
 
         run cat
         assert ${#lines} equals 3
@@ -1565,16 +1333,9 @@
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
     _fzf_complete() {
-        assert $# equals 9
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--read0'
-        assert $3 same_as '--print0'
-        assert $4 same_as '--multi'
-        assert $5 same_as '--preview-window=right:70%:wrap'
-        assert $6 matches '--preview=*'
-        assert $7 same_as '--reverse'
-        assert $8 same_as '--'
-        assert $9 same_as 'git commit -- '
+        assert $# equals 2
+        assert $1 matches '--ansi --read0 --print0 --multi '
+        assert $2 same_as 'git commit -- '
 
         run cat
         assert ${#lines} equals 3
@@ -1613,16 +1374,9 @@
     cd directory2/directory3
 
     _fzf_complete() {
-        assert $# equals 9
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--read0'
-        assert $3 same_as '--print0'
-        assert $4 same_as '--multi'
-        assert $5 same_as '--preview-window=right:70%:wrap'
-        assert $6 matches '--preview=*'
-        assert $7 same_as '--reverse'
-        assert $8 same_as '--'
-        assert $9 same_as 'git commit -- '
+        assert $# equals 2
+        assert $1 matches '--ansi --read0 --print0 --multi '
+        assert $2 same_as 'git commit -- '
 
         run cat
         assert ${#lines} equals 3
@@ -1655,16 +1409,9 @@
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
     _fzf_complete() {
-        assert $# equals 9
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--read0'
-        assert $3 same_as '--print0'
-        assert $4 same_as '--multi'
-        assert $5 same_as '--preview-window=right:70%:wrap'
-        assert $6 matches '--preview=*'
-        assert $7 same_as '--reverse'
-        assert $8 same_as '--'
-        assert $9 same_as 'git add '
+        assert $# equals 2
+        assert $1 matches '--ansi --read0 --print0 --multi '
+        assert $2 same_as 'git add '
 
         run cat
         assert ${#lines} equals 5
@@ -1713,16 +1460,9 @@
     cd directory2/directory3
 
     _fzf_complete() {
-        assert $# equals 9
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--read0'
-        assert $3 same_as '--print0'
-        assert $4 same_as '--multi'
-        assert $5 same_as '--preview-window=right:70%:wrap'
-        assert $6 matches '--preview=*'
-        assert $7 same_as '--reverse'
-        assert $8 same_as '--'
-        assert $9 same_as 'git add '
+        assert $# equals 2
+        assert $1 matches '--ansi --read0 --print0 --multi '
+        assert $2 same_as 'git add '
 
         run cat
         assert ${#lines} equals 7
@@ -1770,11 +1510,9 @@
 
 @test 'Testing completion: git pull --recurse-submodules=**' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git pull '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git pull '
 
         run cat
         assert ${#lines} equals 3
@@ -1789,11 +1527,9 @@
 
 @test 'Testing completion: git pull --cleanup=**' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git pull '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git pull '
 
         run cat
         assert ${#lines} equals 5
@@ -1810,11 +1546,9 @@
 
 @test 'Testing completion: git pull --cleanup **' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git pull --cleanup '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git pull --cleanup '
 
         run cat
         assert ${#lines} equals 5
@@ -1831,11 +1565,9 @@
 
 @test 'Testing completion: git pull -s **' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git pull -s '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git pull -s '
 
         run cat
         assert ${#lines} equals 5
@@ -1852,11 +1584,9 @@
 
 @test 'Testing completion: git pull -s**' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git pull '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git pull '
 
         run cat
         assert ${#lines} equals 5
@@ -1873,11 +1603,9 @@
 
 @test 'Testing completion: git pull -qs **' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git pull -qs '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git pull -qs '
 
         run cat
         assert ${#lines} equals 5
@@ -1894,11 +1622,9 @@
 
 @test 'Testing completion: git pull -qs**' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git pull '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git pull '
 
         run cat
         assert ${#lines} equals 5
@@ -1915,11 +1641,9 @@
 
 @test 'Testing completion: git pull --strategy=**' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git pull '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git pull '
 
         run cat
         assert ${#lines} equals 5
@@ -1936,11 +1660,9 @@
 
 @test 'Testing completion: git pull --strategy **' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git pull --strategy '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git pull --strategy '
 
         run cat
         assert ${#lines} equals 5
@@ -1957,11 +1679,9 @@
 
 @test 'Testing completion: git pull -X **' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git pull -X '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git pull -X '
 
         run cat
         assert ${#lines} equals 19
@@ -1992,11 +1712,9 @@
 
 @test 'Testing completion: git pull -X**' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git pull '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git pull '
 
         run cat
         assert ${#lines} equals 19
@@ -2027,11 +1745,9 @@
 
 @test 'Testing completion: git pull -qX **' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git pull -qX '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git pull -qX '
 
         run cat
         assert ${#lines} equals 19
@@ -2062,11 +1778,9 @@
 
 @test 'Testing completion: git pull -qX**' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git pull '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git pull '
 
         run cat
         assert ${#lines} equals 19
@@ -2097,11 +1811,9 @@
 
 @test 'Testing completion: git pull --strategy-option=**' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git pull '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git pull '
 
         run cat
         assert ${#lines} equals 19
@@ -2131,11 +1843,9 @@
 
 @test 'Testing completion: git pull --strategy-option **' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git pull --strategy-option '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git pull --strategy-option '
 
         run cat
         assert ${#lines} equals 19
@@ -2166,11 +1876,9 @@
 
 @test 'Testing completion: git pull --rebase=**' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git pull '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git pull '
 
         run cat
         assert ${#lines} equals 5
@@ -2187,19 +1895,17 @@
 
 @test 'Testing completion: git pull --shallow-exclude=**' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git pull '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git pull '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}--shallow-exclude=another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}--shallow-exclude=master        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}--shallow-exclude=v1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}--shallow-exclude=v2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}--shallow-exclude=3e209a3       $reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}--shallow-exclude=another-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}--shallow-exclude=master         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}--shallow-exclude=v1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}--shallow-exclude=v2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}--shallow-exclude=3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=--shallow-exclude=
@@ -2208,19 +1914,18 @@
 
 @test 'Testing completion: git pull --shallow-exclude **' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git pull --shallow-exclude '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git pull --shallow-exclude '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  1st commit"
+
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=
@@ -2229,19 +1934,18 @@
 
 @test 'Testing completion: git pull --negotiation-tip=**' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git pull '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git pull '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}--negotiation-tip=another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}--negotiation-tip=master        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}--negotiation-tip=v1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}--negotiation-tip=v2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}--negotiation-tip=3e209a3       $reset_color  1st commit"
+
+        assert ${lines[1]} same_as "${fg[yellow]}--negotiation-tip=another-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}--negotiation-tip=master         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}--negotiation-tip=v1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}--negotiation-tip=v2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}--negotiation-tip=3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=--negotiation-tip=
@@ -2250,19 +1954,17 @@
 
 @test 'Testing completion: git pull --negotiation-tip **' {
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git pull --negotiation-tip '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git pull --negotiation-tip '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master         ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v1             ${fg[green]}tag$reset_color     1st commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v2             ${fg[green]}tag$reset_color      2nd commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=
@@ -2440,40 +2142,36 @@
     run git remote add example example
 
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git pull '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git pull '
 
         run cat
         assert ${#lines} equals 3
-        assert ${lines[1]} same_as "${fg[yellow]}example $reset_color  example (fetch)"
-        assert ${lines[2]} same_as "${fg[yellow]}origin  $reset_color  git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
-        assert ${lines[3]} same_as "${fg[yellow]}upstream$reset_color  git@example.com:example/fzf-zsh-completions (fetch)"
+        assert ${lines[1]} same_as "${fg[yellow]}example  ${fg[green]}example$reset_color  (fetch)"
+        assert ${lines[2]} same_as "${fg[yellow]}origin   ${fg[green]}git@github.com:chitoku-k/fzf-zsh-completions$reset_color  (fetch)"
+        assert ${lines[3]} same_as "${fg[yellow]}upstream ${fg[green]}git@example.com:example/fzf-zsh-completions$reset_color  (fetch)"
     }
 
     prefix=
     _fzf_complete_git 'git pull '
 }
 
+# このテストケースどうすんだろこれw
 @test 'Testing completion: git pull origin **' {
     run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
     run git symbolic-ref refs/remotes/origin/master refs/heads/master
     run git symbolic-ref refs/remotes/origin/another-branch refs/heads/another-branch
 
     _fzf_complete() {
-        assert $# equals 5
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--multi'
-        assert $4 same_as '--'
-        assert $5 same_as 'git pull origin '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index --multi'
+        assert $2 same_as 'git pull origin '
 
         run cat
         assert ${#lines} equals 2
-        assert ${lines[1]} same_as "${fg[yellow]}origin/another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}origin/master        $reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}origin/another-branch $reset_color  2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}origin/master         $reset_color 1st commit"
     }
 
     prefix=
@@ -2486,40 +2184,37 @@
     run git remote add example example
 
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git pull --cleanup strip --rebase '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git pull --cleanup strip --rebase '
 
         run cat
         assert ${#lines} equals 3
-        assert ${lines[1]} same_as "${fg[yellow]}example $reset_color  example (fetch)"
-        assert ${lines[2]} same_as "${fg[yellow]}origin  $reset_color  git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
-        assert ${lines[3]} same_as "${fg[yellow]}upstream$reset_color  git@example.com:example/fzf-zsh-completions (fetch)"
+
+        assert ${lines[1]} same_as "${fg[yellow]}example  ${fg[green]}example$reset_color  (fetch)"
+        assert ${lines[2]} same_as "${fg[yellow]}origin   ${fg[green]}git@github.com:chitoku-k/fzf-zsh-completions$reset_color  (fetch)"
+        assert ${lines[3]} same_as "${fg[yellow]}upstream ${fg[green]}git@example.com:example/fzf-zsh-completions$reset_color  (fetch)"
     }
 
     prefix=
     _fzf_complete_git 'git pull --cleanup strip --rebase '
 }
 
+# このテストケースどうすんだろこれw
 @test 'Testing completion: git pull origin --cleanup strip --quiet **' {
     run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
     run git symbolic-ref refs/remotes/origin/master refs/heads/master
     run git symbolic-ref refs/remotes/origin/another-branch refs/heads/another-branch
 
     _fzf_complete() {
-        assert $# equals 5
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--multi'
-        assert $4 same_as '--'
-        assert $5 same_as 'git pull origin --cleanup strip --quiet '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index --multi'
+        assert $2 same_as 'git pull origin --cleanup strip --quiet '
 
         run cat
         assert ${#lines} equals 2
-        assert ${lines[1]} same_as "${fg[yellow]}origin/another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}origin/master        $reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}origin/another-branch $reset_color  2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}origin/master         $reset_color 1st commit"
     }
 
     prefix=
@@ -2532,40 +2227,36 @@
     run git remote add example example
 
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git pull -- '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git pull -- '
 
         run cat
         assert ${#lines} equals 3
-        assert ${lines[1]} same_as "${fg[yellow]}example $reset_color  example (fetch)"
-        assert ${lines[2]} same_as "${fg[yellow]}origin  $reset_color  git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
-        assert ${lines[3]} same_as "${fg[yellow]}upstream$reset_color  git@example.com:example/fzf-zsh-completions (fetch)"
+        assert ${lines[1]} same_as "${fg[yellow]}example  ${fg[green]}example$reset_color  (fetch)"
+        assert ${lines[2]} same_as "${fg[yellow]}origin   ${fg[green]}git@github.com:chitoku-k/fzf-zsh-completions$reset_color  (fetch)"
+        assert ${lines[3]} same_as "${fg[yellow]}upstream ${fg[green]}git@example.com:example/fzf-zsh-completions$reset_color  (fetch)"
     }
 
     prefix=
     _fzf_complete_git 'git pull -- '
 }
 
+# このテストケースどうすんだろこれw
 @test 'Testing completion: git pull -- origin **' {
     run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
     run git symbolic-ref refs/remotes/origin/master refs/heads/master
     run git symbolic-ref refs/remotes/origin/another-branch refs/heads/another-branch
 
     _fzf_complete() {
-        assert $# equals 5
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--multi'
-        assert $4 same_as '--'
-        assert $5 same_as 'git pull -- origin '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index --multi'
+        assert $2 same_as 'git pull -- origin '
 
         run cat
         assert ${#lines} equals 2
-        assert ${lines[1]} same_as "${fg[yellow]}origin/another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}origin/master        $reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}origin/another-branch $reset_color  2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}origin/master         $reset_color 1st commit"
     }
 
     prefix=
@@ -2580,13 +2271,9 @@
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
     _fzf_complete() {
-        assert $# equals 6
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--read0'
-        assert $3 same_as '--print0'
-        assert $4 same_as '--multi'
-        assert $5 same_as '--'
-        assert $6 same_as 'git rm '
+        assert $# equals 2
+        assert $1 same_as '--ansi --read0 --print0 --multi'
+        assert $2 same_as 'git rm '
 
         run cat
         assert ${#lines} equals 3
@@ -2615,40 +2302,38 @@
     run git config alias.squash 'commit --squash'
 
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git squash '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git squash '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  1st commit"
+
+       assert ${lines[1]} same_as "${fg[yellow]}another-branch ${fg[green]}branch$reset_color   2nd commit"
+assert ${lines[2]} same_as "${fg[yellow]}master         ${fg[green]}branch$reset_color  1st commit"
+assert ${lines[3]} same_as "${fg[yellow]}v1             ${fg[green]}tag$reset_color     1st commit"
+assert ${lines[4]} same_as "${fg[yellow]}v2             ${fg[green]}tag$reset_color      2nd commit"
+assert ${lines[5]} same_as "${fg[yellow]}3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=
     _fzf_complete_git 'git squash '
 }
 
+#これどうすんの？
 @test 'Testing completion (alias): git commit --amend --message **' {
     run git config alias.amend 'commit --amend --message'
     run git checkout another-branch
 
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git amend '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git amend '
 
         run cat
         assert ${#lines} equals 2
-        assert ${lines[1]} same_as "${fg[yellow]}6088ecf$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}3e209a3$reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}6088ecf $reset_color  2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}3e209a3 $reset_color 1st commit"
     }
 
     prefix=
@@ -2693,11 +2378,9 @@
     run git config alias.commit-cleanup 'commit --cleanup'
 
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git commit-cleanup '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git commit-cleanup '
 
         run cat
         assert ${#lines} equals 5
@@ -2722,16 +2405,9 @@
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
     _fzf_complete() {
-        assert $# equals 9
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--read0'
-        assert $3 same_as '--print0'
-        assert $4 same_as '--multi'
-        assert $5 same_as '--preview-window=right:70%:wrap'
-        assert $6 matches '--preview=*'
-        assert $7 same_as '--reverse'
-        assert $8 same_as '--'
-        assert $9 same_as 'git commit-all '
+        assert $# equals 2
+        assert $1 matches '--ansi --read0 --print0 --multi '
+        assert $2 same_as 'git commit-all '
 
         run cat
         assert ${#lines} equals 3
@@ -2761,19 +2437,19 @@
     run git config alias.bar 'commit --squash'
 
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'git foo '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as 'git foo '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  1st commit"
+
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch ${fg[green]}branch$reset_color   2nd commit"
+assert ${lines[2]} same_as "${fg[yellow]}master         ${fg[green]}branch$reset_color  1st commit"
+assert ${lines[3]} same_as "${fg[yellow]}v1             ${fg[green]}tag$reset_color     1st commit"
+assert ${lines[4]} same_as "${fg[yellow]}v2             ${fg[green]}tag$reset_color      2nd commit"
+assert ${lines[5]} same_as "${fg[yellow]}3e209a3        ${fg[green]}commit$reset_color  1st commit"
+
     }
 
     prefix=
@@ -2803,19 +2479,18 @@
     run git config alias.squash 'commit --squash'
 
     _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as '"git"  "squash" '
+        assert $# equals 2
+        assert $1 same_as '--ansi --tiebreak=index '
+        assert $2 same_as '"git"  "squash" '
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color   2nd commit"
-        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  1st commit"
+
+    assert ${lines[1]} same_as "${fg[yellow]}another-branch ${fg[green]}branch$reset_color   2nd commit"
+    assert ${lines[2]} same_as "${fg[yellow]}master         ${fg[green]}branch$reset_color  1st commit"
+    assert ${lines[3]} same_as "${fg[yellow]}v1             ${fg[green]}tag$reset_color     1st commit"
+    assert ${lines[4]} same_as "${fg[yellow]}v2             ${fg[green]}tag$reset_color      2nd commit"
+    assert ${lines[5]} same_as "${fg[yellow]}3e209a3        ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=
@@ -2830,16 +2505,16 @@
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
     _fzf_complete() {
-        fzf_options=($@) run preview ' M  file3 containing space '
+        fzf_options=$1 run preview ' M  file3 containing space '
         assert $output is_not_empty
 
-        fzf_options=($@) run preview ' M directory1/file2'
+        fzf_options=$1 run preview ' M directory1/file2'
         assert $output is_not_empty
 
-        fzf_options=($@) run preview $' M directory2/file4\ncontaining\nnewlines'
+        fzf_options=$1 run preview $' M directory2/file4\ncontaining\nnewlines'
         assert $output is_not_empty
 
-        fzf_options=($@) run preview ' M file1'
+        fzf_options=$1 run preview ' M file1'
         assert $output is_not_empty
     }
 
@@ -2855,16 +2530,16 @@
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
     _fzf_complete() {
-        fzf_options=($@) run preview ' M  file3 containing space '
+        fzf_options=$1 run preview ' M  file3 containing space '
         assert $output is_not_empty
 
-        fzf_options=($@) run preview ' M directory1/file2'
+        fzf_options=$1 run preview ' M directory1/file2'
         assert $output is_not_empty
 
-        fzf_options=($@) run preview $' M directory2/file4\ncontaining\nnewlines'
+        fzf_options=$1 run preview $' M directory2/file4\ncontaining\nnewlines'
         assert $output is_not_empty
 
-        fzf_options=($@) run preview ' M file1'
+        fzf_options=$1 run preview ' M file1'
         assert $output is_not_empty
     }
 
@@ -2880,22 +2555,22 @@
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
     _fzf_complete() {
-        fzf_options=($@) run preview ' M  file3 containing space '
+        fzf_options=$1 run preview ' M  file3 containing space '
         assert $output is_not_empty
 
-        fzf_options=($@) run preview ' M directory1/file2'
+        fzf_options=$1 run preview ' M directory1/file2'
         assert $output is_not_empty
 
-        fzf_options=($@) run preview $' M directory2/file4\ncontaining\nnewlines'
+        fzf_options=$1 run preview $' M directory2/file4\ncontaining\nnewlines'
         assert $output is_not_empty
 
-        fzf_options=($@) run preview ' M file1'
+        fzf_options=$1 run preview ' M file1'
         assert $output is_not_empty
 
-        fzf_options=($@) run preview '??  file5 containing space '
+        fzf_options=$1 run preview '??  file5 containing space '
         assert $output is_not_empty
 
-        fzf_options=($@) run preview $'?? directory2/file6\ncontaining\nnewlines'
+        fzf_options=$1 run preview $'?? directory2/file6\ncontaining\nnewlines'
         assert $output is_not_empty
     }
 
