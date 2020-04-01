@@ -66,9 +66,9 @@ _fzf_complete_git() {
     local subcommand=${${(Q)${(z)arguments}}[2]}
     local last_argument=${${(Q)${(z)arguments}}[-1]}
 
-    if [[ $subcommand =~ '(checkout|diff|log|rebase|reset|switch)' ]]; then
+    if [[ $subcommand =~ '(diff|log|rebase|reset|switch)' ]]; then
         if [[ ${${(Q)${(z)arguments}}[(r)--]} = -- ]]; then
-            if [[ $subcommand =~ '(checkout|diff)' ]]; then
+            if [[ $subcommand =~ 'diff' ]]; then
                 _fzf_complete_git-unstaged-files '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
                 return
             fi
@@ -85,6 +85,51 @@ _fzf_complete_git() {
 
     if [[ $subcommand =~ '(branch|cherry-pick|merge|revert)' ]]; then
         _fzf_complete_git-commits '--multi' $@
+        return
+    fi
+
+    if [[ $subcommand = 'checkout' ]]; then
+        local prefix_option completing_option
+        local git_options_argument_required=(-b -B --orphan --conflict --pathspec-from-file)
+        local git_options_argument_optional=()
+
+        if completing_option=$(_fzf_complete_git_parse_completing_option "$prefix" "$last_argument" "${(F)git_options_argument_required}" "${(F)git_options_argument_optional}"); then
+            if [[ $completing_option = --* ]]; then
+                prefix_option=$completing_option=
+            else
+                prefix_option=${prefix%%${completing_option[-1]}*}${completing_option[-1]}
+            fi
+        fi
+
+        case $completing_option in
+            -b|-B)
+                return
+                ;;
+
+            --conflict)
+                return
+                ;;
+
+            --pathspec-from-file)
+                return
+                ;;
+
+            *)
+                if _fzf_complete_git_parse_argument "${arguments%% -- *}" 1 "${(F)git_options_argument_required}" > /dev/null; then
+                    _fzf_complete_git-ls-files '' '--multi' $@
+                    return
+                fi
+
+                if [[ -z ${${(Q)${(z)arguments}}[(r)--]} ]]; then
+                    _fzf_complete_git-commits '' $@
+                    return
+                fi
+
+                _fzf_complete_git-unstaged-files '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
+                return
+                ;;
+        esac
+
         return
     fi
 
@@ -342,7 +387,7 @@ _fzf_complete_git-unstaged-files() {
         local cdup=$(git rev-parse --show-cdup 2> /dev/null)
 
         for filename in ${(0)files}; do
-            if [[ $previous_status != R ]]; then
+            if [[ $previous_status != 'R' ]]; then
                 awk \
                     -v RS='' \
                     -v cdup=$cdup \
