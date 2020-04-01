@@ -88,7 +88,7 @@ _fzf_complete_git() {
         return
     fi
 
-    if [[ $subcommand = checkout ]]; then
+    if [[ $subcommand = 'checkout' ]]; then
         local prefix_option completing_option
         local git_options_argument_required=(-b -B --orphan --conflict --pathspec-from-file)
         local git_options_argument_optional=()
@@ -386,7 +386,7 @@ _fzf_complete_git-unstaged-files() {
         local cdup=$(git rev-parse --show-cdup 2> /dev/null)
 
         for filename in ${(0)files}; do
-            if [[ $previous_status != R ]]; then
+            if [[ $previous_status != 'R' ]]; then
                 awk \
                     -v RS='' \
                     -v cdup=$cdup \
