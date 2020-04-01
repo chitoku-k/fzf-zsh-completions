@@ -115,13 +115,13 @@ _fzf_complete_git() {
                 ;;
 
             *)
-                if [[ -z ${${(Q)${(z)arguments}}[(r)--]} ]]; then
-                    _fzf_complete_git-commits '' $@
+                if _fzf_complete_git_parse_argument "${arguments%% -- *}" 1 "${(F)git_options_argument_required}" > /dev/null; then
+                    _fzf_complete_git-ls-files '' '--multi' $@
                     return
                 fi
 
-                if _fzf_complete_git_parse_argument "${arguments%% -- *}" 1 "${(F)git_options_argument_required}" > /dev/null; then
-                    _fzf_complete_git-ls-files '' '--multi' $@
+                if [[ -z ${${(Q)${(z)arguments}}[(r)--]} ]]; then
+                    _fzf_complete_git-commits '' $@
                     return
                 fi
 
