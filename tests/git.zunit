@@ -61,8 +61,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -379,8 +379,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -490,8 +490,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -550,8 +550,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -571,8 +571,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -631,8 +631,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -653,8 +653,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -675,8 +675,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -697,8 +697,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -719,8 +719,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -779,8 +779,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}--source=another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}--source=master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}--source=v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}--source=v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}--source=v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}--source=v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}--source=3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -800,8 +800,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -821,8 +821,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}--fixup=another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}--fixup=master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}--fixup=v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}--fixup=v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}--fixup=v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}--fixup=v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}--fixup=3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -842,8 +842,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}--reedit-message=another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}--reedit-message=master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}--reedit-message=v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}--reedit-message=v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}--reedit-message=v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}--reedit-message=v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}--reedit-message=3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -863,8 +863,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}--reuse-message=another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}--reuse-message=master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}--reuse-message=v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}--reuse-message=v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}--reuse-message=v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}--reuse-message=v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}--reuse-message=3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -884,8 +884,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}--squash=another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}--squash=master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}--squash=v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}--squash=v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}--squash=v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}--squash=v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}--squash=3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -905,8 +905,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -926,8 +926,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}-canother-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}-cmaster        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}-cv1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}-cv2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}-cv2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}-cv1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}-c3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -947,8 +947,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -968,8 +968,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}-qcanother-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}-qcmaster        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}-qcv1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}-qcv2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}-qcv2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}-qcv1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}-qc3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -989,8 +989,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -1010,8 +1010,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}-Canother-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}-Cmaster        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}-Cv1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}-Cv2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}-Cv2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}-Cv1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}-C3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -1031,8 +1031,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -1052,8 +1052,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}-qCanother-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}-qCmaster        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}-qCv1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}-qCv2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}-qCv2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}-qCv1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}-qC3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -1073,8 +1073,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -1094,8 +1094,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -1115,8 +1115,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -1136,8 +1136,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -2404,8 +2404,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}--shallow-exclude=another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}--shallow-exclude=master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}--shallow-exclude=v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}--shallow-exclude=v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}--shallow-exclude=v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}--shallow-exclude=v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}--shallow-exclude=3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -2425,8 +2425,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -2446,8 +2446,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}--negotiation-tip=another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}--negotiation-tip=master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}--negotiation-tip=v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}--negotiation-tip=v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}--negotiation-tip=v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}--negotiation-tip=v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}--negotiation-tip=3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -2467,8 +2467,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -2832,8 +2832,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -2978,8 +2978,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -3020,8 +3020,8 @@
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
         assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
@@ -3114,8 +3114,8 @@
     input=(
         'another-branch   2nd commit'
         'master          1st commit'
-        'v1              1st commit'
         'v2               2nd commit'
+        'v1              1st commit'
         '3e209a3         1st commit'
     )
 
@@ -3125,8 +3125,8 @@
     assert ${#lines} equals 5
     assert ${lines[1]} same_as 'another-branch'
     assert ${lines[2]} same_as 'master'
-    assert ${lines[3]} same_as 'v1'
-    assert ${lines[4]} same_as 'v2'
+    assert ${lines[3]} same_as 'v2'
+    assert ${lines[4]} same_as 'v1'
     assert ${lines[5]} same_as '3e209a3'
 }
 

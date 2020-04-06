@@ -318,7 +318,7 @@ _fzf_complete_git-commits() {
 
     _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@ < <({
         git for-each-ref refs/heads refs/remotes --format='%(refname:short) branch %(contents:subject)' 2> /dev/null
-        git for-each-ref refs/tags --format='%(refname:short) tag %(contents:subject)' 2> /dev/null
+        git for-each-ref refs/tags --format='%(refname:short) tag %(contents:subject)' --sort=-version:refname 2> /dev/null
         git log --format='%h commit %s' 2> /dev/null
     } | awk -v prefix=$prefix_option '{ print prefix $0 }' | _fzf_complete_tabularize ${fg[yellow]} ${fg[green]})
 }
