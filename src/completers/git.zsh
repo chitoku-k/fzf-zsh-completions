@@ -86,7 +86,7 @@ _fzf_complete_git() {
     if [[ $subcommand =~ '(diff|log|rebase|reset|switch)' ]]; then
         if [[ ${${(Q)${(z)arguments}}[(r)--]} = -- ]]; then
             if [[ $subcommand =~ 'diff' ]]; then
-                _fzf_complete_git-unstaged-files '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
+                _fzf_complete_git-status-files 'unstaged' '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
                 return
             fi
 
@@ -142,7 +142,7 @@ _fzf_complete_git() {
                     return
                 fi
 
-                _fzf_complete_git-unstaged-files '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
+                _fzf_complete_git-status-files 'unstaged' '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
                 return
                 ;;
         esac
@@ -175,11 +175,11 @@ _fzf_complete_git() {
                 fi
 
                 if [[ ${${(Q)${(z)arguments}}[(r)--staged]} = '--staged' ]] || [[ ${${(Q)${(z)arguments}}[(r)-S]} = '-S' ]]; then
-                    _fzf_complete_git-staged-files '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff_cached $FZF_DEFAULT_OPTS" $@
+                    _fzf_complete_git-status-files 'staged' '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff_cached $FZF_DEFAULT_OPTS" $@
                     return
                 fi
 
-                _fzf_complete_git-unstaged-files '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
+                _fzf_complete_git-status-files 'unstaged' '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
                 ;;
         esac
 
@@ -188,7 +188,7 @@ _fzf_complete_git() {
 
     if [[ $subcommand = 'commit' ]]; then
         if [[ -n ${${(Q)${(z)arguments}}[(r)--]} ]] || [[ $last_argument != -* && $prefix != -* ]]; then
-            _fzf_complete_git-unstaged-files '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
+            _fzf_complete_git-status-files 'unstaged' '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
             return
         fi
 
@@ -231,7 +231,7 @@ _fzf_complete_git() {
                 ;;
 
             *)
-                _fzf_complete_git-unstaged-files '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
+                _fzf_complete_git-status-files 'unstaged' '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
                 ;;
         esac
 
@@ -239,7 +239,7 @@ _fzf_complete_git() {
     fi
 
     if [[ $subcommand = 'add' ]]; then
-        _fzf_complete_git-unstaged-files '--untracked-files=all' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
+        _fzf_complete_git-status-files 'unstaged' '--untracked-files=all' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
         return
     fi
 
@@ -402,10 +402,13 @@ _fzf_complete_git-ls-files_post() {
     done
 }
 
-_fzf_complete_git-unstaged-files() {
-    local git_options=$1
-    local fzf_options=$2
-    shift 2
+_fzf_complete_git-status-files() {
+    local -A regexes
+    regexes=(staged '^[^ ]' unstaged '^.[^ ]')
+    local files_kind=$1
+    local git_options=$2
+    local fzf_options=$3
+    shift 3
 
     _fzf_complete --ansi --read0 --print0 ${(Q)${(Z+n+)fzf_options}} -- $@ < <({
         local previous_status
@@ -422,7 +425,7 @@ _fzf_complete_git-unstaged-files() {
                     -v red=${fg[red]} \
                     -v reset=$reset_color '
                         '$_fzf_complete_awk_functions'
-                        /^.[^ ]/ {
+                        /'${regexes[$files_kind]}'/ {
                             printf "%s%c", colorize_git_status($0, cdup, green, red, reset), 0
                         }
                     ' <<< $filename
@@ -433,47 +436,7 @@ _fzf_complete_git-unstaged-files() {
     })
 }
 
-_fzf_complete_git-unstaged-files_post() {
-    local filename
-    local input=$(cat)
-
-    for filename in ${(0)input}; do
-        echo ${${(q+)filename:3}//\\n/\\\\n}
-    done
-}
-
-_fzf_complete_git-staged-files() {
-    local git_options=$1
-    local fzf_options=$2
-    shift 2
-
-    _fzf_complete --ansi --read0 --print0 ${(Q)${(Z+n+)fzf_options}} -- $@ < <({
-        local previous_status
-        local filename
-        local files=$(git status --porcelain=v1 -z ${(Z+n+)git_options} 2> /dev/null)
-        local cdup=$(git rev-parse --show-cdup 2> /dev/null)
-
-        for filename in ${(0)files}; do
-            if [[ $previous_status != 'R' ]]; then
-                awk \
-                    -v RS='' \
-                    -v cdup=$cdup \
-                    -v green=${fg[green]} \
-                    -v red=${fg[red]} \
-                    -v reset=$reset_color '
-                        '$_fzf_complete_awk_functions'
-                        /^[^ ]/ {
-                            printf "%s%c", colorize_git_status($0, cdup, green, red, reset), 0
-                        }
-                    ' <<< $filename
-            fi
-
-            previous_status=${filename:0:1}
-        done
-    })
-}
-
-_fzf_complete_git-staged-files_post() {
+_fzf_complete_git-status-files_post() {
     local filename
     local input=$(cat)
 

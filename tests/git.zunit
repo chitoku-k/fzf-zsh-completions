@@ -3319,7 +3319,7 @@
     assert ${lines[1]} same_as "' 2nd commit'"
 }
 
-@test 'Testing post: git unstaged files' {
+@test 'Testing post: git status files' {
     input=(
         'M  file1'
         'M  directory1/file2'
@@ -3329,7 +3329,7 @@
         $'?? directory2/file6\ncontaining\nnewlines'
     )
 
-    run _fzf_complete_git-unstaged-files_post <<< ${(pj:\0:)input}
+    run _fzf_complete_git-status-files_post <<< ${(pj:\0:)input}
 
     assert $state equals 0
     assert ${#lines} equals 6
