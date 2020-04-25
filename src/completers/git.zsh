@@ -44,6 +44,23 @@ _fzf_complete_preview_git_diff=$(cat <<'PREVIEW_OPTIONS'
 PREVIEW_OPTIONS
 )
 
+_fzf_complete_preview_git_diff_cached=$(cat <<'PREVIEW_OPTIONS'
+    --preview-window=right:70%:wrap
+    --preview='echo {} | awk -v RS="" '\''
+        {
+            status = substr($0, 1, 2)
+            input = substr($0, 4)
+
+            if (status ~ /^(\?\?|!!)/) {
+                printf "%s%c%s", "/dev/null", 0, input
+            } else {
+                printf "%s", input
+            }
+        }
+    '\'' | xargs -0 git diff --cached --no-ext-diff --color=always --'
+PREVIEW_OPTIONS
+)
+
 _fzf_complete_git() {
     local arguments=$@
     local resolved_commands=()
@@ -152,7 +169,17 @@ _fzf_complete_git() {
                 ;;
 
             *)
-                _fzf_complete_git-ls-files '' '--multi' $@
+                if [[ ${${(Q)${(z)arguments}}[(r)--source]} = '--source' ]] || [[ ${${(Q)${(z)arguments}}[(r)-s]} = '-s' ]]; then
+                    _fzf_complete_git-ls-files '' '--multi' $@
+                    return
+                fi
+
+                if [[ ${${(Q)${(z)arguments}}[(r)--staged]} = '--staged' ]] || [[ ${${(Q)${(z)arguments}}[(r)-S]} = '-S' ]]; then
+                    _fzf_complete_git-staged-files '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff_cached $FZF_DEFAULT_OPTS" $@
+                    return
+                fi
+
+                _fzf_complete_git-unstaged-files '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
                 ;;
         esac
 
@@ -407,6 +434,46 @@ _fzf_complete_git-unstaged-files() {
 }
 
 _fzf_complete_git-unstaged-files_post() {
+    local filename
+    local input=$(cat)
+
+    for filename in ${(0)input}; do
+        echo ${${(q+)filename:3}//\\n/\\\\n}
+    done
+}
+
+_fzf_complete_git-staged-files() {
+    local git_options=$1
+    local fzf_options=$2
+    shift 2
+
+    _fzf_complete --ansi --read0 --print0 ${(Q)${(Z+n+)fzf_options}} -- $@ < <({
+        local previous_status
+        local filename
+        local files=$(git status --porcelain=v1 -z ${(Z+n+)git_options} 2> /dev/null)
+        local cdup=$(git rev-parse --show-cdup 2> /dev/null)
+
+        for filename in ${(0)files}; do
+            if [[ $previous_status != 'R' ]]; then
+                awk \
+                    -v RS='' \
+                    -v cdup=$cdup \
+                    -v green=${fg[green]} \
+                    -v red=${fg[red]} \
+                    -v reset=$reset_color '
+                        '$_fzf_complete_awk_functions'
+                        /^[^ ]/ {
+                            printf "%s%c", colorize_git_status($0, cdup, green, red, reset), 0
+                        }
+                    ' <<< $filename
+            fi
+
+            previous_status=${filename:0:1}
+        done
+    })
+}
+
+_fzf_complete_git-staged-files_post() {
     local filename
     local input=$(cat)
 
