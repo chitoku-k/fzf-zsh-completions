@@ -169,7 +169,7 @@ _fzf_complete_git() {
                 ;;
 
             *)
-                if [[ -n ${${(Q)${(z)arguments}}[(r)--source(|(=*))]} ]] || [[ -n ${${(Q)${(z)arguments}}[(r)-[^-]#s[[:alpha:]]#]} ]]; then
+                if [[ -n ${${(Q)${(z)arguments}}[(r)--source(|(=*))]} ]] || [[ -n ${${(Q)${(z)arguments}}[(r)-[^-]#s*]} ]]; then
                     _fzf_complete_git-ls-files '' '--multi' $@
                     return
                 fi
