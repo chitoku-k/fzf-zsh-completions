@@ -169,12 +169,12 @@ _fzf_complete_git() {
                 ;;
 
             *)
-                if [[ ${${(Q)${(z)arguments}}[(r)--source]} = '--source' ]] || [[ ${${(Q)${(z)arguments}}[(r)-s]} = '-s' ]]; then
+                if [[ -n ${${(Q)${(z)arguments}}[(r)--source]} ]] || [[ -n ${${(Q)${(z)arguments}}[(r)-[^-]#s]} ]]; then
                     _fzf_complete_git-ls-files '' '--multi' $@
                     return
                 fi
 
-                if [[ ${${(Q)${(z)arguments}}[(r)--staged]} = '--staged' ]] || [[ ${${(Q)${(z)arguments}}[(r)-S]} = '-S' ]]; then
+                if [[ -n ${${(Q)${(z)arguments}}[(r)--staged]} ]] || [[ -n ${${(Q)${(z)arguments}}[(r)-[^-]#S]} ]]; then
                     _fzf_complete_git-status-files 'staged' '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff_cached $FZF_DEFAULT_OPTS" $@
                     return
                 fi

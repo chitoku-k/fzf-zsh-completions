@@ -848,6 +848,45 @@
     _fzf_complete_git 'git restore -s HEAD '
 }
 
+@test 'Testing completion: git restore -qs HEAD **' {
+    run git checkout another-branch
+    echo >> ' file3 containing space '
+    echo >> directory2/$'file4\ncontaining\nnewlines'
+    echo >> ' file5 containing space '
+    echo >> directory2/$'file6\ncontaining\nnewlines'
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--read0'
+        assert $3 same_as '--print0'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'git restore -qs HEAD '
+
+        run cat
+        assert ${#lines} equals 3
+
+        actual1=(${(0)lines[1]})
+        assert ${#actual1} equals 3
+        assert ${actual1[1]} same_as ' file3 containing space '
+        assert ${actual1[2]} same_as 'directory1/file2'
+        assert ${actual1[3]} same_as 'directory2/file4'
+
+        actual2=(${(0)lines[2]})
+        assert ${#actual2} equals 1
+        assert ${actual2[1]} same_as 'containing'
+
+        actual3=(${(0)lines[3]})
+        assert ${#actual3} equals 2
+        assert ${actual3[1]} same_as 'newlines'
+        assert ${actual3[2]} same_as 'file1'
+    }
+
+    prefix=
+    _fzf_complete_git 'git restore -qs HEAD '
+}
+
 @test 'Testing completion: git restore --staged **' {
     run git checkout another-branch
     echo >> ' file3 containing space '
@@ -930,6 +969,48 @@
 
     prefix=
     _fzf_complete_git 'git restore -S '
+}
+
+@test 'Testing completion: git restore -qS **' {
+    run git checkout another-branch
+    echo >> ' file3 containing space '
+    echo >> directory2/$'file4\ncontaining\nnewlines'
+    echo >> ' file5 containing space '
+    echo >> directory2/$'file6\ncontaining\nnewlines'
+    run git add file1 ' file3 containing space ' $'directory2/file4\ncontaining\nnewlines'
+
+    _fzf_complete() {
+        assert $# equals 9
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--read0'
+        assert $3 same_as '--print0'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--preview-window=right:70%:wrap'
+        assert $6 matches '--preview=*'
+        assert $7 same_as '--reverse'
+        assert $8 same_as '--'
+        assert $9 same_as 'git restore -qS '
+
+        run cat
+        assert ${#lines} equals 3
+
+        actual1=(${(0)lines[1]})
+        assert ${#actual1} equals 2
+        assert ${actual1[1]} same_as "${fg[green]}M$reset_color $reset_color  file3 containing space "
+        assert ${actual1[2]} same_as "${fg[green]}M$reset_color $reset_color directory2/file4"
+
+        actual2=(${(0)lines[2]})
+        assert ${#actual2} equals 1
+        assert ${actual2[1]} same_as 'containing'
+
+        actual3=(${(0)lines[3]})
+        assert ${#actual3} equals 2
+        assert ${actual3[1]} same_as 'newlines'
+        assert ${actual3[2]} same_as "${fg[green]}M$reset_color $reset_color file1"
+    }
+
+    prefix=
+    _fzf_complete_git 'git restore -qS '
 }
 
 @test 'Testing completion: git restore --source=**' {
