@@ -403,9 +403,7 @@ _fzf_complete_git-ls-files_post() {
 }
 
 _fzf_complete_git-status-files() {
-    local -A regexes
-    regexes=(staged '^[^ ]' unstaged '^.[^ ]')
-    local files_kind=$1
+    local state=$1
     local git_options=$2
     local fzf_options=$3
     shift 3
@@ -420,12 +418,13 @@ _fzf_complete_git-status-files() {
             if [[ $previous_status != 'R' ]]; then
                 awk \
                     -v RS='' \
+                    -v state=$state \
                     -v cdup=$cdup \
                     -v green=${fg[green]} \
                     -v red=${fg[red]} \
                     -v reset=$reset_color '
                         '$_fzf_complete_awk_functions'
-                        /'${regexes[$files_kind]}'/ {
+                        state == "staged" ? /^[^ ]/ : /^.[^ ]/ {
                             printf "%s%c", colorize_git_status($0, cdup, green, red, reset), 0
                         }
                     ' <<< $filename
