@@ -1290,6 +1290,94 @@
     _fzf_complete_docker 'docker inspect --type network '
 }
 
+@test 'Testing completion: docker inspect --type=volume **' {
+    echo 0 > docker_mock_times
+
+    docker() {
+        docker_mock_times=$(($(cat docker_mock_times) + 1))
+        echo $docker_mock_times > docker_mock_times
+
+        docker_mock_$docker_mock_times $@
+    }
+
+    docker_mock_1() {
+        assert $# equals 4
+        assert $1 same_as 'volume'
+        assert $2 same_as 'list'
+        assert $3 same_as '--format'
+        assert $4 same_as 'table {{.Name}};{{.Driver}};{{.Scope}}'
+
+        echo 'VOLUME ID;DRIVER;SCOPE'
+        echo '0b9526ec0aa7f7ded03c88328e9b60f519be17ec53d9b504c2e4b07626a456ec;local;local'
+        echo '1ef4483837bf419c9ba75e79522507a196954032909601d803ca6ddb90329c65;local;local'
+        echo '7fb9e47eb7e7efd9672213fdc0f77296f8230abd5a2682bb5eacfad8cbb93ca2;local;local'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker inspect --type=volume '
+
+        run cat
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}VOLUME ID                                                       ${reset_color}  ${reset_color}DRIVER${reset_color}  SCOPE"
+        assert ${lines[2]} same_as "${fg[yellow]}0b9526ec0aa7f7ded03c88328e9b60f519be17ec53d9b504c2e4b07626a456ec${reset_color}  ${reset_color}local ${reset_color}  local"
+        assert ${lines[3]} same_as "${fg[yellow]}1ef4483837bf419c9ba75e79522507a196954032909601d803ca6ddb90329c65${reset_color}  ${reset_color}local ${reset_color}  local"
+        assert ${lines[4]} same_as "${fg[yellow]}7fb9e47eb7e7efd9672213fdc0f77296f8230abd5a2682bb5eacfad8cbb93ca2${reset_color}  ${reset_color}local ${reset_color}  local"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker inspect --type=volume '
+}
+
+@test 'Testing completion: docker inspect --type volume **' {
+    echo 0 > docker_mock_times
+
+    docker() {
+        docker_mock_times=$(($(cat docker_mock_times) + 1))
+        echo $docker_mock_times > docker_mock_times
+
+        docker_mock_$docker_mock_times $@
+    }
+
+    docker_mock_1() {
+        assert $# equals 4
+        assert $1 same_as 'volume'
+        assert $2 same_as 'list'
+        assert $3 same_as '--format'
+        assert $4 same_as 'table {{.Name}};{{.Driver}};{{.Scope}}'
+
+        echo 'VOLUME ID;DRIVER;SCOPE'
+        echo '0b9526ec0aa7f7ded03c88328e9b60f519be17ec53d9b504c2e4b07626a456ec;local;local'
+        echo '1ef4483837bf419c9ba75e79522507a196954032909601d803ca6ddb90329c65;local;local'
+        echo '7fb9e47eb7e7efd9672213fdc0f77296f8230abd5a2682bb5eacfad8cbb93ca2;local;local'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker inspect --type volume '
+
+        run cat
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}VOLUME ID                                                       ${reset_color}  ${reset_color}DRIVER${reset_color}  SCOPE"
+        assert ${lines[2]} same_as "${fg[yellow]}0b9526ec0aa7f7ded03c88328e9b60f519be17ec53d9b504c2e4b07626a456ec${reset_color}  ${reset_color}local ${reset_color}  local"
+        assert ${lines[3]} same_as "${fg[yellow]}1ef4483837bf419c9ba75e79522507a196954032909601d803ca6ddb90329c65${reset_color}  ${reset_color}local ${reset_color}  local"
+        assert ${lines[4]} same_as "${fg[yellow]}7fb9e47eb7e7efd9672213fdc0f77296f8230abd5a2682bb5eacfad8cbb93ca2${reset_color}  ${reset_color}local ${reset_color}  local"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker inspect --type volume '
+}
+
 @test 'Testing completion: docker inspect --type=task **' {
     echo 0 > docker_mock_times
 
@@ -1678,4 +1766,36 @@
     assert $state equals 0
     assert ${#lines} equals 1
     assert ${lines[1]} same_as '295e3ea0de41:'
+}
+
+@test 'Testing post: docker-networks' {
+    input=(
+        'e19a403182e9  bridge  bridge  local'
+        '0566b014947c  host    host    local'
+        '97628061152b  none    null    local'
+    )
+
+    run _fzf_complete_docker-networks_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 3
+    assert ${lines[1]} same_as 'e19a403182e9'
+    assert ${lines[2]} same_as '0566b014947c'
+    assert ${lines[3]} same_as '97628061152b'
+}
+
+@test 'Testing post: docker-volumes' {
+    input=(
+        '0b9526ec0aa7f7ded03c88328e9b60f519be17ec53d9b504c2e4b07626a456ec  local  local'
+        '1ef4483837bf419c9ba75e79522507a196954032909601d803ca6ddb90329c65  local  local'
+        '7fb9e47eb7e7efd9672213fdc0f77296f8230abd5a2682bb5eacfad8cbb93ca2  local  local'
+    )
+
+    run _fzf_complete_docker-volumes_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 3
+    assert ${lines[1]} same_as '0b9526ec0aa7f7ded03c88328e9b60f519be17ec53d9b504c2e4b07626a456ec'
+    assert ${lines[2]} same_as '1ef4483837bf419c9ba75e79522507a196954032909601d803ca6ddb90329c65'
+    assert ${lines[3]} same_as '7fb9e47eb7e7efd9672213fdc0f77296f8230abd5a2682bb5eacfad8cbb93ca2'
 }
