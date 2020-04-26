@@ -1172,6 +1172,48 @@
     _fzf_complete_git 'git restore --source '
 }
 
+@test 'Testing completion: git restore -s **' {
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git restore -s '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
+    }
+
+    prefix=
+    _fzf_complete_git 'git restore -s '
+}
+
+@test 'Testing completion: git restore -s**' {
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git restore '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "${fg[yellow]}-sanother-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}-smaster        $reset_color  ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}-sv2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}-sv1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
+        assert ${lines[5]} same_as "${fg[yellow]}-s3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
+    }
+
+    prefix=-s
+    _fzf_complete_git 'git restore '
+}
+
 @test 'Testing completion: git commit --fixup=**' {
     _fzf_complete() {
         assert $# equals 4
