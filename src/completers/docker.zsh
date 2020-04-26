@@ -150,11 +150,5 @@ _fzf_complete_docker-networks() {
 }
 
 _fzf_complete_docker-networks_post() {
-    local input=$(awk '{ print $1 }')
-
-    if [[ -z $input ]]; then
-        return
-    fi
-
-    echo -n $input
+    awk '{ print $1 }'
 }
