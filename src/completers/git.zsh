@@ -152,7 +152,7 @@ _fzf_complete_git() {
 
     if [[ $subcommand = 'restore' ]]; then
         local prefix_option completing_option
-        local git_options_argument_required=(--source)
+        local git_options_argument_required=(--source -s)
         local git_options_argument_optional=()
 
         if completing_option=$(_fzf_complete_git_parse_completing_option "$prefix" "$last_argument" "${(F)git_options_argument_required}" "${(F)git_options_argument_optional}"); then
@@ -164,7 +164,7 @@ _fzf_complete_git() {
         fi
 
         case $completing_option in
-            --source)
+            -s|--source)
                 _fzf_complete_git-commits '' $@
                 ;;
 
