@@ -4,6 +4,7 @@ autoload -U colors
 colors
 
 _fzf_complete_docker() {
+    local arguments=$@
     local subcommand=${${(Q)${(z)@}}[2]}
 
     if [[ $subcommand =~ ^(create|history|run)$ ]]; then
@@ -11,7 +12,7 @@ _fzf_complete_docker() {
         return
     fi
 
-    if [[ $subcommand = push ]]; then
+    if [[ $subcommand = 'push' ]]; then
         _fzf_complete_docker-images-repository '' $@
         return
     fi
@@ -36,12 +37,32 @@ _fzf_complete_docker() {
         return
     fi
 
-    if [[ $subcommand = cp ]]; then
+    if [[ $subcommand = 'cp' ]]; then
         if [[ $prefix = */* ]]; then
             _fzf_path_completion "$prefix" $@
         else
             _fzf_complete_docker-containers '--all' '' $@
         fi
+        return
+    fi
+
+    if [[ $subcommand = 'inspect' ]]; then
+        local inspect_type_idx=${${(Q)${(z)arguments}}[(i)--type]}
+
+        if [[ -n ${${(Q)${(z)arguments}}[(r)--type=task]} ]] || [[ ${${(Q)${(z)arguments}}[inspect_type_idx+1]} = 'task' ]]; then
+            return
+        fi
+
+        if [[ -n ${${(Q)${(z)arguments}}[(r)--type=network]} ]] || [[ ${${(Q)${(z)arguments}}[inspect_type_idx+1]} = 'network' ]]; then
+            return
+        fi
+
+        if [[ -n ${${(Q)${(z)arguments}}[(r)--type=image]} ]] || [[ ${${(Q)${(z)arguments}}[inspect_type_idx+1]} = 'image' ]]; then
+            _fzf_complete_docker-images '--multi' $@
+            return
+        fi
+
+        _fzf_complete_docker-containers '--all' '--multi' $@
         return
     fi
 
@@ -106,7 +127,7 @@ _fzf_complete_docker-containers_post() {
         return
     fi
 
-    if [[ $subcommand = cp ]]; then
+    if [[ $subcommand = 'cp' ]]; then
         echo -n $input:
     else
         echo $input
