@@ -99,8 +99,13 @@ For contributing to this project, be sure to update `tests/` and run following:
 tests/test.zsh
 ```
 
+## Related Project
+
+- [fzf-preview.zsh][]
+
 [workflow-link]:   https://github.com/chitoku-k/fzf-zsh-completions/actions?query=branch:master
 [workflow-badge]:  https://img.shields.io/github/workflow/status/chitoku-k/fzf-zsh-completions/CI%20Workflow/master.svg?style=flat-square
 [fzf]:             https://github.com/junegunn/fzf
 [fzf-completions]: https://github.com/junegunn/fzf/blob/master/README.md#fuzzy-completion-for-bash-and-zsh
 [Zsh]:             https://www.zsh.org/
+[fzf-preview.zsh]: https://github.com/yuki-ycino/fzf-preview.zsh
