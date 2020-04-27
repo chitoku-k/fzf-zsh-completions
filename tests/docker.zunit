@@ -961,6 +961,463 @@
     _fzf_complete_docker 'docker rename '
 }
 
+@test 'Testing completion: docker inspect **' {
+    echo 0 > docker_mock_times
+
+    docker() {
+        docker_mock_times=$(($(cat docker_mock_times) + 1))
+        echo $docker_mock_times > docker_mock_times
+
+        docker_mock_$docker_mock_times $@
+    }
+
+    docker_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'container'
+        assert $2 same_as 'list'
+        assert $3 same_as '--all'
+        assert $4 same_as '--format'
+        assert $5 same_as 'table {{.ID}};{{.Image}};{{.Command}};{{.RunningFor}};{{.Status}};{{.Ports}};{{.Names}}'
+
+        echo 'CONTAINER ID;IMAGE;COMMAND;CREATED;STATUS;PORTS;NAME'
+        echo '728e677dd292;5425b1e460b6;"/bin/sh";12 days ago;Exited (0) 12 days ago;;affectionate_curie'
+        echo '5dbce56c9f3c;app;"/bin/sh";12 days ago;Exited (0) 12 days ago;;priceless_euler'
+        echo '862e5e30b1a7;app;"/bin/sh";12 days ago;Exited (0) 12 days ago;;gifted_elion'
+        echo '61858546cc23;5425b1e460b6;"/bin/sh";12 days ago;Exited (0) 12 days ago;;wonderful_tesla'
+        echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker inspect '
+
+        run cat
+        assert ${#lines} equals 6
+        assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
+        assert ${lines[2]} same_as "${fg[yellow]}728e677dd292${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  affectionate_curie"
+        assert ${lines[3]} same_as "${fg[yellow]}5dbce56c9f3c${reset_color}  ${reset_color}app         ${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  priceless_euler"
+        assert ${lines[4]} same_as "${fg[yellow]}862e5e30b1a7${reset_color}  ${reset_color}app         ${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  gifted_elion"
+        assert ${lines[5]} same_as "${fg[yellow]}61858546cc23${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  wonderful_tesla"
+        assert ${lines[6]} same_as "${fg[yellow]}295e3ea0de41${reset_color}  ${reset_color}archlinux   ${reset_color}  ${reset_color}\"/bin/zsh --login\"${reset_color}  ${reset_color}4 weeks ago${reset_color}  ${reset_color}Up 1 second           ${reset_color}  ${reset_color}     ${reset_color}  thankful_smyth"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker inspect '
+}
+
+@test 'Testing completion: docker inspect --type=container **' {
+    echo 0 > docker_mock_times
+
+    docker() {
+        docker_mock_times=$(($(cat docker_mock_times) + 1))
+        echo $docker_mock_times > docker_mock_times
+
+        docker_mock_$docker_mock_times $@
+    }
+
+    docker_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'container'
+        assert $2 same_as 'list'
+        assert $3 same_as '--all'
+        assert $4 same_as '--format'
+        assert $5 same_as 'table {{.ID}};{{.Image}};{{.Command}};{{.RunningFor}};{{.Status}};{{.Ports}};{{.Names}}'
+
+        echo 'CONTAINER ID;IMAGE;COMMAND;CREATED;STATUS;PORTS;NAME'
+        echo '728e677dd292;5425b1e460b6;"/bin/sh";12 days ago;Exited (0) 12 days ago;;affectionate_curie'
+        echo '5dbce56c9f3c;app;"/bin/sh";12 days ago;Exited (0) 12 days ago;;priceless_euler'
+        echo '862e5e30b1a7;app;"/bin/sh";12 days ago;Exited (0) 12 days ago;;gifted_elion'
+        echo '61858546cc23;5425b1e460b6;"/bin/sh";12 days ago;Exited (0) 12 days ago;;wonderful_tesla'
+        echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker inspect --type=container '
+
+        run cat
+        assert ${#lines} equals 6
+        assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
+        assert ${lines[2]} same_as "${fg[yellow]}728e677dd292${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  affectionate_curie"
+        assert ${lines[3]} same_as "${fg[yellow]}5dbce56c9f3c${reset_color}  ${reset_color}app         ${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  priceless_euler"
+        assert ${lines[4]} same_as "${fg[yellow]}862e5e30b1a7${reset_color}  ${reset_color}app         ${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  gifted_elion"
+        assert ${lines[5]} same_as "${fg[yellow]}61858546cc23${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  wonderful_tesla"
+        assert ${lines[6]} same_as "${fg[yellow]}295e3ea0de41${reset_color}  ${reset_color}archlinux   ${reset_color}  ${reset_color}\"/bin/zsh --login\"${reset_color}  ${reset_color}4 weeks ago${reset_color}  ${reset_color}Up 1 second           ${reset_color}  ${reset_color}     ${reset_color}  thankful_smyth"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker inspect --type=container '
+}
+
+@test 'Testing completion: docker inspect --type container **' {
+    echo 0 > docker_mock_times
+
+    docker() {
+        docker_mock_times=$(($(cat docker_mock_times) + 1))
+        echo $docker_mock_times > docker_mock_times
+
+        docker_mock_$docker_mock_times $@
+    }
+
+    docker_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'container'
+        assert $2 same_as 'list'
+        assert $3 same_as '--all'
+        assert $4 same_as '--format'
+        assert $5 same_as 'table {{.ID}};{{.Image}};{{.Command}};{{.RunningFor}};{{.Status}};{{.Ports}};{{.Names}}'
+
+        echo 'CONTAINER ID;IMAGE;COMMAND;CREATED;STATUS;PORTS;NAME'
+        echo '728e677dd292;5425b1e460b6;"/bin/sh";12 days ago;Exited (0) 12 days ago;;affectionate_curie'
+        echo '5dbce56c9f3c;app;"/bin/sh";12 days ago;Exited (0) 12 days ago;;priceless_euler'
+        echo '862e5e30b1a7;app;"/bin/sh";12 days ago;Exited (0) 12 days ago;;gifted_elion'
+        echo '61858546cc23;5425b1e460b6;"/bin/sh";12 days ago;Exited (0) 12 days ago;;wonderful_tesla'
+        echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker inspect --type container '
+
+        run cat
+        assert ${#lines} equals 6
+        assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
+        assert ${lines[2]} same_as "${fg[yellow]}728e677dd292${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  affectionate_curie"
+        assert ${lines[3]} same_as "${fg[yellow]}5dbce56c9f3c${reset_color}  ${reset_color}app         ${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  priceless_euler"
+        assert ${lines[4]} same_as "${fg[yellow]}862e5e30b1a7${reset_color}  ${reset_color}app         ${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  gifted_elion"
+        assert ${lines[5]} same_as "${fg[yellow]}61858546cc23${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  wonderful_tesla"
+        assert ${lines[6]} same_as "${fg[yellow]}295e3ea0de41${reset_color}  ${reset_color}archlinux   ${reset_color}  ${reset_color}\"/bin/zsh --login\"${reset_color}  ${reset_color}4 weeks ago${reset_color}  ${reset_color}Up 1 second           ${reset_color}  ${reset_color}     ${reset_color}  thankful_smyth"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker inspect --type container '
+}
+
+@test 'Testing completion: docker inspect --type=image **' {
+    echo 0 > docker_mock_times
+
+    docker() {
+        docker_mock_times=$(($(cat docker_mock_times) + 1))
+        echo $docker_mock_times > docker_mock_times
+
+        docker_mock_$docker_mock_times $@
+    }
+
+    docker_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'images'
+        assert $2 same_as '--format'
+        assert $3 same_as 'table {{.ID}};{{.Repository}};{{.Tag}};{{if .CreatedSince}}{{.CreatedSince}}{{else}}N/A{{end}};{{.Size}}'
+
+        echo 'IMAGE ID;REPOSITORY;TAG;CREATED;SIZE'
+        echo 'e7d92cdc71fe;alpine;latest;18 hours ago;5.59MB'
+        echo '5425b1e460b6;<none>;<none>;1 weeks ago;5.59MB'
+        echo 'ccc6e87d482b;ubuntu;latest;7 weeks ago;64.2MB'
+        echo 'f17f844b1558;zshusers/zsh;master;8 weeks ago;64.3MB'
+        echo '0152bf6f0800;archlinux;latest;18 months ago;409MB'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker inspect --type=image '
+
+        run cat
+        assert ${#lines} equals 6
+        assert ${lines[1]} same_as "${fg[yellow]}IMAGE ID    ${reset_color}  ${reset_color}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
+        assert ${lines[2]} same_as "${fg[yellow]}e7d92cdc71fe${reset_color}  ${reset_color}alpine      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 hours ago ${reset_color}  5.59MB"
+        assert ${lines[3]} same_as "${fg[yellow]}5425b1e460b6${reset_color}  ${reset_color}<none>      ${reset_color}  ${reset_color}<none>${reset_color}  ${reset_color}1 weeks ago  ${reset_color}  5.59MB"
+        assert ${lines[4]} same_as "${fg[yellow]}ccc6e87d482b${reset_color}  ${reset_color}ubuntu      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}7 weeks ago  ${reset_color}  64.2MB"
+        assert ${lines[5]} same_as "${fg[yellow]}f17f844b1558${reset_color}  ${reset_color}zshusers/zsh${reset_color}  ${reset_color}master${reset_color}  ${reset_color}8 weeks ago  ${reset_color}  64.3MB"
+        assert ${lines[6]} same_as "${fg[yellow]}0152bf6f0800${reset_color}  ${reset_color}archlinux   ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 months ago${reset_color}  409MB"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker inspect --type=image '
+}
+
+@test 'Testing completion: docker inspect --type image **' {
+    echo 0 > docker_mock_times
+
+    docker() {
+        docker_mock_times=$(($(cat docker_mock_times) + 1))
+        echo $docker_mock_times > docker_mock_times
+
+        docker_mock_$docker_mock_times $@
+    }
+
+    docker_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'images'
+        assert $2 same_as '--format'
+        assert $3 same_as 'table {{.ID}};{{.Repository}};{{.Tag}};{{if .CreatedSince}}{{.CreatedSince}}{{else}}N/A{{end}};{{.Size}}'
+
+        echo 'IMAGE ID;REPOSITORY;TAG;CREATED;SIZE'
+        echo 'e7d92cdc71fe;alpine;latest;18 hours ago;5.59MB'
+        echo '5425b1e460b6;<none>;<none>;1 weeks ago;5.59MB'
+        echo 'ccc6e87d482b;ubuntu;latest;7 weeks ago;64.2MB'
+        echo 'f17f844b1558;zshusers/zsh;master;8 weeks ago;64.3MB'
+        echo '0152bf6f0800;archlinux;latest;18 months ago;409MB'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker inspect --type image '
+
+        run cat
+        assert ${#lines} equals 6
+        assert ${lines[1]} same_as "${fg[yellow]}IMAGE ID    ${reset_color}  ${reset_color}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
+        assert ${lines[2]} same_as "${fg[yellow]}e7d92cdc71fe${reset_color}  ${reset_color}alpine      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 hours ago ${reset_color}  5.59MB"
+        assert ${lines[3]} same_as "${fg[yellow]}5425b1e460b6${reset_color}  ${reset_color}<none>      ${reset_color}  ${reset_color}<none>${reset_color}  ${reset_color}1 weeks ago  ${reset_color}  5.59MB"
+        assert ${lines[4]} same_as "${fg[yellow]}ccc6e87d482b${reset_color}  ${reset_color}ubuntu      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}7 weeks ago  ${reset_color}  64.2MB"
+        assert ${lines[5]} same_as "${fg[yellow]}f17f844b1558${reset_color}  ${reset_color}zshusers/zsh${reset_color}  ${reset_color}master${reset_color}  ${reset_color}8 weeks ago  ${reset_color}  64.3MB"
+        assert ${lines[6]} same_as "${fg[yellow]}0152bf6f0800${reset_color}  ${reset_color}archlinux   ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 months ago${reset_color}  409MB"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker inspect --type image '
+}
+
+@test 'Testing completion: docker inspect --type=network **' {
+    echo 0 > docker_mock_times
+
+    docker() {
+        docker_mock_times=$(($(cat docker_mock_times) + 1))
+        echo $docker_mock_times > docker_mock_times
+
+        docker_mock_$docker_mock_times $@
+    }
+
+    docker_mock_1() {
+        assert $# equals 4
+        assert $1 same_as 'network'
+        assert $2 same_as 'list'
+        assert $3 same_as '--format'
+        assert $4 same_as 'table {{.ID}};{{.Name}};{{.Driver}};{{.Scope}}'
+
+        echo 'NETWORK ID;NAME;DRIVER;SCOPE'
+        echo 'e19a403182e9;bridge;bridge;local'
+        echo '0566b014947c;host;host;local'
+        echo '97628061152b;none;null;local'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker inspect --type=network '
+
+        run cat
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}NETWORK ID  ${reset_color}  ${reset_color}NAME  ${reset_color}  ${reset_color}DRIVER${reset_color}  SCOPE"
+        assert ${lines[2]} same_as "${fg[yellow]}e19a403182e9${reset_color}  ${reset_color}bridge${reset_color}  ${reset_color}bridge${reset_color}  local"
+        assert ${lines[3]} same_as "${fg[yellow]}0566b014947c${reset_color}  ${reset_color}host  ${reset_color}  ${reset_color}host  ${reset_color}  local"
+        assert ${lines[4]} same_as "${fg[yellow]}97628061152b${reset_color}  ${reset_color}none  ${reset_color}  ${reset_color}null  ${reset_color}  local"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker inspect --type=network '
+}
+
+@test 'Testing completion: docker inspect --type network **' {
+    echo 0 > docker_mock_times
+
+    docker() {
+        docker_mock_times=$(($(cat docker_mock_times) + 1))
+        echo $docker_mock_times > docker_mock_times
+
+        docker_mock_$docker_mock_times $@
+    }
+
+    docker_mock_1() {
+        assert $# equals 4
+        assert $1 same_as 'network'
+        assert $2 same_as 'list'
+        assert $3 same_as '--format'
+        assert $4 same_as 'table {{.ID}};{{.Name}};{{.Driver}};{{.Scope}}'
+
+        echo 'NETWORK ID;NAME;DRIVER;SCOPE'
+        echo 'e19a403182e9;bridge;bridge;local'
+        echo '0566b014947c;host;host;local'
+        echo '97628061152b;none;null;local'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker inspect --type network '
+
+        run cat
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}NETWORK ID  ${reset_color}  ${reset_color}NAME  ${reset_color}  ${reset_color}DRIVER${reset_color}  SCOPE"
+        assert ${lines[2]} same_as "${fg[yellow]}e19a403182e9${reset_color}  ${reset_color}bridge${reset_color}  ${reset_color}bridge${reset_color}  local"
+        assert ${lines[3]} same_as "${fg[yellow]}0566b014947c${reset_color}  ${reset_color}host  ${reset_color}  ${reset_color}host  ${reset_color}  local"
+        assert ${lines[4]} same_as "${fg[yellow]}97628061152b${reset_color}  ${reset_color}none  ${reset_color}  ${reset_color}null  ${reset_color}  local"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker inspect --type network '
+}
+
+@test 'Testing completion: docker inspect --type=volume **' {
+    echo 0 > docker_mock_times
+
+    docker() {
+        docker_mock_times=$(($(cat docker_mock_times) + 1))
+        echo $docker_mock_times > docker_mock_times
+
+        docker_mock_$docker_mock_times $@
+    }
+
+    docker_mock_1() {
+        assert $# equals 4
+        assert $1 same_as 'volume'
+        assert $2 same_as 'list'
+        assert $3 same_as '--format'
+        assert $4 same_as 'table {{.Name}};{{.Driver}};{{.Scope}}'
+
+        echo 'VOLUME ID;DRIVER;SCOPE'
+        echo '0b9526ec0aa7f7ded03c88328e9b60f519be17ec53d9b504c2e4b07626a456ec;local;local'
+        echo '1ef4483837bf419c9ba75e79522507a196954032909601d803ca6ddb90329c65;local;local'
+        echo '7fb9e47eb7e7efd9672213fdc0f77296f8230abd5a2682bb5eacfad8cbb93ca2;local;local'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker inspect --type=volume '
+
+        run cat
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}VOLUME ID                                                       ${reset_color}  ${reset_color}DRIVER${reset_color}  SCOPE"
+        assert ${lines[2]} same_as "${fg[yellow]}0b9526ec0aa7f7ded03c88328e9b60f519be17ec53d9b504c2e4b07626a456ec${reset_color}  ${reset_color}local ${reset_color}  local"
+        assert ${lines[3]} same_as "${fg[yellow]}1ef4483837bf419c9ba75e79522507a196954032909601d803ca6ddb90329c65${reset_color}  ${reset_color}local ${reset_color}  local"
+        assert ${lines[4]} same_as "${fg[yellow]}7fb9e47eb7e7efd9672213fdc0f77296f8230abd5a2682bb5eacfad8cbb93ca2${reset_color}  ${reset_color}local ${reset_color}  local"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker inspect --type=volume '
+}
+
+@test 'Testing completion: docker inspect --type volume **' {
+    echo 0 > docker_mock_times
+
+    docker() {
+        docker_mock_times=$(($(cat docker_mock_times) + 1))
+        echo $docker_mock_times > docker_mock_times
+
+        docker_mock_$docker_mock_times $@
+    }
+
+    docker_mock_1() {
+        assert $# equals 4
+        assert $1 same_as 'volume'
+        assert $2 same_as 'list'
+        assert $3 same_as '--format'
+        assert $4 same_as 'table {{.Name}};{{.Driver}};{{.Scope}}'
+
+        echo 'VOLUME ID;DRIVER;SCOPE'
+        echo '0b9526ec0aa7f7ded03c88328e9b60f519be17ec53d9b504c2e4b07626a456ec;local;local'
+        echo '1ef4483837bf419c9ba75e79522507a196954032909601d803ca6ddb90329c65;local;local'
+        echo '7fb9e47eb7e7efd9672213fdc0f77296f8230abd5a2682bb5eacfad8cbb93ca2;local;local'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker inspect --type volume '
+
+        run cat
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}VOLUME ID                                                       ${reset_color}  ${reset_color}DRIVER${reset_color}  SCOPE"
+        assert ${lines[2]} same_as "${fg[yellow]}0b9526ec0aa7f7ded03c88328e9b60f519be17ec53d9b504c2e4b07626a456ec${reset_color}  ${reset_color}local ${reset_color}  local"
+        assert ${lines[3]} same_as "${fg[yellow]}1ef4483837bf419c9ba75e79522507a196954032909601d803ca6ddb90329c65${reset_color}  ${reset_color}local ${reset_color}  local"
+        assert ${lines[4]} same_as "${fg[yellow]}7fb9e47eb7e7efd9672213fdc0f77296f8230abd5a2682bb5eacfad8cbb93ca2${reset_color}  ${reset_color}local ${reset_color}  local"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker inspect --type volume '
+}
+
+@test 'Testing completion: docker inspect --type=task **' {
+    echo 0 > docker_mock_times
+
+    docker() {
+        docker_mock_times=$(($(cat docker_mock_times) + 1))
+        echo $docker_mock_times > docker_mock_times
+
+        docker_mock_$docker_mock_times $@
+    }
+
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker inspect --type=task '
+
+    assert $(cat docker_mock_times) equals 0
+}
+
+@test 'Testing completion: docker inspect --type task **' {
+    echo 0 > docker_mock_times
+
+    docker() {
+        docker_mock_times=$(($(cat docker_mock_times) + 1))
+        echo $docker_mock_times > docker_mock_times
+
+        docker_mock_$docker_mock_times $@
+    }
+
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker inspect --type task '
+
+    assert $(cat docker_mock_times) equals 0
+}
+
 @test 'Testing completion: docker restart **' {
     echo 0 > docker_mock_times
 
@@ -1309,4 +1766,36 @@
     assert $state equals 0
     assert ${#lines} equals 1
     assert ${lines[1]} same_as '295e3ea0de41:'
+}
+
+@test 'Testing post: docker-networks' {
+    input=(
+        'e19a403182e9  bridge  bridge  local'
+        '0566b014947c  host    host    local'
+        '97628061152b  none    null    local'
+    )
+
+    run _fzf_complete_docker-networks_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 3
+    assert ${lines[1]} same_as 'e19a403182e9'
+    assert ${lines[2]} same_as '0566b014947c'
+    assert ${lines[3]} same_as '97628061152b'
+}
+
+@test 'Testing post: docker-volumes' {
+    input=(
+        '0b9526ec0aa7f7ded03c88328e9b60f519be17ec53d9b504c2e4b07626a456ec  local  local'
+        '1ef4483837bf419c9ba75e79522507a196954032909601d803ca6ddb90329c65  local  local'
+        '7fb9e47eb7e7efd9672213fdc0f77296f8230abd5a2682bb5eacfad8cbb93ca2  local  local'
+    )
+
+    run _fzf_complete_docker-volumes_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 3
+    assert ${lines[1]} same_as '0b9526ec0aa7f7ded03c88328e9b60f519be17ec53d9b504c2e4b07626a456ec'
+    assert ${lines[2]} same_as '1ef4483837bf419c9ba75e79522507a196954032909601d803ca6ddb90329c65'
+    assert ${lines[3]} same_as '7fb9e47eb7e7efd9672213fdc0f77296f8230abd5a2682bb5eacfad8cbb93ca2'
 }
