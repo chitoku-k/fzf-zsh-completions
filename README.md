@@ -57,6 +57,11 @@ git rebase -i **<TAB>
   - revert
   - rm
   - switch
+- kubectl
+  - describe (pods)
+  - exec
+  - get (pods)
+  - logs
 - make
 - npm
   - run
