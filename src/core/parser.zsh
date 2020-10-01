@@ -76,7 +76,7 @@ _fzf_complete_parse_argument() {
     local options_argument_required=(${(z)4})
     shift 4
 
-    if [[ ${#arguments} = 0 ]]; then
+    if (( ${#arguments} < $start_index )); then
         return 1
     fi
 
