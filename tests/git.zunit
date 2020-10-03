@@ -1140,11 +1140,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}--source=another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}--source=master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}--source=v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
-        assert ${lines[4]} same_as "${fg[yellow]}--source=v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[5]} same_as "${fg[yellow]}--source=3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=--source=
@@ -1203,11 +1203,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}-sanother-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}-smaster        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}-sv2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
-        assert ${lines[4]} same_as "${fg[yellow]}-sv1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[5]} same_as "${fg[yellow]}-s3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=-s
@@ -1224,11 +1224,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}--fixup=another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}--fixup=master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}--fixup=v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
-        assert ${lines[4]} same_as "${fg[yellow]}--fixup=v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[5]} same_as "${fg[yellow]}--fixup=3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=--fixup=
@@ -1245,11 +1245,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}--reedit-message=another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}--reedit-message=master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}--reedit-message=v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
-        assert ${lines[4]} same_as "${fg[yellow]}--reedit-message=v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[5]} same_as "${fg[yellow]}--reedit-message=3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=--reedit-message=
@@ -1266,11 +1266,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}--reuse-message=another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}--reuse-message=master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}--reuse-message=v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
-        assert ${lines[4]} same_as "${fg[yellow]}--reuse-message=v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[5]} same_as "${fg[yellow]}--reuse-message=3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=--reuse-message=
@@ -1287,11 +1287,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}--squash=another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}--squash=master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}--squash=v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
-        assert ${lines[4]} same_as "${fg[yellow]}--squash=v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[5]} same_as "${fg[yellow]}--squash=3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=--squash=
@@ -1329,11 +1329,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}-canother-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}-cmaster        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}-cv2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
-        assert ${lines[4]} same_as "${fg[yellow]}-cv1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[5]} same_as "${fg[yellow]}-c3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=-c
@@ -1371,11 +1371,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}-qcanother-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}-qcmaster        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}-qcv2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
-        assert ${lines[4]} same_as "${fg[yellow]}-qcv1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[5]} same_as "${fg[yellow]}-qc3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=-qc
@@ -1413,11 +1413,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}-Canother-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}-Cmaster        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}-Cv2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
-        assert ${lines[4]} same_as "${fg[yellow]}-Cv1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[5]} same_as "${fg[yellow]}-C3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=-C
@@ -1455,11 +1455,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}-qCanother-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}-qCmaster        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}-qCv2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
-        assert ${lines[4]} same_as "${fg[yellow]}-qCv1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[5]} same_as "${fg[yellow]}-qC3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=-qC
@@ -1562,8 +1562,8 @@
 
         run cat
         assert ${#lines} equals 2
-        assert ${lines[1]} same_as "${fg[yellow]}6088ecf$reset_color  --message= 2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}3e209a3$reset_color  --message=1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}6088ecf$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}3e209a3$reset_color  1st commit"
     }
 
     prefix=--message=
@@ -1602,8 +1602,8 @@
 
         run cat
         assert ${#lines} equals 2
-        assert ${lines[1]} same_as "${fg[yellow]}6088ecf$reset_color  -m 2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}3e209a3$reset_color  -m1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}6088ecf$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}3e209a3$reset_color  1st commit"
     }
 
     prefix=-m
@@ -1642,8 +1642,8 @@
 
         run cat
         assert ${#lines} equals 2
-        assert ${lines[1]} same_as "${fg[yellow]}6088ecf$reset_color  -qm 2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}3e209a3$reset_color  -qm1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}6088ecf$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}3e209a3$reset_color  1st commit"
     }
 
     prefix=-qm
@@ -1990,11 +1990,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as --cleanup=strip
-        assert ${lines[2]} same_as --cleanup=whitespace
-        assert ${lines[3]} same_as --cleanup=verbatim
-        assert ${lines[4]} same_as --cleanup=scissors
-        assert ${lines[5]} same_as --cleanup=default
+        assert ${lines[1]} same_as strip
+        assert ${lines[2]} same_as whitespace
+        assert ${lines[3]} same_as verbatim
+        assert ${lines[4]} same_as scissors
+        assert ${lines[5]} same_as default
     }
 
     prefix=--cleanup=
@@ -2032,9 +2032,9 @@
 
         run cat
         assert ${#lines} equals 3
-        assert ${lines[1]} same_as -uno
-        assert ${lines[2]} same_as -unormal
-        assert ${lines[3]} same_as -uall
+        assert ${lines[1]} same_as no
+        assert ${lines[2]} same_as normal
+        assert ${lines[3]} same_as all
     }
 
     prefix=-u
@@ -2051,9 +2051,9 @@
 
         run cat
         assert ${#lines} equals 3
-        assert ${lines[1]} same_as -quno
-        assert ${lines[2]} same_as -qunormal
-        assert ${lines[3]} same_as -quall
+        assert ${lines[1]} same_as no
+        assert ${lines[2]} same_as normal
+        assert ${lines[3]} same_as all
     }
 
     prefix=-qu
@@ -2070,9 +2070,9 @@
 
         run cat
         assert ${#lines} equals 3
-        assert ${lines[1]} same_as --untracked-files=no
-        assert ${lines[2]} same_as --untracked-files=normal
-        assert ${lines[3]} same_as --untracked-files=all
+        assert ${lines[1]} same_as no
+        assert ${lines[2]} same_as normal
+        assert ${lines[3]} same_as all
     }
 
     prefix=--untracked-files=
@@ -2390,9 +2390,9 @@
 
         run cat
         assert ${#lines} equals 3
-        assert ${lines[1]} same_as --recurse-submodules=yes
-        assert ${lines[2]} same_as --recurse-submodules=on-demand
-        assert ${lines[3]} same_as --recurse-submodules=no
+        assert ${lines[1]} same_as yes
+        assert ${lines[2]} same_as on-demand
+        assert ${lines[3]} same_as no
     }
 
     prefix=--recurse-submodules=
@@ -2409,11 +2409,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as --cleanup=strip
-        assert ${lines[2]} same_as --cleanup=whitespace
-        assert ${lines[3]} same_as --cleanup=verbatim
-        assert ${lines[4]} same_as --cleanup=scissors
-        assert ${lines[5]} same_as --cleanup=default
+        assert ${lines[1]} same_as strip
+        assert ${lines[2]} same_as whitespace
+        assert ${lines[3]} same_as verbatim
+        assert ${lines[4]} same_as scissors
+        assert ${lines[5]} same_as default
     }
 
     prefix=--cleanup=
@@ -2472,11 +2472,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as -soctopus
-        assert ${lines[2]} same_as -sours
-        assert ${lines[3]} same_as -ssubtree
-        assert ${lines[4]} same_as -srecursive
-        assert ${lines[5]} same_as -sresolve
+        assert ${lines[1]} same_as octopus
+        assert ${lines[2]} same_as ours
+        assert ${lines[3]} same_as subtree
+        assert ${lines[4]} same_as recursive
+        assert ${lines[5]} same_as resolve
     }
 
     prefix=-s
@@ -2514,11 +2514,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as -qsoctopus
-        assert ${lines[2]} same_as -qsours
-        assert ${lines[3]} same_as -qssubtree
-        assert ${lines[4]} same_as -qsrecursive
-        assert ${lines[5]} same_as -qsresolve
+        assert ${lines[1]} same_as octopus
+        assert ${lines[2]} same_as ours
+        assert ${lines[3]} same_as subtree
+        assert ${lines[4]} same_as recursive
+        assert ${lines[5]} same_as resolve
     }
 
     prefix=-qs
@@ -2535,11 +2535,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as --strategy=octopus
-        assert ${lines[2]} same_as --strategy=ours
-        assert ${lines[3]} same_as --strategy=subtree
-        assert ${lines[4]} same_as --strategy=recursive
-        assert ${lines[5]} same_as --strategy=resolve
+        assert ${lines[1]} same_as octopus
+        assert ${lines[2]} same_as ours
+        assert ${lines[3]} same_as subtree
+        assert ${lines[4]} same_as recursive
+        assert ${lines[5]} same_as resolve
     }
 
     prefix=--strategy=
@@ -2612,25 +2612,25 @@
 
         run cat
         assert ${#lines} equals 19
-        assert ${lines[1]} same_as -Xdiff-algorithm=histogram
-        assert ${lines[2]} same_as -Xdiff-algorithm=minimal
-        assert ${lines[3]} same_as -Xdiff-algorithm=myers
-        assert ${lines[4]} same_as -Xdiff-algorithm=patience
-        assert ${lines[5]} same_as -Xfind-renames
-        assert ${lines[6]} same_as -Xfind-renames=
-        assert ${lines[7]} same_as -Xignore-all-space
-        assert ${lines[8]} same_as -Xignore-cr-at-eol
-        assert ${lines[9]} same_as -Xignore-space-at-eol
-        assert ${lines[10]} same_as -Xignore-space-change
-        assert ${lines[11]} same_as -Xno-renames
-        assert ${lines[12]} same_as -Xno-renormalize
-        assert ${lines[13]} same_as -Xours
-        assert ${lines[14]} same_as -Xpatience
-        assert ${lines[15]} same_as -Xrename-threshold=
-        assert ${lines[16]} same_as -Xrenormalize
-        assert ${lines[17]} same_as -Xsubtree
-        assert ${lines[18]} same_as -Xsubtree=
-        assert ${lines[19]} same_as -Xtheirs
+        assert ${lines[1]} same_as diff-algorithm=histogram
+        assert ${lines[2]} same_as diff-algorithm=minimal
+        assert ${lines[3]} same_as diff-algorithm=myers
+        assert ${lines[4]} same_as diff-algorithm=patience
+        assert ${lines[5]} same_as find-renames
+        assert ${lines[6]} same_as find-renames=
+        assert ${lines[7]} same_as ignore-all-space
+        assert ${lines[8]} same_as ignore-cr-at-eol
+        assert ${lines[9]} same_as ignore-space-at-eol
+        assert ${lines[10]} same_as ignore-space-change
+        assert ${lines[11]} same_as no-renames
+        assert ${lines[12]} same_as no-renormalize
+        assert ${lines[13]} same_as ours
+        assert ${lines[14]} same_as patience
+        assert ${lines[15]} same_as rename-threshold=
+        assert ${lines[16]} same_as renormalize
+        assert ${lines[17]} same_as subtree
+        assert ${lines[18]} same_as subtree=
+        assert ${lines[19]} same_as theirs
     }
 
     prefix=-X
@@ -2682,25 +2682,25 @@
 
         run cat
         assert ${#lines} equals 19
-        assert ${lines[1]} same_as -qXdiff-algorithm=histogram
-        assert ${lines[2]} same_as -qXdiff-algorithm=minimal
-        assert ${lines[3]} same_as -qXdiff-algorithm=myers
-        assert ${lines[4]} same_as -qXdiff-algorithm=patience
-        assert ${lines[5]} same_as -qXfind-renames
-        assert ${lines[6]} same_as -qXfind-renames=
-        assert ${lines[7]} same_as -qXignore-all-space
-        assert ${lines[8]} same_as -qXignore-cr-at-eol
-        assert ${lines[9]} same_as -qXignore-space-at-eol
-        assert ${lines[10]} same_as -qXignore-space-change
-        assert ${lines[11]} same_as -qXno-renames
-        assert ${lines[12]} same_as -qXno-renormalize
-        assert ${lines[13]} same_as -qXours
-        assert ${lines[14]} same_as -qXpatience
-        assert ${lines[15]} same_as -qXrename-threshold=
-        assert ${lines[16]} same_as -qXrenormalize
-        assert ${lines[17]} same_as -qXsubtree
-        assert ${lines[18]} same_as -qXsubtree=
-        assert ${lines[19]} same_as -qXtheirs
+        assert ${lines[1]} same_as diff-algorithm=histogram
+        assert ${lines[2]} same_as diff-algorithm=minimal
+        assert ${lines[3]} same_as diff-algorithm=myers
+        assert ${lines[4]} same_as diff-algorithm=patience
+        assert ${lines[5]} same_as find-renames
+        assert ${lines[6]} same_as find-renames=
+        assert ${lines[7]} same_as ignore-all-space
+        assert ${lines[8]} same_as ignore-cr-at-eol
+        assert ${lines[9]} same_as ignore-space-at-eol
+        assert ${lines[10]} same_as ignore-space-change
+        assert ${lines[11]} same_as no-renames
+        assert ${lines[12]} same_as no-renormalize
+        assert ${lines[13]} same_as ours
+        assert ${lines[14]} same_as patience
+        assert ${lines[15]} same_as rename-threshold=
+        assert ${lines[16]} same_as renormalize
+        assert ${lines[17]} same_as subtree
+        assert ${lines[18]} same_as subtree=
+        assert ${lines[19]} same_as theirs
     }
 
     prefix=-qX
@@ -2717,24 +2717,24 @@
 
         run cat
         assert ${#lines} equals 19
-        assert ${lines[1]} same_as --strategy-option=diff-algorithm=histogram
-        assert ${lines[2]} same_as --strategy-option=diff-algorithm=minimal
-        assert ${lines[3]} same_as --strategy-option=diff-algorithm=myers
-        assert ${lines[5]} same_as --strategy-option=find-renames
-        assert ${lines[6]} same_as --strategy-option=find-renames=
-        assert ${lines[7]} same_as --strategy-option=ignore-all-space
-        assert ${lines[8]} same_as --strategy-option=ignore-cr-at-eol
-        assert ${lines[9]} same_as --strategy-option=ignore-space-at-eol
-        assert ${lines[10]} same_as --strategy-option=ignore-space-change
-        assert ${lines[11]} same_as --strategy-option=no-renames
-        assert ${lines[12]} same_as --strategy-option=no-renormalize
-        assert ${lines[13]} same_as --strategy-option=ours
-        assert ${lines[14]} same_as --strategy-option=patience
-        assert ${lines[15]} same_as --strategy-option=rename-threshold=
-        assert ${lines[16]} same_as --strategy-option=renormalize
-        assert ${lines[17]} same_as --strategy-option=subtree
-        assert ${lines[18]} same_as --strategy-option=subtree=
-        assert ${lines[19]} same_as --strategy-option=theirs
+        assert ${lines[1]} same_as diff-algorithm=histogram
+        assert ${lines[2]} same_as diff-algorithm=minimal
+        assert ${lines[3]} same_as diff-algorithm=myers
+        assert ${lines[5]} same_as find-renames
+        assert ${lines[6]} same_as find-renames=
+        assert ${lines[7]} same_as ignore-all-space
+        assert ${lines[8]} same_as ignore-cr-at-eol
+        assert ${lines[9]} same_as ignore-space-at-eol
+        assert ${lines[10]} same_as ignore-space-change
+        assert ${lines[11]} same_as no-renames
+        assert ${lines[12]} same_as no-renormalize
+        assert ${lines[13]} same_as ours
+        assert ${lines[14]} same_as patience
+        assert ${lines[15]} same_as rename-threshold=
+        assert ${lines[16]} same_as renormalize
+        assert ${lines[17]} same_as subtree
+        assert ${lines[18]} same_as subtree=
+        assert ${lines[19]} same_as theirs
     }
 
     prefix=--strategy-option=
@@ -2786,11 +2786,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as --rebase=false
-        assert ${lines[2]} same_as --rebase=interactive
-        assert ${lines[3]} same_as --rebase=merges
-        assert ${lines[4]} same_as --rebase=preserve
-        assert ${lines[5]} same_as --rebase=true
+        assert ${lines[1]} same_as false
+        assert ${lines[2]} same_as interactive
+        assert ${lines[3]} same_as merges
+        assert ${lines[4]} same_as preserve
+        assert ${lines[5]} same_as true
     }
 
     prefix=--rebase=
@@ -2807,11 +2807,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}--shallow-exclude=another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}--shallow-exclude=master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}--shallow-exclude=v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
-        assert ${lines[4]} same_as "${fg[yellow]}--shallow-exclude=v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[5]} same_as "${fg[yellow]}--shallow-exclude=3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=--shallow-exclude=
@@ -2849,11 +2849,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}--negotiation-tip=another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}--negotiation-tip=master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}--negotiation-tip=v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
-        assert ${lines[4]} same_as "${fg[yellow]}--negotiation-tip=v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[5]} same_as "${fg[yellow]}--negotiation-tip=3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
     }
 
     prefix=--negotiation-tip=

@@ -165,7 +165,7 @@ _fzf_complete_git() {
 
         case $completing_option in
             -s|--source)
-                _fzf_complete_git-commits '' $@
+                prefix=${prefix#$prefix_option} _fzf_complete_git-commits '' $@
                 ;;
 
             *)
@@ -206,11 +206,11 @@ _fzf_complete_git() {
 
         case $completing_option in
             -c|-C|--fixup|--reedit-message|--reuse-message|--squash)
-                _fzf_complete_git-commits '' $@
+                prefix=${prefix#$prefix_option} _fzf_complete_git-commits '' $@
                 ;;
 
             -m|--message)
-                _fzf_complete_git-commit-messages '' $@
+                prefix=${prefix#$prefix_option} _fzf_complete_git-commit-messages '' $@
                 ;;
 
             --author|--date)
@@ -222,12 +222,12 @@ _fzf_complete_git() {
 
             --cleanup)
                 local cleanup_modes=(strip whitespace verbatim scissors default)
-                _fzf_complete_git_constants '' "${(F)cleanup_modes}" $@
+                prefix=${prefix#$prefix_option} _fzf_complete_git_constants '' "${(F)cleanup_modes}" $@
                 ;;
 
             -u|--untracked-files)
                 local untracked_file_modes=(no normal all)
-                _fzf_complete_git_constants '' "${(F)untracked_file_modes}" $@
+                prefix=${prefix#$prefix_option} _fzf_complete_git_constants '' "${(F)untracked_file_modes}" $@
                 ;;
 
             *)
@@ -260,17 +260,17 @@ _fzf_complete_git() {
         case $completing_option in
             --recurse-submodules)
                 local recurse_submodules=(yes on-demand no)
-                _fzf_complete_git_constants '' "${(F)recurse_submodules}" $@
+                prefix=${prefix#$prefix_option} _fzf_complete_git_constants '' "${(F)recurse_submodules}" $@
                 ;;
 
             --cleanup)
                 local cleanup_modes=(strip whitespace verbatim scissors default)
-                _fzf_complete_git_constants '' "${(F)cleanup_modes}" $@
+                prefix=${prefix#$prefix_option} _fzf_complete_git_constants '' "${(F)cleanup_modes}" $@
                 ;;
 
             -s|--strategy)
                 local strategies=(octopus ours subtree recursive resolve)
-                _fzf_complete_git_constants '' "${(F)strategies}" $@
+                prefix=${prefix#$prefix_option} _fzf_complete_git_constants '' "${(F)strategies}" $@
                 ;;
 
             --strategy-option|--strategy-option=diff-algorithm|-X)
@@ -295,20 +295,20 @@ _fzf_complete_git() {
                     subtree=
                     theirs
                 )
-                prefix_option=${prefix_option/=*/=} _fzf_complete_git_constants '' "${(F)strategy_options}" $@
+                prefix_option=${prefix_option/=*/=} prefix=${prefix#$prefix_option} _fzf_complete_git_constants '' "${(F)strategy_options}" $@
                 ;;
 
             --rebase)
                 local rebases=(false interactive merges preserve true)
-                _fzf_complete_git_constants '' "${(F)rebases}" $@
+                prefix=${prefix#$prefix_option} _fzf_complete_git_constants '' "${(F)rebases}" $@
                 ;;
 
             --shallow-exclude)
-                _fzf_complete_git-commits '' $@
+                prefix=${prefix#$prefix_option} _fzf_complete_git-commits '' $@
                 ;;
 
             --negotiation-tip)
-                _fzf_complete_git-commits '' $@
+                prefix=${prefix#$prefix_option} _fzf_complete_git-commits '' $@
                 ;;
 
             --gpg-sign|-S)
@@ -343,11 +343,11 @@ _fzf_complete_git-commits() {
     local fzf_options=$1
     shift
 
-    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@ < <({
+    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <({
         git for-each-ref refs/heads refs/remotes --format='%(refname:short) branch %(contents:subject)' 2> /dev/null
         git for-each-ref refs/tags --format='%(refname:short) tag %(contents:subject)' --sort=-version:refname 2> /dev/null
         git log --format='%h commit %s' 2> /dev/null
-    } | awk -v prefix=$prefix_option '{ print prefix $0 }' | _fzf_complete_tabularize ${fg[yellow]} ${fg[green]})
+    } | _fzf_complete_tabularize ${fg[yellow]} ${fg[green]})
 }
 
 _fzf_complete_git-commits_post() {
@@ -360,10 +360,10 @@ _fzf_complete_git-commit-messages() {
 
     _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@ < <(
         git log --format='%h %s' 2> /dev/null |
-        awk -v prefix=$prefix_option '
+        awk '
             {
                 match($0, / /)
-                print $1, prefix substr($0, RSTART + RLENGTH)
+                print $1, substr($0, RSTART + RLENGTH)
             }
         ' | _fzf_complete_tabularize ${fg[yellow]}
     )
@@ -490,7 +490,7 @@ _fzf_complete_git_constants() {
     local values=$2
     shift 2
 
-    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@ < <(awk -v prefix=$prefix_option '{ print prefix $0 }' <<< $values)
+    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(echo $values)
 }
 
 _fzf_complete_git_constants_post() {
