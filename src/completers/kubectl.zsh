@@ -6,18 +6,42 @@ colors
 _fzf_complete_kubectl() {
     local arguments=$@
     local last_argument=${${(Q)${(z)@}}[-1]}
+    local prefix_option resource name
 
     if [[ $last_argument =~ '(-[^-]*n|--namespace)$' ]]; then
-        _fzf_complete_kubectl-namespaces '' $@
+        resource=namespaces
+        _fzf_complete_kubectl-resource-names '' $@
         return
     fi
 
-    if [[ $prefix =~ '(-[^-]*n|--namespace=)' ]]; then
+    if [[ $prefix =~ '^(-[^-]*n|--namespace=)' ]]; then
         if [[ $prefix = --* ]]; then
-            prefix_option=${prefix/=*/=} _fzf_complete_kubectl-namespaces '' $@
+            resource=namespaces \
+            prefix_option=${prefix/=*/=} \
+            prefix=${prefix#$prefix_option} \
+                _fzf_complete_kubectl-resource-names '' $@
         else
-            prefix_option=${prefix%%n*}n _fzf_complete_kubectl-namespaces '' $@
+            resource=namespaces \
+            prefix_option=${prefix%%n*}n \
+            prefix=${prefix#$prefix_option} \
+                _fzf_complete_kubectl-resource-names '' $@
         fi
+        return
+    fi
+
+    if [[ $last_argument =~ '(-[^-]*f|--filename)$' ]]; then
+        _fzf_path_completion "$prefix" $@
+        return
+    fi
+
+    if [[ $prefix =~ '^(-[^-]*f|--filename=)' ]]; then
+        if [[ $prefix = --* ]]; then
+            prefix_option=${prefix/=*/=}
+        else
+            prefix_option=${prefix%%f*}f
+        fi
+
+        __fzf_generic_path_completion "${prefix#$prefix_option}" $@$prefix_option _fzf_compgen_path '' '' ' '
         return
     fi
 
@@ -82,32 +106,80 @@ _fzf_complete_kubectl() {
         --vmodule
     )
 
-    local subcommand resource
-    subcommand=$(_fzf_complete_parse_argument 2 1 "$arguments" "${(F)kubectl_options_argument_required}")
-    resource=$(_fzf_complete_parse_argument 2 2 "$arguments" "${(F)kubectl_options_argument_required}")
+    local subcommands=($(_fzf_complete_parse_argument 2 1 "$arguments" "${(F)kubectl_options_argument_required}"))
+    local namespace=$(_fzf_complete_kubectl-parse-namespace $@)
 
-    if [[ $subcommand =~ 'exec|logs' ]]; then
+    if [[ ${subcommands[1]} =~ '^(rollout|set)$' ]]; then
+        subcommands+=($(_fzf_complete_parse_argument 2 2 "$arguments" "${(F)kubectl_options_argument_required}"))
+        resource=$(_fzf_complete_parse_argument 2 3 "$arguments" "${(F)kubectl_options_argument_required}")
+    else
+        resource=$(_fzf_complete_parse_argument 2 2 "$arguments" "${(F)kubectl_options_argument_required}")
+    fi
+
+    if [[ $resource = */* ]]; then
+        name=${resource#*/}
+        resource=${resource%/*}
+    elif [[ -z $resource ]] && [[ $prefix =~ / ]]; then
+        resource=${prefix%/*}
+        prefix_option=${prefix%/*}/
+        prefix=${prefix#$prefix_option}
+    else
+        name=$(_fzf_complete_parse_argument 2 3 "$arguments" "${(F)kubectl_options_argument_required}")
+    fi
+
+    if [[ ${subcommands[1]} =~ '^(exec|logs|port-forward)$' ]]; then
+        if [[ -z $name ]]; then
+            name=$resource
+            resource=pods
+        fi
+
         if [[ $last_argument =~ '(-[^-]*c|--container)$' ]]; then
             _fzf_complete_kubectl-containers '' $@
             return
         fi
 
-        if [[ $prefix =~ '-[^-]*c|--container=' ]]; then
+        if [[ $prefix =~ '^(-[^-]*c|--container=)' ]]; then
             if [[ $prefix = --* ]]; then
-                prefix_option=${prefix/=*/=} _fzf_complete_kubectl-containers '' $@
+                prefix_option=${prefix/=*/=} \
+                prefix=${prefix#$prefix_option} \
+                    _fzf_complete_kubectl-containers '' $@
             else
-                prefix_option=${prefix%%n*}n _fzf_complete_kubectl-containers '' $@
+                prefix_option=${prefix%%c*}c \
+                prefix=${prefix#$prefix_option} \
+                    _fzf_complete_kubectl-containers '' $@
             fi
             return
         fi
 
-        _fzf_complete_kubectl-pods '' $@
+        _fzf_complete_kubectl-resource-names '' $@
         return
     fi
 
-    if [[ $subcommand =~ 'describe|get' ]] && [[ $resource =~ 'po|pod|pods' ]]; then
-        _fzf_complete_kubectl-pods '' $@
-        return
+    if [[ ${subcommands[1]} =~ '^(annotate|describe|expose|get|label|patch)$' ]]; then
+        if [[ -z $resource ]]; then
+            _fzf_complete_kubectl-resources '' $@
+            return
+        fi
+
+        _fzf_complete_kubectl-resource-names '--multi' $@
+    fi
+
+    if [[ ${subcommands[1]} = 'rollout' ]]; then
+        if [[ ${#subcommands[@]} != 2 ]]; then
+            return
+        fi
+
+        if [[ -z $resource ]]; then
+            _fzf_complete_kubectl-resources '' $@
+            return
+        fi
+
+        _fzf_complete_kubectl-resource-names '--multi' $@
+    fi
+
+    if [[ ${subcommands[1]} =~ '^(cordon|drain|uncordon)$' ]]; then
+        resource=nodes
+        _fzf_complete_kubectl-resource-names '' $@
     fi
 }
 
@@ -116,7 +188,7 @@ _fzf_complete_kubectl-parse-namespace() {
 
     if [[ -n ${(Q)${(z)@}[(r)-[^-]#n?##]} ]]; then
         idx=${(Q)${(z)@}[(i)-[^-]#n?##]}
-        namespace=${(Q)${(z)@}[idx]/-[^-]#n/}
+        namespace=${(Q)${(z)@}[idx]/-[^-n]#n/}
     fi
 
     if [[ -n ${(Q)${(z)@}[(r)-[^-]#n]} ]]; then
@@ -137,63 +209,79 @@ _fzf_complete_kubectl-parse-namespace() {
     echo - $namespace
 }
 
-_fzf_complete_kubectl-namespaces() {
+_fzf_complete_kubectl-resources() {
     local fzf_options=$1
     shift
 
     _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@ < <(
-        kubectl get namespaces |
-        awk -v prefix_option=$prefix_option '{ print (NR == 1 ? "" : prefix_option) $1, $2, $3 }' |
-        _fzf_complete_tabularize $fg[yellow] $reset_color
+        kubectl api-resources --cached --verbs=get |
+        _fzf_complete_colorize $fg[yellow]
     )
 }
 
-_fzf_complete_kubectl-namespaces_post() {
+_fzf_complete_kubectl-resources_post() {
     awk '{ print $1 }'
-}
-
-_fzf_complete_kubectl-pods() {
-    local fzf_options=$1
-    shift
-
-    local arguments=()
-    local namespace=$(_fzf_complete_kubectl-parse-namespace $@)
-
-    if [[ -z $namespace ]]; then
-        arguments+=(--all-namespaces)
-    else
-        arguments+=(--namespace=$namespace)
-    fi
-
-    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@ < <(
-        kubectl get pods -o wide ${(Q)${(z)arguments}} |
-        awk -v n=$namespace '
-            n != "" { print $1, $2, $3, $4, $5, $6, $7 }
-            n == "" { print $1, $2, $3, $4, $5, $6, $7, $8 }' |
-        if [[ -n $namespace ]]; then
-            _fzf_complete_tabularize $fg[yellow] $reset_color{,,,,,}
-        else
-            _fzf_complete_tabularize $fg[green] $fg[yellow] $reset_color{,,,,,}
-        fi
-    )
-}
-
-_fzf_complete_kubectl-pods_post() {
-    if [[ -n $namespace ]]; then
-        awk '{ print $1 }'
-    else
-        awk '{ print "--namespace=" $1, $2 }'
-    fi
 }
 
 _fzf_complete_kubectl-containers() {
     local fzf_options=$1
     shift
 
-    local namespace=$(_fzf_complete_kubectl-parse-namespace $@)
-    local pod=$(_fzf_complete_parse_argument 2 2 "$@" "${(F)kubectl_options_argument_required}")
+    local arguments=()
+    if [[ -n $namespace ]]; then
+        arguments+=(--namespace=$namespace)
+    fi
 
-    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@ < <(
-        kubectl get pod $pod -n ${namespace:-default} -o jsonpath='{range .spec.containers[*]}{.name}{"\n"}{end}'
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
+        kubectl get pod $name ${(Q)${(z)arguments}} -o jsonpath='{"NAME\tIMAGE\n"}{range .spec.containers[*]}{.name}{"\t"}{.image}{"\n"}{end}' 2> /dev/null |
+        _fzf_complete_tabularize $fg[yellow] $reset_color
     )
+}
+
+_fzf_complete_kubectl-containers_post() {
+    awk '{ print $1 }'
+}
+
+_fzf_complete_kubectl-resource-names() {
+    local fzf_options=$1
+    shift
+
+    local arguments=()
+    if [[ -z $namespace ]]; then
+        arguments+=(--all-namespaces)
+    else
+        arguments+=(--namespace=$namespace)
+    fi
+
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
+        local result=$(kubectl get "$resource" -o wide ${(Q)${(z)arguments}} 2> /dev/null)
+        if [[ $result = NAMESPACE\ * ]]; then
+            _fzf_complete_colorize $fg[green] $fg[yellow] | awk '{ print SUBSEP $0 }'
+        else
+            _fzf_complete_colorize $fg[yellow]
+        fi <<< "$result"
+    )
+}
+
+_fzf_complete_kubectl-resource-names_post() {
+    awk \
+        -v prefix_option=$prefix_option '
+        NR > 1 && prefix_option ~ /\/$/ {
+            printf "%s", prefix_option
+        }
+        /^\x1c/ {
+            sub(SUBSEP, "", $1)
+            namespace = $1
+            print $2
+            next
+        }
+        {
+            print $1
+        }
+        END {
+            if (namespace != "") {
+                print "--namespace=" namespace
+            }
+        }
+    '
 }
