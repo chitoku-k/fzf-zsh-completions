@@ -363,13 +363,7 @@ _fzf_complete_git-commit-messages() {
     shift
 
     _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@ < <(
-        git log --format='%h %s' 2> /dev/null |
-        awk '
-            {
-                match($0, / /)
-                print $1, substr($0, RSTART + RLENGTH)
-            }
-        ' | _fzf_complete_tabularize ${fg[yellow]}
+        git log --format='%h %s' 2> /dev/null | _fzf_complete_tabularize ${fg[yellow]}
     )
 }
 
