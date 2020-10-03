@@ -1136,7 +1136,7 @@
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--'
-        assert $4 same_as 'git restore '
+        assert $4 same_as 'git restore --source='
 
         run cat
         assert ${#lines} equals 5
@@ -1199,7 +1199,7 @@
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--'
-        assert $4 same_as 'git restore '
+        assert $4 same_as 'git restore -s'
 
         run cat
         assert ${#lines} equals 5
@@ -1220,7 +1220,7 @@
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--'
-        assert $4 same_as 'git commit '
+        assert $4 same_as 'git commit --fixup='
 
         run cat
         assert ${#lines} equals 5
@@ -1241,7 +1241,7 @@
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--'
-        assert $4 same_as 'git commit '
+        assert $4 same_as 'git commit --reedit-message='
 
         run cat
         assert ${#lines} equals 5
@@ -1262,7 +1262,7 @@
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--'
-        assert $4 same_as 'git commit '
+        assert $4 same_as 'git commit --reuse-message='
 
         run cat
         assert ${#lines} equals 5
@@ -1283,7 +1283,7 @@
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--'
-        assert $4 same_as 'git commit '
+        assert $4 same_as 'git commit --squash='
 
         run cat
         assert ${#lines} equals 5
@@ -1325,7 +1325,7 @@
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--'
-        assert $4 same_as 'git commit '
+        assert $4 same_as 'git commit -c'
 
         run cat
         assert ${#lines} equals 5
@@ -1367,7 +1367,7 @@
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--'
-        assert $4 same_as 'git commit '
+        assert $4 same_as 'git commit -qc'
 
         run cat
         assert ${#lines} equals 5
@@ -1409,7 +1409,7 @@
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--'
-        assert $4 same_as 'git commit '
+        assert $4 same_as 'git commit -C'
 
         run cat
         assert ${#lines} equals 5
@@ -1451,7 +1451,7 @@
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--'
-        assert $4 same_as 'git commit '
+        assert $4 same_as 'git commit -qC'
 
         run cat
         assert ${#lines} equals 5
@@ -1986,7 +1986,7 @@
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--'
-        assert $4 same_as 'git commit '
+        assert $4 same_as 'git commit --cleanup='
 
         run cat
         assert ${#lines} equals 5
@@ -2028,7 +2028,7 @@
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--'
-        assert $4 same_as 'git commit '
+        assert $4 same_as 'git commit -u'
 
         run cat
         assert ${#lines} equals 3
@@ -2047,7 +2047,7 @@
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--'
-        assert $4 same_as 'git commit '
+        assert $4 same_as 'git commit -qu'
 
         run cat
         assert ${#lines} equals 3
@@ -2066,7 +2066,7 @@
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--'
-        assert $4 same_as 'git commit '
+        assert $4 same_as 'git commit --untracked-files='
 
         run cat
         assert ${#lines} equals 3
@@ -2386,7 +2386,7 @@
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--'
-        assert $4 same_as 'git pull '
+        assert $4 same_as 'git pull --recurse-submodules='
 
         run cat
         assert ${#lines} equals 3
@@ -2405,7 +2405,7 @@
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--'
-        assert $4 same_as 'git pull '
+        assert $4 same_as 'git pull --cleanup='
 
         run cat
         assert ${#lines} equals 5
@@ -2468,7 +2468,7 @@
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--'
-        assert $4 same_as 'git pull '
+        assert $4 same_as 'git pull -s'
 
         run cat
         assert ${#lines} equals 5
@@ -2510,7 +2510,7 @@
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--'
-        assert $4 same_as 'git pull '
+        assert $4 same_as 'git pull -qs'
 
         run cat
         assert ${#lines} equals 5
@@ -2531,7 +2531,7 @@
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--'
-        assert $4 same_as 'git pull '
+        assert $4 same_as 'git pull --strategy='
 
         run cat
         assert ${#lines} equals 5
@@ -2608,7 +2608,7 @@
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--'
-        assert $4 same_as 'git pull '
+        assert $4 same_as 'git pull -X'
 
         run cat
         assert ${#lines} equals 19
@@ -2678,7 +2678,7 @@
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--'
-        assert $4 same_as 'git pull '
+        assert $4 same_as 'git pull -qX'
 
         run cat
         assert ${#lines} equals 19
@@ -2713,7 +2713,7 @@
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--'
-        assert $4 same_as 'git pull '
+        assert $4 same_as 'git pull --strategy-option='
 
         run cat
         assert ${#lines} equals 19
@@ -2782,7 +2782,7 @@
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--'
-        assert $4 same_as 'git pull '
+        assert $4 same_as 'git pull --rebase='
 
         run cat
         assert ${#lines} equals 5
@@ -2803,7 +2803,7 @@
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--'
-        assert $4 same_as 'git pull '
+        assert $4 same_as 'git pull --shallow-exclude='
 
         run cat
         assert ${#lines} equals 5
@@ -2845,7 +2845,7 @@
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--'
-        assert $4 same_as 'git pull '
+        assert $4 same_as 'git pull --negotiation-tip='
 
         run cat
         assert ${#lines} equals 5
