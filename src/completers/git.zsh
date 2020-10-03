@@ -116,6 +116,7 @@ _fzf_complete_git() {
             else
                 prefix_option=${prefix%%${completing_option[-1]}*}${completing_option[-1]}
             fi
+            prefix=${prefix#$prefix_option}
         fi
 
         case $completing_option in
@@ -161,11 +162,12 @@ _fzf_complete_git() {
             else
                 prefix_option=${prefix%%${completing_option[-1]}*}${completing_option[-1]}
             fi
+            prefix=${prefix#$prefix_option}
         fi
 
         case $completing_option in
             -s|--source)
-                prefix=${prefix#$prefix_option} _fzf_complete_git-commits '' $@
+                _fzf_complete_git-commits '' $@
                 ;;
 
             *)
@@ -202,15 +204,16 @@ _fzf_complete_git() {
             else
                 prefix_option=${prefix%%${completing_option[-1]}*}${completing_option[-1]}
             fi
+            prefix=${prefix#$prefix_option}
         fi
 
         case $completing_option in
             -c|-C|--fixup|--reedit-message|--reuse-message|--squash)
-                prefix=${prefix#$prefix_option} _fzf_complete_git-commits '' $@
+                _fzf_complete_git-commits '' $@
                 ;;
 
             -m|--message)
-                prefix=${prefix#$prefix_option} _fzf_complete_git-commit-messages '' $@
+                _fzf_complete_git-commit-messages '' $@
                 ;;
 
             --author|--date)
@@ -222,12 +225,12 @@ _fzf_complete_git() {
 
             --cleanup)
                 local cleanup_modes=(strip whitespace verbatim scissors default)
-                prefix=${prefix#$prefix_option} _fzf_complete_git_constants '' "${(F)cleanup_modes}" $@
+                _fzf_complete_git_constants '' "${(F)cleanup_modes}" $@
                 ;;
 
             -u|--untracked-files)
                 local untracked_file_modes=(no normal all)
-                prefix=${prefix#$prefix_option} _fzf_complete_git_constants '' "${(F)untracked_file_modes}" $@
+                _fzf_complete_git_constants '' "${(F)untracked_file_modes}" $@
                 ;;
 
             *)
@@ -255,22 +258,23 @@ _fzf_complete_git() {
             else
                 prefix_option=${prefix%%${completing_option[-1]}*}${completing_option[-1]}
             fi
+            prefix=${prefix#$prefix_option}
         fi
 
         case $completing_option in
             --recurse-submodules)
                 local recurse_submodules=(yes on-demand no)
-                prefix=${prefix#$prefix_option} _fzf_complete_git_constants '' "${(F)recurse_submodules}" $@
+                _fzf_complete_git_constants '' "${(F)recurse_submodules}" $@
                 ;;
 
             --cleanup)
                 local cleanup_modes=(strip whitespace verbatim scissors default)
-                prefix=${prefix#$prefix_option} _fzf_complete_git_constants '' "${(F)cleanup_modes}" $@
+                _fzf_complete_git_constants '' "${(F)cleanup_modes}" $@
                 ;;
 
             -s|--strategy)
                 local strategies=(octopus ours subtree recursive resolve)
-                prefix=${prefix#$prefix_option} _fzf_complete_git_constants '' "${(F)strategies}" $@
+                _fzf_complete_git_constants '' "${(F)strategies}" $@
                 ;;
 
             --strategy-option|--strategy-option=diff-algorithm|-X)
@@ -300,15 +304,15 @@ _fzf_complete_git() {
 
             --rebase)
                 local rebases=(false interactive merges preserve true)
-                prefix=${prefix#$prefix_option} _fzf_complete_git_constants '' "${(F)rebases}" $@
+                _fzf_complete_git_constants '' "${(F)rebases}" $@
                 ;;
 
             --shallow-exclude)
-                prefix=${prefix#$prefix_option} _fzf_complete_git-commits '' $@
+                _fzf_complete_git-commits '' $@
                 ;;
 
             --negotiation-tip)
-                prefix=${prefix#$prefix_option} _fzf_complete_git-commits '' $@
+                _fzf_complete_git-commits '' $@
                 ;;
 
             --gpg-sign|-S)
