@@ -20,11 +20,6 @@ _fzf_complete_awk_functions='
 
         return sprintf("%s%s%s%s%s%s %s", index_status_color, index_status, reset, work_tree_status_color, work_tree_status, reset, cdup substr(input, 4))
     }
-
-    function trim_prefix(str, prefix) {
-        match(str, prefix)
-        return substr(str, RSTART + RLENGTH)
-    }
 '
 
 _fzf_complete_preview_git_diff=$(cat <<'PREVIEW_OPTIONS'
@@ -116,6 +111,7 @@ _fzf_complete_git() {
             else
                 prefix_option=${prefix%%${completing_option[-1]}*}${completing_option[-1]}
             fi
+            prefix=${prefix#$prefix_option}
         fi
 
         case $completing_option in
@@ -161,6 +157,7 @@ _fzf_complete_git() {
             else
                 prefix_option=${prefix%%${completing_option[-1]}*}${completing_option[-1]}
             fi
+            prefix=${prefix#$prefix_option}
         fi
 
         case $completing_option in
@@ -202,6 +199,7 @@ _fzf_complete_git() {
             else
                 prefix_option=${prefix%%${completing_option[-1]}*}${completing_option[-1]}
             fi
+            prefix=${prefix#$prefix_option}
         fi
 
         case $completing_option in
@@ -255,6 +253,7 @@ _fzf_complete_git() {
             else
                 prefix_option=${prefix%%${completing_option[-1]}*}${completing_option[-1]}
             fi
+            prefix=${prefix#$prefix_option}
         fi
 
         case $completing_option in
@@ -295,7 +294,7 @@ _fzf_complete_git() {
                     subtree=
                     theirs
                 )
-                prefix_option=${prefix_option/=*/=} _fzf_complete_git_constants '' "${(F)strategy_options}" $@
+                prefix_option=${prefix_option/=*/=} prefix=${prefix#$prefix_option} _fzf_complete_git_constants '' "${(F)strategy_options}" $@
                 ;;
 
             --rebase)
@@ -343,11 +342,11 @@ _fzf_complete_git-commits() {
     local fzf_options=$1
     shift
 
-    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@ < <({
+    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <({
         git for-each-ref refs/heads refs/remotes --format='%(refname:short) branch %(contents:subject)' 2> /dev/null
         git for-each-ref refs/tags --format='%(refname:short) tag %(contents:subject)' --sort=-version:refname 2> /dev/null
         git log --format='%h commit %s' 2> /dev/null
-    } | awk -v prefix=$prefix_option '{ print prefix $0 }' | _fzf_complete_tabularize ${fg[yellow]} ${fg[green]})
+    } | _fzf_complete_tabularize ${fg[yellow]} ${fg[green]})
 }
 
 _fzf_complete_git-commits_post() {
@@ -358,31 +357,23 @@ _fzf_complete_git-commit-messages() {
     local fzf_options=$1
     shift
 
-    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@ < <(
-        git log --format='%h %s' 2> /dev/null |
-        awk -v prefix=$prefix_option '
-            {
-                match($0, / /)
-                print $1, prefix substr($0, RSTART + RLENGTH)
-            }
-        ' | _fzf_complete_tabularize ${fg[yellow]}
+    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
+        git log --format='%h %s' 2> /dev/null | _fzf_complete_tabularize ${fg[yellow]}
     )
 }
 
 _fzf_complete_git-commit-messages_post() {
-    local message=$(awk -v prefix=$prefix_option '
-        '$_fzf_complete_awk_functions'
+    local message=$(awk '
         {
-            match($0, /  /)
-            str = substr($0, RSTART + RLENGTH)
-            print trim_prefix(str, prefix)
+            sub(/[^ ]*  /, "")
+            print
         }
     ')
     if [[ -z $message ]]; then
         return
     fi
 
-    echo $prefix_option${(qq)message}
+    echo ${(qq)message}
 }
 
 _fzf_complete_git-ls-files() {
@@ -468,7 +459,7 @@ _fzf_complete_git-refs() {
 
     _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@ < <(
         git for-each-ref "$ref" --format='%(refname:short) %(contents:subject)' 2> /dev/null |
-        awk -v prefix=$prefix_option '{ print prefix $0 }' | _fzf_complete_tabularize ${fg[yellow]}
+            _fzf_complete_tabularize ${fg[yellow]}
     )
 }
 
@@ -490,7 +481,7 @@ _fzf_complete_git_constants() {
     local values=$2
     shift 2
 
-    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@ < <(awk -v prefix=$prefix_option '{ print prefix $0 }' <<< $values)
+    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(echo $values)
 }
 
 _fzf_complete_git_constants_post() {
