@@ -363,11 +363,10 @@ _fzf_complete_git-commit-messages() {
 }
 
 _fzf_complete_git-commit-messages_post() {
-    local message=$(awk -v prefix=$prefix_option '
-        '$_fzf_complete_awk_functions'
+    local message=$(awk '
         {
-            match($0, /  /)
-            print substr($0, RSTART + RLENGTH)
+            sub(/[^ ]*  /, "")
+            print
         }
     ')
     if [[ -z $message ]]; then
@@ -460,7 +459,7 @@ _fzf_complete_git-refs() {
 
     _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@ < <(
         git for-each-ref "$ref" --format='%(refname:short) %(contents:subject)' 2> /dev/null |
-        awk -v prefix=$prefix_option '{ print prefix $0 }' | _fzf_complete_tabularize ${fg[yellow]}
+            _fzf_complete_tabularize ${fg[yellow]}
     )
 }
 
