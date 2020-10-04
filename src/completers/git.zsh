@@ -20,11 +20,6 @@ _fzf_complete_awk_functions='
 
         return sprintf("%s%s%s%s%s%s %s", index_status_color, index_status, reset, work_tree_status_color, work_tree_status, reset, cdup substr(input, 4))
     }
-
-    function trim_prefix(str, prefix) {
-        match(str, prefix)
-        return substr(str, RSTART + RLENGTH)
-    }
 '
 
 _fzf_complete_preview_git_diff=$(cat <<'PREVIEW_OPTIONS'
@@ -362,7 +357,7 @@ _fzf_complete_git-commit-messages() {
     local fzf_options=$1
     shift
 
-    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@ < <(
+    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
         git log --format='%h %s' 2> /dev/null | _fzf_complete_tabularize ${fg[yellow]}
     )
 }
@@ -372,15 +367,14 @@ _fzf_complete_git-commit-messages_post() {
         '$_fzf_complete_awk_functions'
         {
             match($0, /  /)
-            str = substr($0, RSTART + RLENGTH)
-            print trim_prefix(str, prefix)
+            print substr($0, RSTART + RLENGTH)
         }
     ')
     if [[ -z $message ]]; then
         return
     fi
 
-    echo $prefix_option${(qq)message}
+    echo ${(qq)message}
 }
 
 _fzf_complete_git-ls-files() {

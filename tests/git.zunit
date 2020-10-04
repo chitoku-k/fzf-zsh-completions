@@ -1558,7 +1558,7 @@
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--'
-        assert $4 same_as 'git commit '
+        assert $4 same_as 'git commit --message='
 
         run cat
         assert ${#lines} equals 2
@@ -1598,7 +1598,7 @@
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--'
-        assert $4 same_as 'git commit '
+        assert $4 same_as 'git commit -m'
 
         run cat
         assert ${#lines} equals 2
@@ -1638,7 +1638,7 @@
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--'
-        assert $4 same_as 'git commit '
+        assert $4 same_as 'git commit -qm'
 
         run cat
         assert ${#lines} equals 2
