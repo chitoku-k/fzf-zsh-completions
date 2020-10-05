@@ -324,7 +324,7 @@ _fzf_complete_git() {
                     return
                 fi
 
-                repository=$repository _fzf_complete_git-refs '--multi' $@
+                _fzf_complete_git-refs '--multi' $@
                 ;;
         esac
 
@@ -381,7 +381,7 @@ _fzf_complete_git() {
                 fi
 
                 if [[ $prefix = *:* ]]; then
-                    prefix=${prefix#*:} repository=$repository _fzf_complete_git-refs '' $@
+                    prefix=${prefix#*:} _fzf_complete_git-refs '' $@
                     return
                 fi
 
