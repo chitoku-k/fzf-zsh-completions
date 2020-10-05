@@ -414,7 +414,7 @@ _fzf_complete_git-commits() {
 _fzf_complete_git-commits_post() {
     local input=$(awk '{ print $1 }')
 
-    if [[ $subcommand == 'push' ]] && [[ -z $prefix_ref ]]; then
+    if [[ $subcommand = 'push' ]] && [[ -z $prefix_ref ]]; then
         echo -n $input
         return
     fi
