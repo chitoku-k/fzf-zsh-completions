@@ -385,7 +385,7 @@ _fzf_complete_git() {
                     return
                 fi
 
-                no_spacing=1 _fzf_complete_git-commits '--multi' $@
+                _fzf_complete_git-commits '--multi' $@
                 ;;
         esac
 
@@ -414,7 +414,7 @@ _fzf_complete_git-commits() {
 _fzf_complete_git-commits_post() {
     local input=$(awk '{ print $1 }')
 
-    if (( $no_spacing )); then
+    if [[ $subcommand == 'push' ]] && [[ -z $prefix_ref ]]; then
         echo -n $input
         return
     fi
