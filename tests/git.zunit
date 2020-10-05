@@ -3826,15 +3826,47 @@
         '3e209a3         1st commit'
     )
 
-    run _fzf_complete_git-commits_post <<< ${(F)input}
+    run _fzf_complete_git-commits_post <<< ${(F)input} \| tr '\n' ' '
 
     assert $state equals 0
-    assert ${#lines} equals 5
-    assert ${lines[1]} same_as 'another-branch'
-    assert ${lines[2]} same_as 'master'
-    assert ${lines[3]} same_as 'v2'
-    assert ${lines[4]} same_as 'v1'
-    assert ${lines[5]} same_as '3e209a3'
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'another-branch master v2 v1 3e209a3 '
+}
+
+@test 'Testing post: git commits with push subcommand and without prefix_ref' {
+    input=(
+        'another-branch   2nd commit'
+        'master          1st commit'
+        'v2               2nd commit'
+        'v1              1st commit'
+        '3e209a3         1st commit'
+    )
+    subcommand=push
+    prefix_ref=
+
+    run _fzf_complete_git-commits_post <<< ${(F)input} \| tr '\n' ' '
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'another-branch master v2 v1 3e209a3'
+}
+
+@test 'Testing post: git commits with push subcommand and with prefix_ref' {
+    input=(
+        'another-branch   2nd commit'
+        'master          1st commit'
+        'v2               2nd commit'
+        'v1              1st commit'
+        '3e209a3         1st commit'
+    )
+    subcommand=push
+    prefix_ref=master:
+
+    run _fzf_complete_git-commits_post <<< ${(F)input} \| tr '\n' ' '
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'another-branch master v2 v1 3e209a3 '
 }
 
 @test 'Testing post: git commit messages containing space' {
