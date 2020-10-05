@@ -51,6 +51,7 @@ git rebase -i **<TAB>
   - log
   - merge
   - pull
+  - push
   - rebase
   - reset
   - restore
