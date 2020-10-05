@@ -67,7 +67,7 @@ _fzf_complete_colorize() {
                 printf "%s%s%s", colors[i], substr($0, fields[i], width), reset
             }
 
-            printf "%s\n", substr($0, total)
+            printf "%s\n", substr($0, total + 1)
         }
     '
 }
