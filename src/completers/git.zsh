@@ -57,6 +57,7 @@ PREVIEW_OPTIONS
 )
 
 _fzf_complete_git() {
+    setopt local_options extended_glob
     local arguments=$@
     local resolved_commands=()
 
@@ -323,7 +324,68 @@ _fzf_complete_git() {
                     return
                 fi
 
-                repository=$repository _fzf_complete_git-refs '--multi' $@
+                _fzf_complete_git-refs '--multi' $@
+                ;;
+        esac
+
+        return
+    fi
+
+    if [[ $subcommand = 'push' ]]; then
+        local prefix_option completing_option
+
+        local git_options_argument_required=(--exec -o --push-option --receive-pack --recurse-submodules --repo)
+        local git_options_argument_optional=(--force-with-lease --signed)
+
+        if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" ${(F)git_options_argument_required} ${(F)git_options_argument_optional}); then
+            if [[ $completing_option = --* ]]; then
+                prefix_option=$completing_option=
+            else
+                prefix_option=${prefix%%${completing_option[-1]}*}${completing_option[-1]}
+            fi
+            prefix=${prefix#$prefix_option}
+        fi
+
+        local prefix_ref=${prefix%[^:]#}
+
+        case $completing_option in
+            --signed)
+                local signed=(false if-asked true)
+                _fzf_complete_git_constants '' "${(F)signed}" $@
+                ;;
+
+            -o|--push-option)
+                ;;
+
+            --exec|--receive-pack)
+                ;;
+
+            --force-with-lease)
+                prefix=${prefix#*:} _fzf_complete_git-commits '' $@
+                ;;
+
+            --repo)
+                _fzf_complete_git-remotes '' $@
+                ;;
+
+            --recurse-submodules)
+                local recurse_submodules=(check no on-demand only)
+                _fzf_complete_git_constants '' "${(F)recurse_submodules}" $@
+                ;;
+
+            *)
+                local repository
+                if ! repository=$(_fzf_complete_git_parse_argument 1 "$arguments" "${(F)git_options_argument_required}") && [[ -z $repository ]]; then
+                    _fzf_complete_git-remotes '' $@
+                    return
+                fi
+
+                if [[ $prefix = *:* ]]; then
+                    prefix=${prefix#*:} _fzf_complete_git-refs '' $@
+                    return
+                fi
+
+                _fzf_complete_git-commits '--multi' $@
                 ;;
         esac
 
@@ -342,7 +404,7 @@ _fzf_complete_git-commits() {
     local fzf_options=$1
     shift
 
-    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <({
+    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option$prefix_ref < <({
         git for-each-ref refs/heads refs/remotes --format='%(refname:short) branch %(contents:subject)' 2> /dev/null
         git for-each-ref refs/tags --format='%(refname:short) tag %(contents:subject)' --sort=-version:refname 2> /dev/null
         git log --format='%h commit %s' 2> /dev/null
@@ -350,7 +412,14 @@ _fzf_complete_git-commits() {
 }
 
 _fzf_complete_git-commits_post() {
-    awk '{ print $1 }'
+    local input=$(awk '{ print $1 }')
+
+    if [[ $subcommand = 'push' ]] && [[ -z $prefix_ref ]]; then
+        echo -n $input
+        return
+    fi
+
+    echo $input
 }
 
 _fzf_complete_git-commit-messages() {
@@ -439,7 +508,7 @@ _fzf_complete_git-remotes() {
     local fzf_options=$1
     shift
 
-    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@ < <(git remote --verbose 2> /dev/null | awk '
+    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(git remote --verbose 2> /dev/null | awk '
         /\(fetch\)$/ {
             gsub("\t", " ")
             print
@@ -457,7 +526,7 @@ _fzf_complete_git-refs() {
 
     local ref=${${$(git config remote.$repository.fetch 2> /dev/null)#*:}%\*}
 
-    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@ < <(
+    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option$prefix_ref < <(
         git for-each-ref "$ref" --format='%(refname:short) %(contents:subject)' 2> /dev/null |
             _fzf_complete_tabularize ${fg[yellow]}
     )

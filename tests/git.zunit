@@ -3184,6 +3184,308 @@
     _fzf_complete_git 'git pull -- origin '
 }
 
+@test 'Testing completion: git push --signed=**' {
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git push --signed='
+
+        run cat
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as false
+        assert ${lines[2]} same_as if-asked
+        assert ${lines[3]} same_as true
+    }
+
+    prefix=--signed=
+    _fzf_complete_git 'git push '
+}
+
+@test 'Testing completion: git push --push-option=**' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=--push-option=
+    _fzf_complete_git 'git push '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git push --push-option **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_git 'git push --push-option '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git push -o**' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=-o
+    _fzf_complete_git 'git push '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git push -o **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_git 'git push -o '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git push --exec=**' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=--exec=
+    _fzf_complete_git 'git push '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git push --exec **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_git 'git push --exec '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git push --receive-pack=**' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=--receive-pack=
+    _fzf_complete_git 'git push '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git push --receive-pack **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_git 'git push --receive-pack '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git push --force-with-lease=**' {
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git push --force-with-lease='
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
+    }
+
+    prefix=--force-with-lease=
+    _fzf_complete_git 'git push '
+}
+
+@test 'Testing completion: git push --force-with-lease=master:**' {
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git push --force-with-lease=master:'
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
+    }
+
+    prefix=--force-with-lease=master:
+    _fzf_complete_git 'git push '
+}
+
+@test 'Testing completion: git push --repo=**' {
+    run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
+    run git remote add upstream git@example.com:example/fzf-zsh-completions
+    run git remote add example example
+
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git push --repo='
+
+        run cat
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}example $reset_color  example (fetch)"
+        assert ${lines[2]} same_as "${fg[yellow]}origin  $reset_color  git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
+        assert ${lines[3]} same_as "${fg[yellow]}upstream$reset_color  git@example.com:example/fzf-zsh-completions (fetch)"
+    }
+
+    prefix=--repo
+    _fzf_complete_git 'git push '
+}
+
+@test 'Testing completion: git push --repo **' {
+    run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
+    run git remote add upstream git@example.com:example/fzf-zsh-completions
+    run git remote add example example
+
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git push --repo '
+
+        run cat
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}example $reset_color  example (fetch)"
+        assert ${lines[2]} same_as "${fg[yellow]}origin  $reset_color  git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
+        assert ${lines[3]} same_as "${fg[yellow]}upstream$reset_color  git@example.com:example/fzf-zsh-completions (fetch)"
+    }
+
+    prefix=
+    _fzf_complete_git 'git push --repo '
+}
+
+@test 'Testing completion: git push --recurse-submodules=**' {
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git push --recurse-submodules='
+
+        run cat
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as check
+        assert ${lines[2]} same_as no
+        assert ${lines[3]} same_as on-demand
+        assert ${lines[4]} same_as only
+    }
+
+    prefix=--recurse-submodules=
+    _fzf_complete_git 'git push '
+}
+
+@test 'Testing completion: git push --recurse-submodules **' {
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git push --recurse-submodules '
+
+        run cat
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as check
+        assert ${lines[2]} same_as no
+        assert ${lines[3]} same_as on-demand
+        assert ${lines[4]} same_as only
+    }
+
+    prefix=
+    _fzf_complete_git 'git push --recurse-submodules '
+}
+
+@test 'Testing completion: git push **' {
+    run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
+    run git remote add upstream git@example.com:example/fzf-zsh-completions
+    run git remote add example example
+
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git push '
+
+        run cat
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}example $reset_color  example (fetch)"
+        assert ${lines[2]} same_as "${fg[yellow]}origin  $reset_color  git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
+        assert ${lines[3]} same_as "${fg[yellow]}upstream$reset_color  git@example.com:example/fzf-zsh-completions (fetch)"
+    }
+
+    prefix=
+    _fzf_complete_git 'git push '
+}
+
+@test 'Testing completion: git push origin **' {
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--multi'
+        assert $4 same_as '--'
+        assert $5 same_as 'git push origin '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
+    }
+
+    prefix=
+    _fzf_complete_git 'git push origin '
+}
+
+@test 'Testing completion: git push origin master:**' {
+    run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
+    run git symbolic-ref refs/remotes/origin/master refs/heads/master
+    run git symbolic-ref refs/remotes/origin/another-branch refs/heads/another-branch
+
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git push origin master:'
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}origin/another-branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}origin/master        $reset_color  1st commit"
+    }
+
+    prefix=master:
+    _fzf_complete_git 'git push origin '
+}
+
 @test 'Testing completion: git rm **' {
     run git checkout another-branch
     echo >> ' file3 containing space '
@@ -3524,15 +3826,47 @@
         '3e209a3         1st commit'
     )
 
-    run _fzf_complete_git-commits_post <<< ${(F)input}
+    run _fzf_complete_git-commits_post <<< ${(F)input} \| tr '\n' ' '
 
     assert $state equals 0
-    assert ${#lines} equals 5
-    assert ${lines[1]} same_as 'another-branch'
-    assert ${lines[2]} same_as 'master'
-    assert ${lines[3]} same_as 'v2'
-    assert ${lines[4]} same_as 'v1'
-    assert ${lines[5]} same_as '3e209a3'
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'another-branch master v2 v1 3e209a3 '
+}
+
+@test 'Testing post: git commits with push subcommand and without prefix_ref' {
+    input=(
+        'another-branch   2nd commit'
+        'master          1st commit'
+        'v2               2nd commit'
+        'v1              1st commit'
+        '3e209a3         1st commit'
+    )
+    subcommand=push
+    prefix_ref=
+
+    run _fzf_complete_git-commits_post <<< ${(F)input} \| tr '\n' ' '
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'another-branch master v2 v1 3e209a3'
+}
+
+@test 'Testing post: git commits with push subcommand and with prefix_ref' {
+    input=(
+        'another-branch   2nd commit'
+        'master          1st commit'
+        'v2               2nd commit'
+        'v1              1st commit'
+        '3e209a3         1st commit'
+    )
+    subcommand=push
+    prefix_ref=master:
+
+    run _fzf_complete_git-commits_post <<< ${(F)input} \| tr '\n' ' '
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'another-branch master v2 v1 3e209a3 '
 }
 
 @test 'Testing post: git commit messages containing space' {
