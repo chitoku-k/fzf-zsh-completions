@@ -4165,6 +4165,20 @@
     assert ${lines[1]} same_as 'another-branch master v2 v1 3e209a3 '
 }
 
+@test 'Testing post: git git commits not in head' {
+    input=(
+        '6088ecf   2nd commit'
+        '3e209a3  1st commit'
+    )
+
+    run _fzf_complete_git-commits-not-in-head_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 2
+    assert ${lines[1]} same_as '6088ecf'
+    assert ${lines[2]} same_as '3e209a3'
+}
+
 @test 'Testing post: git commit messages containing space' {
     input=(
         '3e209a3  1st commit'
