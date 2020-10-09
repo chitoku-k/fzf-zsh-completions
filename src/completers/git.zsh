@@ -170,7 +170,7 @@ _fzf_complete_git() {
             --gpg-sign|-S)
                 ;;
 
-            -s|--strategy)
+            --strategy)
                 local strategies=(octopus ours subtree recursive resolve)
                 _fzf_complete_git_constants '' "${(F)strategies}" $@
                 ;;
