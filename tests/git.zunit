@@ -662,7 +662,389 @@
     _fzf_complete_git 'git branch -D '
 }
 
+@test 'Testing completion: git cherry-pick --cleanup=**' {
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git cherry-pick --cleanup='
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as strip
+        assert ${lines[2]} same_as whitespace
+        assert ${lines[3]} same_as verbatim
+        assert ${lines[4]} same_as scissors
+        assert ${lines[5]} same_as default
+    }
+
+    prefix=--cleanup=
+    _fzf_complete_git 'git cherry-pick '
+}
+
+@test 'Testing completion: git cherry-pick --cleanup **' {
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git cherry-pick --cleanup '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as strip
+        assert ${lines[2]} same_as whitespace
+        assert ${lines[3]} same_as verbatim
+        assert ${lines[4]} same_as scissors
+        assert ${lines[5]} same_as default
+    }
+
+    prefix=
+    _fzf_complete_git 'git cherry-pick --cleanup '
+}
+
+@test 'Testing completion: git cherry-pick -s **' {
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git cherry-pick -s '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as octopus
+        assert ${lines[2]} same_as ours
+        assert ${lines[3]} same_as subtree
+        assert ${lines[4]} same_as recursive
+        assert ${lines[5]} same_as resolve
+    }
+
+    prefix=
+    _fzf_complete_git 'git cherry-pick -s '
+}
+
+@test 'Testing completion: git cherry-pick -s**' {
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git cherry-pick -s'
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as octopus
+        assert ${lines[2]} same_as ours
+        assert ${lines[3]} same_as subtree
+        assert ${lines[4]} same_as recursive
+        assert ${lines[5]} same_as resolve
+    }
+
+    prefix=-s
+    _fzf_complete_git 'git cherry-pick '
+}
+
+@test 'Testing completion: git cherry-pick -qs **' {
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git cherry-pick -qs '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as octopus
+        assert ${lines[2]} same_as ours
+        assert ${lines[3]} same_as subtree
+        assert ${lines[4]} same_as recursive
+        assert ${lines[5]} same_as resolve
+    }
+
+    prefix=
+    _fzf_complete_git 'git cherry-pick -qs '
+}
+
+@test 'Testing completion: git cherry-pick -qs**' {
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git cherry-pick -qs'
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as octopus
+        assert ${lines[2]} same_as ours
+        assert ${lines[3]} same_as subtree
+        assert ${lines[4]} same_as recursive
+        assert ${lines[5]} same_as resolve
+    }
+
+    prefix=-qs
+    _fzf_complete_git 'git cherry-pick '
+}
+
+@test 'Testing completion: git cherry-pick --strategy=**' {
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git cherry-pick --strategy='
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as octopus
+        assert ${lines[2]} same_as ours
+        assert ${lines[3]} same_as subtree
+        assert ${lines[4]} same_as recursive
+        assert ${lines[5]} same_as resolve
+    }
+
+    prefix=--strategy=
+    _fzf_complete_git 'git cherry-pick '
+}
+
+@test 'Testing completion: git cherry-pick --strategy **' {
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git cherry-pick --strategy '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as octopus
+        assert ${lines[2]} same_as ours
+        assert ${lines[3]} same_as subtree
+        assert ${lines[4]} same_as recursive
+        assert ${lines[5]} same_as resolve
+    }
+
+    prefix=
+    _fzf_complete_git 'git cherry-pick --strategy '
+}
+
+@test 'Testing completion: git cherry-pick -X **' {
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git cherry-pick -X '
+
+        run cat
+        assert ${#lines} equals 19
+        assert ${lines[1]} same_as diff-algorithm=histogram
+        assert ${lines[2]} same_as diff-algorithm=minimal
+        assert ${lines[3]} same_as diff-algorithm=myers
+        assert ${lines[4]} same_as diff-algorithm=patience
+        assert ${lines[5]} same_as find-renames
+        assert ${lines[6]} same_as find-renames=
+        assert ${lines[7]} same_as ignore-all-space
+        assert ${lines[8]} same_as ignore-cr-at-eol
+        assert ${lines[9]} same_as ignore-space-at-eol
+        assert ${lines[10]} same_as ignore-space-change
+        assert ${lines[11]} same_as no-renames
+        assert ${lines[12]} same_as no-renormalize
+        assert ${lines[13]} same_as ours
+        assert ${lines[14]} same_as patience
+        assert ${lines[15]} same_as rename-threshold=
+        assert ${lines[16]} same_as renormalize
+        assert ${lines[17]} same_as subtree
+        assert ${lines[18]} same_as subtree=
+        assert ${lines[19]} same_as theirs
+    }
+
+    prefix=
+    _fzf_complete_git 'git cherry-pick -X '
+}
+
+@test 'Testing completion: git cherry-pick -X**' {
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git cherry-pick -X'
+
+        run cat
+        assert ${#lines} equals 19
+        assert ${lines[1]} same_as diff-algorithm=histogram
+        assert ${lines[2]} same_as diff-algorithm=minimal
+        assert ${lines[3]} same_as diff-algorithm=myers
+        assert ${lines[4]} same_as diff-algorithm=patience
+        assert ${lines[5]} same_as find-renames
+        assert ${lines[6]} same_as find-renames=
+        assert ${lines[7]} same_as ignore-all-space
+        assert ${lines[8]} same_as ignore-cr-at-eol
+        assert ${lines[9]} same_as ignore-space-at-eol
+        assert ${lines[10]} same_as ignore-space-change
+        assert ${lines[11]} same_as no-renames
+        assert ${lines[12]} same_as no-renormalize
+        assert ${lines[13]} same_as ours
+        assert ${lines[14]} same_as patience
+        assert ${lines[15]} same_as rename-threshold=
+        assert ${lines[16]} same_as renormalize
+        assert ${lines[17]} same_as subtree
+        assert ${lines[18]} same_as subtree=
+        assert ${lines[19]} same_as theirs
+    }
+
+    prefix=-X
+    _fzf_complete_git 'git cherry-pick '
+}
+
+@test 'Testing completion: git cherry-pick -qX **' {
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git cherry-pick -qX '
+
+        run cat
+        assert ${#lines} equals 19
+        assert ${lines[1]} same_as diff-algorithm=histogram
+        assert ${lines[2]} same_as diff-algorithm=minimal
+        assert ${lines[3]} same_as diff-algorithm=myers
+        assert ${lines[4]} same_as diff-algorithm=patience
+        assert ${lines[5]} same_as find-renames
+        assert ${lines[6]} same_as find-renames=
+        assert ${lines[7]} same_as ignore-all-space
+        assert ${lines[8]} same_as ignore-cr-at-eol
+        assert ${lines[9]} same_as ignore-space-at-eol
+        assert ${lines[10]} same_as ignore-space-change
+        assert ${lines[11]} same_as no-renames
+        assert ${lines[12]} same_as no-renormalize
+        assert ${lines[13]} same_as ours
+        assert ${lines[14]} same_as patience
+        assert ${lines[15]} same_as rename-threshold=
+        assert ${lines[16]} same_as renormalize
+        assert ${lines[17]} same_as subtree
+        assert ${lines[18]} same_as subtree=
+        assert ${lines[19]} same_as theirs
+    }
+
+    prefix=
+    _fzf_complete_git 'git cherry-pick -qX '
+}
+
+@test 'Testing completion: git cherry-pick -qX**' {
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git cherry-pick -qX'
+
+        run cat
+        assert ${#lines} equals 19
+        assert ${lines[1]} same_as diff-algorithm=histogram
+        assert ${lines[2]} same_as diff-algorithm=minimal
+        assert ${lines[3]} same_as diff-algorithm=myers
+        assert ${lines[4]} same_as diff-algorithm=patience
+        assert ${lines[5]} same_as find-renames
+        assert ${lines[6]} same_as find-renames=
+        assert ${lines[7]} same_as ignore-all-space
+        assert ${lines[8]} same_as ignore-cr-at-eol
+        assert ${lines[9]} same_as ignore-space-at-eol
+        assert ${lines[10]} same_as ignore-space-change
+        assert ${lines[11]} same_as no-renames
+        assert ${lines[12]} same_as no-renormalize
+        assert ${lines[13]} same_as ours
+        assert ${lines[14]} same_as patience
+        assert ${lines[15]} same_as rename-threshold=
+        assert ${lines[16]} same_as renormalize
+        assert ${lines[17]} same_as subtree
+        assert ${lines[18]} same_as subtree=
+        assert ${lines[19]} same_as theirs
+    }
+
+    prefix=-qX
+    _fzf_complete_git 'git cherry-pick '
+}
+
+@test 'Testing completion: git cherry-pick --strategy-option=**' {
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git cherry-pick --strategy-option='
+
+        run cat
+        assert ${#lines} equals 19
+        assert ${lines[1]} same_as diff-algorithm=histogram
+        assert ${lines[2]} same_as diff-algorithm=minimal
+        assert ${lines[3]} same_as diff-algorithm=myers
+        assert ${lines[5]} same_as find-renames
+        assert ${lines[6]} same_as find-renames=
+        assert ${lines[7]} same_as ignore-all-space
+        assert ${lines[8]} same_as ignore-cr-at-eol
+        assert ${lines[9]} same_as ignore-space-at-eol
+        assert ${lines[10]} same_as ignore-space-change
+        assert ${lines[11]} same_as no-renames
+        assert ${lines[12]} same_as no-renormalize
+        assert ${lines[13]} same_as ours
+        assert ${lines[14]} same_as patience
+        assert ${lines[15]} same_as rename-threshold=
+        assert ${lines[16]} same_as renormalize
+        assert ${lines[17]} same_as subtree
+        assert ${lines[18]} same_as subtree=
+        assert ${lines[19]} same_as theirs
+    }
+
+    prefix=--strategy-option=
+    _fzf_complete_git 'git cherry-pick '
+}
+
+@test 'Testing completion: git cherry-pick --strategy-option **' {
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git cherry-pick --strategy-option '
+
+        run cat
+        assert ${#lines} equals 19
+        assert ${lines[1]} same_as diff-algorithm=histogram
+        assert ${lines[2]} same_as diff-algorithm=minimal
+        assert ${lines[3]} same_as diff-algorithm=myers
+        assert ${lines[4]} same_as diff-algorithm=patience
+        assert ${lines[5]} same_as find-renames
+        assert ${lines[6]} same_as find-renames=
+        assert ${lines[7]} same_as ignore-all-space
+        assert ${lines[8]} same_as ignore-cr-at-eol
+        assert ${lines[9]} same_as ignore-space-at-eol
+        assert ${lines[10]} same_as ignore-space-change
+        assert ${lines[11]} same_as no-renames
+        assert ${lines[12]} same_as no-renormalize
+        assert ${lines[13]} same_as ours
+        assert ${lines[14]} same_as patience
+        assert ${lines[15]} same_as rename-threshold=
+        assert ${lines[16]} same_as renormalize
+        assert ${lines[17]} same_as subtree
+        assert ${lines[18]} same_as subtree=
+        assert ${lines[19]} same_as theirs
+    }
+
+    prefix=
+    _fzf_complete_git 'git cherry-pick --strategy-option '
+}
+
 @test 'Testing completion: git cherry-pick **' {
+    run git checkout -b extra-branch master
+    run git commit --allow-empty -m '1st extra commit in extra-branch'
+    run git commit --allow-empty -m ' 2nd extra commit in extra-branch'
+    run git checkout master
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -672,12 +1054,10 @@
         assert $5 same_as 'git cherry-pick '
 
         run cat
-        assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
-        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
-        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
-        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
-        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
+        assert ${#lines} equals 3
+        assert ${lines[1]} contains ' 2nd extra commit in extra-branch'
+        assert ${lines[2]} contains '1st extra commit in extra-branch'
+        assert ${lines[3]} same_as "${fg[yellow]}6088ecf$reset_color   2nd commit"
     }
 
     prefix=
