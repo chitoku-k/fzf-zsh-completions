@@ -3009,6 +3009,7 @@
         assert ${lines[1]} same_as diff-algorithm=histogram
         assert ${lines[2]} same_as diff-algorithm=minimal
         assert ${lines[3]} same_as diff-algorithm=myers
+        assert ${lines[4]} same_as diff-algorithm=patience
         assert ${lines[5]} same_as find-renames
         assert ${lines[6]} same_as find-renames=
         assert ${lines[7]} same_as ignore-all-space
