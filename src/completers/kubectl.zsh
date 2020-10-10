@@ -6,7 +6,7 @@ colors
 _fzf_complete_kubectl() {
     local arguments=$@
     local last_argument=${${(Q)${(z)@}}[-1]}
-    local prefix_option subcommands namespace resource name
+    local prefix_option subcommands namespace resource metadata name
 
     if [[ $last_argument =~ '(-[^-]*n|--namespace)$' ]]; then
         resource=namespaces
@@ -127,6 +127,27 @@ _fzf_complete_kubectl() {
         prefix=${prefix#$prefix_option}
     fi
 
+    if [[ ${subcommands[1]} =~ '^(annotate|label)$' ]]; then
+        if [[ -z $resource ]]; then
+            _fzf_complete_kubectl-resources '' $@
+            return
+        fi
+
+        if [[ -z $name ]]; then
+            _fzf_complete_kubectl-resource-names '' $@
+            return
+        fi
+
+        typeset -A metadata_kinds
+        metadata_kinds=(
+            annotate annotations
+            label    labels
+        )
+
+        metadata=${metadata_kinds[${subcommands[1]}]}
+        _fzf_complete_kubectl-metadata '' $@
+        return
+    fi
 
     if [[ ${subcommands[1]} =~ '^(exec|logs)$' ]]; then
         if [[ -z $name ]] && [[ -z $prefix_option ]]; then
@@ -313,6 +334,27 @@ _fzf_complete_kubectl-ports() {
 
 _fzf_complete_kubectl-ports_post() {
     awk '{ print $1 }'
+}
+
+_fzf_complete_kubectl-metadata() {
+    local fzf_options=$1
+    shift
+
+    local arguments=()
+    if [[ -n $namespace ]]; then
+        arguments+=(--namespace=$namespace)
+    fi
+
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
+        _fzf_complete_tabularize $fg[yellow] $reset_color < <(cat \
+            <(echo KEY VALUE) \
+            <(kubectl get "$resource" "$name" ${(Q)${(z)arguments}} -o jsonpath="{.metadata.$metadata}" 2> /dev/null | jq -r 'to_entries[] | "\(.key) \(.value)"') \
+        )
+    )
+}
+
+_fzf_complete_kubectl-metadata_post() {
+    awk '{ printf "%s=%s", $1, $2 }'
 }
 
 _fzf_complete_kubectl-resource-names() {
