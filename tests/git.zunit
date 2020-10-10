@@ -4253,7 +4253,7 @@
         '--strategy-option=subtree'
     )
 
-    run _fzf_complete_git_constants_post <<< ${(F)input} \| tr '\n' ' '
+    run _fzf_complete_constants_post <<< ${(F)input} \| tr '\n' ' '
 
     assert $state equals 0
     assert ${#lines} equals 1
@@ -4266,7 +4266,7 @@
         '--strategy-option=subtree='
     )
 
-    run _fzf_complete_git_constants_post <<< ${(F)input} \| tr '\n' ' '
+    run _fzf_complete_constants_post <<< ${(F)input} \| tr '\n' ' '
 
     assert $state equals 0
     assert ${#lines} equals 1
