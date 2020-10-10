@@ -328,6 +328,254 @@
     _fzf_complete_kubectl 'kubectl exec '
 }
 
+@test 'Testing completion: kubectl exec etcd-minikube --container=**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'NAME IMAGE'
+        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl exec etcd-minikube --container='
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
+        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+    }
+
+    prefix=--container=
+    _fzf_complete_kubectl 'kubectl exec etcd-minikube '
+}
+
+@test 'Testing completion: kubectl exec pods/etcd-minikube --container=**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'NAME IMAGE'
+        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl exec pods/etcd-minikube --container='
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
+        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+    }
+
+    prefix=--container=
+    _fzf_complete_kubectl 'kubectl exec pods/etcd-minikube '
+}
+
+@test 'Testing completion: kubectl exec etcd-minikube --container **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'NAME IMAGE'
+        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl exec etcd-minikube --container '
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
+        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl exec etcd-minikube --container '
+}
+
+@test 'Testing completion: kubectl exec pods/etcd-minikube --container **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'NAME IMAGE'
+        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl exec pods/etcd-minikube --container '
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
+        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl exec pods/etcd-minikube --container '
+}
+
+@test 'Testing completion: kubectl exec etcd-minikube -c **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'NAME IMAGE'
+        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl exec etcd-minikube -c '
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
+        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl exec etcd-minikube -c '
+}
+
+@test 'Testing completion: kubectl exec pods/etcd-minikube -c **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'NAME IMAGE'
+        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl exec pods/etcd-minikube -c '
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
+        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl exec pods/etcd-minikube -c '
+}
+
+@test 'Testing completion: kubectl exec etcd-minikube -c**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'NAME IMAGE'
+        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl exec etcd-minikube -c'
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
+        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+    }
+
+    prefix=-c
+    _fzf_complete_kubectl 'kubectl exec etcd-minikube '
+}
+
+@test 'Testing completion: kubectl exec pods/etcd-minikube -c**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'NAME IMAGE'
+        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl exec pods/etcd-minikube -c'
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
+        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+    }
+
+    prefix=-c
+    _fzf_complete_kubectl 'kubectl exec pods/etcd-minikube '
+}
+
 @test 'Testing completion: kubectl exec ** --namespace=kube-system' {
     kubectl_mock_1() {
         assert $# equals 5
@@ -408,68 +656,6 @@
     _fzf_complete_kubectl 'kubectl exec '
 }
 
-@test 'Testing completion: kubectl exec etcd-minikube --container=**' {
-    kubectl_mock_1() {
-        assert $# equals 5
-        assert $1 same_as 'get'
-        assert $2 same_as 'pods'
-        assert $3 same_as 'etcd-minikube'
-        assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
-
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
-    }
-
-    _fzf_complete() {
-        assert $# equals 5
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--'
-        assert $5 same_as 'kubectl exec etcd-minikube --container='
-
-        run cat
-        assert ${#lines} equals 2
-        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
-    }
-
-    prefix=--container=
-    _fzf_complete_kubectl 'kubectl exec etcd-minikube '
-}
-
-@test 'Testing completion: kubectl exec pods/etcd-minikube --container=**' {
-    kubectl_mock_1() {
-        assert $# equals 5
-        assert $1 same_as 'get'
-        assert $2 same_as 'pods'
-        assert $3 same_as 'etcd-minikube'
-        assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
-
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
-    }
-
-    _fzf_complete() {
-        assert $# equals 5
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--'
-        assert $5 same_as 'kubectl exec pods/etcd-minikube --container='
-
-        run cat
-        assert ${#lines} equals 2
-        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
-    }
-
-    prefix=--container=
-    _fzf_complete_kubectl 'kubectl exec pods/etcd-minikube '
-}
-
 @test 'Testing completion: kubectl exec etcd-minikube --container=** --namespace=kube-system' {
     kubectl_mock_1() {
         assert $# equals 6
@@ -534,68 +720,6 @@
     RBUFFER=' --namespace=kube-system'
     prefix=--container=
     _fzf_complete_kubectl 'kubectl exec pods/etcd-minikube '
-}
-
-@test 'Testing completion: kubectl exec etcd-minikube --container **' {
-    kubectl_mock_1() {
-        assert $# equals 5
-        assert $1 same_as 'get'
-        assert $2 same_as 'pods'
-        assert $3 same_as 'etcd-minikube'
-        assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
-
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
-    }
-
-    _fzf_complete() {
-        assert $# equals 5
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--'
-        assert $5 same_as 'kubectl exec etcd-minikube --container '
-
-        run cat
-        assert ${#lines} equals 2
-        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
-    }
-
-    prefix=
-    _fzf_complete_kubectl 'kubectl exec etcd-minikube --container '
-}
-
-@test 'Testing completion: kubectl exec pods/etcd-minikube --container **' {
-    kubectl_mock_1() {
-        assert $# equals 5
-        assert $1 same_as 'get'
-        assert $2 same_as 'pods'
-        assert $3 same_as 'etcd-minikube'
-        assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
-
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
-    }
-
-    _fzf_complete() {
-        assert $# equals 5
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--'
-        assert $5 same_as 'kubectl exec pods/etcd-minikube --container '
-
-        run cat
-        assert ${#lines} equals 2
-        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
-    }
-
-    prefix=
-    _fzf_complete_kubectl 'kubectl exec pods/etcd-minikube --container '
 }
 
 @test 'Testing completion: kubectl exec etcd-minikube --container ** --namespace=kube-system' {
@@ -664,68 +788,6 @@
     _fzf_complete_kubectl 'kubectl exec pods/etcd-minikube --container '
 }
 
-@test 'Testing completion: kubectl exec etcd-minikube -c **' {
-    kubectl_mock_1() {
-        assert $# equals 5
-        assert $1 same_as 'get'
-        assert $2 same_as 'pods'
-        assert $3 same_as 'etcd-minikube'
-        assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
-
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
-    }
-
-    _fzf_complete() {
-        assert $# equals 5
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--'
-        assert $5 same_as 'kubectl exec etcd-minikube -c '
-
-        run cat
-        assert ${#lines} equals 2
-        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
-    }
-
-    prefix=
-    _fzf_complete_kubectl 'kubectl exec etcd-minikube -c '
-}
-
-@test 'Testing completion: kubectl exec pods/etcd-minikube -c **' {
-    kubectl_mock_1() {
-        assert $# equals 5
-        assert $1 same_as 'get'
-        assert $2 same_as 'pods'
-        assert $3 same_as 'etcd-minikube'
-        assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
-
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
-    }
-
-    _fzf_complete() {
-        assert $# equals 5
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--'
-        assert $5 same_as 'kubectl exec pods/etcd-minikube -c '
-
-        run cat
-        assert ${#lines} equals 2
-        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
-    }
-
-    prefix=
-    _fzf_complete_kubectl 'kubectl exec pods/etcd-minikube -c '
-}
-
 @test 'Testing completion: kubectl exec etcd-minikube -c ** --namespace=kube-system' {
     kubectl_mock_1() {
         assert $# equals 6
@@ -790,68 +852,6 @@
     RBUFFER=' --namespace=kube-system'
     prefix=
     _fzf_complete_kubectl 'kubectl exec pods/etcd-minikube -c '
-}
-
-@test 'Testing completion: kubectl exec etcd-minikube -c**' {
-    kubectl_mock_1() {
-        assert $# equals 5
-        assert $1 same_as 'get'
-        assert $2 same_as 'pods'
-        assert $3 same_as 'etcd-minikube'
-        assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
-
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
-    }
-
-    _fzf_complete() {
-        assert $# equals 5
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--'
-        assert $5 same_as 'kubectl exec etcd-minikube -c'
-
-        run cat
-        assert ${#lines} equals 2
-        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
-    }
-
-    prefix=-c
-    _fzf_complete_kubectl 'kubectl exec etcd-minikube '
-}
-
-@test 'Testing completion: kubectl exec pods/etcd-minikube -c**' {
-    kubectl_mock_1() {
-        assert $# equals 5
-        assert $1 same_as 'get'
-        assert $2 same_as 'pods'
-        assert $3 same_as 'etcd-minikube'
-        assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
-
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
-    }
-
-    _fzf_complete() {
-        assert $# equals 5
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--'
-        assert $5 same_as 'kubectl exec pods/etcd-minikube -c'
-
-        run cat
-        assert ${#lines} equals 2
-        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
-    }
-
-    prefix=-c
-    _fzf_complete_kubectl 'kubectl exec pods/etcd-minikube '
 }
 
 @test 'Testing completion: kubectl exec etcd-minikube -c** --namespace=kube-system' {
@@ -1002,6 +1002,254 @@
     _fzf_complete_kubectl 'kubectl logs '
 }
 
+@test 'Testing completion: kubectl logs etcd-minikube --container=**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'NAME IMAGE'
+        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl logs etcd-minikube --container='
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
+        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+    }
+
+    prefix=--container=
+    _fzf_complete_kubectl 'kubectl logs etcd-minikube '
+}
+
+@test 'Testing completion: kubectl logs pods/etcd-minikube --container=**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'NAME IMAGE'
+        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl logs pods/etcd-minikube --container='
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
+        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+    }
+
+    prefix=--container=
+    _fzf_complete_kubectl 'kubectl logs pods/etcd-minikube '
+}
+
+@test 'Testing completion: kubectl logs etcd-minikube --container **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'NAME IMAGE'
+        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl logs etcd-minikube --container '
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
+        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl logs etcd-minikube --container '
+}
+
+@test 'Testing completion: kubectl logs pods/etcd-minikube --container **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'NAME IMAGE'
+        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl logs pods/etcd-minikube --container '
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
+        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl logs pods/etcd-minikube --container '
+}
+
+@test 'Testing completion: kubectl logs etcd-minikube -c **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'NAME IMAGE'
+        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl logs etcd-minikube -c '
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
+        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl logs etcd-minikube -c '
+}
+
+@test 'Testing completion: kubectl logs pods/etcd-minikube -c **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'NAME IMAGE'
+        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl logs pods/etcd-minikube -c '
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
+        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl logs pods/etcd-minikube -c '
+}
+
+@test 'Testing completion: kubectl logs etcd-minikube -c**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'NAME IMAGE'
+        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl logs etcd-minikube -c'
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
+        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+    }
+
+    prefix=-c
+    _fzf_complete_kubectl 'kubectl logs etcd-minikube '
+}
+
+@test 'Testing completion: kubectl logs pods/etcd-minikube -c**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'NAME IMAGE'
+        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl logs pods/etcd-minikube -c'
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
+        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+    }
+
+    prefix=-c
+    _fzf_complete_kubectl 'kubectl logs pods/etcd-minikube '
+}
+
 @test 'Testing completion: kubectl logs ** --namespace=kube-system' {
     kubectl_mock_1() {
         assert $# equals 5
@@ -1082,68 +1330,6 @@
     _fzf_complete_kubectl 'kubectl logs '
 }
 
-@test 'Testing completion: kubectl logs etcd-minikube --container=**' {
-    kubectl_mock_1() {
-        assert $# equals 5
-        assert $1 same_as 'get'
-        assert $2 same_as 'pods'
-        assert $3 same_as 'etcd-minikube'
-        assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
-
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
-    }
-
-    _fzf_complete() {
-        assert $# equals 5
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--'
-        assert $5 same_as 'kubectl logs etcd-minikube --container='
-
-        run cat
-        assert ${#lines} equals 2
-        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
-    }
-
-    prefix=--container=
-    _fzf_complete_kubectl 'kubectl logs etcd-minikube '
-}
-
-@test 'Testing completion: kubectl logs pods/etcd-minikube --container=**' {
-    kubectl_mock_1() {
-        assert $# equals 5
-        assert $1 same_as 'get'
-        assert $2 same_as 'pods'
-        assert $3 same_as 'etcd-minikube'
-        assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
-
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
-    }
-
-    _fzf_complete() {
-        assert $# equals 5
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--'
-        assert $5 same_as 'kubectl logs pods/etcd-minikube --container='
-
-        run cat
-        assert ${#lines} equals 2
-        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
-    }
-
-    prefix=--container=
-    _fzf_complete_kubectl 'kubectl logs pods/etcd-minikube '
-}
-
 @test 'Testing completion: kubectl logs etcd-minikube --container=** --namespace=kube-system' {
     kubectl_mock_1() {
         assert $# equals 6
@@ -1208,68 +1394,6 @@
     RBUFFER=' --namespace=kube-system'
     prefix=--container=
     _fzf_complete_kubectl 'kubectl logs pods/etcd-minikube '
-}
-
-@test 'Testing completion: kubectl logs etcd-minikube --container **' {
-    kubectl_mock_1() {
-        assert $# equals 5
-        assert $1 same_as 'get'
-        assert $2 same_as 'pods'
-        assert $3 same_as 'etcd-minikube'
-        assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
-
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
-    }
-
-    _fzf_complete() {
-        assert $# equals 5
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--'
-        assert $5 same_as 'kubectl logs etcd-minikube --container '
-
-        run cat
-        assert ${#lines} equals 2
-        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
-    }
-
-    prefix=
-    _fzf_complete_kubectl 'kubectl logs etcd-minikube --container '
-}
-
-@test 'Testing completion: kubectl logs pods/etcd-minikube --container **' {
-    kubectl_mock_1() {
-        assert $# equals 5
-        assert $1 same_as 'get'
-        assert $2 same_as 'pods'
-        assert $3 same_as 'etcd-minikube'
-        assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
-
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
-    }
-
-    _fzf_complete() {
-        assert $# equals 5
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--'
-        assert $5 same_as 'kubectl logs pods/etcd-minikube --container '
-
-        run cat
-        assert ${#lines} equals 2
-        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
-    }
-
-    prefix=
-    _fzf_complete_kubectl 'kubectl logs pods/etcd-minikube --container '
 }
 
 @test 'Testing completion: kubectl logs etcd-minikube --container ** --namespace=kube-system' {
@@ -1338,68 +1462,6 @@
     _fzf_complete_kubectl 'kubectl logs pods/etcd-minikube --container '
 }
 
-@test 'Testing completion: kubectl logs etcd-minikube -c **' {
-    kubectl_mock_1() {
-        assert $# equals 5
-        assert $1 same_as 'get'
-        assert $2 same_as 'pods'
-        assert $3 same_as 'etcd-minikube'
-        assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
-
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
-    }
-
-    _fzf_complete() {
-        assert $# equals 5
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--'
-        assert $5 same_as 'kubectl logs etcd-minikube -c '
-
-        run cat
-        assert ${#lines} equals 2
-        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
-    }
-
-    prefix=
-    _fzf_complete_kubectl 'kubectl logs etcd-minikube -c '
-}
-
-@test 'Testing completion: kubectl logs pods/etcd-minikube -c **' {
-    kubectl_mock_1() {
-        assert $# equals 5
-        assert $1 same_as 'get'
-        assert $2 same_as 'pods'
-        assert $3 same_as 'etcd-minikube'
-        assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
-
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
-    }
-
-    _fzf_complete() {
-        assert $# equals 5
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--'
-        assert $5 same_as 'kubectl logs pods/etcd-minikube -c '
-
-        run cat
-        assert ${#lines} equals 2
-        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
-    }
-
-    prefix=
-    _fzf_complete_kubectl 'kubectl logs pods/etcd-minikube -c '
-}
-
 @test 'Testing completion: kubectl logs etcd-minikube -c ** --namespace=kube-system' {
     kubectl_mock_1() {
         assert $# equals 6
@@ -1464,68 +1526,6 @@
     RBUFFER=' --namespace=kube-system'
     prefix=
     _fzf_complete_kubectl 'kubectl logs pods/etcd-minikube -c '
-}
-
-@test 'Testing completion: kubectl logs etcd-minikube -c**' {
-    kubectl_mock_1() {
-        assert $# equals 5
-        assert $1 same_as 'get'
-        assert $2 same_as 'pods'
-        assert $3 same_as 'etcd-minikube'
-        assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
-
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
-    }
-
-    _fzf_complete() {
-        assert $# equals 5
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--'
-        assert $5 same_as 'kubectl logs etcd-minikube -c'
-
-        run cat
-        assert ${#lines} equals 2
-        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
-    }
-
-    prefix=-c
-    _fzf_complete_kubectl 'kubectl logs etcd-minikube '
-}
-
-@test 'Testing completion: kubectl logs pods/etcd-minikube -c**' {
-    kubectl_mock_1() {
-        assert $# equals 5
-        assert $1 same_as 'get'
-        assert $2 same_as 'pods'
-        assert $3 same_as 'etcd-minikube'
-        assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
-
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
-    }
-
-    _fzf_complete() {
-        assert $# equals 5
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--'
-        assert $5 same_as 'kubectl logs pods/etcd-minikube -c'
-
-        run cat
-        assert ${#lines} equals 2
-        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
-    }
-
-    prefix=-c
-    _fzf_complete_kubectl 'kubectl logs pods/etcd-minikube '
 }
 
 @test 'Testing completion: kubectl logs etcd-minikube -c** --namespace=kube-system' {
@@ -1697,106 +1697,6 @@
     _fzf_complete_kubectl 'kubectl port-forward '
 }
 
-@test 'Testing completion: kubectl port-forward ** --namespace=kube-system' {
-    kubectl_mock_1() {
-        assert $# equals 5
-        assert $1 same_as 'get'
-        assert $2 same_as 'pods'
-        assert $3 same_as '-o'
-        assert $4 same_as 'wide'
-        assert $5 same_as '--namespace=kube-system'
-
-        echo 'NAME                      READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
-        echo 'coredns-000000000-00000   1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
-        echo 'coredns-000000000-00001   1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
-    }
-
-    _fzf_complete() {
-        assert $# equals 5
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--'
-        assert $5 same_as 'kubectl port-forward '
-
-        run cat
-        assert ${#lines} equals 3
-        assert ${lines[1]} same_as "${fg[yellow]}NAME                      ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
-        assert ${lines[2]} same_as "${fg[yellow]}coredns-000000000-00000   ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
-        assert ${lines[3]} same_as "${fg[yellow]}coredns-000000000-00001   ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
-    }
-
-    RBUFFER=' --namespace=kube-system'
-    prefix=
-    _fzf_complete_kubectl 'kubectl port-forward '
-}
-
-@test 'Testing completion: kubectl port-forward pods/** --namespace=kube-system' {
-    kubectl_mock_1() {
-        assert $# equals 5
-        assert $1 same_as 'get'
-        assert $2 same_as 'pods'
-        assert $3 same_as '-o'
-        assert $4 same_as 'wide'
-        assert $5 same_as '--namespace=kube-system'
-
-        echo 'NAME                      READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
-        echo 'coredns-000000000-00000   1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
-        echo 'coredns-000000000-00001   1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
-    }
-
-    _fzf_complete() {
-        assert $# equals 5
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--'
-        assert $5 same_as 'kubectl port-forward pods/'
-
-        run cat
-        assert ${#lines} equals 3
-        assert ${lines[1]} same_as "${fg[yellow]}NAME                      ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
-        assert ${lines[2]} same_as "${fg[yellow]}coredns-000000000-00000   ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
-        assert ${lines[3]} same_as "${fg[yellow]}coredns-000000000-00001   ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
-    }
-
-    RBUFFER=' --namespace=kube-system'
-    prefix=pods/
-    _fzf_complete_kubectl 'kubectl port-forward '
-}
-
-@test 'Testing completion: kubectl port-forward services/** --namespace=kube-system' {
-    kubectl_mock_1() {
-        assert $# equals 5
-        assert $1 same_as 'get'
-        assert $2 same_as 'services'
-        assert $3 same_as '-o'
-        assert $4 same_as 'wide'
-        assert $5 same_as '--namespace=kube-system'
-
-        echo 'NAME       TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)                  AGE   SELECTOR'
-        echo 'kube-dns   ClusterIP   10.96.0.10   <none>        53/UDP,53/TCP,9153/TCP   1d    k8s-app=kube-dns'
-    }
-
-    _fzf_complete() {
-        assert $# equals 5
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--'
-        assert $5 same_as 'kubectl port-forward services/'
-
-        run cat
-        assert ${#lines} equals 2
-        assert ${lines[1]} same_as "${fg[yellow]}NAME       ${reset_color}TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)                  AGE   SELECTOR"
-        assert ${lines[2]} same_as "${fg[yellow]}kube-dns   ${reset_color}ClusterIP   10.96.0.10   <none>        53/UDP,53/TCP,9153/TCP   1d    k8s-app=kube-dns"
-    }
-
-    RBUFFER=' --namespace=kube-system'
-    prefix=services/
-    _fzf_complete_kubectl 'kubectl port-forward '
-}
-
 @test 'Testing completion: kubectl port-forward coredns-000000000-00000 **' {
     kubectl_mock_1() {
         assert $# equals 5
@@ -1903,6 +1803,214 @@
 
     prefix=
     _fzf_complete_kubectl 'kubectl port-forward services/kube-dns '
+}
+
+@test 'Testing completion: kubectl port-forward coredns-000000000-00000 53:**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'coredns-000000000-00000'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath=PORT PROTOCOL NAME{"\\n"}{range ..ports[*]}{.targetPort} {.containerPort} {.protocol} {.name}{"\\n"}{end}'
+
+        echo 'PORT PROTOCOL NAME'
+        echo ' 53 UDP dns'
+        echo ' 53 TCP dns-tcp'
+        echo ' 9153 TCP metrics'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl port-forward coredns-000000000-00000 53:'
+
+        run cat
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}PORT$reset_color  ${reset_color}PROTOCOL$reset_color  NAME"
+        assert ${lines[2]} same_as "${fg[yellow]}53  $reset_color  ${reset_color}UDP     $reset_color  dns"
+        assert ${lines[3]} same_as "${fg[yellow]}53  $reset_color  ${reset_color}TCP     $reset_color  dns-tcp"
+        assert ${lines[4]} same_as "${fg[yellow]}9153$reset_color  ${reset_color}TCP     $reset_color  metrics"
+    }
+
+    prefix=53:
+    _fzf_complete_kubectl 'kubectl port-forward coredns-000000000-00000 '
+}
+
+@test 'Testing completion: kubectl port-forward pods/coredns-000000000-00000 53:**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'coredns-000000000-00000'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath=PORT PROTOCOL NAME{"\\n"}{range ..ports[*]}{.targetPort} {.containerPort} {.protocol} {.name}{"\\n"}{end}'
+
+        echo 'PORT PROTOCOL NAME'
+        echo ' 53 UDP dns'
+        echo ' 53 TCP dns-tcp'
+        echo ' 9153 TCP metrics'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl port-forward pods/coredns-000000000-00000 53:'
+
+        run cat
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}PORT$reset_color  ${reset_color}PROTOCOL$reset_color  NAME"
+        assert ${lines[2]} same_as "${fg[yellow]}53  $reset_color  ${reset_color}UDP     $reset_color  dns"
+        assert ${lines[3]} same_as "${fg[yellow]}53  $reset_color  ${reset_color}TCP     $reset_color  dns-tcp"
+        assert ${lines[4]} same_as "${fg[yellow]}9153$reset_color  ${reset_color}TCP     $reset_color  metrics"
+    }
+
+    prefix=53:
+    _fzf_complete_kubectl 'kubectl port-forward pods/coredns-000000000-00000 '
+}
+
+@test 'Testing completion: kubectl port-forward services/kube-dns 53:**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'services'
+        assert $3 same_as 'kube-dns'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath=PORT PROTOCOL NAME{"\\n"}{range ..ports[*]}{.targetPort} {.containerPort} {.protocol} {.name}{"\\n"}{end}'
+
+        echo 'PORT PROTOCOL NAME'
+        echo '53  UDP dns'
+        echo '53  TCP dns-tcp'
+        echo '9153  TCP metrics'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl port-forward services/kube-dns 53:'
+
+        run cat
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}PORT$reset_color  ${reset_color}PROTOCOL$reset_color  NAME"
+        assert ${lines[2]} same_as "${fg[yellow]}53  $reset_color  ${reset_color}UDP     $reset_color  dns"
+        assert ${lines[3]} same_as "${fg[yellow]}53  $reset_color  ${reset_color}TCP     $reset_color  dns-tcp"
+        assert ${lines[4]} same_as "${fg[yellow]}9153$reset_color  ${reset_color}TCP     $reset_color  metrics"
+    }
+
+    prefix=53:
+    _fzf_complete_kubectl 'kubectl port-forward services/kube-dns '
+}
+
+@test 'Testing completion: kubectl port-forward ** --namespace=kube-system' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--namespace=kube-system'
+
+        echo 'NAME                      READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'coredns-000000000-00000   1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'coredns-000000000-00001   1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl port-forward '
+
+        run cat
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}NAME                      ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "${fg[yellow]}coredns-000000000-00000   ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "${fg[yellow]}coredns-000000000-00001   ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+    }
+
+    RBUFFER=' --namespace=kube-system'
+    prefix=
+    _fzf_complete_kubectl 'kubectl port-forward '
+}
+
+@test 'Testing completion: kubectl port-forward pods/** --namespace=kube-system' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--namespace=kube-system'
+
+        echo 'NAME                      READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'coredns-000000000-00000   1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'coredns-000000000-00001   1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl port-forward pods/'
+
+        run cat
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}NAME                      ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "${fg[yellow]}coredns-000000000-00000   ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "${fg[yellow]}coredns-000000000-00001   ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+    }
+
+    RBUFFER=' --namespace=kube-system'
+    prefix=pods/
+    _fzf_complete_kubectl 'kubectl port-forward '
+}
+
+@test 'Testing completion: kubectl port-forward services/** --namespace=kube-system' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'services'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--namespace=kube-system'
+
+        echo 'NAME       TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)                  AGE   SELECTOR'
+        echo 'kube-dns   ClusterIP   10.96.0.10   <none>        53/UDP,53/TCP,9153/TCP   1d    k8s-app=kube-dns'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl port-forward services/'
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}NAME       ${reset_color}TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)                  AGE   SELECTOR"
+        assert ${lines[2]} same_as "${fg[yellow]}kube-dns   ${reset_color}ClusterIP   10.96.0.10   <none>        53/UDP,53/TCP,9153/TCP   1d    k8s-app=kube-dns"
+    }
+
+    RBUFFER=' --namespace=kube-system'
+    prefix=services/
+    _fzf_complete_kubectl 'kubectl port-forward '
 }
 
 @test 'Testing completion: kubectl port-forward coredns-000000000-00000 ** --namespace=kube-system' {
@@ -2016,114 +2124,6 @@
 
     RBUFFER=' --namespace=kube-system'
     prefix=
-    _fzf_complete_kubectl 'kubectl port-forward services/kube-dns '
-}
-
-@test 'Testing completion: kubectl port-forward coredns-000000000-00000 53:**' {
-    kubectl_mock_1() {
-        assert $# equals 5
-        assert $1 same_as 'get'
-        assert $2 same_as 'pods'
-        assert $3 same_as 'coredns-000000000-00000'
-        assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=PORT PROTOCOL NAME{"\\n"}{range ..ports[*]}{.targetPort} {.containerPort} {.protocol} {.name}{"\\n"}{end}'
-
-        echo 'PORT PROTOCOL NAME'
-        echo ' 53 UDP dns'
-        echo ' 53 TCP dns-tcp'
-        echo ' 9153 TCP metrics'
-    }
-
-    _fzf_complete() {
-        assert $# equals 6
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--multi'
-        assert $5 same_as '--'
-        assert $6 same_as 'kubectl port-forward coredns-000000000-00000 53:'
-
-        run cat
-        assert ${#lines} equals 4
-        assert ${lines[1]} same_as "${fg[yellow]}PORT$reset_color  ${reset_color}PROTOCOL$reset_color  NAME"
-        assert ${lines[2]} same_as "${fg[yellow]}53  $reset_color  ${reset_color}UDP     $reset_color  dns"
-        assert ${lines[3]} same_as "${fg[yellow]}53  $reset_color  ${reset_color}TCP     $reset_color  dns-tcp"
-        assert ${lines[4]} same_as "${fg[yellow]}9153$reset_color  ${reset_color}TCP     $reset_color  metrics"
-    }
-
-    prefix=53:
-    _fzf_complete_kubectl 'kubectl port-forward coredns-000000000-00000 '
-}
-
-@test 'Testing completion: kubectl port-forward pods/coredns-000000000-00000 53:**' {
-    kubectl_mock_1() {
-        assert $# equals 5
-        assert $1 same_as 'get'
-        assert $2 same_as 'pods'
-        assert $3 same_as 'coredns-000000000-00000'
-        assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=PORT PROTOCOL NAME{"\\n"}{range ..ports[*]}{.targetPort} {.containerPort} {.protocol} {.name}{"\\n"}{end}'
-
-        echo 'PORT PROTOCOL NAME'
-        echo ' 53 UDP dns'
-        echo ' 53 TCP dns-tcp'
-        echo ' 9153 TCP metrics'
-    }
-
-    _fzf_complete() {
-        assert $# equals 6
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--multi'
-        assert $5 same_as '--'
-        assert $6 same_as 'kubectl port-forward pods/coredns-000000000-00000 53:'
-
-        run cat
-        assert ${#lines} equals 4
-        assert ${lines[1]} same_as "${fg[yellow]}PORT$reset_color  ${reset_color}PROTOCOL$reset_color  NAME"
-        assert ${lines[2]} same_as "${fg[yellow]}53  $reset_color  ${reset_color}UDP     $reset_color  dns"
-        assert ${lines[3]} same_as "${fg[yellow]}53  $reset_color  ${reset_color}TCP     $reset_color  dns-tcp"
-        assert ${lines[4]} same_as "${fg[yellow]}9153$reset_color  ${reset_color}TCP     $reset_color  metrics"
-    }
-
-    prefix=53:
-    _fzf_complete_kubectl 'kubectl port-forward pods/coredns-000000000-00000 '
-}
-
-@test 'Testing completion: kubectl port-forward services/kube-dns 53:**' {
-    kubectl_mock_1() {
-        assert $# equals 5
-        assert $1 same_as 'get'
-        assert $2 same_as 'services'
-        assert $3 same_as 'kube-dns'
-        assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=PORT PROTOCOL NAME{"\\n"}{range ..ports[*]}{.targetPort} {.containerPort} {.protocol} {.name}{"\\n"}{end}'
-
-        echo 'PORT PROTOCOL NAME'
-        echo '53  UDP dns'
-        echo '53  TCP dns-tcp'
-        echo '9153  TCP metrics'
-    }
-
-    _fzf_complete() {
-        assert $# equals 6
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--multi'
-        assert $5 same_as '--'
-        assert $6 same_as 'kubectl port-forward services/kube-dns 53:'
-
-        run cat
-        assert ${#lines} equals 4
-        assert ${lines[1]} same_as "${fg[yellow]}PORT$reset_color  ${reset_color}PROTOCOL$reset_color  NAME"
-        assert ${lines[2]} same_as "${fg[yellow]}53  $reset_color  ${reset_color}UDP     $reset_color  dns"
-        assert ${lines[3]} same_as "${fg[yellow]}53  $reset_color  ${reset_color}TCP     $reset_color  dns-tcp"
-        assert ${lines[4]} same_as "${fg[yellow]}9153$reset_color  ${reset_color}TCP     $reset_color  metrics"
-    }
-
-    prefix=53:
     _fzf_complete_kubectl 'kubectl port-forward services/kube-dns '
 }
 
