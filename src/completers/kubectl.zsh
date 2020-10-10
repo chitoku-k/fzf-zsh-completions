@@ -109,11 +109,13 @@ _fzf_complete_kubectl() {
     subcommands=($(_fzf_complete_parse_argument 2 1 "$arguments" "${(F)kubectl_options_argument_required}" || :))
     namespace=$(_fzf_complete_kubectl-parse-namespace $@)
 
-    if [[ ${subcommands[1]} =~ ^(rollout|set)$ ]]; then
+    if [[ ${subcommands[1]} =~ '^(rollout|set)$' ]]; then
         subcommands+=($(_fzf_complete_parse_argument 2 2 "$arguments" "${(F)kubectl_options_argument_required}" || :))
         resource=$(_fzf_complete_parse_argument 2 3 "$arguments" "${(F)kubectl_options_argument_required}" || :)
+        name=$(_fzf_complete_parse_argument 2 4 "$arguments" "${(F)kubectl_options_argument_required}" || :)
     else
         resource=$(_fzf_complete_parse_argument 2 2 "$arguments" "${(F)kubectl_options_argument_required}" || :)
+        name=$(_fzf_complete_parse_argument 2 3 "$arguments" "${(F)kubectl_options_argument_required}" || :)
     fi
 
     if [[ $resource = */* ]]; then
@@ -123,9 +125,8 @@ _fzf_complete_kubectl() {
         resource=${prefix%/*}
         prefix_option=${prefix%/*}/
         prefix=${prefix#$prefix_option}
-    else
-        name=$(_fzf_complete_parse_argument 2 3 "$arguments" "${(F)kubectl_options_argument_required}" || :)
     fi
+
 
     if [[ ${subcommands[1]} =~ '^(exec|logs)$' ]]; then
         if [[ -z $name ]] && [[ -z $prefix_option ]]; then
