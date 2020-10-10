@@ -96,7 +96,7 @@ _fzf_complete_git() {
         return
     fi
 
-    if [[ $subcommand =~ '(branch|cherry-pick|merge|revert)' ]]; then
+    if [[ $subcommand =~ '(branch|merge|revert)' ]]; then
         _fzf_complete_git-commits '--multi' $@
         return
     fi
@@ -141,6 +141,67 @@ _fzf_complete_git() {
 
                 _fzf_complete_git-status-files 'unstaged' '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
                 return
+                ;;
+        esac
+
+        return
+    fi
+
+    if [[ $subcommand = 'cherry-pick' ]]; then
+        local prefix_option completing_option
+        local git_options_argument_required=(--cleanup --strategy --strategy-option --strategy-option=diff-algorithm -X)
+        local git_options_argument_optional=(--gpg-sign -S)
+
+        if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)git_options_argument_required}" "${(F)git_options_argument_optional}"); then
+            if [[ $completing_option = --* ]]; then
+                prefix_option=$completing_option=
+            else
+                prefix_option=${prefix%%${completing_option[-1]}*}${completing_option[-1]}
+            fi
+            prefix=${prefix#$prefix_option}
+        fi
+
+        case $completing_option in
+            --cleanup)
+                local cleanup_modes=(strip whitespace verbatim scissors default)
+                _fzf_complete_git_constants '' "${(F)cleanup_modes}" $@
+                ;;
+
+            --gpg-sign|-S)
+                ;;
+
+            --strategy)
+                local strategies=(octopus ours subtree recursive resolve)
+                _fzf_complete_git_constants '' "${(F)strategies}" $@
+                ;;
+
+            --strategy-option|--strategy-option=diff-algorithm|-X)
+                local strategy_options=(
+                    diff-algorithm=histogram
+                    diff-algorithm=minimal
+                    diff-algorithm=myers
+                    diff-algorithm=patience
+                    find-renames
+                    find-renames=
+                    ignore-all-space
+                    ignore-cr-at-eol
+                    ignore-space-at-eol
+                    ignore-space-change
+                    no-renames
+                    no-renormalize
+                    ours
+                    patience
+                    rename-threshold=
+                    renormalize
+                    subtree
+                    subtree=
+                    theirs
+                )
+                prefix_option=${prefix_option/=*/=} prefix=${prefix#$prefix_option} _fzf_complete_git_constants '' "${(F)strategy_options}" $@
+                ;;
+
+            *)
+                _fzf_complete_git-commits-not-in-head '--multi' $@
                 ;;
         esac
 
@@ -420,6 +481,24 @@ _fzf_complete_git-commits_post() {
     fi
 
     echo $input
+}
+
+_fzf_complete_git-commits-not-in-head() {
+    local fzf_options=$1
+    shift
+
+    local rev_list_all=$(git rev-list --all --oneline 2> /dev/null)
+    rev_list_all=(${(q)${(f)rev_list_all}})
+    local rev_list_head=$(git rev-list HEAD --oneline 2> /dev/null)
+    rev_list_head=(${(q)${(f)rev_list_head}})
+
+    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option$prefix_ref < <(
+        _fzf_complete_tabularize ${fg[yellow]} <<< ${(Q)${(F)rev_list_all:|rev_list_head}}
+    )
+}
+
+_fzf_complete_git-commits-not-in-head_post() {
+    awk '{ print $1 }'
 }
 
 _fzf_complete_git-commit-messages() {
