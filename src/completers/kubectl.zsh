@@ -107,7 +107,7 @@ _fzf_complete_kubectl() {
     )
 
     subcommands=($(_fzf_complete_parse_argument 2 1 "$arguments" "${(F)kubectl_options_argument_required}" || :))
-    namespace=$(_fzf_complete_kubectl-parse-namespace $@)
+    namespace=$(_fzf_complete_kubectl-parse-namespace $@$RBUFFER)
 
     if [[ ${subcommands[1]} =~ '^(rollout|set)$' ]]; then
         subcommands+=($(_fzf_complete_parse_argument 2 2 "$arguments" "${(F)kubectl_options_argument_required}" || :))
