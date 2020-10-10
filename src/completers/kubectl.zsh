@@ -149,6 +149,32 @@ _fzf_complete_kubectl() {
         return
     fi
 
+    if [[ ${subcommands[1]} =~ '^(autoscale|create|edit|expose|patch)$' ]]; then
+        if [[ -z $resource ]]; then
+            _fzf_complete_kubectl-resources '' $@
+            return
+        fi
+
+        _fzf_complete_kubectl-resource-names '' $@
+        return
+    fi
+
+    if [[ ${subcommands[1]} =~ '^(cordon|drain|uncordon)$' ]]; then
+        resource=nodes
+        _fzf_complete_kubectl-resource-names '' $@
+        return
+    fi
+
+    if [[ ${subcommands[1]} =~ '^(delete|describe|get)$' ]]; then
+        if [[ -z $resource ]]; then
+            _fzf_complete_kubectl-resources '' $@
+            return
+        fi
+
+        _fzf_complete_kubectl-resource-names '--multi' $@
+        return
+    fi
+
     if [[ ${subcommands[1]} =~ '^(exec|logs)$' ]]; then
         if [[ -z $name ]] && [[ -z $prefix_option ]]; then
             name=$resource
@@ -199,16 +225,6 @@ _fzf_complete_kubectl() {
         return
     fi
 
-    if [[ ${subcommands[1]} =~ '^(describe|expose|get|patch)$' ]]; then
-        if [[ -z $resource ]]; then
-            _fzf_complete_kubectl-resources '' $@
-            return
-        fi
-
-        _fzf_complete_kubectl-resource-names '--multi' $@
-        return
-    fi
-
     if [[ ${subcommands[1]} = 'rollout' ]]; then
         if [[ ${#subcommands[@]} != 2 ]]; then
             local rollout_subcommands=(history pause restart resume status undo)
@@ -246,12 +262,6 @@ _fzf_complete_kubectl() {
             _fzf_complete_kubectl-containers '' $@
             return
         fi
-        return
-    fi
-
-    if [[ ${subcommands[1]} =~ '^(cordon|drain|uncordon)$' ]]; then
-        resource=nodes
-        _fzf_complete_kubectl-resource-names '' $@
         return
     fi
 
