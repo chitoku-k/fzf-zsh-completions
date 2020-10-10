@@ -956,11 +956,6 @@
 }
 
 @test 'Testing completion: git cherry-pick **' {
-    run git checkout -b extra-branch master
-    run git commit --allow-empty -m '1st extra commit in extra-branch'
-    run git commit --allow-empty -m ' 2nd extra commit in extra-branch'
-    run git checkout master
-
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -970,10 +965,8 @@
         assert $5 same_as 'git cherry-pick '
 
         run cat
-        assert ${#lines} equals 3
-        assert ${lines[1]} contains ' 2nd extra commit in extra-branch'
-        assert ${lines[2]} contains '1st extra commit in extra-branch'
-        assert ${lines[3]} same_as "${fg[yellow]}6088ecf$reset_color   2nd commit"
+        assert ${#lines} equals 1
+        assert ${lines[1]} same_as "${fg[yellow]}6088ecf$reset_color   2nd commit"
     }
 
     prefix=
