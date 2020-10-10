@@ -185,6 +185,8 @@ _fzf_complete_kubectl() {
 
     if [[ ${subcommands[1]} = 'rollout' ]]; then
         if [[ ${#subcommands[@]} != 2 ]]; then
+            local rollout_subcommands=(history pause restart resume status undo)
+            _fzf_complete_constants '' "${(F)rollout_subcommands}" $@
             return
         fi
 
@@ -194,6 +196,30 @@ _fzf_complete_kubectl() {
         fi
 
         _fzf_complete_kubectl-resource-names '--multi' $@
+        return
+    fi
+
+    if [[ ${subcommands[1]} = 'set' ]]; then
+        if [[ ${#subcommands[@]} != 2 ]]; then
+            local set_subcommands=(env image resources selector serviceaccount subject)
+            _fzf_complete_constants '' "${(F)set_subcommands}" $@
+            return
+        fi
+
+        if [[ -z $resource ]]; then
+            _fzf_complete_kubectl-resources '' $@
+            return
+        fi
+
+        if [[ -z $name ]]; then
+            _fzf_complete_kubectl-resource-names '' $@
+            return
+        fi
+
+        if [[ ${subcommands[2]} = 'image' ]]; then
+            _fzf_complete_kubectl-containers '' $@
+            return
+        fi
         return
     fi
 
@@ -256,13 +282,17 @@ _fzf_complete_kubectl-containers() {
     fi
 
     _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
-        kubectl get "$resource" "$name" ${(Q)${(z)arguments}} -o jsonpath='NAME IMAGE{"\n"}{range .spec.containers[*]}{.name} {.image}{"\n"}{end}' 2> /dev/null |
+        kubectl get "$resource" "$name" ${(Q)${(z)arguments}} -o jsonpath='NAME IMAGE{"\n"}{range ..containers[*]}{.name} {.image}{"\n"}{end}' 2> /dev/null |
         _fzf_complete_tabularize $fg[yellow]
     )
 }
 
 _fzf_complete_kubectl-containers_post() {
-    awk '{ print $1 }'
+    if [[ ${subcommands[@]} != 'set image' ]]; then
+        awk '{ print $1 }'
+    else
+        awk '{ printf "%s=%s", $1, $2 }'
+    fi
 }
 
 _fzf_complete_kubectl-ports() {
