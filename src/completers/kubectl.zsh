@@ -244,9 +244,25 @@ _fzf_complete_kubectl() {
         return
     fi
 
-    if [[ ${subcommands[1]} =~ '^(cordon|drain|taint|uncordon)$' ]]; then
+    if [[ ${subcommands[1]} =~ '^(cordon|drain|uncordon)$' ]]; then
         resource=nodes
         _fzf_complete_kubectl-resource-names '' $@
+        return
+    fi
+
+    if [[ ${subcommands[1]} = 'taint' ]]; then
+        if [[ -z $resource ]]; then
+            _fzf_complete_kubectl-resources '' $@
+            return
+        fi
+
+        if [[ -z $name ]]; then
+            resource=nodes
+            _fzf_complete_kubectl-resource-names '' $@
+            return
+        fi
+
+        _fzf_complete_kubectl-taints '' $@
         return
     fi
 
@@ -355,6 +371,22 @@ _fzf_complete_kubectl-metadata() {
 
 _fzf_complete_kubectl-metadata_post() {
     awk '{ printf "%s=%s", $1, $2 }'
+}
+
+_fzf_complete_kubectl-taints() {
+    local fzf_options=$1
+    shift
+
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
+        _fzf_complete_tabularize $fg[yellow] $reset_color < <(cat \
+            <(echo KEY VALUE EFFECT) \
+            <(kubectl get "$resource" "$name" -o jsonpath='{range .spec.taints[*]}{.key} {.value} {.effect}{"\n"}{end}' 2> /dev/null)
+        )
+    )
+}
+
+_fzf_complete_kubectl-taints_post() {
+    awk '{ printf "%s=%s:%s", $1, $2, $3 }'
 }
 
 _fzf_complete_kubectl-resource-names() {
