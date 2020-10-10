@@ -177,6 +177,11 @@ _fzf_complete_kubectl() {
         return
     fi
 
+    if [[ ${subcommands[1]} = 'explain' ]]; then
+        _fzf_complete_kubectl-resources '' $@
+        return
+    fi
+
     if [[ ${subcommands[1]} = 'port-forward' ]]; then
         if [[ -z $name ]] && [[ -z $prefix_option ]]; then
             name=$resource
