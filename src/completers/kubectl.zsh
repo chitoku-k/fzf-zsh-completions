@@ -385,7 +385,7 @@ _fzf_complete_kubectl-annotations() {
     fi
 
     _fzf_complete --ansi --read0 --print0 --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
-        kubectl get "$resource" "$name" ${(Q)${(z)arguments}} -o jsonpath='{.metadata.annotations}' 2> /dev/null | jq -r 'to_entries | map("\(.key)=\(.value)") | join("\u0000")'
+        kubectl get "$resource" "$name" ${(Q)${(z)arguments}} -o jsonpath='{.metadata.annotations}' 2> /dev/null | jq -jr 'to_entries | map("\(.key)=\(.value)") | join("\u0000")'
     )
 }
 
