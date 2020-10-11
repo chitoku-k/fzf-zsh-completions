@@ -4220,12 +4220,12 @@
     assert ${lines[6]} same_as "\$'directory2/file6\\ncontaining\\nnewlines'"
 }
 
-@test 'Testing post: git remotes' {
+@test 'Testing post: git repositories' {
     input=(
         'origin  git@github.com:chitoku-k/fzf-zsh-completions (fetch)'
     )
 
-    run _fzf_complete_git-remotes_post <<< ${(F)input}
+    run _fzf_complete_git-repositories_post <<< ${(F)input}
 
     assert $state equals 0
     assert ${#lines} equals 1

@@ -381,7 +381,7 @@ _fzf_complete_git() {
             *)
                 local repository
                 if ! repository=$(_fzf_complete_git_parse_argument 1 "$arguments" "${(F)git_options_argument_required}") && [[ -z $repository ]]; then
-                    _fzf_complete_git-remotes '' $@
+                    _fzf_complete_git-repositories '' $@
                     return
                 fi
 
@@ -426,7 +426,7 @@ _fzf_complete_git() {
                 ;;
 
             --repo)
-                _fzf_complete_git-remotes '' $@
+                _fzf_complete_git-repositories '' $@
                 ;;
 
             --recurse-submodules)
@@ -437,7 +437,7 @@ _fzf_complete_git() {
             *)
                 local repository
                 if ! repository=$(_fzf_complete_git_parse_argument 1 "$arguments" "${(F)git_options_argument_required}") && [[ -z $repository ]]; then
-                    _fzf_complete_git-remotes '' $@
+                    _fzf_complete_git-repositories '' $@
                     return
                 fi
 
@@ -583,7 +583,7 @@ _fzf_complete_git-status-files_post() {
     done
 }
 
-_fzf_complete_git-remotes() {
+_fzf_complete_git-repositories() {
     local fzf_options=$1
     shift
 
@@ -595,7 +595,7 @@ _fzf_complete_git-remotes() {
     ' | _fzf_complete_tabularize ${fg[yellow]})
 }
 
-_fzf_complete_git-remotes_post() {
+_fzf_complete_git-repositories_post() {
     awk '{ print $1 }'
 }
 
