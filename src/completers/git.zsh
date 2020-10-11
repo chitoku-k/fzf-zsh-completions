@@ -308,7 +308,7 @@ _fzf_complete_git() {
         local git_options_argument_required=(--depth --deepen -j --jobs --negotiation-tip -o --recurse-submodules-default --refmap --server-option --shallow-exclude --shallow-since --submodule-prefix --upload-pack)
         local git_options_argument_optional=(--recurse-submodules -S)
 
-        if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)git_options_argument_required}" "${(F)git_options_argument_optional})"; then
+        if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)git_options_argument_required}" "${(F)git_options_argument_optional}"); then
             if [[ $completing_option = --* ]]; then
                 prefix_option=$completing_option=
             else
@@ -362,7 +362,7 @@ _fzf_complete_git() {
         local git_options_argument_required=(--cleanup --date --depth --deepen --negotiation-tip -o -s --server-option --shallow-exclude --shallow-since --strategy --strategy-option --strategy-option=diff-algorithm --upload-pack -X)
         local git_options_argument_optional=(--gpg-sign --log --rebase --recurse-submodules -S)
 
-        if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)git_options_argument_required}" "${(F)git_options_argument_optional})"; then
+        if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)git_options_argument_required}" "${(F)git_options_argument_optional}"); then
             if [[ $completing_option = --* ]]; then
                 prefix_option=$completing_option=
             else
@@ -450,7 +450,7 @@ _fzf_complete_git() {
         local git_options_argument_required=(--exec -o --push-option --receive-pack --recurse-submodules --repo)
         local git_options_argument_optional=(--force-with-lease --signed)
 
-        if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)git_options_argument_required}" "${(F)git_options_argument_optional})"; then
+        if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)git_options_argument_required}" "${(F)git_options_argument_optional}"); then
             if [[ $completing_option = --* ]]; then
                 prefix_option=$completing_option=
             else
