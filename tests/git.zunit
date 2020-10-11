@@ -2669,6 +2669,445 @@
     _fzf_complete_git 'git add '
 }
 
+@test 'Testing completion: git fetch --recurse-submodules=**' {
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git fetch --recurse-submodules='
+
+        run cat
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as yes
+        assert ${lines[2]} same_as on-demand
+        assert ${lines[3]} same_as no
+    }
+
+    prefix=--recurse-submodules=
+    _fzf_complete_git 'git fetch '
+}
+
+@test 'Testing completion: git fetch --recurse-submodules-default=**' {
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git fetch --recurse-submodules-default='
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as yes
+        assert ${lines[2]} same_as on-demand
+    }
+
+    prefix=--recurse-submodules-default=
+    _fzf_complete_git 'git fetch '
+}
+
+@test 'Testing completion: git fetch --recurse-submodules-default **' {
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git fetch --recurse-submodules-default '
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as yes
+        assert ${lines[2]} same_as on-demand
+    }
+
+    prefix=
+    _fzf_complete_git 'git fetch --recurse-submodules-default '
+}
+
+@test 'Testing completion: git fetch --shallow-exclude=**' {
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git fetch --shallow-exclude='
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
+    }
+
+    prefix=--shallow-exclude=
+    _fzf_complete_git 'git fetch '
+}
+
+@test 'Testing completion: git fetch --shallow-exclude **' {
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git fetch --shallow-exclude '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
+    }
+
+    prefix=
+    _fzf_complete_git 'git fetch --shallow-exclude '
+}
+
+@test 'Testing completion: git fetch --negotiation-tip=**' {
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git fetch --negotiation-tip='
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
+    }
+
+    prefix=--negotiation-tip=
+    _fzf_complete_git 'git fetch '
+}
+
+@test 'Testing completion: git fetch --negotiation-tip **' {
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git fetch --negotiation-tip '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
+    }
+
+    prefix=
+    _fzf_complete_git 'git fetch --negotiation-tip '
+}
+
+@test 'Testing completion: git fetch -j**' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=-j
+    _fzf_complete_git 'git fetch '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git fetch -j **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_git 'git fetch -o '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git fetch --jobs=**' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_git 'git fetch --jobs '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git fetch --jobs **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_git 'git fetch --jobs '
+
+    assert $? equals 0
+}
+
+
+@test 'Testing completion: git fetch -o **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_git 'git fetch -o '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git fetch -o**' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=-o
+    _fzf_complete_git 'git fetch '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git fetch -qo **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_git 'git fetch -qo '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git fetch -qo**' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=-qo
+    _fzf_complete_git 'git fetch '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git fetch --depth=**' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=--depth=
+    _fzf_complete_git 'git fetch '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git fetch --depth **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_git 'git fetch --depth '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git fetch --deepen=**' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=--deepen=
+    _fzf_complete_git 'git fetch '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git fetch --deepen **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_git 'git fetch --deepen '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git fetch --server-option=**' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=--server-option=
+    _fzf_complete_git 'git fetch '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git fetch --server-option **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_git 'git fetch --server-option '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git fetch --shallow-since=**' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=--shallow-since=
+    _fzf_complete_git 'git fetch '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git fetch --shallow-since **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_git 'git fetch --shallow-since '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git fetch --submodule-prefix=**' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=--submodule-prefix
+    _fzf_complete_git 'git fetch '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git fetch --submodule-prefix **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_git 'git fetch --submodule-prefix '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git fetch --upload-pack=**' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=--upload-pack
+    _fzf_complete_git 'git fetch '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git fetch --upload-pack **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_git 'git fetch --upload-pack '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git fetch **' {
+    run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
+    run git remote add upstream git@example.com:example/fzf-zsh-completions
+    run git remote add example example
+    run git config remotes.group1 'origin upstream'
+    run git config remotes.group2 'origin upstream example'
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--multi'
+        assert $4 same_as '--'
+        assert $5 same_as 'git fetch '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "${fg[yellow]}example $reset_color  example (fetch)"
+        assert ${lines[2]} same_as "${fg[yellow]}origin  $reset_color  git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
+        assert ${lines[3]} same_as "${fg[yellow]}upstream$reset_color  git@example.com:example/fzf-zsh-completions (fetch)"
+        assert ${lines[4]} same_as "${fg[yellow]}group1  $reset_color  origin upstream"
+        assert ${lines[5]} same_as "${fg[yellow]}group2  $reset_color  origin upstream example"
+    }
+
+    prefix=
+    _fzf_complete_git 'git fetch '
+}
+
+@test 'Testing completion: git fetch origin **' {
+    run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
+    run git symbolic-ref refs/remotes/origin/master refs/heads/master
+    run git symbolic-ref refs/remotes/origin/another-branch refs/heads/another-branch
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--multi'
+        assert $4 same_as '--'
+        assert $5 same_as 'git fetch origin '
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}origin/another-branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}origin/master        $reset_color  1st commit"
+    }
+
+    prefix=
+    _fzf_complete_git 'git fetch origin '
+}
+
+@test 'Testing completion: git fetch --multiple origin **' {
+    run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
+    run git remote add upstream git@example.com:example/fzf-zsh-completions
+    run git remote add example example
+    run git config remotes.group1 'origin upstream'
+    run git config remotes.group2 'origin upstream example'
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--multi'
+        assert $4 same_as '--'
+        assert $5 same_as 'git fetch --multiple origin '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "${fg[yellow]}example $reset_color  example (fetch)"
+        assert ${lines[2]} same_as "${fg[yellow]}origin  $reset_color  git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
+        assert ${lines[3]} same_as "${fg[yellow]}upstream$reset_color  git@example.com:example/fzf-zsh-completions (fetch)"
+        assert ${lines[4]} same_as "${fg[yellow]}group1  $reset_color  origin upstream"
+        assert ${lines[5]} same_as "${fg[yellow]}group2  $reset_color  origin upstream example"
+    }
+
+    prefix=
+    _fzf_complete_git 'git fetch --multiple origin '
+}
+
 @test 'Testing completion: git pull --recurse-submodules=**' {
     _fzf_complete() {
         assert $# equals 4
