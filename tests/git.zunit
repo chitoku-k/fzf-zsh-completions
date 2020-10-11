@@ -2852,7 +2852,6 @@
     assert $? equals 0
 }
 
-
 @test 'Testing completion: git fetch -o **' {
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
