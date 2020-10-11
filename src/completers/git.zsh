@@ -303,6 +303,61 @@ _fzf_complete_git() {
         return
     fi
 
+    if [[ $subcommand = 'fetch' ]]; then
+        local prefix_option completing_option
+
+        local git_options_argument_required=(--depth --deepen -j --jobs --negotiation-tip -o --recurse-submodules-default --refmap --server-option --shallow-exclude --shallow-since --submodule-prefix --upload-pack)
+        local git_options_argument_optional=(--recurse-submodules -S)
+
+        if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" ${(F)git_options_argument_required} ${(F)git_options_argument_optional}); then
+            if [[ $completing_option = --* ]]; then
+                prefix_option=$completing_option=
+            else
+                prefix_option=${prefix%%${completing_option[-1]}*}${completing_option[-1]}
+            fi
+            prefix=${prefix#$prefix_option}
+        fi
+
+        case $completing_option in
+            --recurse-submodules)
+                local recurse_submodules=(yes on-demand no)
+                _fzf_complete_git_constants '' "${(F)recurse_submodules}" $@
+                ;;
+
+            --recurse-submodules-default)
+                local recurse_submodules_default=(yes on-demand)
+                _fzf_complete_git_constants '' "${(F)recurse_submodules_default}" $@
+                ;;
+
+            --refmap)
+                _fzf_complete_git-refs '' $@
+                ;;
+
+            --shallow-exclude)
+                _fzf_complete_git-commits '' $@
+                ;;
+
+            --negotiation-tip)
+                _fzf_complete_git-commits '' $@
+                ;;
+
+            --depth|--deepen|-j|--jobs|--server-option|--shallow-since|--submodule-prefix|--upload-pack|-o)
+                ;;
+
+            *)
+                local repository
+                if [[ $@ =~ '--multiple' ]] || ! repository=$(_fzf_complete_git_parse_argument 1 "$arguments" "${(F)git_options_argument_required}") && [[ -z $repository ]]; then
+                    _fzf_complete_git-repositories '--multi' $@
+                    return
+                fi
+
+                _fzf_complete_git-refs '--multi' $@
+                ;;
+        esac
+
+        return
+    fi
+
     if [[ $subcommand = 'pull' ]]; then
         local prefix_option completing_option
 
@@ -587,12 +642,20 @@ _fzf_complete_git-repositories() {
     local fzf_options=$1
     shift
 
-    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(git remote --verbose 2> /dev/null | awk '
-        /\(fetch\)$/ {
-            gsub("\t", " ")
-            print
-        }
-    ' | _fzf_complete_tabularize ${fg[yellow]})
+    if [[ $subcommand = 'fetch' ]]; then
+        local groups=$(git config --get-regexp remotes 2> /dev/null)
+        groups=${(Q)${(F)${${(q)${(f)groups}}#remotes.}}}
+    fi
+
+    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <({
+        git remote --verbose 2> /dev/null | awk '
+            /\(fetch\)$/ {
+                gsub("\t", " ")
+                print
+            }
+        '
+        echo -n $groups
+    } | _fzf_complete_tabularize ${fg[yellow]})
 }
 
 _fzf_complete_git-repositories_post() {
