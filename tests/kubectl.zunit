@@ -617,7 +617,7 @@
     _fzf_complete_kubectl 'kubectl annotate pods/etcd-minikube '
 }
 
-@test 'Testing completion: kubectl label **' {
+@test 'Testing completion: kubectl autoscale **' {
     kubectl_mock_1() {
         assert $# equals 3
         assert $1 same_as 'api-resources'
@@ -641,7 +641,7 @@
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--'
-        assert $5 same_as 'kubectl label '
+        assert $5 same_as 'kubectl autoscale '
 
         run cat
         assert ${#lines} equals 9
@@ -657,10 +657,10 @@
     }
 
     prefix=
-    _fzf_complete_kubectl 'kubectl label '
+    _fzf_complete_kubectl 'kubectl autoscale '
 }
 
-@test 'Testing completion: kubectl label pods **' {
+@test 'Testing completion: kubectl autoscale pods **' {
     kubectl_mock_1() {
         assert $# equals 5
         assert $1 same_as 'get'
@@ -684,7 +684,7 @@
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--'
-        assert $5 same_as 'kubectl label pods '
+        assert $5 same_as 'kubectl autoscale pods '
 
         run cat
         assert ${#lines} equals 7
@@ -698,10 +698,10 @@
     }
 
     prefix=
-    _fzf_complete_kubectl 'kubectl label pods '
+    _fzf_complete_kubectl 'kubectl autoscale pods '
 }
 
-@test 'Testing completion: kubectl label pods/**' {
+@test 'Testing completion: kubectl autoscale pods/**' {
     kubectl_mock_1() {
         assert $# equals 5
         assert $1 same_as 'get'
@@ -725,7 +725,7 @@
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--'
-        assert $5 same_as 'kubectl label pods/'
+        assert $5 same_as 'kubectl autoscale pods/'
 
         run cat
         assert ${#lines} equals 7
@@ -739,74 +739,10 @@
     }
 
     prefix=pods/
-    _fzf_complete_kubectl 'kubectl label '
+    _fzf_complete_kubectl 'kubectl autoscale '
 }
 
-@test 'Testing completion: kubectl label pods etcd-minikube **' {
-    kubectl_mock_1() {
-        assert $# equals 5
-        assert $1 same_as 'get'
-        assert $2 same_as 'pods'
-        assert $3 same_as 'etcd-minikube'
-        assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath={.metadata.labels}'
-
-        echo -n '{"component":"etcd","tier":"control-plane"}'
-    }
-
-    _fzf_complete() {
-        assert $# equals 6
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--multi'
-        assert $5 same_as '--'
-        assert $6 same_as 'kubectl label pods etcd-minikube '
-
-        run cat
-        assert ${#lines} equals 3
-        assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
-        assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
-        assert ${lines[3]} same_as "${fg[yellow]}tier     ${reset_color}  control-plane"
-    }
-
-    prefix=
-    _fzf_complete_kubectl 'kubectl label pods etcd-minikube '
-}
-
-@test 'Testing completion: kubectl label pods/etcd-minikube **' {
-    kubectl_mock_1() {
-        assert $# equals 5
-        assert $1 same_as 'get'
-        assert $2 same_as 'pods'
-        assert $3 same_as 'etcd-minikube'
-        assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath={.metadata.labels}'
-
-        echo '{"component":"etcd","tier":"control-plane"}'
-    }
-
-    _fzf_complete() {
-        assert $# equals 6
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--multi'
-        assert $5 same_as '--'
-        assert $6 same_as 'kubectl label pods/etcd-minikube '
-
-        run cat
-        assert ${#lines} equals 3
-        assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
-        assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
-        assert ${lines[3]} same_as "${fg[yellow]}tier     ${reset_color}  control-plane"
-    }
-
-    prefix=
-    _fzf_complete_kubectl 'kubectl label pods/etcd-minikube '
-}
-
-@test 'Testing completion: kubectl label pods ** --namespace=kube-system' {
+@test 'Testing completion: kubectl autoscale pods ** --namespace=kube-system' {
     kubectl_mock_1() {
         assert $# equals 5
         assert $1 same_as 'get'
@@ -830,7 +766,7 @@
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--'
-        assert $5 same_as 'kubectl label pods '
+        assert $5 same_as 'kubectl autoscale pods '
 
         run cat
         assert ${#lines} equals 7
@@ -845,10 +781,10 @@
 
     RBUFFER=' --namespace=kube-system'
     prefix=
-    _fzf_complete_kubectl 'kubectl label pods '
+    _fzf_complete_kubectl 'kubectl autoscale pods '
 }
 
-@test 'Testing completion: kubectl label pods/** --namespace=kube-system' {
+@test 'Testing completion: kubectl autoscale pods/** --namespace=kube-system' {
     kubectl_mock_1() {
         assert $# equals 5
         assert $1 same_as 'get'
@@ -872,7 +808,7 @@
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--'
-        assert $5 same_as 'kubectl label pods/'
+        assert $5 same_as 'kubectl autoscale pods/'
 
         run cat
         assert ${#lines} equals 7
@@ -887,20 +823,997 @@
 
     RBUFFER=' --namespace=kube-system'
     prefix=pods/
-    _fzf_complete_kubectl 'kubectl label '
+    _fzf_complete_kubectl 'kubectl autoscale '
 }
 
-@test 'Testing completion: kubectl label pods etcd-minikube ** --namespace=kube-system' {
+@test 'Testing completion: kubectl create **' {
     kubectl_mock_1() {
-        assert $# equals 6
+        assert $# equals 3
+        assert $1 same_as 'api-resources'
+        assert $2 same_as '--cached'
+        assert $3 same_as '--verbs=get'
+
+        echo 'NAME         SHORTNAMES   APIGROUP                    NAMESPACED   KIND'
+        echo 'configmaps   cm                                       true         ConfigMap'
+        echo 'namespaces   ns                                       false        Namespace'
+        echo 'nodes        no                                       false        Node'
+        echo 'pods         po                                       true         Pod'
+        echo 'secrets                                               true         Secret'
+        echo 'services     svc                                      true         Service'
+        echo 'ingresses    ing          extensions                  true         Ingress'
+        echo 'roles                     rbac.authorization.k8s.io   true         Role'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl create '
+
+        run cat
+        assert ${#lines} equals 9
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
+        assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
+        assert ${lines[3]} same_as "${fg[yellow]}namespaces   ${reset_color}ns                                       false        Namespace"
+        assert ${lines[4]} same_as "${fg[yellow]}nodes        ${reset_color}no                                       false        Node"
+        assert ${lines[5]} same_as "${fg[yellow]}pods         ${reset_color}po                                       true         Pod"
+        assert ${lines[6]} same_as "${fg[yellow]}secrets      ${reset_color}                                         true         Secret"
+        assert ${lines[7]} same_as "${fg[yellow]}services     ${reset_color}svc                                      true         Service"
+        assert ${lines[8]} same_as "${fg[yellow]}ingresses    ${reset_color}ing          extensions                  true         Ingress"
+        assert ${lines[9]} same_as "${fg[yellow]}roles        ${reset_color}             rbac.authorization.k8s.io   true         Role"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl create '
+}
+
+@test 'Testing completion: kubectl create pods **' {
+    kubectl_mock_1() {
+        assert $# equals 5
         assert $1 same_as 'get'
         assert $2 same_as 'pods'
-        assert $3 same_as 'etcd-minikube'
-        assert $4 same_as '--namespace=kube-system'
-        assert $5 same_as '-o'
-        assert $6 same_as 'jsonpath={.metadata.labels}'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
 
-        echo -n '{"component":"etcd","tier":"control-plane"}'
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl create pods '
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl create pods '
+}
+
+@test 'Testing completion: kubectl create pods/**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl create pods/'
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    prefix=pods/
+    _fzf_complete_kubectl 'kubectl create '
+}
+
+@test 'Testing completion: kubectl create pods ** --namespace=kube-system' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--namespace=kube-system'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl create pods '
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    RBUFFER=' --namespace=kube-system'
+    prefix=
+    _fzf_complete_kubectl 'kubectl create pods '
+}
+
+@test 'Testing completion: kubectl create pods/** --namespace=kube-system' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--namespace=kube-system'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl create pods/'
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    RBUFFER=' --namespace=kube-system'
+    prefix=pods/
+    _fzf_complete_kubectl 'kubectl create '
+}
+
+@test 'Testing completion: kubectl edit **' {
+    kubectl_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'api-resources'
+        assert $2 same_as '--cached'
+        assert $3 same_as '--verbs=get'
+
+        echo 'NAME         SHORTNAMES   APIGROUP                    NAMESPACED   KIND'
+        echo 'configmaps   cm                                       true         ConfigMap'
+        echo 'namespaces   ns                                       false        Namespace'
+        echo 'nodes        no                                       false        Node'
+        echo 'pods         po                                       true         Pod'
+        echo 'secrets                                               true         Secret'
+        echo 'services     svc                                      true         Service'
+        echo 'ingresses    ing          extensions                  true         Ingress'
+        echo 'roles                     rbac.authorization.k8s.io   true         Role'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl edit '
+
+        run cat
+        assert ${#lines} equals 9
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
+        assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
+        assert ${lines[3]} same_as "${fg[yellow]}namespaces   ${reset_color}ns                                       false        Namespace"
+        assert ${lines[4]} same_as "${fg[yellow]}nodes        ${reset_color}no                                       false        Node"
+        assert ${lines[5]} same_as "${fg[yellow]}pods         ${reset_color}po                                       true         Pod"
+        assert ${lines[6]} same_as "${fg[yellow]}secrets      ${reset_color}                                         true         Secret"
+        assert ${lines[7]} same_as "${fg[yellow]}services     ${reset_color}svc                                      true         Service"
+        assert ${lines[8]} same_as "${fg[yellow]}ingresses    ${reset_color}ing          extensions                  true         Ingress"
+        assert ${lines[9]} same_as "${fg[yellow]}roles        ${reset_color}             rbac.authorization.k8s.io   true         Role"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl edit '
+}
+
+@test 'Testing completion: kubectl edit pods **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl edit pods '
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl edit pods '
+}
+
+@test 'Testing completion: kubectl edit pods/**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl edit pods/'
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    prefix=pods/
+    _fzf_complete_kubectl 'kubectl edit '
+}
+
+@test 'Testing completion: kubectl edit pods ** --namespace=kube-system' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--namespace=kube-system'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl edit pods '
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    RBUFFER=' --namespace=kube-system'
+    prefix=
+    _fzf_complete_kubectl 'kubectl edit pods '
+}
+
+@test 'Testing completion: kubectl edit pods/** --namespace=kube-system' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--namespace=kube-system'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl edit pods/'
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    RBUFFER=' --namespace=kube-system'
+    prefix=pods/
+    _fzf_complete_kubectl 'kubectl edit '
+}
+
+@test 'Testing completion: kubectl expose **' {
+    kubectl_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'api-resources'
+        assert $2 same_as '--cached'
+        assert $3 same_as '--verbs=get'
+
+        echo 'NAME         SHORTNAMES   APIGROUP                    NAMESPACED   KIND'
+        echo 'configmaps   cm                                       true         ConfigMap'
+        echo 'namespaces   ns                                       false        Namespace'
+        echo 'nodes        no                                       false        Node'
+        echo 'pods         po                                       true         Pod'
+        echo 'secrets                                               true         Secret'
+        echo 'services     svc                                      true         Service'
+        echo 'ingresses    ing          extensions                  true         Ingress'
+        echo 'roles                     rbac.authorization.k8s.io   true         Role'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl expose '
+
+        run cat
+        assert ${#lines} equals 9
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
+        assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
+        assert ${lines[3]} same_as "${fg[yellow]}namespaces   ${reset_color}ns                                       false        Namespace"
+        assert ${lines[4]} same_as "${fg[yellow]}nodes        ${reset_color}no                                       false        Node"
+        assert ${lines[5]} same_as "${fg[yellow]}pods         ${reset_color}po                                       true         Pod"
+        assert ${lines[6]} same_as "${fg[yellow]}secrets      ${reset_color}                                         true         Secret"
+        assert ${lines[7]} same_as "${fg[yellow]}services     ${reset_color}svc                                      true         Service"
+        assert ${lines[8]} same_as "${fg[yellow]}ingresses    ${reset_color}ing          extensions                  true         Ingress"
+        assert ${lines[9]} same_as "${fg[yellow]}roles        ${reset_color}             rbac.authorization.k8s.io   true         Role"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl expose '
+}
+
+@test 'Testing completion: kubectl expose pods **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl expose pods '
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl expose pods '
+}
+
+@test 'Testing completion: kubectl expose pods/**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl expose pods/'
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    prefix=pods/
+    _fzf_complete_kubectl 'kubectl expose '
+}
+
+@test 'Testing completion: kubectl expose pods ** --namespace=kube-system' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--namespace=kube-system'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl expose pods '
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    RBUFFER=' --namespace=kube-system'
+    prefix=
+    _fzf_complete_kubectl 'kubectl expose pods '
+}
+
+@test 'Testing completion: kubectl expose pods/** --namespace=kube-system' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--namespace=kube-system'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl expose pods/'
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    RBUFFER=' --namespace=kube-system'
+    prefix=pods/
+    _fzf_complete_kubectl 'kubectl expose '
+}
+
+@test 'Testing completion: kubectl patch **' {
+    kubectl_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'api-resources'
+        assert $2 same_as '--cached'
+        assert $3 same_as '--verbs=get'
+
+        echo 'NAME         SHORTNAMES   APIGROUP                    NAMESPACED   KIND'
+        echo 'configmaps   cm                                       true         ConfigMap'
+        echo 'namespaces   ns                                       false        Namespace'
+        echo 'nodes        no                                       false        Node'
+        echo 'pods         po                                       true         Pod'
+        echo 'secrets                                               true         Secret'
+        echo 'services     svc                                      true         Service'
+        echo 'ingresses    ing          extensions                  true         Ingress'
+        echo 'roles                     rbac.authorization.k8s.io   true         Role'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl patch '
+
+        run cat
+        assert ${#lines} equals 9
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
+        assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
+        assert ${lines[3]} same_as "${fg[yellow]}namespaces   ${reset_color}ns                                       false        Namespace"
+        assert ${lines[4]} same_as "${fg[yellow]}nodes        ${reset_color}no                                       false        Node"
+        assert ${lines[5]} same_as "${fg[yellow]}pods         ${reset_color}po                                       true         Pod"
+        assert ${lines[6]} same_as "${fg[yellow]}secrets      ${reset_color}                                         true         Secret"
+        assert ${lines[7]} same_as "${fg[yellow]}services     ${reset_color}svc                                      true         Service"
+        assert ${lines[8]} same_as "${fg[yellow]}ingresses    ${reset_color}ing          extensions                  true         Ingress"
+        assert ${lines[9]} same_as "${fg[yellow]}roles        ${reset_color}             rbac.authorization.k8s.io   true         Role"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl patch '
+}
+
+@test 'Testing completion: kubectl patch pods **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl patch pods '
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl patch pods '
+}
+
+@test 'Testing completion: kubectl patch pods/**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl patch pods/'
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    prefix=pods/
+    _fzf_complete_kubectl 'kubectl patch '
+}
+
+@test 'Testing completion: kubectl patch pods ** --namespace=kube-system' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--namespace=kube-system'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl patch pods '
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    RBUFFER=' --namespace=kube-system'
+    prefix=
+    _fzf_complete_kubectl 'kubectl patch pods '
+}
+
+@test 'Testing completion: kubectl patch pods/** --namespace=kube-system' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--namespace=kube-system'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl patch pods/'
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    RBUFFER=' --namespace=kube-system'
+    prefix=pods/
+    _fzf_complete_kubectl 'kubectl patch '
+}
+
+@test 'Testing completion: kubectl cordon **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'nodes'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAME       STATUS   ROLES    AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE     KERNEL-VERSION   CONTAINER-RUNTIME'
+        echo 'minikube   Ready    master   20d   v1.19.2   192.0.2.1     <none>        Arch Linux   5.8.14-arch1-1   docker://19.3.13'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl cordon '
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}NAME       ${reset_color}STATUS   ROLES    AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE     KERNEL-VERSION   CONTAINER-RUNTIME"
+        assert ${lines[2]} same_as "${fg[yellow]}minikube   ${reset_color}Ready    master   20d   v1.19.2   192.0.2.1     <none>        Arch Linux   5.8.14-arch1-1   docker://19.3.13"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl cordon '
+}
+
+@test 'Testing completion: kubectl drain **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'nodes'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAME       STATUS   ROLES    AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE     KERNEL-VERSION   CONTAINER-RUNTIME'
+        echo 'minikube   Ready    master   20d   v1.19.2   192.0.2.1     <none>        Arch Linux   5.8.14-arch1-1   docker://19.3.13'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl drain '
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}NAME       ${reset_color}STATUS   ROLES    AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE     KERNEL-VERSION   CONTAINER-RUNTIME"
+        assert ${lines[2]} same_as "${fg[yellow]}minikube   ${reset_color}Ready    master   20d   v1.19.2   192.0.2.1     <none>        Arch Linux   5.8.14-arch1-1   docker://19.3.13"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl drain '
+}
+
+@test 'Testing completion: kubectl uncordon **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'nodes'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAME       STATUS   ROLES    AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE     KERNEL-VERSION   CONTAINER-RUNTIME'
+        echo 'minikube   Ready    master   20d   v1.19.2   192.0.2.1     <none>        Arch Linux   5.8.14-arch1-1   docker://19.3.13'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl uncordon '
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}NAME       ${reset_color}STATUS   ROLES    AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE     KERNEL-VERSION   CONTAINER-RUNTIME"
+        assert ${lines[2]} same_as "${fg[yellow]}minikube   ${reset_color}Ready    master   20d   v1.19.2   192.0.2.1     <none>        Arch Linux   5.8.14-arch1-1   docker://19.3.13"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl uncordon '
+}
+
+@test 'Testing completion: kubectl delete **' {
+    kubectl_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'api-resources'
+        assert $2 same_as '--cached'
+        assert $3 same_as '--verbs=get'
+
+        echo 'NAME         SHORTNAMES   APIGROUP                    NAMESPACED   KIND'
+        echo 'configmaps   cm                                       true         ConfigMap'
+        echo 'namespaces   ns                                       false        Namespace'
+        echo 'nodes        no                                       false        Node'
+        echo 'pods         po                                       true         Pod'
+        echo 'secrets                                               true         Secret'
+        echo 'services     svc                                      true         Service'
+        echo 'ingresses    ing          extensions                  true         Ingress'
+        echo 'roles                     rbac.authorization.k8s.io   true         Role'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl delete '
+
+        run cat
+        assert ${#lines} equals 9
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
+        assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
+        assert ${lines[3]} same_as "${fg[yellow]}namespaces   ${reset_color}ns                                       false        Namespace"
+        assert ${lines[4]} same_as "${fg[yellow]}nodes        ${reset_color}no                                       false        Node"
+        assert ${lines[5]} same_as "${fg[yellow]}pods         ${reset_color}po                                       true         Pod"
+        assert ${lines[6]} same_as "${fg[yellow]}secrets      ${reset_color}                                         true         Secret"
+        assert ${lines[7]} same_as "${fg[yellow]}services     ${reset_color}svc                                      true         Service"
+        assert ${lines[8]} same_as "${fg[yellow]}ingresses    ${reset_color}ing          extensions                  true         Ingress"
+        assert ${lines[9]} same_as "${fg[yellow]}roles        ${reset_color}             rbac.authorization.k8s.io   true         Role"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl delete '
+}
+
+@test 'Testing completion: kubectl delete pods **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
     }
 
     _fzf_complete() {
@@ -910,31 +1823,39 @@
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'kubectl label pods etcd-minikube '
+        assert $6 same_as 'kubectl delete pods '
 
         run cat
-        assert ${#lines} equals 3
-        assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
-        assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
-        assert ${lines[3]} same_as "${fg[yellow]}tier     ${reset_color}  control-plane"
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
     }
 
-    RBUFFER=' --namespace=kube-system'
     prefix=
-    _fzf_complete_kubectl 'kubectl label pods etcd-minikube '
+    _fzf_complete_kubectl 'kubectl delete pods '
 }
 
-@test 'Testing completion: kubectl label pods/etcd-minikube ** --namespace=kube-system' {
+@test 'Testing completion: kubectl delete pods/**' {
     kubectl_mock_1() {
-        assert $# equals 6
+        assert $# equals 5
         assert $1 same_as 'get'
         assert $2 same_as 'pods'
-        assert $3 same_as 'etcd-minikube'
-        assert $4 same_as '--namespace=kube-system'
-        assert $5 same_as '-o'
-        assert $6 same_as 'jsonpath={.metadata.labels}'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
 
-        echo -n '{"component":"etcd","tier":"control-plane"}'
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
     }
 
     _fzf_complete() {
@@ -944,18 +1865,533 @@
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'kubectl label pods/etcd-minikube '
+        assert $6 same_as 'kubectl delete pods/'
 
         run cat
-        assert ${#lines} equals 3
-        assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
-        assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
-        assert ${lines[3]} same_as "${fg[yellow]}tier     ${reset_color}  control-plane"
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    prefix=pods/
+    _fzf_complete_kubectl 'kubectl delete '
+}
+
+@test 'Testing completion: kubectl delete pods ** --namespace=kube-system' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--namespace=kube-system'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl delete pods '
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
     }
 
     RBUFFER=' --namespace=kube-system'
     prefix=
-    _fzf_complete_kubectl 'kubectl label pods/etcd-minikube '
+    _fzf_complete_kubectl 'kubectl delete pods '
+}
+
+@test 'Testing completion: kubectl delete pods/** --namespace=kube-system' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--namespace=kube-system'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl delete pods/'
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    RBUFFER=' --namespace=kube-system'
+    prefix=pods/
+    _fzf_complete_kubectl 'kubectl delete '
+}
+
+@test 'Testing completion: kubectl describe **' {
+    kubectl_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'api-resources'
+        assert $2 same_as '--cached'
+        assert $3 same_as '--verbs=get'
+
+        echo 'NAME         SHORTNAMES   APIGROUP                    NAMESPACED   KIND'
+        echo 'configmaps   cm                                       true         ConfigMap'
+        echo 'namespaces   ns                                       false        Namespace'
+        echo 'nodes        no                                       false        Node'
+        echo 'pods         po                                       true         Pod'
+        echo 'secrets                                               true         Secret'
+        echo 'services     svc                                      true         Service'
+        echo 'ingresses    ing          extensions                  true         Ingress'
+        echo 'roles                     rbac.authorization.k8s.io   true         Role'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl describe '
+
+        run cat
+        assert ${#lines} equals 9
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
+        assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
+        assert ${lines[3]} same_as "${fg[yellow]}namespaces   ${reset_color}ns                                       false        Namespace"
+        assert ${lines[4]} same_as "${fg[yellow]}nodes        ${reset_color}no                                       false        Node"
+        assert ${lines[5]} same_as "${fg[yellow]}pods         ${reset_color}po                                       true         Pod"
+        assert ${lines[6]} same_as "${fg[yellow]}secrets      ${reset_color}                                         true         Secret"
+        assert ${lines[7]} same_as "${fg[yellow]}services     ${reset_color}svc                                      true         Service"
+        assert ${lines[8]} same_as "${fg[yellow]}ingresses    ${reset_color}ing          extensions                  true         Ingress"
+        assert ${lines[9]} same_as "${fg[yellow]}roles        ${reset_color}             rbac.authorization.k8s.io   true         Role"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl describe '
+}
+
+@test 'Testing completion: kubectl describe pods **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl describe pods '
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl describe pods '
+}
+
+@test 'Testing completion: kubectl describe pods/**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl describe pods/'
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    prefix=pods/
+    _fzf_complete_kubectl 'kubectl describe '
+}
+
+@test 'Testing completion: kubectl describe pods ** --namespace=kube-system' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--namespace=kube-system'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl describe pods '
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    RBUFFER=' --namespace=kube-system'
+    prefix=
+    _fzf_complete_kubectl 'kubectl describe pods '
+}
+
+@test 'Testing completion: kubectl describe pods/** --namespace=kube-system' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--namespace=kube-system'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl describe pods/'
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    RBUFFER=' --namespace=kube-system'
+    prefix=pods/
+    _fzf_complete_kubectl 'kubectl describe '
+}
+
+@test 'Testing completion: kubectl get **' {
+    kubectl_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'api-resources'
+        assert $2 same_as '--cached'
+        assert $3 same_as '--verbs=get'
+
+        echo 'NAME         SHORTNAMES   APIGROUP                    NAMESPACED   KIND'
+        echo 'configmaps   cm                                       true         ConfigMap'
+        echo 'namespaces   ns                                       false        Namespace'
+        echo 'nodes        no                                       false        Node'
+        echo 'pods         po                                       true         Pod'
+        echo 'secrets                                               true         Secret'
+        echo 'services     svc                                      true         Service'
+        echo 'ingresses    ing          extensions                  true         Ingress'
+        echo 'roles                     rbac.authorization.k8s.io   true         Role'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl get '
+
+        run cat
+        assert ${#lines} equals 9
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
+        assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
+        assert ${lines[3]} same_as "${fg[yellow]}namespaces   ${reset_color}ns                                       false        Namespace"
+        assert ${lines[4]} same_as "${fg[yellow]}nodes        ${reset_color}no                                       false        Node"
+        assert ${lines[5]} same_as "${fg[yellow]}pods         ${reset_color}po                                       true         Pod"
+        assert ${lines[6]} same_as "${fg[yellow]}secrets      ${reset_color}                                         true         Secret"
+        assert ${lines[7]} same_as "${fg[yellow]}services     ${reset_color}svc                                      true         Service"
+        assert ${lines[8]} same_as "${fg[yellow]}ingresses    ${reset_color}ing          extensions                  true         Ingress"
+        assert ${lines[9]} same_as "${fg[yellow]}roles        ${reset_color}             rbac.authorization.k8s.io   true         Role"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl get '
+}
+
+@test 'Testing completion: kubectl get pods **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl get pods '
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl get pods '
+}
+
+@test 'Testing completion: kubectl get pods/**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl get pods/'
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    prefix=pods/
+    _fzf_complete_kubectl 'kubectl get '
+}
+
+@test 'Testing completion: kubectl get pods ** --namespace=kube-system' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--namespace=kube-system'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl get pods '
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    RBUFFER=' --namespace=kube-system'
+    prefix=
+    _fzf_complete_kubectl 'kubectl get pods '
+}
+
+@test 'Testing completion: kubectl get pods/** --namespace=kube-system' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--namespace=kube-system'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl get pods/'
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    RBUFFER=' --namespace=kube-system'
+    prefix=pods/
+    _fzf_complete_kubectl 'kubectl get '
 }
 
 @test 'Testing completion: kubectl exec **' {
@@ -2306,6 +3742,390 @@
     _fzf_complete_kubectl 'kubectl logs pods/etcd-minikube '
 }
 
+@test 'Testing completion: kubectl explain **' {
+    kubectl_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'api-resources'
+        assert $2 same_as '--cached'
+        assert $3 same_as '--verbs=get'
+
+        echo 'NAME         SHORTNAMES   APIGROUP                    NAMESPACED   KIND'
+        echo 'configmaps   cm                                       true         ConfigMap'
+        echo 'namespaces   ns                                       false        Namespace'
+        echo 'nodes        no                                       false        Node'
+        echo 'pods         po                                       true         Pod'
+        echo 'secrets                                               true         Secret'
+        echo 'services     svc                                      true         Service'
+        echo 'ingresses    ing          extensions                  true         Ingress'
+        echo 'roles                     rbac.authorization.k8s.io   true         Role'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl explain '
+
+        run cat
+        assert ${#lines} equals 9
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
+        assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
+        assert ${lines[3]} same_as "${fg[yellow]}namespaces   ${reset_color}ns                                       false        Namespace"
+        assert ${lines[4]} same_as "${fg[yellow]}nodes        ${reset_color}no                                       false        Node"
+        assert ${lines[5]} same_as "${fg[yellow]}pods         ${reset_color}po                                       true         Pod"
+        assert ${lines[6]} same_as "${fg[yellow]}secrets      ${reset_color}                                         true         Secret"
+        assert ${lines[7]} same_as "${fg[yellow]}services     ${reset_color}svc                                      true         Service"
+        assert ${lines[8]} same_as "${fg[yellow]}ingresses    ${reset_color}ing          extensions                  true         Ingress"
+        assert ${lines[9]} same_as "${fg[yellow]}roles        ${reset_color}             rbac.authorization.k8s.io   true         Role"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl explain '
+}
+
+@test 'Testing completion: kubectl label **' {
+    kubectl_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'api-resources'
+        assert $2 same_as '--cached'
+        assert $3 same_as '--verbs=get'
+
+        echo 'NAME         SHORTNAMES   APIGROUP                    NAMESPACED   KIND'
+        echo 'configmaps   cm                                       true         ConfigMap'
+        echo 'namespaces   ns                                       false        Namespace'
+        echo 'nodes        no                                       false        Node'
+        echo 'pods         po                                       true         Pod'
+        echo 'secrets                                               true         Secret'
+        echo 'services     svc                                      true         Service'
+        echo 'ingresses    ing          extensions                  true         Ingress'
+        echo 'roles                     rbac.authorization.k8s.io   true         Role'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl label '
+
+        run cat
+        assert ${#lines} equals 9
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
+        assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
+        assert ${lines[3]} same_as "${fg[yellow]}namespaces   ${reset_color}ns                                       false        Namespace"
+        assert ${lines[4]} same_as "${fg[yellow]}nodes        ${reset_color}no                                       false        Node"
+        assert ${lines[5]} same_as "${fg[yellow]}pods         ${reset_color}po                                       true         Pod"
+        assert ${lines[6]} same_as "${fg[yellow]}secrets      ${reset_color}                                         true         Secret"
+        assert ${lines[7]} same_as "${fg[yellow]}services     ${reset_color}svc                                      true         Service"
+        assert ${lines[8]} same_as "${fg[yellow]}ingresses    ${reset_color}ing          extensions                  true         Ingress"
+        assert ${lines[9]} same_as "${fg[yellow]}roles        ${reset_color}             rbac.authorization.k8s.io   true         Role"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl label '
+}
+
+@test 'Testing completion: kubectl label pods **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl label pods '
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl label pods '
+}
+
+@test 'Testing completion: kubectl label pods/**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl label pods/'
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    prefix=pods/
+    _fzf_complete_kubectl 'kubectl label '
+}
+
+@test 'Testing completion: kubectl label pods etcd-minikube **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={.metadata.labels}'
+
+        echo -n '{"component":"etcd","tier":"control-plane"}'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl label pods etcd-minikube '
+
+        run cat
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
+        assert ${lines[3]} same_as "${fg[yellow]}tier     ${reset_color}  control-plane"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl label pods etcd-minikube '
+}
+
+@test 'Testing completion: kubectl label pods/etcd-minikube **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={.metadata.labels}'
+
+        echo '{"component":"etcd","tier":"control-plane"}'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl label pods/etcd-minikube '
+
+        run cat
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
+        assert ${lines[3]} same_as "${fg[yellow]}tier     ${reset_color}  control-plane"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl label pods/etcd-minikube '
+}
+
+@test 'Testing completion: kubectl label pods ** --namespace=kube-system' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--namespace=kube-system'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl label pods '
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    RBUFFER=' --namespace=kube-system'
+    prefix=
+    _fzf_complete_kubectl 'kubectl label pods '
+}
+
+@test 'Testing completion: kubectl label pods/** --namespace=kube-system' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--namespace=kube-system'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl label pods/'
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    RBUFFER=' --namespace=kube-system'
+    prefix=pods/
+    _fzf_complete_kubectl 'kubectl label '
+}
+
+@test 'Testing completion: kubectl label pods etcd-minikube ** --namespace=kube-system' {
+    kubectl_mock_1() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '--namespace=kube-system'
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath={.metadata.labels}'
+
+        echo -n '{"component":"etcd","tier":"control-plane"}'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl label pods etcd-minikube '
+
+        run cat
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
+        assert ${lines[3]} same_as "${fg[yellow]}tier     ${reset_color}  control-plane"
+    }
+
+    RBUFFER=' --namespace=kube-system'
+    prefix=
+    _fzf_complete_kubectl 'kubectl label pods etcd-minikube '
+}
+
+@test 'Testing completion: kubectl label pods/etcd-minikube ** --namespace=kube-system' {
+    kubectl_mock_1() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '--namespace=kube-system'
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath={.metadata.labels}'
+
+        echo -n '{"component":"etcd","tier":"control-plane"}'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl label pods/etcd-minikube '
+
+        run cat
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
+        assert ${lines[3]} same_as "${fg[yellow]}tier     ${reset_color}  control-plane"
+    }
+
+    RBUFFER=' --namespace=kube-system'
+    prefix=
+    _fzf_complete_kubectl 'kubectl label pods/etcd-minikube '
+}
+
 @test 'Testing completion: kubectl port-forward **' {
     kubectl_mock_1() {
         assert $# equals 5
@@ -2953,6 +4773,711 @@
     _fzf_complete_kubectl 'kubectl port-forward services/kube-dns '
 }
 
+@test 'Testing completion: kubectl rollout **' {
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'kubectl rollout '
+
+        run cat
+        assert ${#lines} equals 6
+        assert ${lines[1]} same_as history
+        assert ${lines[2]} same_as pause
+        assert ${lines[3]} same_as restart
+        assert ${lines[4]} same_as resume
+        assert ${lines[5]} same_as status
+        assert ${lines[6]} same_as undo
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl rollout '
+}
+
+@test 'Testing completion: kubectl rollout restart **' {
+    kubectl_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'api-resources'
+        assert $2 same_as '--cached'
+        assert $3 same_as '--verbs=get'
+
+        echo 'NAME         SHORTNAMES   APIGROUP                    NAMESPACED   KIND'
+        echo 'configmaps   cm                                       true         ConfigMap'
+        echo 'namespaces   ns                                       false        Namespace'
+        echo 'nodes        no                                       false        Node'
+        echo 'pods         po                                       true         Pod'
+        echo 'secrets                                               true         Secret'
+        echo 'services     svc                                      true         Service'
+        echo 'ingresses    ing          extensions                  true         Ingress'
+        echo 'roles                     rbac.authorization.k8s.io   true         Role'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl rollout restart '
+
+        run cat
+        assert ${#lines} equals 9
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
+        assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
+        assert ${lines[3]} same_as "${fg[yellow]}namespaces   ${reset_color}ns                                       false        Namespace"
+        assert ${lines[4]} same_as "${fg[yellow]}nodes        ${reset_color}no                                       false        Node"
+        assert ${lines[5]} same_as "${fg[yellow]}pods         ${reset_color}po                                       true         Pod"
+        assert ${lines[6]} same_as "${fg[yellow]}secrets      ${reset_color}                                         true         Secret"
+        assert ${lines[7]} same_as "${fg[yellow]}services     ${reset_color}svc                                      true         Service"
+        assert ${lines[8]} same_as "${fg[yellow]}ingresses    ${reset_color}ing          extensions                  true         Ingress"
+        assert ${lines[9]} same_as "${fg[yellow]}roles        ${reset_color}             rbac.authorization.k8s.io   true         Role"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl rollout restart '
+}
+
+@test 'Testing completion: kubectl rollout restart deployments **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'deployments'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl rollout restart deployments '
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl rollout restart deployments '
+}
+
+@test 'Testing completion: kubectl rollout restart deployments/**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'deployments'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl rollout restart deployments/'
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    prefix=deployments/
+    _fzf_complete_kubectl 'kubectl rollout restart '
+}
+
+@test 'Testing completion: kubectl rollout restart deployments ** --namespace=kube-system' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'deployments'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--namespace=kube-system'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl rollout restart deployments '
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    RBUFFER=' --namespace=kube-system'
+    prefix=
+    _fzf_complete_kubectl 'kubectl rollout restart deployments '
+}
+
+@test 'Testing completion: kubectl rollout restart deployments/** --namespace=kube-system' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'deployments'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--namespace=kube-system'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl rollout restart deployments/'
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    RBUFFER=' --namespace=kube-system'
+    prefix=deployments/
+    _fzf_complete_kubectl 'kubectl rollout restart '
+}
+
+@test 'Testing completion: kubectl set **' {
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'kubectl set '
+
+        run cat
+        assert ${#lines} equals 6
+        assert ${lines[1]} same_as env
+        assert ${lines[2]} same_as image
+        assert ${lines[3]} same_as resources
+        assert ${lines[4]} same_as selector
+        assert ${lines[5]} same_as serviceaccount
+        assert ${lines[6]} same_as subject
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl set '
+}
+
+@test 'Testing completion: kubectl set image **' {
+    kubectl_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'api-resources'
+        assert $2 same_as '--cached'
+        assert $3 same_as '--verbs=get'
+
+        echo 'NAME         SHORTNAMES   APIGROUP                    NAMESPACED   KIND'
+        echo 'configmaps   cm                                       true         ConfigMap'
+        echo 'namespaces   ns                                       false        Namespace'
+        echo 'nodes        no                                       false        Node'
+        echo 'pods         po                                       true         Pod'
+        echo 'secrets                                               true         Secret'
+        echo 'services     svc                                      true         Service'
+        echo 'ingresses    ing          extensions                  true         Ingress'
+        echo 'roles                     rbac.authorization.k8s.io   true         Role'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl set image '
+
+        run cat
+        assert ${#lines} equals 9
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
+        assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
+        assert ${lines[3]} same_as "${fg[yellow]}namespaces   ${reset_color}ns                                       false        Namespace"
+        assert ${lines[4]} same_as "${fg[yellow]}nodes        ${reset_color}no                                       false        Node"
+        assert ${lines[5]} same_as "${fg[yellow]}pods         ${reset_color}po                                       true         Pod"
+        assert ${lines[6]} same_as "${fg[yellow]}secrets      ${reset_color}                                         true         Secret"
+        assert ${lines[7]} same_as "${fg[yellow]}services     ${reset_color}svc                                      true         Service"
+        assert ${lines[8]} same_as "${fg[yellow]}ingresses    ${reset_color}ing          extensions                  true         Ingress"
+        assert ${lines[9]} same_as "${fg[yellow]}roles        ${reset_color}             rbac.authorization.k8s.io   true         Role"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl set image '
+}
+
+@test 'Testing completion: kubectl set image pods **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl set image pods '
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl set image pods '
+}
+
+@test 'Testing completion: kubectl set image pods/**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl set image pods/'
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    prefix=pods/
+    _fzf_complete_kubectl 'kubectl set image '
+}
+
+@test 'Testing completion: kubectl set image pods etcd-minikube **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'NAME IMAGE'
+        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl set image pods etcd-minikube '
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
+        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl set image pods etcd-minikube '
+}
+
+@test 'Testing completion: kubectl set image pods/etcd-minikube **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'NAME IMAGE'
+        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl set image pods/etcd-minikube '
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
+        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl set image pods/etcd-minikube '
+}
+
+@test 'Testing completion: kubectl set image pods ** --namespace=kube-system' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--namespace=kube-system'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl set image pods '
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    RBUFFER=' --namespace=kube-system'
+    prefix=
+    _fzf_complete_kubectl 'kubectl set image pods '
+}
+
+@test 'Testing completion: kubectl set image pods/** --namespace=kube-system' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--namespace=kube-system'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl set image pods/'
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    RBUFFER=' --namespace=kube-system'
+    prefix=pods/
+    _fzf_complete_kubectl 'kubectl set image '
+}
+
+@test 'Testing completion: kubectl set image pods etcd-minikube ** --namespace=kube-system' {
+    kubectl_mock_1() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '--namespace=kube-system'
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'NAME IMAGE'
+        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl set image pods etcd-minikube '
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
+        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+    }
+
+    RBUFFER=' --namespace=kube-system'
+    prefix=
+    _fzf_complete_kubectl 'kubectl set image pods etcd-minikube '
+}
+
+@test 'Testing completion: kubectl set image pods/etcd-minikube ** --namespace=kube-system' {
+    kubectl_mock_1() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '--namespace=kube-system'
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'NAME IMAGE'
+        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl set image pods/etcd-minikube '
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
+        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+    }
+
+    RBUFFER=' --namespace=kube-system'
+    prefix=
+    _fzf_complete_kubectl 'kubectl set image pods/etcd-minikube '
+}
+
+@test 'Testing completion: kubectl taint **' {
+    kubectl_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'api-resources'
+        assert $2 same_as '--cached'
+        assert $3 same_as '--verbs=get'
+
+        echo 'NAME         SHORTNAMES   APIGROUP                    NAMESPACED   KIND'
+        echo 'configmaps   cm                                       true         ConfigMap'
+        echo 'namespaces   ns                                       false        Namespace'
+        echo 'nodes        no                                       false        Node'
+        echo 'pods         po                                       true         Pod'
+        echo 'secrets                                               true         Secret'
+        echo 'services     svc                                      true         Service'
+        echo 'ingresses    ing          extensions                  true         Ingress'
+        echo 'roles                     rbac.authorization.k8s.io   true         Role'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl taint '
+
+        run cat
+        assert ${#lines} equals 9
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
+        assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
+        assert ${lines[3]} same_as "${fg[yellow]}namespaces   ${reset_color}ns                                       false        Namespace"
+        assert ${lines[4]} same_as "${fg[yellow]}nodes        ${reset_color}no                                       false        Node"
+        assert ${lines[5]} same_as "${fg[yellow]}pods         ${reset_color}po                                       true         Pod"
+        assert ${lines[6]} same_as "${fg[yellow]}secrets      ${reset_color}                                         true         Secret"
+        assert ${lines[7]} same_as "${fg[yellow]}services     ${reset_color}svc                                      true         Service"
+        assert ${lines[8]} same_as "${fg[yellow]}ingresses    ${reset_color}ing          extensions                  true         Ingress"
+        assert ${lines[9]} same_as "${fg[yellow]}roles        ${reset_color}             rbac.authorization.k8s.io   true         Role"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl taint '
+}
+
+@test 'Testing completion: kubectl taint nodes **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'nodes'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAME       STATUS   ROLES    AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE     KERNEL-VERSION   CONTAINER-RUNTIME'
+        echo 'minikube   Ready    master   20d   v1.19.2   192.0.2.1     <none>        Arch Linux   5.8.14-arch1-1   docker://19.3.13'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl taint nodes '
+
+        run cat
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}NAME       ${reset_color}STATUS   ROLES    AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE     KERNEL-VERSION   CONTAINER-RUNTIME"
+        assert ${lines[2]} same_as "${fg[yellow]}minikube   ${reset_color}Ready    master   20d   v1.19.2   192.0.2.1     <none>        Arch Linux   5.8.14-arch1-1   docker://19.3.13"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl taint nodes '
+}
+
+@test 'Testing completion: kubectl taint nodes minikube **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'nodes'
+        assert $3 same_as 'minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={range .spec.taints[*]}{.key} {.value} {.effect}{"\\n"}{end}'
+
+        echo 'key1 value1 NoSchedule'
+        echo 'key2 value2 NoExecute'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl taint nodes minikube '
+
+        run cat
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}KEY ${reset_color}  ${reset_color}VALUE ${reset_color}  EFFECT"
+        assert ${lines[2]} same_as "${fg[yellow]}key1${reset_color}  ${reset_color}value1${reset_color}  NoSchedule"
+        assert ${lines[3]} same_as "${fg[yellow]}key2${reset_color}  ${reset_color}value2${reset_color}  NoExecute"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl taint nodes minikube '
+}
+
 @test 'Testing post: a resource name' {
     input=(
         'test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
@@ -3085,13 +5610,26 @@
     assert ${lines[1]} same_as 'app'
 }
 
+@test 'Testing post: a container name and image' {
+    input=(
+        'app  alpine:latest'
+    )
+
+    subcommands=(set image)
+    run _fzf_complete_kubectl-containers_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'app=alpine:latest'
+}
+
 @test 'Testing post: a port number' {
     input=(
         '53    TCP       dns-tcp'
         '9153  TCP       metrics'
     )
 
-    run _fzf_complete_kubectl-containers_post <<< ${(F)input}
+    run _fzf_complete_kubectl-ports_post <<< ${(F)input}
 
     assert $state equals 0
     assert ${#lines} equals 2
@@ -3125,4 +5663,18 @@
     assert ${#lines} equals 2
     assert ${lines[1]} same_as 'component=etcd'
     assert ${lines[2]} same_as 'tier=control-plane'
+}
+
+@test 'Testing post: a taint' {
+    input=(
+        'key1  value1  NoSchedule'
+        'key2  value2  NoExecute'
+    )
+
+    run _fzf_complete_kubectl-taints_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 2
+    assert ${lines[1]} same_as 'key1=value1:NoSchedule'
+    assert ${lines[2]} same_as 'key2=value2:NoExecute'
 }

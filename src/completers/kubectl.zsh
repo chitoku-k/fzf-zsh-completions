@@ -267,7 +267,7 @@ _fzf_complete_kubectl() {
         fi
 
         if [[ ${subcommands[2]} = 'image' ]]; then
-            _fzf_complete_kubectl-containers '' $@
+            _fzf_complete_kubectl-containers '--multi' $@
             return
         fi
         return
@@ -280,12 +280,11 @@ _fzf_complete_kubectl() {
         fi
 
         if [[ -z $name ]]; then
-            resource=nodes
             _fzf_complete_kubectl-resource-names '' $@
             return
         fi
 
-        _fzf_complete_kubectl-taints '' $@
+        _fzf_complete_kubectl-taints '--multi' $@
         return
     fi
 
@@ -348,11 +347,12 @@ _fzf_complete_kubectl-containers() {
 }
 
 _fzf_complete_kubectl-containers_post() {
-    if [[ ${subcommands[@]} != 'set image' ]]; then
-        awk '{ print $1 }'
-    else
+    if [[ ${subcommands[1]} = 'set' ]] && [[ ${subcommands[2]} = 'image' ]]; then
         awk '{ printf "%s=%s", $1, $2 }'
+        return
     fi
+
+    awk '{ print $1 }'
 }
 
 _fzf_complete_kubectl-ports() {
@@ -437,7 +437,7 @@ _fzf_complete_kubectl-taints() {
 }
 
 _fzf_complete_kubectl-taints_post() {
-    awk '{ printf "%s=%s:%s", $1, $2, $3 }'
+    awk '{ printf "%s%s=%s:%s", (NR > 1 ? "\n" : ""), $1, $2, $3 }'
 }
 
 _fzf_complete_kubectl-resource-names() {
