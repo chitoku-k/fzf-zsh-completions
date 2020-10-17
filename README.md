@@ -59,10 +59,27 @@ git rebase -i **<TAB>
   - rm
   - switch
 - kubectl
-  - describe (pods)
+  - annotate
+  - apply
+  - autoscale
+  - cordon
+  - create
+  - delete
+  - describe
+  - drain
+  - edit
   - exec
-  - get (pods)
+  - explain
+  - expose
+  - get
+  - label
   - logs
+  - patch
+  - port-forward
+  - rollout
+  - set
+  - taint
+  - uncordon
 - make
 - npm
   - run
