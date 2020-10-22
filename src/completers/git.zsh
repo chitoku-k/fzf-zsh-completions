@@ -320,12 +320,12 @@ _fzf_complete_git() {
         case $completing_option in
             --recurse-submodules)
                 local recurse_submodules=(yes on-demand no)
-                _fzf_complete_git_constants '' "${(F)recurse_submodules}" $@
+                _fzf_complete_constants '' "${(F)recurse_submodules}" $@
                 ;;
 
             --recurse-submodules-default)
                 local recurse_submodules_default=(yes on-demand)
-                _fzf_complete_git_constants '' "${(F)recurse_submodules_default}" $@
+                _fzf_complete_constants '' "${(F)recurse_submodules_default}" $@
                 ;;
 
             --refmap)
