@@ -640,7 +640,7 @@ _fzf_complete_git-repositories() {
     shift
 
     if [[ $subcommand = 'fetch' ]]; then
-        local groups=$(git config --get-regexp remotes 2> /dev/null)
+        local groups=$(git config --get-regexp '^remotes\.' 2> /dev/null)
         groups=${(Q)${(F)${${(q)${(f)groups}}#remotes.}}}
     fi
 

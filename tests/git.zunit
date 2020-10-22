@@ -3032,6 +3032,7 @@
     run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
     run git remote add upstream git@example.com:example/fzf-zsh-completions
     run git remote add example example
+    run git config alias.remotes 'remote -v'
     run git config remotes.group1 'origin upstream'
     run git config remotes.group2 'origin upstream example'
 
