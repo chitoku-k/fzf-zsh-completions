@@ -6,6 +6,10 @@ fzf-zsh-completions
 Fuzzy completions for [fzf][] and [Zsh][] that can be triggered by the trigger
 sequence that defaults to `**`.
 
+<img src="https://user-images.githubusercontent.com/6535425/96915303-0d674180-14e1-11eb-8a14-5b3cd3673a49.png" alt="git" width="600"><br>
+<img src="https://user-images.githubusercontent.com/6535425/96915276-06403380-14e1-11eb-9697-3cd40db7cc58.png" alt="kubectl" width="600"><br>
+<img src="https://user-images.githubusercontent.com/6535425/96915321-10fac880-14e1-11eb-9222-93fd5a1563b4.png" alt="systemctl" width="600">
+
 ## Prerequisites
 
 - [fzf][]
