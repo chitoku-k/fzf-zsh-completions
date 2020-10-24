@@ -2483,10 +2483,20 @@
         assert $2 same_as 'pods'
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $5 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -2498,9 +2508,10 @@
         assert $5 same_as 'kubectl exec etcd-minikube --container='
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     prefix=--container=
@@ -2514,10 +2525,20 @@
         assert $2 same_as 'pods'
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $5 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -2529,9 +2550,10 @@
         assert $5 same_as 'kubectl exec pods/etcd-minikube --container='
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     prefix=--container=
@@ -2545,10 +2567,20 @@
         assert $2 same_as 'pods'
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $5 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -2560,9 +2592,10 @@
         assert $5 same_as 'kubectl exec etcd-minikube --container '
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     prefix=
@@ -2576,10 +2609,20 @@
         assert $2 same_as 'pods'
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $5 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -2591,9 +2634,10 @@
         assert $5 same_as 'kubectl exec pods/etcd-minikube --container '
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     prefix=
@@ -2607,10 +2651,20 @@
         assert $2 same_as 'pods'
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $5 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -2622,9 +2676,10 @@
         assert $5 same_as 'kubectl exec etcd-minikube -c '
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     prefix=
@@ -2638,10 +2693,20 @@
         assert $2 same_as 'pods'
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $5 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -2653,9 +2718,10 @@
         assert $5 same_as 'kubectl exec pods/etcd-minikube -c '
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     prefix=
@@ -2669,10 +2735,20 @@
         assert $2 same_as 'pods'
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $5 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -2684,9 +2760,10 @@
         assert $5 same_as 'kubectl exec etcd-minikube -c'
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     prefix=-c
@@ -2700,10 +2777,20 @@
         assert $2 same_as 'pods'
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $5 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -2715,9 +2802,10 @@
         assert $5 same_as 'kubectl exec pods/etcd-minikube -c'
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     prefix=-c
@@ -2812,10 +2900,21 @@
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '--namespace=kube-system'
         assert $5 same_as '-o'
-        assert $6 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $6 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '--namespace=kube-system'
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -2827,9 +2926,10 @@
         assert $5 same_as 'kubectl exec etcd-minikube --container='
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     RBUFFER=' --namespace=kube-system'
@@ -2845,10 +2945,21 @@
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '--namespace=kube-system'
         assert $5 same_as '-o'
-        assert $6 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $6 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '--namespace=kube-system'
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -2860,9 +2971,10 @@
         assert $5 same_as 'kubectl exec pods/etcd-minikube --container='
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     RBUFFER=' --namespace=kube-system'
@@ -2878,10 +2990,21 @@
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '--namespace=kube-system'
         assert $5 same_as '-o'
-        assert $6 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $6 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '--namespace=kube-system'
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -2893,9 +3016,10 @@
         assert $5 same_as 'kubectl exec etcd-minikube --container '
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     RBUFFER=' --namespace=kube-system'
@@ -2911,10 +3035,21 @@
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '--namespace=kube-system'
         assert $5 same_as '-o'
-        assert $6 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $6 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '--namespace=kube-system'
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -2926,9 +3061,10 @@
         assert $5 same_as 'kubectl exec pods/etcd-minikube --container '
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     RBUFFER=' --namespace=kube-system'
@@ -2944,10 +3080,21 @@
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '--namespace=kube-system'
         assert $5 same_as '-o'
-        assert $6 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $6 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '--namespace=kube-system'
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -2959,9 +3106,10 @@
         assert $5 same_as 'kubectl exec etcd-minikube -c '
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     RBUFFER=' --namespace=kube-system'
@@ -2977,10 +3125,21 @@
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '--namespace=kube-system'
         assert $5 same_as '-o'
-        assert $6 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $6 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '--namespace=kube-system'
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -2992,9 +3151,10 @@
         assert $5 same_as 'kubectl exec pods/etcd-minikube -c '
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     RBUFFER=' --namespace=kube-system'
@@ -3010,10 +3170,21 @@
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '--namespace=kube-system'
         assert $5 same_as '-o'
-        assert $6 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $6 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '--namespace=kube-system'
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -3025,9 +3196,10 @@
         assert $5 same_as 'kubectl exec etcd-minikube -c'
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     RBUFFER=' --namespace=kube-system'
@@ -3043,10 +3215,21 @@
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '--namespace=kube-system'
         assert $5 same_as '-o'
-        assert $6 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $6 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '--namespace=kube-system'
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -3058,9 +3241,10 @@
         assert $5 same_as 'kubectl exec pods/etcd-minikube -c'
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     RBUFFER=' --namespace=kube-system'
@@ -3157,10 +3341,20 @@
         assert $2 same_as 'pods'
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $5 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -3172,9 +3366,10 @@
         assert $5 same_as 'kubectl logs etcd-minikube --container='
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     prefix=--container=
@@ -3188,10 +3383,20 @@
         assert $2 same_as 'pods'
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $5 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -3203,9 +3408,10 @@
         assert $5 same_as 'kubectl logs pods/etcd-minikube --container='
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     prefix=--container=
@@ -3219,10 +3425,20 @@
         assert $2 same_as 'pods'
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $5 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -3234,9 +3450,10 @@
         assert $5 same_as 'kubectl logs etcd-minikube --container '
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     prefix=
@@ -3250,10 +3467,20 @@
         assert $2 same_as 'pods'
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $5 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -3265,9 +3492,10 @@
         assert $5 same_as 'kubectl logs pods/etcd-minikube --container '
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     prefix=
@@ -3281,10 +3509,20 @@
         assert $2 same_as 'pods'
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $5 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -3296,9 +3534,10 @@
         assert $5 same_as 'kubectl logs etcd-minikube -c '
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     prefix=
@@ -3312,10 +3551,20 @@
         assert $2 same_as 'pods'
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $5 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -3327,9 +3576,10 @@
         assert $5 same_as 'kubectl logs pods/etcd-minikube -c '
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     prefix=
@@ -3343,10 +3593,20 @@
         assert $2 same_as 'pods'
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $5 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -3358,9 +3618,10 @@
         assert $5 same_as 'kubectl logs etcd-minikube -c'
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     prefix=-c
@@ -3374,10 +3635,20 @@
         assert $2 same_as 'pods'
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $5 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -3389,9 +3660,10 @@
         assert $5 same_as 'kubectl logs pods/etcd-minikube -c'
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     prefix=-c
@@ -3486,10 +3758,21 @@
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '--namespace=kube-system'
         assert $5 same_as '-o'
-        assert $6 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $6 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '--namespace=kube-system'
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -3501,9 +3784,10 @@
         assert $5 same_as 'kubectl logs etcd-minikube --container='
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     RBUFFER=' --namespace=kube-system'
@@ -3519,10 +3803,21 @@
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '--namespace=kube-system'
         assert $5 same_as '-o'
-        assert $6 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $6 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '--namespace=kube-system'
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -3534,9 +3829,10 @@
         assert $5 same_as 'kubectl logs pods/etcd-minikube --container='
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     RBUFFER=' --namespace=kube-system'
@@ -3552,10 +3848,21 @@
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '--namespace=kube-system'
         assert $5 same_as '-o'
-        assert $6 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $6 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '--namespace=kube-system'
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -3567,9 +3874,10 @@
         assert $5 same_as 'kubectl logs etcd-minikube --container '
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     RBUFFER=' --namespace=kube-system'
@@ -3585,10 +3893,21 @@
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '--namespace=kube-system'
         assert $5 same_as '-o'
-        assert $6 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $6 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '--namespace=kube-system'
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -3600,9 +3919,10 @@
         assert $5 same_as 'kubectl logs pods/etcd-minikube --container '
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     RBUFFER=' --namespace=kube-system'
@@ -3618,10 +3938,21 @@
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '--namespace=kube-system'
         assert $5 same_as '-o'
-        assert $6 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $6 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '--namespace=kube-system'
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -3633,9 +3964,10 @@
         assert $5 same_as 'kubectl logs etcd-minikube -c '
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     RBUFFER=' --namespace=kube-system'
@@ -3651,10 +3983,21 @@
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '--namespace=kube-system'
         assert $5 same_as '-o'
-        assert $6 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $6 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '--namespace=kube-system'
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -3666,9 +4009,10 @@
         assert $5 same_as 'kubectl logs pods/etcd-minikube -c '
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     RBUFFER=' --namespace=kube-system'
@@ -3684,10 +4028,21 @@
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '--namespace=kube-system'
         assert $5 same_as '-o'
-        assert $6 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $6 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '--namespace=kube-system'
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -3699,9 +4054,10 @@
         assert $5 same_as 'kubectl logs etcd-minikube -c'
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     RBUFFER=' --namespace=kube-system'
@@ -3717,10 +4073,21 @@
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '--namespace=kube-system'
         assert $5 same_as '-o'
-        assert $6 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $6 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '--namespace=kube-system'
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -3732,9 +4099,10 @@
         assert $5 same_as 'kubectl logs pods/etcd-minikube -c'
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     RBUFFER=' --namespace=kube-system'
@@ -5162,10 +5530,20 @@
         assert $2 same_as 'pods'
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $5 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -5178,9 +5556,10 @@
         assert $6 same_as 'kubectl set image pods etcd-minikube '
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     prefix=
@@ -5194,10 +5573,20 @@
         assert $2 same_as 'pods'
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $5 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -5210,9 +5599,10 @@
         assert $6 same_as 'kubectl set image pods/etcd-minikube '
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     prefix=
@@ -5311,10 +5701,21 @@
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '--namespace=kube-system'
         assert $5 same_as '-o'
-        assert $6 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $6 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '--namespace=kube-system'
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -5327,9 +5728,10 @@
         assert $6 same_as 'kubectl set image pods etcd-minikube '
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     RBUFFER=' --namespace=kube-system'
@@ -5345,10 +5747,21 @@
         assert $3 same_as 'etcd-minikube'
         assert $4 same_as '--namespace=kube-system'
         assert $5 same_as '-o'
-        assert $6 same_as 'jsonpath=NAME IMAGE{"\\n"}{range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+        assert $6 same_as 'jsonpath={range ..initContainers[*]}{.name} {.image}{"\\n"}{end}'
 
-        echo 'NAME IMAGE'
-        echo 'etcd-minikube k8s.gcr.io/etcd:3.4.13-0'
+        echo 'initcontainer busybox:musl'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as 'etcd-minikube'
+        assert $4 same_as '--namespace=kube-system'
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath={range ..containers[*]}{.name} {.image}{"\\n"}{end}'
+
+        echo 'etcd k8s.gcr.io/etcd:3.4.13-0'
     }
 
     _fzf_complete() {
@@ -5361,9 +5774,10 @@
         assert $6 same_as 'kubectl set image pods/etcd-minikube '
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
-        assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
+        assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd         ${reset_color}  k8s.gcr.io/etcd:3.4.13-0"
     }
 
     RBUFFER=' --namespace=kube-system'

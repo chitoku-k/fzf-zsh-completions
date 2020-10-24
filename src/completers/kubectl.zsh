@@ -340,10 +340,11 @@ _fzf_complete_kubectl-containers() {
         arguments+=(--namespace=$namespace)
     fi
 
-    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
-        kubectl get "$resource" "$name" ${(Q)${(z)arguments}} -o jsonpath='NAME IMAGE{"\n"}{range ..containers[*]}{.name} {.image}{"\n"}{end}' 2> /dev/null |
-        _fzf_complete_tabularize $fg[yellow]
-    )
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <({
+        echo NAME IMAGE
+        kubectl get "$resource" "$name" ${(Q)${(z)arguments}} -o jsonpath='{range ..initContainers[*]}{.name} {.image}{"\n"}{end}' 2> /dev/null
+        kubectl get "$resource" "$name" ${(Q)${(z)arguments}} -o jsonpath='{range ..containers[*]}{.name} {.image}{"\n"}{end}' 2> /dev/null
+    } | _fzf_complete_tabularize $fg[yellow])
 }
 
 _fzf_complete_kubectl-containers_post() {
