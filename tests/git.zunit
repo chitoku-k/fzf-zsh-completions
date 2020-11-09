@@ -250,13 +250,7 @@
     _fzf_complete_git 'git checkout -- file '
 }
 
-@test 'Testing completion: git checkout branch **' {
-    run git checkout another-branch
-    echo >> ' file3 containing space '
-    echo >> directory2/$'file4\ncontaining\nnewlines'
-    echo >> ' file5 containing space '
-    echo >> directory2/$'file6\ncontaining\nnewlines'
-
+@test 'Testing completion: git checkout another-branch **' {
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -264,7 +258,7 @@
         assert $3 same_as '--print0'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'git checkout branch '
+        assert $6 same_as 'git checkout another-branch '
 
         run cat
         assert ${#lines} equals 3
@@ -286,16 +280,10 @@
     }
 
     prefix=
-    _fzf_complete_git 'git checkout branch '
+    _fzf_complete_git 'git checkout another-branch '
 }
 
-@test 'Testing completion: git checkout branch -- **' {
-    run git checkout another-branch
-    echo >> ' file3 containing space '
-    echo >> directory2/$'file4\ncontaining\nnewlines'
-    echo >> ' file5 containing space '
-    echo >> directory2/$'file6\ncontaining\nnewlines'
-
+@test 'Testing completion: git checkout another-branch -- **' {
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -303,7 +291,7 @@
         assert $3 same_as '--print0'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'git checkout branch -- '
+        assert $6 same_as 'git checkout another-branch -- '
 
         run cat
         assert ${#lines} equals 3
@@ -325,16 +313,10 @@
     }
 
     prefix=
-    _fzf_complete_git 'git checkout branch -- '
+    _fzf_complete_git 'git checkout another-branch -- '
 }
 
-@test 'Testing completion: git checkout branch -- file **' {
-    run git checkout another-branch
-    echo >> ' file3 containing space '
-    echo >> directory2/$'file4\ncontaining\nnewlines'
-    echo >> ' file5 containing space '
-    echo >> directory2/$'file6\ncontaining\nnewlines'
-
+@test 'Testing completion: git checkout another-branch -- file **' {
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -342,7 +324,7 @@
         assert $3 same_as '--print0'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'git checkout branch -- file '
+        assert $6 same_as 'git checkout another-branch -- file '
 
         run cat
         assert ${#lines} equals 3
@@ -364,7 +346,70 @@
     }
 
     prefix=
-    _fzf_complete_git 'git checkout branch -- file '
+    _fzf_complete_git 'git checkout another-branch -- file '
+}
+
+@test 'Testing completion: git checkout branch-that-does-not-exist **' {
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--read0'
+        assert $3 same_as '--print0'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'git checkout branch-that-does-not-exist '
+
+        run cat
+        assert ${#lines} equals 1
+
+        actual1=(${(0)lines[1]})
+        assert ${#actual1} equals 0
+    }
+
+    prefix=
+    _fzf_complete_git 'git checkout branch-that-does-not-exist '
+}
+
+@test 'Testing completion: git checkout branch-that-does-not-exist -- **' {
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--read0'
+        assert $3 same_as '--print0'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'git checkout branch-that-does-not-exist -- '
+
+        run cat
+        assert ${#lines} equals 1
+
+        actual1=(${(0)lines[1]})
+        assert ${#actual1} equals 0
+    }
+
+    prefix=
+    _fzf_complete_git 'git checkout branch-that-does-not-exist -- '
+}
+
+@test 'Testing completion: git checkout branch-that-does-not-exist -- file **' {
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--read0'
+        assert $3 same_as '--print0'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'git checkout branch-that-does-not-exist -- file '
+
+        run cat
+        assert ${#lines} equals 1
+
+        actual1=(${(0)lines[1]})
+        assert ${#actual1} equals 0
+    }
+
+    prefix=
+    _fzf_complete_git 'git checkout branch-that-does-not-exist -- file '
 }
 
 @test 'Testing completion: git diff **' {
