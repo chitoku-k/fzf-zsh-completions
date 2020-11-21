@@ -550,44 +550,30 @@ _fzf_complete_git() {
                 ;;
 
             --diff-algorithm)
-                local algorithms=(default histogram minimal myers patience)
-                _fzf_complete_constants '' "${(F)algorithms}" $@
                 return
                 ;;
 
             --dirstat|-X)
-                local dirstats=(changes cumulative files lines)
-                _fzf_complete_constants '' "${(F)dirstats}" $@
                 return
                 ;;
 
             --color)
-                local colors=(always auto never)
-                _fzf_complete_constants '' "${(F)colors}" $@
                 return
                 ;;
 
             --color-moved)
-                local color_moved=(blocks default dimmed-zebra no plain zebra)
-                _fzf_complete_constants '' "${(F)color_moved}" $@
                 return
                 ;;
 
             --color-moved-ws)
-                local color-moved-ws=(allow-indentation-change ignore-all-space ignore-space-at-eol ignore-space-change no)
-                _fzf_complete_constants '' "${(F)color-moved-ws}" $@
                 return
                 ;;
 
             --word-diff)
-                local mode=(color none plain porcelain)
-                _fzf_complete_constants '' "${(F)mode}" $@
                 return
                 ;;
 
             --ws-error-highlight)
-                local kind=(cone new all default nontext old)
-                _fzf_complete_constants '' "${(F)kind}" $@
                 return
                 ;;
 
@@ -596,18 +582,14 @@ _fzf_complete_git() {
                 ;;
 
             -O)
-                __fzf_generic_path_completion "${prefix#$prefix_option}" $@$prefix_option _fzf_compgen_path '' '' ' '
                 return
                 ;;
 
             --relative)
-                __fzf_generic_path_completion "${prefix#$prefix_option}" $@$prefix_option _fzf_compgen_dir '' '' ' '
                 return
                 ;;
 
             --ignore-submodules)
-                local when=(all dirty none untracked)
-                _fzf_complete_constants '' "${(F)when}" $@
                 return
                 ;;
 
