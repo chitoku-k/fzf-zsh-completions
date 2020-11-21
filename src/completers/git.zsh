@@ -511,6 +511,114 @@ _fzf_complete_git() {
         return
     fi
 
+    if [[ $subcommand = 'show' ]]; then
+        local prefix_option completing_option
+        local git_options_argument_required=(
+            -l -G -O -S -U
+            --anchored --color-moved-ws --diff-algorithm --diff-filter --dst-prefix
+            --encoding --expand-tabs --find-object --format --inter-hunk-context
+            --line-prefix --output --output-indicator-context --output-indicator-new
+            --output-indicator-old --src-prefix --unified --word-diff-regex --ws-error-highlight
+        )
+        local git_options_argument_optional=(
+            -B -C -M -X
+            --abbrev --break-rewrites --color --color-moved --dirstat
+            --find-copies --find-renames --ignore-submodules --notes
+            --pretty --relative --show-notes --stat --submodule --word-diff
+        )
+
+        if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)git_options_argument_required}" "${(F)git_options_argument_optional}"); then
+            if [[ $completing_option = --* ]]; then
+                prefix_option=$completing_option=
+            else
+                prefix_option=${prefix%%${completing_option[-1]}*}${completing_option[-1]}
+            fi
+            prefix=${prefix#$prefix_option}
+        fi
+
+        case $completing_option in
+            --abbrev|--anchored|--break-rewrites|--dst-prefix|--encoding|--expand-tabs| \
+                --find-copies|--find-object|--find-renames|--format|--inter-hunk-context| \
+                --line-prefix|--output|--output-indicator-context|--output-indicator-new| \
+                --output-indicator-old|--src-prefix|--stat|--submodule|--unified|--word-diff-regex)
+                return
+                ;;
+
+            --notes|--show-notes)
+                _fzf_complete_git-notes '' $@
+                return
+                ;;
+
+            --diff-algorithm)
+                local algorithms=(default histogram minimal myers patience)
+                _fzf_complete_constants '' "${(F)algorithms}" $@
+                return
+                ;;
+
+            --dirstat|-X)
+                local dirstats=(changes cumulative files lines)
+                _fzf_complete_constants '' "${(F)dirstats}" $@
+                return
+                ;;
+
+            --color)
+                local colors=(always auto never)
+                _fzf_complete_constants '' "${(F)colors}" $@
+                return
+                ;;
+
+            --color-moved)
+                local color_moved=(blocks default dimmed-zebra no plain zebra)
+                _fzf_complete_constants '' "${(F)color_moved}" $@
+                return
+                ;;
+
+            --color-moved-ws)
+                local color-moved-ws=(allow-indentation-change ignore-all-space ignore-space-at-eol ignore-space-change no)
+                _fzf_complete_constants '' "${(F)color-moved-ws}" $@
+                return
+                ;;
+
+            --word-diff)
+                local mode=(color none plain porcelain)
+                _fzf_complete_constants '' "${(F)mode}" $@
+                return
+                ;;
+
+            --ws-error-highlight)
+                local kind=(cone new all default nontext old)
+                _fzf_complete_constants '' "${(F)kind}" $@
+                return
+                ;;
+
+            --diff-filter)
+                return
+                ;;
+
+            -O)
+                __fzf_generic_path_completion "${prefix#$prefix_option}" $@$prefix_option _fzf_compgen_path '' '' ' '
+                return
+                ;;
+
+            --relative)
+                __fzf_generic_path_completion "${prefix#$prefix_option}" $@$prefix_option _fzf_compgen_dir '' '' ' '
+                return
+                ;;
+
+            --ignore-submodules)
+                local when=(all dirty none untracked)
+                _fzf_complete_constants '' "${(F)when}" $@
+                return
+                ;;
+
+            *)
+                return
+                ;;
+        esac
+
+        return
+    fi
+
     _fzf_path_completion "$prefix" $@
 }
 
@@ -687,6 +795,20 @@ _fzf_complete_git-refs_post() {
     for ref in ${(f)input}; do
         echo ${${ref#*/}%% *}
     done
+}
+
+_fzf_complete_git-notes() {
+    local fzf_options=$1
+    shift
+
+    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option$prefix_ref < <(
+        git for-each-ref refs/heads refs/remotes --format='%(refname:short) %(contents:subject)' 2> /dev/null |
+            _fzf_complete_tabularize ${fg[yellow]} ${fg[green]}
+    )
+}
+
+_fzf_complete_git-notes_post() {
+    awk '{ print $1 }'
 }
 
 _fzf_complete_git_resolve_alias() {
