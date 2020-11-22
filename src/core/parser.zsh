@@ -98,3 +98,40 @@ _fzf_complete_parse_argument() {
     echo - ${command_arguments[$index]}
     return $(( index > #command_arguments ))
 }
+
+_fzf_complete_parse_option_argument() {
+    local idx value
+    local short=${1#*-}
+    local long=${2#*--}
+    shift 2
+
+    if [[ -n $short ]]; then
+        if [[ -n ${(Q)${(z)@}[(r)-[^-]#$short?##]} ]]; then
+            idx=${(Q)${(z)@}[(i)-[^-]#$short?##]}
+            value=${(Q)${(z)@}[idx]/-[^-$short]#$short/}
+        fi
+
+        if [[ -n ${(Q)${(z)@}[(r)-[^-]#$short]} ]]; then
+            idx=${(Q)${(z)@}[(i)-[^-]#$short]}
+            value=${(Q)${(z)@}[idx+1]}
+        fi
+    fi
+
+    if [[ -n $long ]]; then
+        if [[ -n ${(Q)${(z)@}[(r)--$long=*]} ]]; then
+            idx=${(Q)${(z)@}[(i)--$long=*]}
+            value=${(Q)${(z)@}[idx]/--$long=/}
+        fi
+
+        if [[ -n ${(Q)${(z)@}[(r)--$long]} ]]; then
+            idx=${(Q)${(z)@}[(i)--$long]}
+            value=${(Q)${(z)@}[idx+1]}
+        fi
+    fi
+
+    if [[ -z $idx ]]; then
+        return 1
+    fi
+
+    echo - $value
+}
