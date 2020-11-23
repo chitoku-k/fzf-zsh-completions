@@ -536,6 +536,8 @@ _fzf_complete_git() {
             prefix=${prefix#$prefix_option}
         fi
 
+        local prefix_ref=${prefix%[^:]#}
+
         case $completing_option in
             --abbrev|--anchored|--break-rewrites|--dst-prefix|--encoding|--expand-tabs| \
                 --find-copies|--find-object|--find-renames|--format|--inter-hunk-context| \
@@ -594,6 +596,25 @@ _fzf_complete_git() {
                 ;;
 
             *)
+                local treeish
+
+                if [[ $prefix = *:* ]]; then
+                    treeish=${prefix%:*}
+                    prefix=${prefix#*:} _fzf_complete_git-ls-tree '' '' $@
+                    return
+                fi
+
+                if [[ -n ${(Q)${(Z+n+)arguments}[(r)--]} ]]; then
+                    treeish=$(_fzf_complete_git_parse_argument 1 "${arguments%% -- *}" "${(F)git_options_argument_required}") && true
+                    _fzf_complete_git-show-files '--multi' $@
+                    return
+                fi
+
+                if [[ $treeish = *:* ]]; then
+                    return
+                fi
+
+                _fzf_complete_git-commits '' $@
                 return
                 ;;
         esac
@@ -676,7 +697,7 @@ _fzf_complete_git-ls-tree() {
     local fzf_options=$2
     shift 2
 
-    _fzf_complete --ansi --read0 --print0 ${(Q)${(Z+n+)fzf_options}} -- $@ < <(git ls-tree --name-only -r -z ${(Z+n+)git_options} ${treeish-HEAD} 2> /dev/null)
+    _fzf_complete --ansi --read0 --print0 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_ref < <(git ls-tree --name-only -r -z ${(Z+n+)git_options} ${treeish-HEAD} 2> /dev/null)
 }
 
 _fzf_complete_git-ls-tree_post() {
@@ -784,13 +805,29 @@ _fzf_complete_git-notes() {
     shift
 
     _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option$prefix_ref < <(
-        git for-each-ref refs/heads refs/remotes --format='%(refname:short) %(contents:subject)' 2> /dev/null |
-            _fzf_complete_tabularize ${fg[yellow]} ${fg[green]}
+        git for-each-ref refs/notes --format='%(refname:short) %(contents:subject)' 2> /dev/null |
+            _fzf_complete_tabularize ${fg[yellow]}
     )
 }
 
 _fzf_complete_git-notes_post() {
     awk '{ print $1 }'
+}
+
+_fzf_complete_git-show-files() {
+    local fzf_options=$1
+    shift
+
+    _fzf_complete --ansi --read0 --print0 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(git show --pretty=format: --name-only -z $treeish 2> /dev/null)
+}
+
+_fzf_complete_git-show-files_post() {
+    local filename
+    local input=$(cat)
+
+    for filename in ${(0)input}; do
+        echo ${${(q+)filename}//\\n/\\\\n}
+    done
 }
 
 _fzf_complete_git_resolve_alias() {
