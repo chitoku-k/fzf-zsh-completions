@@ -4463,6 +4463,9 @@
 }
 
 @test 'Testing completion: git show --show-notes=**' {
+    run git notes add -m 'Note1'
+    run git notes --ref=note add -m 'Note2'
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -4482,6 +4485,9 @@
 }
 
 @test 'Testing completion: git show --notes=**' {
+    run git notes add -m 'Note1'
+    run git notes --ref=note add -m 'Note2'
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
