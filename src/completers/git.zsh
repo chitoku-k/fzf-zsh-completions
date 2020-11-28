@@ -460,7 +460,7 @@ _fzf_complete_git() {
             prefix=${prefix#$prefix_option}
         fi
 
-        local prefix_ref=${prefix%[^:]#}
+        local prefix_ref=${prefix%%[^:]#}
 
         case $completing_option in
             --signed)
@@ -536,7 +536,7 @@ _fzf_complete_git() {
             prefix=${prefix#$prefix_option}
         fi
 
-        local prefix_ref=${prefix%[^:]#}
+        local prefix_ref=${prefix%%[^:]#}
 
         case $completing_option in
             --abbrev|--anchored|--break-rewrites|--dst-prefix|--encoding|--expand-tabs| \
