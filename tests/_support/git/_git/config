@@ -3,3 +3,6 @@
 	filemode = true
 	bare = false
 	logallrefupdates = true
+[user]
+	email = alice@example.com
+	name = Alice
