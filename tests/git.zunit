@@ -4429,36 +4429,37 @@
     _fzf_complete_git 'git show '
 }
 
-@test 'Testing completion: git show another-branch:file1 master new-branch v1:file1 -- **' {
-    run git checkout -b new-branch
-    echo >> newfile1
-    echo >> newfile2
-    run git add .
-    run git commit -m 'new commit'
-    run git checkout master
-
+@test 'Testing completion: git show another-branch:file1 master another-branch v1:file1 -- **' {
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
         assert $2 same_as '--read0'
         assert $3 same_as '--print0'
         assert $4 same_as '--multi'
-        assert $5 same_as Make it returns all arguments list when `0` is passed to 2nd argument of `_fzf_complete_parse_argument`.'--'
-        assert $6 same_as 'git show another-branch:file1 master new-branch v1:file1 -- '
+        assert $5 same_as '--'
+        assert $6 same_as 'git show another-branch:file1 master another-branch v1:file1 -- '
 
         run cat
-        assert ${#lines} equals 1
+        assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
-        assert ${#actual1} equals 4
-        assert ${actual1[1]} same_as 'directory1/file2'
-        assert ${actual1[2]} same_as 'file1'
-        assert ${actual1[3]} same_as 'newfile1'
-        assert ${actual1[4]} same_as 'newfile2'
+        assert ${#actual1} equals 3
+        assert ${actual1[1]} same_as ' file3 containing space '
+        assert ${actual1[2]} same_as 'directory1/file2'
+        assert ${actual1[3]} same_as 'directory2/file4'
+
+        actual2=(${(0)lines[2]})
+        assert ${#actual2} equals 1
+        assert ${actual2[1]} same_as 'containing'
+
+        actual3=(${(0)lines[3]})
+        assert ${#actual3} equals 2
+        assert ${actual3[1]} same_as 'newlines'
+        assert ${actual3[2]} same_as 'file1'
     }
 
     prefix=
-    _fzf_complete_git 'git show another-branch:file1 master new-branch v1:file1 -- '
+    _fzf_complete_git 'git show another-branch:file1 master another-branch v1:file1 -- '
 }
 
 @test 'Testing completion: git show --show-notes=**' {
