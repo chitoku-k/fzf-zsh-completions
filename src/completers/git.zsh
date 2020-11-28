@@ -605,16 +605,13 @@ _fzf_complete_git() {
                 fi
 
                 if [[ -n ${(Q)${(Z+n+)arguments}[(r)--]} ]]; then
-                    treeish=$(_fzf_complete_git_parse_argument 1 "${arguments%% -- *}" "${(F)git_options_argument_required}") && true
+                    local args=($(_fzf_complete_git_parse_argument 0 "${arguments%% -- *}" "${(F)git_options_argument_required}"))
+                    treeish=${args:#*:*}
                     _fzf_complete_git-show-files '--multi' $@
                     return
                 fi
 
-                if [[ $treeish = *:* ]]; then
-                    return
-                fi
-
-                _fzf_complete_git-commits '' $@
+                _fzf_complete_git-commits '--multi' $@
                 return
                 ;;
         esac
@@ -818,7 +815,9 @@ _fzf_complete_git-show-files() {
     local fzf_options=$1
     shift
 
-    _fzf_complete --ansi --read0 --print0 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(git show --pretty=format: --name-only -z $treeish 2> /dev/null)
+    _fzf_complete --ansi --read0 --print0 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
+        git show --pretty=format: --name-only -z ${(ps: :)treeish} 2> /dev/null | sort -u -z
+    )
 }
 
 _fzf_complete_git-show-files_post() {

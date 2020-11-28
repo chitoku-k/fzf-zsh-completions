@@ -95,6 +95,10 @@ _fzf_complete_parse_argument() {
         command_arguments+=${arguments[$i]}
     done
 
+    if [[ $index = 0 ]]; then
+        echo - ${command_arguments}
+        return 0
+    fi
     echo - ${command_arguments[$index]}
     return $(( index > #command_arguments ))
 }
