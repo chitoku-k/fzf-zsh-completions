@@ -4443,7 +4443,7 @@
         assert $2 same_as '--read0'
         assert $3 same_as '--print0'
         assert $4 same_as '--multi'
-        assert $5 same_as '--'
+        assert $5 same_as Make it returns all arguments list when `0` is passed to 2nd argument of `_fzf_complete_parse_argument`.'--'
         assert $6 same_as 'git show another-branch:file1 master new-branch v1:file1 -- '
 
         run cat
@@ -4936,6 +4936,44 @@
 
     assert ${lines[1]} same_as 'another-branch'
     assert ${lines[2]} same_as 'master'
+}
+
+@test 'Testing post: git show files' {
+    input=(
+        'file1'
+        'directory1/file2'
+        ' file3 containing space '
+        $'file4\ncontaining\nnewlines'
+        ' file5 containing space '
+        $'directory2/file6\ncontaining\nnewlines'
+    )
+
+    run _fzf_complete_git-show-files_post <<< ${(pj:\0:)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 6
+
+    assert ${lines[1]} same_as 'file1'
+    assert ${lines[2]} same_as 'directory1/file2'
+    assert ${lines[3]} same_as "' file3 containing space '"
+    assert ${lines[4]} same_as "\$'file4\\ncontaining\\nnewlines'"
+    assert ${lines[5]} same_as "' file5 containing space '"
+    assert ${lines[6]} same_as "\$'directory2/file6\\ncontaining\\nnewlines'"
+}
+
+@test 'Testing post: git notes' {
+    input=(
+        "notes/note1    Notes added by 'git notes add'"
+        "notes/commits  Notes added by 'git notes add'"
+    )
+
+    run _fzf_complete_git-notes_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 2
+
+    assert ${lines[1]} same_as 'notes/note1'
+    assert ${lines[2]} same_as 'notes/commits'
 }
 
 @test 'Testing post: git constants not ending with equal' {
