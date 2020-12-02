@@ -816,7 +816,7 @@ _fzf_complete_git-show-files() {
     shift
 
     _fzf_complete --ansi --read0 --print0 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
-        git show --pretty=format: --name-only -z ${(ps: :)treeish} 2> /dev/null | sort -u -z
+        git show --pretty=tformat: --name-only -z ${(ps: :)treeish} 2> /dev/null | sort -u -z
     )
 }
 
