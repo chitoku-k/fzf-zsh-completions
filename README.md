@@ -61,6 +61,7 @@ git rebase -i **<TAB>
   - restore
   - revert
   - rm
+  - show
   - switch
 - kubectl
   - annotate
