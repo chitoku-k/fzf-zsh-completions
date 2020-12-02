@@ -514,17 +514,51 @@ _fzf_complete_git() {
     if [[ $subcommand = 'show' ]]; then
         local prefix_option completing_option
         local git_options_argument_required=(
-            -l -G -O -S -U
-            --anchored --color-moved-ws --diff-algorithm --diff-filter --dst-prefix
-            --encoding --expand-tabs --find-object --format --inter-hunk-context
-            --line-prefix --output --output-indicator-context --output-indicator-new
-            --output-indicator-old --src-prefix --unified --word-diff-regex --ws-error-highlight
+            -l
+            -G
+            -O
+            -S
+            -U
+            --anchored
+            --color-moved-ws
+            --diff-algorithm
+            --diff-filter
+            --dst-prefix
+            --encoding
+            --expand-tabs
+            --find-object
+            --format
+            --inter-hunk-context
+            --line-prefix
+            --output
+            --output-indicator-context
+            --output-indicator-new
+            --output-indicator-old
+            --src-prefix
+            --unified
+            --word-diff-regex
+            --ws-error-highlight
         )
         local git_options_argument_optional=(
-            -B -C -M -X
-            --abbrev --break-rewrites --color --color-moved --dirstat
-            --find-copies --find-renames --ignore-submodules --notes
-            --pretty --relative --show-notes --stat --submodule --word-diff
+            -B
+            -C
+            -M
+            -X
+            --abbrev
+            --break-rewrites
+            --color
+            --color-moved
+            --dirstat
+            --find-copies
+            --find-renames
+            --ignore-submodules
+            --notes
+            --pretty
+            --relative
+            --show-notes
+            --stat
+            --submodule
+            --word-diff
         )
 
         if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)git_options_argument_required}" "${(F)git_options_argument_optional}"); then
@@ -539,10 +573,7 @@ _fzf_complete_git() {
         local prefix_ref=${prefix%%[^:]#}
 
         case $completing_option in
-            --abbrev|--anchored|--break-rewrites|--dst-prefix|--encoding|--expand-tabs| \
-                --find-copies|--find-object|--find-renames|--format|--inter-hunk-context| \
-                --line-prefix|--output|--output-indicator-context|--output-indicator-new| \
-                --output-indicator-old|--src-prefix|--stat|--submodule|--unified|--word-diff-regex)
+            --abbrev|--anchored|--break-rewrites|--dst-prefix|--encoding|--expand-tabs|--find-copies|--find-object|--find-renames|--format|--inter-hunk-context|--line-prefix|--output|--output-indicator-context|--output-indicator-new|--output-indicator-old|--src-prefix|--stat|--submodule|--unified|--word-diff-regex)
                 return
                 ;;
 
