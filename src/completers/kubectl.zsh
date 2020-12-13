@@ -191,13 +191,43 @@ _fzf_complete_kubectl() {
         return
     fi
 
-    if [[ ${subcommands[1]} =~ '^(autoscale|create|edit|expose|patch)$' ]]; then
+    if [[ ${subcommands[1]} =~ '^(autoscale|edit|expose|patch)$' ]]; then
         if [[ -z $resource ]]; then
             _fzf_complete_kubectl-resources '' $@
             return
         fi
 
         _fzf_complete_kubectl-resource-names '' $@
+        return
+    fi
+
+    if [[ ${subcommands[1]} =~ 'create' ]]; then
+        local set_subcommands=(
+            'clusterrole'
+            'clusterrolebinding'
+            'configmap'
+            'cronjob'
+            'deployment'
+            'ingress'
+            'job'
+            'namespace'
+            'poddisruptionbudget'
+            'priorityclass'
+            'quota'
+            'role'
+            'rolebinding'
+            'secret'
+            'secret docker-registry'
+            'secret generic'
+            'secret tls'
+            'service'
+            'service clusterip'
+            'service externalname'
+            'service loadbalancer'
+            'service nodeport'
+            'serviceaccount'
+        )
+        _fzf_complete_constants '' "${(F)set_subcommands}" $@
         return
     fi
 
