@@ -201,6 +201,12 @@ _fzf_complete_kubectl() {
         return
     fi
 
+    if [[ ${subcommands[1]} =~ '^(cordon|drain|uncordon)$' ]]; then
+        resource=nodes
+        _fzf_complete_kubectl-resource-names '' $@
+        return
+    fi
+
     if [[ ${subcommands[1]} =~ 'create' ]]; then
         local set_subcommands=(
             'clusterrole'
@@ -228,12 +234,6 @@ _fzf_complete_kubectl() {
             'serviceaccount'
         )
         _fzf_complete_constants '' "${(F)set_subcommands}" $@
-        return
-    fi
-
-    if [[ ${subcommands[1]} =~ '^(cordon|drain|uncordon)$' ]]; then
-        resource=nodes
-        _fzf_complete_kubectl-resource-names '' $@
         return
     fi
 

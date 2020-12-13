@@ -1453,45 +1453,6 @@
     _fzf_complete_kubectl 'kubectl patch '
 }
 
-@test 'Testing completion: kubectl create **' {
-    _fzf_complete() {
-        assert $# equals 4
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'kubectl create '
-
-        run cat
-        assert ${#lines} equals 23
-        assert ${lines[1]} same_as 'clusterrole'
-        assert ${lines[2]} same_as 'clusterrolebinding'
-        assert ${lines[3]} same_as 'configmap'
-        assert ${lines[4]} same_as 'cronjob'
-        assert ${lines[5]} same_as 'deployment'
-        assert ${lines[6]} same_as 'ingress'
-        assert ${lines[7]} same_as 'job'
-        assert ${lines[8]} same_as 'namespace'
-        assert ${lines[9]} same_as 'poddisruptionbudget'
-        assert ${lines[10]} same_as 'priorityclass'
-        assert ${lines[11]} same_as 'quota'
-        assert ${lines[12]} same_as 'role'
-        assert ${lines[13]} same_as 'rolebinding'
-        assert ${lines[14]} same_as 'secret'
-        assert ${lines[15]} same_as 'secret docker-registry'
-        assert ${lines[16]} same_as 'secret generic'
-        assert ${lines[17]} same_as 'secret tls'
-        assert ${lines[18]} same_as 'service'
-        assert ${lines[19]} same_as 'service clusterip'
-        assert ${lines[20]} same_as 'service externalname'
-        assert ${lines[21]} same_as 'service loadbalancer'
-        assert ${lines[22]} same_as 'service nodeport'
-        assert ${lines[23]} same_as 'serviceaccount'
-    }
-
-    prefix=
-    _fzf_complete_kubectl 'kubectl create '
-}
-
 @test 'Testing completion: kubectl cordon **' {
     kubectl_mock_1() {
         assert $# equals 5
@@ -1583,6 +1544,45 @@
 
     prefix=
     _fzf_complete_kubectl 'kubectl uncordon '
+}
+
+@test 'Testing completion: kubectl create **' {
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'kubectl create '
+
+        run cat
+        assert ${#lines} equals 23
+        assert ${lines[1]} same_as 'clusterrole'
+        assert ${lines[2]} same_as 'clusterrolebinding'
+        assert ${lines[3]} same_as 'configmap'
+        assert ${lines[4]} same_as 'cronjob'
+        assert ${lines[5]} same_as 'deployment'
+        assert ${lines[6]} same_as 'ingress'
+        assert ${lines[7]} same_as 'job'
+        assert ${lines[8]} same_as 'namespace'
+        assert ${lines[9]} same_as 'poddisruptionbudget'
+        assert ${lines[10]} same_as 'priorityclass'
+        assert ${lines[11]} same_as 'quota'
+        assert ${lines[12]} same_as 'role'
+        assert ${lines[13]} same_as 'rolebinding'
+        assert ${lines[14]} same_as 'secret'
+        assert ${lines[15]} same_as 'secret docker-registry'
+        assert ${lines[16]} same_as 'secret generic'
+        assert ${lines[17]} same_as 'secret tls'
+        assert ${lines[18]} same_as 'service'
+        assert ${lines[19]} same_as 'service clusterip'
+        assert ${lines[20]} same_as 'service externalname'
+        assert ${lines[21]} same_as 'service loadbalancer'
+        assert ${lines[22]} same_as 'service nodeport'
+        assert ${lines[23]} same_as 'serviceaccount'
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl create '
 }
 
 @test 'Testing completion: kubectl delete **' {
