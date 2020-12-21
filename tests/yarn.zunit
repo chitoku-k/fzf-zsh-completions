@@ -118,4 +118,3 @@
     prefix=
     _fzf_complete_yarn 'yarn workspace '
 }
-
