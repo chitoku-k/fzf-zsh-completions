@@ -90,6 +90,7 @@ git rebase -i **<TAB>
 - systemctl
 - yarn
   - run
+  - workspace
 - docker
   - attach
   - commit
