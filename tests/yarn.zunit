@@ -92,3 +92,26 @@
     prefix=
     _fzf_complete_yarn 'yarn run '
 }
+
+@test 'Testing completion: yarn workspace **' {
+    popd
+    pushd tests/_support/yarn/workspace
+
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'yarn workspace '
+
+        run cat
+        assert ${#lines} equals 3
+
+        assert ${lines[1]} same_as 'package/a'
+        assert ${lines[2]} same_as 'package/b'
+        assert ${lines[3]} same_as 'examples/a'
+    }
+
+    prefix=
+    _fzf_complete_yarn 'yarn workspace '
+}
