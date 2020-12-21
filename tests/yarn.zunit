@@ -98,21 +98,18 @@
     pushd tests/_support/yarn/workspace
 
     _fzf_complete() {
-        assert $# equals 5
+        assert $# equals 4
         assert $1 same_as '--ansi'
-        assert $2 same_as '--read0'
-        assert $3 same_as '--tiebreak=index'
-        assert $4 same_as '--'
-        assert $5 same_as 'yarn workspace '
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'yarn workspace '
 
         run cat
-        assert ${#lines} equals 1
+        assert ${#lines} equals 3
 
-        actual1=(${(0)lines[1]})
-        assert ${#actual1} equals 3
-        assert ${actual1[1]} same_as 'package/a'
-        assert ${actual1[2]} same_as 'package/b'
-        assert ${actual1[3]} same_as 'examples/a'
+        assert ${lines[1]} same_as 'package/a'
+        assert ${lines[2]} same_as 'package/b'
+        assert ${lines[3]} same_as 'examples/a'
     }
 
     prefix=

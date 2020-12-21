@@ -25,12 +25,5 @@ _fzf_complete_yarn-workspace() {
 
     local workspace_packages_patterns=$(jq -r '.workspaces | map(. + "/package.json") | join("\u0000")' "$parent_package")
 
-    local package_names=()
-    for pattern in $workspace_packages_patterns; do
-        for p in ${~pattern}; do
-            package_names+=(`jq -r '.name' < $p`)
-        done
-    done
-
-    _fzf_complete --ansi --read0 --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@ < <(echo ${(j:\0:)package_names})
+   _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@ < <(jq -r '.name' ${~${(0)workspace_packages_patterns}})
 }
