@@ -23,8 +23,7 @@ _fzf_complete_yarn-workspace() {
         return
     fi
 
-    IFS=$'\0'
-    local workspace_packages_patterns=(`jq '.workspaces|map(. + "/package.json")|join("\u0000")' -r < "$parent_package"`)
+    local workspace_packages_patterns=$(jq -r '.workspaces | map(. + "/package.json") | join("\u0000")' "$parent_package")
 
     local package_names=()
     for pattern in $workspace_packages_patterns; do
