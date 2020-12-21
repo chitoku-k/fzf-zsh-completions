@@ -4,5 +4,4 @@
   "main": "index.js",
   "license": "MIT",
   "workspaces":  ["packages/*", "examples/*"]
-
 }
