@@ -35,4 +35,3 @@ _fzf_complete_yarn-workspace() {
 
     _fzf_complete --ansi --read0 --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@ < <(echo ${(j:\0:)package_names})
 }
-
