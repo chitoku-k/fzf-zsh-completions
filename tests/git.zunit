@@ -4299,6 +4299,213 @@
     _fzf_complete_git 'git rm '
 }
 
+@test 'Testing completion: git show **' {
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--multi'
+        assert $4 same_as '--'
+        assert $5 same_as 'git show '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
+    }
+
+    prefix=
+    _fzf_complete_git 'git show '
+}
+
+@test 'Testing completion: git show HEAD **' {
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--multi'
+        assert $4 same_as '--'
+        assert $5 same_as 'git show HEAD '
+
+        run cat
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
+    }
+
+    prefix=
+    _fzf_complete_git 'git show HEAD '
+}
+
+@test 'Testing completion: git show -- **' {
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--read0'
+        assert $3 same_as '--print0'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'git show -- '
+
+        run cat
+        assert ${#lines} equals 1
+
+        actual1=(${(0)lines[1]})
+        assert ${#actual1} equals 2
+        assert ${actual1[1]} same_as 'directory1/file2'
+        assert ${actual1[2]} same_as 'file1'
+    }
+
+    prefix=
+    _fzf_complete_git 'git show -- '
+}
+
+@test 'Testing completion: git show another-branch -- **' {
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--read0'
+        assert $3 same_as '--print0'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'git show another-branch -- '
+
+        run cat
+        assert ${#lines} equals 3
+
+        actual1=(${(0)lines[1]})
+        assert ${#actual1} equals 2
+        assert ${actual1[1]} same_as ' file3 containing space '
+        assert ${actual1[2]} same_as 'directory2/file4'
+
+        actual2=(${(0)lines[2]})
+        assert ${#actual2} equals 1
+        assert ${actual2[1]} same_as 'containing'
+
+        actual3=(${(0)lines[3]})
+        assert ${#actual3} equals 1
+        assert ${actual3[1]} same_as 'newlines'
+    }
+
+    prefix=
+    _fzf_complete_git 'git show another-branch -- '
+}
+
+@test 'Testing completion: git show another-branch:**' {
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--read0'
+        assert $3 same_as '--print0'
+        assert $4 same_as '--'
+        assert $5 same_as 'git show another-branch:'
+
+        run cat
+        assert ${#lines} equals 3
+
+        actual1=(${(0)lines[1]})
+        assert ${#actual1} equals 3
+        assert ${actual1[1]} same_as ' file3 containing space '
+        assert ${actual1[2]} same_as 'directory1/file2'
+        assert ${actual1[3]} same_as 'directory2/file4'
+
+        actual2=(${(0)lines[2]})
+        assert ${#actual2} equals 1
+        assert ${actual2[1]} same_as 'containing'
+
+        actual3=(${(0)lines[3]})
+        assert ${#actual3} equals 2
+        assert ${actual3[1]} same_as 'newlines'
+        assert ${actual3[2]} same_as 'file1'
+    }
+
+    prefix=another-branch:
+    _fzf_complete_git 'git show '
+}
+
+@test 'Testing completion: git show another-branch:file1 master another-branch v1:file1 -- **' {
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--read0'
+        assert $3 same_as '--print0'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'git show another-branch:file1 master another-branch v1:file1 -- '
+
+        run cat
+        assert ${#lines} equals 3
+
+        actual1=(${(0)lines[1]})
+        assert ${#actual1} equals 3
+        assert ${actual1[1]} same_as ' file3 containing space '
+        assert ${actual1[2]} same_as 'directory1/file2'
+        assert ${actual1[3]} same_as 'directory2/file4'
+
+        actual2=(${(0)lines[2]})
+        assert ${#actual2} equals 1
+        assert ${actual2[1]} same_as 'containing'
+
+        actual3=(${(0)lines[3]})
+        assert ${#actual3} equals 2
+        assert ${actual3[1]} same_as 'newlines'
+        assert ${actual3[2]} same_as 'file1'
+    }
+
+    prefix=
+    _fzf_complete_git 'git show another-branch:file1 master another-branch v1:file1 -- '
+}
+
+@test 'Testing completion: git show --show-notes=**' {
+    run git notes add -m 'Note1'
+    run git notes --ref=note add -m 'Note2'
+
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git show --show-notes='
+
+        run cat
+        assert ${#lines} equals 2
+
+        assert ${lines[1]} same_as "${fg[yellow]}notes/commits$reset_color  Notes added by 'git notes add'"
+        assert ${lines[2]} same_as "${fg[yellow]}notes/note   $reset_color  Notes added by 'git notes add'"
+    }
+
+    prefix=--show-notes=
+    _fzf_complete_git 'git show '
+}
+
+@test 'Testing completion: git show --notes=**' {
+    run git notes add -m 'Note1'
+    run git notes --ref=note add -m 'Note2'
+
+    _fzf_complete() {
+        assert $# equals 4
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--'
+        assert $4 same_as 'git show --notes='
+
+        run cat
+        assert ${#lines} equals 2
+
+        assert ${lines[1]} same_as "${fg[yellow]}notes/commits$reset_color  Notes added by 'git notes add'"
+        assert ${lines[2]} same_as "${fg[yellow]}notes/note   $reset_color  Notes added by 'git notes add'"
+    }
+
+    prefix=--notes=
+    _fzf_complete_git 'git show '
+}
+
 @test 'Testing completion (alias): git commit --squash **' {
     run git config alias.squash 'commit --squash'
 
@@ -4730,6 +4937,44 @@
 
     assert ${lines[1]} same_as 'another-branch'
     assert ${lines[2]} same_as 'master'
+}
+
+@test 'Testing post: git show files' {
+    input=(
+        'file1'
+        'directory1/file2'
+        ' file3 containing space '
+        $'file4\ncontaining\nnewlines'
+        ' file5 containing space '
+        $'directory2/file6\ncontaining\nnewlines'
+    )
+
+    run _fzf_complete_git-show-files_post <<< ${(pj:\0:)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 6
+
+    assert ${lines[1]} same_as 'file1'
+    assert ${lines[2]} same_as 'directory1/file2'
+    assert ${lines[3]} same_as "' file3 containing space '"
+    assert ${lines[4]} same_as "\$'file4\\ncontaining\\nnewlines'"
+    assert ${lines[5]} same_as "' file5 containing space '"
+    assert ${lines[6]} same_as "\$'directory2/file6\\ncontaining\\nnewlines'"
+}
+
+@test 'Testing post: git notes' {
+    input=(
+        "notes/note1    Notes added by 'git notes add'"
+        "notes/commits  Notes added by 'git notes add'"
+    )
+
+    run _fzf_complete_git-notes_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 2
+
+    assert ${lines[1]} same_as 'notes/note1'
+    assert ${lines[2]} same_as 'notes/commits'
 }
 
 @test 'Testing post: git constants not ending with equal' {

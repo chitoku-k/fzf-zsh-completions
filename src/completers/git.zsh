@@ -460,7 +460,7 @@ _fzf_complete_git() {
             prefix=${prefix#$prefix_option}
         fi
 
-        local prefix_ref=${prefix%[^:]#}
+        local prefix_ref=${prefix%%[^:]#}
 
         case $completing_option in
             --signed)
@@ -508,6 +508,145 @@ _fzf_complete_git() {
 
     if [[ $subcommand = 'rm' ]]; then
         _fzf_complete_git-ls-tree '' '--multi' $@
+        return
+    fi
+
+    if [[ $subcommand = 'show' ]]; then
+        local prefix_option completing_option
+        local git_options_argument_required=(
+            -l
+            -G
+            -O
+            -S
+            -U
+            --anchored
+            --color-moved-ws
+            --diff-algorithm
+            --diff-filter
+            --dst-prefix
+            --encoding
+            --expand-tabs
+            --find-object
+            --format
+            --inter-hunk-context
+            --line-prefix
+            --output
+            --output-indicator-context
+            --output-indicator-new
+            --output-indicator-old
+            --src-prefix
+            --unified
+            --word-diff-regex
+            --ws-error-highlight
+        )
+        local git_options_argument_optional=(
+            -B
+            -C
+            -M
+            -X
+            --abbrev
+            --break-rewrites
+            --color
+            --color-moved
+            --dirstat
+            --find-copies
+            --find-renames
+            --ignore-submodules
+            --notes
+            --pretty
+            --relative
+            --show-notes
+            --stat
+            --submodule
+            --word-diff
+        )
+
+        if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)git_options_argument_required}" "${(F)git_options_argument_optional}"); then
+            if [[ $completing_option = --* ]]; then
+                prefix_option=$completing_option=
+            else
+                prefix_option=${prefix%%${completing_option[-1]}*}${completing_option[-1]}
+            fi
+            prefix=${prefix#$prefix_option}
+        fi
+
+        local prefix_ref=${prefix%%[^:]#}
+
+        case $completing_option in
+            --abbrev|--anchored|--break-rewrites|--dst-prefix|--encoding|--expand-tabs|--find-copies|--find-object|--find-renames|--format|--inter-hunk-context|--line-prefix|--output|--output-indicator-context|--output-indicator-new|--output-indicator-old|--src-prefix|--stat|--submodule|--unified|--word-diff-regex)
+                return
+                ;;
+
+            --notes|--show-notes)
+                _fzf_complete_git-notes '' $@
+                return
+                ;;
+
+            --diff-algorithm)
+                return
+                ;;
+
+            --dirstat|-X)
+                return
+                ;;
+
+            --color)
+                return
+                ;;
+
+            --color-moved)
+                return
+                ;;
+
+            --color-moved-ws)
+                return
+                ;;
+
+            --word-diff)
+                return
+                ;;
+
+            --ws-error-highlight)
+                return
+                ;;
+
+            --diff-filter)
+                return
+                ;;
+
+            -O)
+                return
+                ;;
+
+            --relative)
+                return
+                ;;
+
+            --ignore-submodules)
+                return
+                ;;
+
+            *)
+                local treeish
+
+                if [[ $prefix = *:* ]]; then
+                    treeish=${prefix%:*}
+                    prefix=${prefix#*:} _fzf_complete_git-ls-tree '' '' $@
+                    return
+                fi
+
+                if [[ -n ${(Q)${(Z+n+)arguments}[(r)--]} ]]; then
+                    local args=($(_fzf_complete_git_parse_argument 0 "${arguments%% -- *}" "${(F)git_options_argument_required}"))
+                    treeish=${args:#*:*}
+                    _fzf_complete_git-show-files '--multi' $@
+                    return
+                fi
+
+                _fzf_complete_git-commits '--multi' $@
+                return
+                ;;
+        esac
+
         return
     fi
 
@@ -586,7 +725,7 @@ _fzf_complete_git-ls-tree() {
     local fzf_options=$2
     shift 2
 
-    _fzf_complete --ansi --read0 --print0 ${(Q)${(Z+n+)fzf_options}} -- $@ < <(git ls-tree --name-only -r -z ${(Z+n+)git_options} ${treeish-HEAD} 2> /dev/null)
+    _fzf_complete --ansi --read0 --print0 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_ref < <(git ls-tree --name-only -r -z ${(Z+n+)git_options} ${treeish-HEAD} 2> /dev/null)
 }
 
 _fzf_complete_git-ls-tree_post() {
@@ -686,6 +825,39 @@ _fzf_complete_git-refs_post() {
 
     for ref in ${(f)input}; do
         echo ${${ref#*/}%% *}
+    done
+}
+
+_fzf_complete_git-notes() {
+    local fzf_options=$1
+    shift
+
+    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option$prefix_ref < <(
+        git for-each-ref refs/notes --format='%(refname:short) %(contents:subject)' 2> /dev/null |
+            _fzf_complete_tabularize ${fg[yellow]}
+    )
+}
+
+_fzf_complete_git-notes_post() {
+    awk '{ print $1 }'
+}
+
+_fzf_complete_git-show-files() {
+    local fzf_options=$1
+    shift
+
+    _fzf_complete --ansi --read0 --print0 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
+        local result=$(git show --pretty=format: --name-only -z ${(ps: :)treeish} 2> /dev/null)
+        echo -n ${(pj:\0:)${(u)${(o)${(0)result}}}}
+    )
+}
+
+_fzf_complete_git-show-files_post() {
+    local filename
+    local input=$(cat)
+
+    for filename in ${(0)input}; do
+        echo ${${(q+)filename}//\\n/\\\\n}
     done
 }
 
