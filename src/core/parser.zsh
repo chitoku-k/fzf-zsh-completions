@@ -87,7 +87,7 @@ _fzf_complete_parse_argument() {
             continue
         fi
 
-        local previous_argument=$(_fzf_complete_parse_completing_option '' ${(Q)arguments[i - 1]} ${(F)options_argument_required} '')
+        local previous_argument=$(_fzf_complete_parse_completing_option '' "${(Q)arguments[i - 1]}" "${(F)options_argument_required}" '')
         if [[ -n $previous_argument ]] && [[ ${options_argument_required[(r)$previous_argument]} = $previous_argument ]]; then
             continue
         fi

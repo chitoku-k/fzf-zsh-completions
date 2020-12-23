@@ -13,7 +13,7 @@ _fzf_complete_npm-run() {
     local fzf_options=$1
     shift
 
-    local package=$(dirname -- $(npm root))/package.json
+    local package=${npm_directory-$(dirname -- $(npm root))}/package.json
     if [[ ! -f $package ]]; then
         return
     fi

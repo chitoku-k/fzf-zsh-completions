@@ -1,8 +1,17 @@
 #!/usr/bin/env zsh
 
 _fzf_complete_yarn() {
-    if [[ $@ = 'yarn workspace ' ]]; then
-        _fzf_complete_yarn-workspace '' $@
+    local subcommand=${${(Q)${(z)@}}[2]}
+
+    if [[ $subcommand = 'workspace' ]]; then
+        local workspace
+        if ! workspace=$(_fzf_complete_parse_argument 3 1 $@ '') && [[ -z $workspace ]]; then
+            _fzf_complete_yarn-workspace '' $@
+            return
+        fi
+
+        local npm_directory=$(yarn workspaces --json info | jq -r ".data | fromjson | .[\"$workspace\"].location")
+        _fzf_complete_npm-run '' $@
         return
     fi
 
