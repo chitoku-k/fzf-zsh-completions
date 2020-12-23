@@ -91,7 +91,8 @@ git rebase -i **<TAB>
 - systemctl
 - yarn
   - run
-  - workspace
+  - workspace (requires [jq][])
+  - workspace <workspace> run (requires [jq][])
 - docker
   - attach
   - commit
@@ -138,3 +139,4 @@ tests/test.zsh
 [fzf-completions]: https://github.com/junegunn/fzf/blob/master/README.md#fuzzy-completion-for-bash-and-zsh
 [Zsh]:             https://www.zsh.org/
 [fzf-preview.zsh]: https://github.com/yuki-ycino/fzf-preview.zsh
+[jq]:              https://github.com/stedolan/jq
