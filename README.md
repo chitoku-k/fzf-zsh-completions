@@ -14,6 +14,7 @@ sequence that defaults to `**`.
 
 - [fzf][]
 - [Zsh][] >= 5.3
+- [jq][]
 
 ## Installation
 
@@ -91,8 +92,8 @@ git rebase -i **<TAB>
 - systemctl
 - yarn
   - run
-  - workspace (requires [jq][])
-  - workspace <workspace> run (requires [jq][])
+  - workspace
+  - workspace \<workspace\>
 - docker
   - attach
   - commit
