@@ -424,7 +424,7 @@ _fzf_complete_kubectl-annotations() {
     shift
 
     _fzf_complete --ansi --read0 --print0 --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
-        kubectl get "$resource" "$name" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{.metadata.annotations}' 2> /dev/null | jq -jr 'to_entries | map("\(.key)=\(.value)") | join("\u0000")'
+        { kubectl get "$resource" "$name" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{.metadata.annotations}' | jq -jr 'to_entries | map("\(.key)=\(.value)") | join("\u0000")' } 2> /dev/null
     )
 }
 
@@ -449,7 +449,7 @@ _fzf_complete_kubectl-labels() {
     _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
         _fzf_complete_tabularize $fg[yellow] < <(cat \
             <(echo KEY VALUE) \
-            <(kubectl get "$resource" "$name" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{.metadata.labels}' 2> /dev/null | jq -r 'to_entries[] | "\(.key) \(.value)"') \
+            <({ kubectl get "$resource" "$name" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{.metadata.labels}' | jq -r 'to_entries[] | "\(.key) \(.value)"'} 2> /dev/null) \
         )
     )
 }

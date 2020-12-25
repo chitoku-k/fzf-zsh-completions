@@ -10,7 +10,9 @@ _fzf_complete_yarn() {
             return
         fi
 
-        local npm_directory=$(yarn workspaces --json info | jq --arg workspace "$workspace" -r '.data | fromjson | .[$workspace].location')
+        local npm_directory=$({
+            yarn workspaces --json info | jq --arg workspace "$workspace" -r '.data | fromjson | .[$workspace].location' 2> /dev/null
+        } 2> /dev/null)
         _fzf_complete_npm-run '' $@
         return
     fi
@@ -32,7 +34,7 @@ _fzf_complete_yarn-workspace() {
         return
     fi
 
-    local workspace_packages_patterns=$(jq -r '.workspaces | map(. + "/package.json") | join("\u0000")' "$parent_package")
+    local workspace_packages_patterns=$(jq -r '.workspaces | map(. + "/package.json") | join("\u0000")' "$parent_package" 2> /dev/null)
 
-   _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@ < <(jq -r '.name' ${~${(0)workspace_packages_patterns}})
+   _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@ < <(jq -r '.name' ${~${(0)workspace_packages_patterns}} 2> /dev/null)
 }
