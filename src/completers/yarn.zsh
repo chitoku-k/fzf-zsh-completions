@@ -11,7 +11,7 @@ _fzf_complete_yarn() {
         fi
 
         local npm_directory=$({
-            yarn workspaces --json info | jq --arg workspace "$workspace" -r '.data | fromjson | .[$workspace].location' 2> /dev/null
+            yarn workspaces --json info | jq --arg workspace "$workspace" -r '.data | fromjson | .[$workspace].location'
         } 2> /dev/null)
         _fzf_complete_npm-run '' $@
         return
