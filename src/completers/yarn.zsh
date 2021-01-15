@@ -1,11 +1,12 @@
 #!/usr/bin/env zsh
 
 _fzf_complete_yarn() {
-    local subcommand=${${(Q)${(z)@}}[2]}
+    local arguments=$@
+    local subcommand=${${(Q)${(z)arguments}}[2]}
 
     if [[ $subcommand = 'workspace' ]]; then
         local workspace
-        if ! workspace=$(_fzf_complete_parse_argument 3 1 $@ '') && [[ -z $workspace ]]; then
+        if ! workspace=$(_fzf_complete_parse_argument 3 1 "$arguments" '') && [[ -z $workspace ]]; then
             _fzf_complete_yarn-workspace '' $@
             return
         fi
