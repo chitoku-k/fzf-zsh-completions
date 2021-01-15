@@ -1,6 +1,13 @@
 {
-  "name": "package/a",
+  "name": "package-a",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "package-a-command": "exit 0",
+    " script containing spaces ": "echo \"This script contains spaces in its name\"",
+    "script\nthat\nconsists\nof\nmultiple\nlines": "echo \"The name of this script consists of multiple lines\""
+  }
 }

@@ -14,6 +14,7 @@ sequence that defaults to `**`.
 
 - [fzf][]
 - [Zsh][] >= 5.3
+- [jq][]
 
 ## Installation
 
@@ -92,6 +93,7 @@ git rebase -i **<TAB>
 - yarn
   - run
   - workspace
+  - workspace \<workspace\>
 - docker
   - attach
   - commit
@@ -138,3 +140,4 @@ tests/test.zsh
 [fzf-completions]: https://github.com/junegunn/fzf/blob/master/README.md#fuzzy-completion-for-bash-and-zsh
 [Zsh]:             https://www.zsh.org/
 [fzf-preview.zsh]: https://github.com/yuki-ycino/fzf-preview.zsh
+[jq]:              https://github.com/stedolan/jq

@@ -107,11 +107,169 @@
         run cat
         assert ${#lines} equals 3
 
-        assert ${lines[1]} same_as 'package/a'
-        assert ${lines[2]} same_as 'package/b'
-        assert ${lines[3]} same_as 'examples/a'
+        assert ${lines[1]} same_as 'package-a'
+        assert ${lines[2]} same_as 'package-b'
+        assert ${lines[3]} same_as 'examples-a'
     }
 
     prefix=
     _fzf_complete_yarn 'yarn workspace '
+}
+
+@test 'Testing completion: yarn workspace package-a **' {
+    popd
+    pushd tests/_support/yarn/workspace
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--read0'
+        assert $3 same_as '--print0'
+        assert $4 same_as '--tiebreak=index'
+        assert $5 same_as '--'
+        assert $6 same_as 'yarn workspace package-a '
+
+        run cat
+        assert ${#lines} equals 6
+
+        actual1=(${(0)lines[1]})
+        assert ${#actual1} equals 5
+        assert ${actual1[1]} same_as 'start'
+        assert ${actual1[2]} same_as 'test'
+        assert ${actual1[3]} same_as 'package-a-command'
+        assert ${actual1[4]} same_as ' script containing spaces '
+        assert ${actual1[5]} same_as 'script'
+
+        actual2=(${(0)lines[2]})
+        assert ${#actual2} equals 1
+        assert ${actual2[1]} same_as 'that'
+
+        actual3=(${(0)lines[3]})
+        assert ${#actual3} equals 1
+        assert ${actual3[1]} same_as 'consists'
+
+        actual4=(${(0)lines[4]})
+        assert ${#actual4} equals 1
+        assert ${actual4[1]} same_as 'of'
+
+        actual5=(${(0)lines[5]})
+        assert ${#actual5} equals 1
+        assert ${actual5[1]} same_as 'multiple'
+
+        actual6=(${(0)lines[6]})
+        assert ${actual6[1]} same_as 'lines'
+    }
+
+    prefix=
+    _fzf_complete_yarn 'yarn workspace package-a '
+}
+
+@test 'Testing completion: yarn workspace package-b **' {
+    popd
+    pushd tests/_support/yarn/workspace
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--read0'
+        assert $3 same_as '--print0'
+        assert $4 same_as '--tiebreak=index'
+        assert $5 same_as '--'
+        assert $6 same_as 'yarn workspace package-b '
+
+        run cat
+        assert ${#lines} equals 6
+
+        actual1=(${(0)lines[1]})
+        assert ${#actual1} equals 5
+        assert ${actual1[1]} same_as 'start'
+        assert ${actual1[2]} same_as 'test'
+        assert ${actual1[3]} same_as 'package-b-command'
+        assert ${actual1[4]} same_as ' script containing spaces '
+        assert ${actual1[5]} same_as 'script'
+
+        actual2=(${(0)lines[2]})
+        assert ${#actual2} equals 1
+        assert ${actual2[1]} same_as 'that'
+
+        actual3=(${(0)lines[3]})
+        assert ${#actual3} equals 1
+        assert ${actual3[1]} same_as 'consists'
+
+        actual4=(${(0)lines[4]})
+        assert ${#actual4} equals 1
+        assert ${actual4[1]} same_as 'of'
+
+        actual5=(${(0)lines[5]})
+        assert ${#actual5} equals 1
+        assert ${actual5[1]} same_as 'multiple'
+
+        actual6=(${(0)lines[6]})
+        assert ${actual6[1]} same_as 'lines'
+    }
+
+    prefix=
+    _fzf_complete_yarn 'yarn workspace package-b '
+}
+
+@test 'Testing completion: yarn workspace examples-a **' {
+    popd
+    pushd tests/_support/yarn/workspace
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--read0'
+        assert $3 same_as '--print0'
+        assert $4 same_as '--tiebreak=index'
+        assert $5 same_as '--'
+        assert $6 same_as 'yarn workspace examples-a '
+
+        run cat
+        assert ${#lines} equals 6
+
+        actual1=(${(0)lines[1]})
+        assert ${#actual1} equals 5
+        assert ${actual1[1]} same_as 'start'
+        assert ${actual1[2]} same_as 'test'
+        assert ${actual1[3]} same_as 'examples-a-command'
+        assert ${actual1[4]} same_as ' script containing spaces '
+        assert ${actual1[5]} same_as 'script'
+
+        actual2=(${(0)lines[2]})
+        assert ${#actual2} equals 1
+        assert ${actual2[1]} same_as 'that'
+
+        actual3=(${(0)lines[3]})
+        assert ${#actual3} equals 1
+        assert ${actual3[1]} same_as 'consists'
+
+        actual4=(${(0)lines[4]})
+        assert ${#actual4} equals 1
+        assert ${actual4[1]} same_as 'of'
+
+        actual5=(${(0)lines[5]})
+        assert ${#actual5} equals 1
+        assert ${actual5[1]} same_as 'multiple'
+
+        actual6=(${(0)lines[6]})
+        assert ${actual6[1]} same_as 'lines'
+    }
+
+    prefix=
+    _fzf_complete_yarn 'yarn workspace examples-a '
+}
+
+@test 'Testing completion: yarn workspace no-workspace **' {
+    popd
+    pushd tests/_support/yarn/workspace
+
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_yarn 'yarn workspace no-workspace '
+
+    assert $? equals 0
 }
