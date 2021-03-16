@@ -46,81 +46,36 @@ git rebase -i **<TAB>
 ## Supported commands
 
 - composer
+  - Scripts (run-script)
 - git
-  - add
-  - branch
-  - checkout
-  - cherry-pick
-  - commit
-  - diff
-  - log
-  - merge
-  - pull
-  - push
-  - rebase
-  - reset
-  - restore
-  - revert
-  - rm
-  - show
-  - switch
+  - Commit-ish (branch, checkout, cherry-pick, diff, log, merge, pull, rebase, reset, revert, show, and switch)
+  - Commit messaees (commit)
+  - Files (add, checkout, commit, diff, reset, restore, rm, and show)
+  - Remotes (pull)
 - kubectl
-  - annotate
-  - apply
-  - autoscale
-  - cordon
-  - create
-  - delete
-  - describe
-  - drain
-  - edit
-  - exec
-  - explain
-  - expose
-  - get
-  - label
-  - logs
-  - patch
-  - port-forward
-  - rollout
-  - set
-  - taint
-  - uncordon
+  - Annotations (annotate)
+  - Containers (exec, logs and set)
+  - Files (apply)
+  - Labels (label)
+  - Nodes (cordon, drain, and uncordon)
+  - Ports (port-forward)
+  - Resources (annotate, autoscale, create, delete, describe, edit, exec, explain, expose, get, label, logs, patch, rollout, set and taint)
+  - Taints (taint)
 - make
+  - Targets
 - npm
-  - run
+  - Scripts (run)
 - systemctl
+  - Services
 - yarn
-  - run
-  - workspace
-  - workspace \<workspace\>
+  - Scripts (run, workspace, and workspace \<workspace\>)
 - docker
-  - attach
-  - commit
-  - cp
-  - create
-  - diff
-  - exec
-  - export
-  - history
-  - kill
-  - logs
-  - pause
-  - port
-  - rename
-  - restart
-  - rm
-  - rmi
-  - run
-  - save
-  - start
-  - stats
-  - stop
-  - tag
-  - top
-  - unpause
-  - update
-  - wait
+  - Containers (attach, commit, cp, diff, exec, export, inspect, kill, logs, pause, ports, rename, restart, rm, start, stats, stop, update, unpause, and wait)
+  - Files (cp)
+  - Images (create, history, inspect, rmi, run, save, tag)
+  - Networks (inspect)
+  - Repositories (push)
+  - Volumes (inspect)
 
 ## Testing
 
