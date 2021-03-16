@@ -30,22 +30,6 @@ _fzf_complete_kubectl() {
         return
     fi
 
-    if [[ $last_argument =~ '(-[^-]*f|--filename)$' ]]; then
-        __fzf_generic_path_completion "$prefix" $@ _fzf_compgen_path '' '' ' '
-        return
-    fi
-
-    if [[ $prefix =~ '^(-[^-]*f|--filename=)' ]]; then
-        if [[ $prefix = --* ]]; then
-            prefix_option=${prefix/=*/=}
-        else
-            prefix_option=${prefix%%f*}f
-        fi
-
-        __fzf_generic_path_completion "${prefix#$prefix_option}" $@$prefix_option _fzf_compgen_path '' '' ' '
-        return
-    fi
-
     local kubectl_options_argument_required=(
         --application-metrics-count-limit
         --as
@@ -157,6 +141,24 @@ _fzf_complete_kubectl() {
 
     subcommands=($(_fzf_complete_parse_argument 2 1 "$arguments" "${(F)kubectl_options_argument_required}" || :))
     namespace=$(_fzf_complete_parse_option_argument '-n' '--namespace' $@$RBUFFER || :)
+
+    if [[ ${subcommands[1]} != 'logs' ]]; then
+        if [[ $last_argument =~ '(-[^-]*f|--filename)$' ]]; then
+            __fzf_generic_path_completion "$prefix" $@ _fzf_compgen_path '' '' ' '
+            return
+        fi
+
+        if [[ $prefix =~ '^(-[^-]*f|--filename=)' ]]; then
+            if [[ $prefix = --* ]]; then
+                prefix_option=${prefix/=*/=}
+            else
+                prefix_option=${prefix%%f*}f
+            fi
+
+            __fzf_generic_path_completion "${prefix#$prefix_option}" $@$prefix_option _fzf_compgen_path '' '' ' '
+            return
+        fi
+    fi
 
     if [[ ${subcommands[1]} =~ '^(rollout|set)$' ]]; then
         subcommands+=($(_fzf_complete_parse_argument 2 2 "$arguments" "${(F)kubectl_options_argument_required}" || :))
