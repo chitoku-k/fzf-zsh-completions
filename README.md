@@ -47,6 +47,8 @@ git rebase -i **<TAB>
 
 - composer
   - Scripts (run-script)
+- gh
+  - Pull Requests (pr \*)
 - git
   - Commit-ish (branch, checkout, cherry-pick, diff, log, merge, pull, rebase, reset, revert, show, and switch)
   - Commit messaees (commit)
