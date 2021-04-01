@@ -49,9 +49,10 @@ _fzf_complete_gh-pr() {
     local pr_state=$2
     shift 2
 
-    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@ < <(
-        gh pr list --state $pr_state | FS="\t" _fzf_complete_tabularize ${fg[yellow]} $reset_color ${fg[blue]} ${fg[green]}
-    )
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@ < <({
+        echo "NUM\tTITLE\tBRANCH\tSTATE"
+        gh pr list --state $pr_state
+    } | FS="\t" _fzf_complete_tabularize ${fg[yellow]} $reset_color ${fg[blue]} ${fg[green]})
 }
 
 _fzf_complete_gh-pr_post() {

@@ -58,18 +58,20 @@
     }
 
     _fzf_complete() {
-        assert $# equals 4
+        assert $# equals 5
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'gh pr close '
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'gh pr close '
 
         run cat
-        assert ${#lines} equals 4
-        assert ${lines[1]} same_as "${fg[yellow]}8${reset_color}  ${reset_color}2nd OPEN PR ${reset_color}  ${fg[blue]}2nd-open ${reset_color}  ${fg[green]}OPEN ${reset_color}  "
-        assert ${lines[2]} same_as "${fg[yellow]}7${reset_color}  ${reset_color}2nd DRAFT PR${reset_color}  ${fg[blue]}2nd-draft${reset_color}  ${fg[green]}DRAFT${reset_color}  "
-        assert ${lines[3]} same_as "${fg[yellow]}4${reset_color}  ${reset_color}1st OPEN PR ${reset_color}  ${fg[blue]}1st-open ${reset_color}  ${fg[green]}OPEN ${reset_color}  "
-        assert ${lines[4]} same_as "${fg[yellow]}3${reset_color}  ${reset_color}1st DRAFT PR${reset_color}  ${fg[blue]}1st-draft${reset_color}  ${fg[green]}DRAFT${reset_color}  "
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "${fg[yellow]}NUM${reset_color}  ${reset_color}TITLE       ${reset_color}  ${fg[blue]}BRANCH   ${reset_color}  ${fg[green]}STATE${reset_color}  "
+        assert ${lines[2]} same_as "${fg[yellow]}8  ${reset_color}  ${reset_color}2nd OPEN PR ${reset_color}  ${fg[blue]}2nd-open ${reset_color}  ${fg[green]}OPEN ${reset_color}  "
+        assert ${lines[3]} same_as "${fg[yellow]}7  ${reset_color}  ${reset_color}2nd DRAFT PR${reset_color}  ${fg[blue]}2nd-draft${reset_color}  ${fg[green]}DRAFT${reset_color}  "
+        assert ${lines[4]} same_as "${fg[yellow]}4  ${reset_color}  ${reset_color}1st OPEN PR ${reset_color}  ${fg[blue]}1st-open ${reset_color}  ${fg[green]}OPEN ${reset_color}  "
+        assert ${lines[5]} same_as "${fg[yellow]}3  ${reset_color}  ${reset_color}1st DRAFT PR${reset_color}  ${fg[blue]}1st-draft${reset_color}  ${fg[green]}DRAFT${reset_color}  "
     }
 
     prefix=
@@ -100,18 +102,20 @@
     }
 
     _fzf_complete() {
-        assert $# equals 4
+        assert $# equals 5
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'gh pr merge '
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'gh pr merge '
 
         run cat
-        assert ${#lines} equals 4
-        assert ${lines[1]} same_as "${fg[yellow]}8${reset_color}  ${reset_color}2nd OPEN PR ${reset_color}  ${fg[blue]}2nd-open ${reset_color}  ${fg[green]}OPEN ${reset_color}  "
-        assert ${lines[2]} same_as "${fg[yellow]}7${reset_color}  ${reset_color}2nd DRAFT PR${reset_color}  ${fg[blue]}2nd-draft${reset_color}  ${fg[green]}DRAFT${reset_color}  "
-        assert ${lines[3]} same_as "${fg[yellow]}4${reset_color}  ${reset_color}1st OPEN PR ${reset_color}  ${fg[blue]}1st-open ${reset_color}  ${fg[green]}OPEN ${reset_color}  "
-        assert ${lines[4]} same_as "${fg[yellow]}3${reset_color}  ${reset_color}1st DRAFT PR${reset_color}  ${fg[blue]}1st-draft${reset_color}  ${fg[green]}DRAFT${reset_color}  "
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "${fg[yellow]}NUM${reset_color}  ${reset_color}TITLE       ${reset_color}  ${fg[blue]}BRANCH   ${reset_color}  ${fg[green]}STATE${reset_color}  "
+        assert ${lines[2]} same_as "${fg[yellow]}8  ${reset_color}  ${reset_color}2nd OPEN PR ${reset_color}  ${fg[blue]}2nd-open ${reset_color}  ${fg[green]}OPEN ${reset_color}  "
+        assert ${lines[3]} same_as "${fg[yellow]}7  ${reset_color}  ${reset_color}2nd DRAFT PR${reset_color}  ${fg[blue]}2nd-draft${reset_color}  ${fg[green]}DRAFT${reset_color}  "
+        assert ${lines[4]} same_as "${fg[yellow]}4  ${reset_color}  ${reset_color}1st OPEN PR ${reset_color}  ${fg[blue]}1st-open ${reset_color}  ${fg[green]}OPEN ${reset_color}  "
+        assert ${lines[5]} same_as "${fg[yellow]}3  ${reset_color}  ${reset_color}1st DRAFT PR${reset_color}  ${fg[blue]}1st-draft${reset_color}  ${fg[green]}DRAFT${reset_color}  "
     }
 
     prefix=
@@ -142,18 +146,20 @@
     }
 
     _fzf_complete() {
-        assert $# equals 4
+        assert $# equals 5
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'gh pr ready '
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'gh pr ready '
 
         run cat
-        assert ${#lines} equals 4
-        assert ${lines[1]} same_as "${fg[yellow]}8${reset_color}  ${reset_color}2nd OPEN PR ${reset_color}  ${fg[blue]}2nd-open ${reset_color}  ${fg[green]}OPEN ${reset_color}  "
-        assert ${lines[2]} same_as "${fg[yellow]}7${reset_color}  ${reset_color}2nd DRAFT PR${reset_color}  ${fg[blue]}2nd-draft${reset_color}  ${fg[green]}DRAFT${reset_color}  "
-        assert ${lines[3]} same_as "${fg[yellow]}4${reset_color}  ${reset_color}1st OPEN PR ${reset_color}  ${fg[blue]}1st-open ${reset_color}  ${fg[green]}OPEN ${reset_color}  "
-        assert ${lines[4]} same_as "${fg[yellow]}3${reset_color}  ${reset_color}1st DRAFT PR${reset_color}  ${fg[blue]}1st-draft${reset_color}  ${fg[green]}DRAFT${reset_color}  "
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "${fg[yellow]}NUM${reset_color}  ${reset_color}TITLE       ${reset_color}  ${fg[blue]}BRANCH   ${reset_color}  ${fg[green]}STATE${reset_color}  "
+        assert ${lines[2]} same_as "${fg[yellow]}8  ${reset_color}  ${reset_color}2nd OPEN PR ${reset_color}  ${fg[blue]}2nd-open ${reset_color}  ${fg[green]}OPEN ${reset_color}  "
+        assert ${lines[3]} same_as "${fg[yellow]}7  ${reset_color}  ${reset_color}2nd DRAFT PR${reset_color}  ${fg[blue]}2nd-draft${reset_color}  ${fg[green]}DRAFT${reset_color}  "
+        assert ${lines[4]} same_as "${fg[yellow]}4  ${reset_color}  ${reset_color}1st OPEN PR ${reset_color}  ${fg[blue]}1st-open ${reset_color}  ${fg[green]}OPEN ${reset_color}  "
+        assert ${lines[5]} same_as "${fg[yellow]}3  ${reset_color}  ${reset_color}1st DRAFT PR${reset_color}  ${fg[blue]}1st-draft${reset_color}  ${fg[green]}DRAFT${reset_color}  "
     }
 
     prefix=
@@ -182,16 +188,18 @@
     }
 
     _fzf_complete() {
-        assert $# equals 4
+        assert $# equals 5
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'gh pr reopen '
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'gh pr reopen '
 
         run cat
-        assert ${#lines} equals 2
-        assert ${lines[1]} same_as "${fg[yellow]}5${reset_color}  ${reset_color}2nd CLOSED PR${reset_color}  ${fg[blue]}2nd-closed${reset_color}  ${fg[green]}CLOSED${reset_color}  "
-        assert ${lines[2]} same_as "${fg[yellow]}1${reset_color}  ${reset_color}1st CLOSED PR${reset_color}  ${fg[blue]}1st-closed${reset_color}  ${fg[green]}CLOSED${reset_color}  "
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}NUM${reset_color}  ${reset_color}TITLE        ${reset_color}  ${fg[blue]}BRANCH    ${reset_color}  ${fg[green]}STATE ${reset_color}  "
+        assert ${lines[2]} same_as "${fg[yellow]}5  ${reset_color}  ${reset_color}2nd CLOSED PR${reset_color}  ${fg[blue]}2nd-closed${reset_color}  ${fg[green]}CLOSED${reset_color}  "
+        assert ${lines[3]} same_as "${fg[yellow]}1  ${reset_color}  ${reset_color}1st CLOSED PR${reset_color}  ${fg[blue]}1st-closed${reset_color}  ${fg[green]}CLOSED${reset_color}  "
     }
 
     prefix=
@@ -226,22 +234,24 @@
     }
 
     _fzf_complete() {
-        assert $# equals 4
+        assert $# equals 5
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'gh pr checkout '
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'gh pr checkout '
 
         run cat
-        assert ${#lines} equals 8
-        assert ${lines[1]} same_as "${fg[yellow]}8${reset_color}  ${reset_color}2nd OPEN PR  ${reset_color}  ${fg[blue]}2nd-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}  "
-        assert ${lines[2]} same_as "${fg[yellow]}7${reset_color}  ${reset_color}2nd DRAFT PR ${reset_color}  ${fg[blue]}2nd-draft ${reset_color}  ${fg[green]}DRAFT ${reset_color}  "
-        assert ${lines[3]} same_as "${fg[yellow]}6${reset_color}  ${reset_color}2nd MERGED PR${reset_color}  ${fg[blue]}2nd-merged${reset_color}  ${fg[green]}MERGED${reset_color}  "
-        assert ${lines[4]} same_as "${fg[yellow]}5${reset_color}  ${reset_color}2nd CLOSED PR${reset_color}  ${fg[blue]}2nd-closed${reset_color}  ${fg[green]}CLOSED${reset_color}  "
-        assert ${lines[5]} same_as "${fg[yellow]}4${reset_color}  ${reset_color}1st OPEN PR  ${reset_color}  ${fg[blue]}1st-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}  "
-        assert ${lines[6]} same_as "${fg[yellow]}3${reset_color}  ${reset_color}1st DRAFT PR ${reset_color}  ${fg[blue]}1st-draft ${reset_color}  ${fg[green]}DRAFT ${reset_color}  "
-        assert ${lines[7]} same_as "${fg[yellow]}2${reset_color}  ${reset_color}1st MERGED PR${reset_color}  ${fg[blue]}1st-merged${reset_color}  ${fg[green]}MERGED${reset_color}  "
-        assert ${lines[8]} same_as "${fg[yellow]}1${reset_color}  ${reset_color}1st CLOSED PR${reset_color}  ${fg[blue]}1st-closed${reset_color}  ${fg[green]}CLOSED${reset_color}  "
+        assert ${#lines} equals 9
+        assert ${lines[1]} same_as "${fg[yellow]}NUM${reset_color}  ${reset_color}TITLE        ${reset_color}  ${fg[blue]}BRANCH    ${reset_color}  ${fg[green]}STATE ${reset_color}  "
+        assert ${lines[2]} same_as "${fg[yellow]}8  ${reset_color}  ${reset_color}2nd OPEN PR  ${reset_color}  ${fg[blue]}2nd-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}  "
+        assert ${lines[3]} same_as "${fg[yellow]}7  ${reset_color}  ${reset_color}2nd DRAFT PR ${reset_color}  ${fg[blue]}2nd-draft ${reset_color}  ${fg[green]}DRAFT ${reset_color}  "
+        assert ${lines[4]} same_as "${fg[yellow]}6  ${reset_color}  ${reset_color}2nd MERGED PR${reset_color}  ${fg[blue]}2nd-merged${reset_color}  ${fg[green]}MERGED${reset_color}  "
+        assert ${lines[5]} same_as "${fg[yellow]}5  ${reset_color}  ${reset_color}2nd CLOSED PR${reset_color}  ${fg[blue]}2nd-closed${reset_color}  ${fg[green]}CLOSED${reset_color}  "
+        assert ${lines[6]} same_as "${fg[yellow]}4  ${reset_color}  ${reset_color}1st OPEN PR  ${reset_color}  ${fg[blue]}1st-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}  "
+        assert ${lines[7]} same_as "${fg[yellow]}3  ${reset_color}  ${reset_color}1st DRAFT PR ${reset_color}  ${fg[blue]}1st-draft ${reset_color}  ${fg[green]}DRAFT ${reset_color}  "
+        assert ${lines[8]} same_as "${fg[yellow]}2  ${reset_color}  ${reset_color}1st MERGED PR${reset_color}  ${fg[blue]}1st-merged${reset_color}  ${fg[green]}MERGED${reset_color}  "
+        assert ${lines[9]} same_as "${fg[yellow]}1  ${reset_color}  ${reset_color}1st CLOSED PR${reset_color}  ${fg[blue]}1st-closed${reset_color}  ${fg[green]}CLOSED${reset_color}  "
     }
 
     prefix=
@@ -276,22 +286,24 @@
     }
 
     _fzf_complete() {
-        assert $# equals 4
+        assert $# equals 5
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'gh pr comment '
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'gh pr comment '
 
         run cat
-        assert ${#lines} equals 8
-        assert ${lines[1]} same_as "${fg[yellow]}8${reset_color}  ${reset_color}2nd OPEN PR  ${reset_color}  ${fg[blue]}2nd-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}  "
-        assert ${lines[2]} same_as "${fg[yellow]}7${reset_color}  ${reset_color}2nd DRAFT PR ${reset_color}  ${fg[blue]}2nd-draft ${reset_color}  ${fg[green]}DRAFT ${reset_color}  "
-        assert ${lines[3]} same_as "${fg[yellow]}6${reset_color}  ${reset_color}2nd MERGED PR${reset_color}  ${fg[blue]}2nd-merged${reset_color}  ${fg[green]}MERGED${reset_color}  "
-        assert ${lines[4]} same_as "${fg[yellow]}5${reset_color}  ${reset_color}2nd CLOSED PR${reset_color}  ${fg[blue]}2nd-closed${reset_color}  ${fg[green]}CLOSED${reset_color}  "
-        assert ${lines[5]} same_as "${fg[yellow]}4${reset_color}  ${reset_color}1st OPEN PR  ${reset_color}  ${fg[blue]}1st-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}  "
-        assert ${lines[6]} same_as "${fg[yellow]}3${reset_color}  ${reset_color}1st DRAFT PR ${reset_color}  ${fg[blue]}1st-draft ${reset_color}  ${fg[green]}DRAFT ${reset_color}  "
-        assert ${lines[7]} same_as "${fg[yellow]}2${reset_color}  ${reset_color}1st MERGED PR${reset_color}  ${fg[blue]}1st-merged${reset_color}  ${fg[green]}MERGED${reset_color}  "
-        assert ${lines[8]} same_as "${fg[yellow]}1${reset_color}  ${reset_color}1st CLOSED PR${reset_color}  ${fg[blue]}1st-closed${reset_color}  ${fg[green]}CLOSED${reset_color}  "
+        assert ${#lines} equals 9
+        assert ${lines[1]} same_as "${fg[yellow]}NUM${reset_color}  ${reset_color}TITLE        ${reset_color}  ${fg[blue]}BRANCH    ${reset_color}  ${fg[green]}STATE ${reset_color}  "
+        assert ${lines[2]} same_as "${fg[yellow]}8  ${reset_color}  ${reset_color}2nd OPEN PR  ${reset_color}  ${fg[blue]}2nd-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}  "
+        assert ${lines[3]} same_as "${fg[yellow]}7  ${reset_color}  ${reset_color}2nd DRAFT PR ${reset_color}  ${fg[blue]}2nd-draft ${reset_color}  ${fg[green]}DRAFT ${reset_color}  "
+        assert ${lines[4]} same_as "${fg[yellow]}6  ${reset_color}  ${reset_color}2nd MERGED PR${reset_color}  ${fg[blue]}2nd-merged${reset_color}  ${fg[green]}MERGED${reset_color}  "
+        assert ${lines[5]} same_as "${fg[yellow]}5  ${reset_color}  ${reset_color}2nd CLOSED PR${reset_color}  ${fg[blue]}2nd-closed${reset_color}  ${fg[green]}CLOSED${reset_color}  "
+        assert ${lines[6]} same_as "${fg[yellow]}4  ${reset_color}  ${reset_color}1st OPEN PR  ${reset_color}  ${fg[blue]}1st-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}  "
+        assert ${lines[7]} same_as "${fg[yellow]}3  ${reset_color}  ${reset_color}1st DRAFT PR ${reset_color}  ${fg[blue]}1st-draft ${reset_color}  ${fg[green]}DRAFT ${reset_color}  "
+        assert ${lines[8]} same_as "${fg[yellow]}2  ${reset_color}  ${reset_color}1st MERGED PR${reset_color}  ${fg[blue]}1st-merged${reset_color}  ${fg[green]}MERGED${reset_color}  "
+        assert ${lines[9]} same_as "${fg[yellow]}1  ${reset_color}  ${reset_color}1st CLOSED PR${reset_color}  ${fg[blue]}1st-closed${reset_color}  ${fg[green]}CLOSED${reset_color}  "
     }
 
     prefix=
@@ -326,22 +338,24 @@
     }
 
     _fzf_complete() {
-        assert $# equals 4
+        assert $# equals 5
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'gh pr diff '
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'gh pr diff '
 
         run cat
-        assert ${#lines} equals 8
-        assert ${lines[1]} same_as "${fg[yellow]}8${reset_color}  ${reset_color}2nd OPEN PR  ${reset_color}  ${fg[blue]}2nd-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}  "
-        assert ${lines[2]} same_as "${fg[yellow]}7${reset_color}  ${reset_color}2nd DRAFT PR ${reset_color}  ${fg[blue]}2nd-draft ${reset_color}  ${fg[green]}DRAFT ${reset_color}  "
-        assert ${lines[3]} same_as "${fg[yellow]}6${reset_color}  ${reset_color}2nd MERGED PR${reset_color}  ${fg[blue]}2nd-merged${reset_color}  ${fg[green]}MERGED${reset_color}  "
-        assert ${lines[4]} same_as "${fg[yellow]}5${reset_color}  ${reset_color}2nd CLOSED PR${reset_color}  ${fg[blue]}2nd-closed${reset_color}  ${fg[green]}CLOSED${reset_color}  "
-        assert ${lines[5]} same_as "${fg[yellow]}4${reset_color}  ${reset_color}1st OPEN PR  ${reset_color}  ${fg[blue]}1st-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}  "
-        assert ${lines[6]} same_as "${fg[yellow]}3${reset_color}  ${reset_color}1st DRAFT PR ${reset_color}  ${fg[blue]}1st-draft ${reset_color}  ${fg[green]}DRAFT ${reset_color}  "
-        assert ${lines[7]} same_as "${fg[yellow]}2${reset_color}  ${reset_color}1st MERGED PR${reset_color}  ${fg[blue]}1st-merged${reset_color}  ${fg[green]}MERGED${reset_color}  "
-        assert ${lines[8]} same_as "${fg[yellow]}1${reset_color}  ${reset_color}1st CLOSED PR${reset_color}  ${fg[blue]}1st-closed${reset_color}  ${fg[green]}CLOSED${reset_color}  "
+        assert ${#lines} equals 9
+        assert ${lines[1]} same_as "${fg[yellow]}NUM${reset_color}  ${reset_color}TITLE        ${reset_color}  ${fg[blue]}BRANCH    ${reset_color}  ${fg[green]}STATE ${reset_color}  "
+        assert ${lines[2]} same_as "${fg[yellow]}8  ${reset_color}  ${reset_color}2nd OPEN PR  ${reset_color}  ${fg[blue]}2nd-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}  "
+        assert ${lines[3]} same_as "${fg[yellow]}7  ${reset_color}  ${reset_color}2nd DRAFT PR ${reset_color}  ${fg[blue]}2nd-draft ${reset_color}  ${fg[green]}DRAFT ${reset_color}  "
+        assert ${lines[4]} same_as "${fg[yellow]}6  ${reset_color}  ${reset_color}2nd MERGED PR${reset_color}  ${fg[blue]}2nd-merged${reset_color}  ${fg[green]}MERGED${reset_color}  "
+        assert ${lines[5]} same_as "${fg[yellow]}5  ${reset_color}  ${reset_color}2nd CLOSED PR${reset_color}  ${fg[blue]}2nd-closed${reset_color}  ${fg[green]}CLOSED${reset_color}  "
+        assert ${lines[6]} same_as "${fg[yellow]}4  ${reset_color}  ${reset_color}1st OPEN PR  ${reset_color}  ${fg[blue]}1st-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}  "
+        assert ${lines[7]} same_as "${fg[yellow]}3  ${reset_color}  ${reset_color}1st DRAFT PR ${reset_color}  ${fg[blue]}1st-draft ${reset_color}  ${fg[green]}DRAFT ${reset_color}  "
+        assert ${lines[8]} same_as "${fg[yellow]}2  ${reset_color}  ${reset_color}1st MERGED PR${reset_color}  ${fg[blue]}1st-merged${reset_color}  ${fg[green]}MERGED${reset_color}  "
+        assert ${lines[9]} same_as "${fg[yellow]}1  ${reset_color}  ${reset_color}1st CLOSED PR${reset_color}  ${fg[blue]}1st-closed${reset_color}  ${fg[green]}CLOSED${reset_color}  "
     }
 
     prefix=
@@ -376,22 +390,24 @@
     }
 
     _fzf_complete() {
-        assert $# equals 4
+        assert $# equals 5
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'gh pr edit '
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'gh pr edit '
 
         run cat
-        assert ${#lines} equals 8
-        assert ${lines[1]} same_as "${fg[yellow]}8${reset_color}  ${reset_color}2nd OPEN PR  ${reset_color}  ${fg[blue]}2nd-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}  "
-        assert ${lines[2]} same_as "${fg[yellow]}7${reset_color}  ${reset_color}2nd DRAFT PR ${reset_color}  ${fg[blue]}2nd-draft ${reset_color}  ${fg[green]}DRAFT ${reset_color}  "
-        assert ${lines[3]} same_as "${fg[yellow]}6${reset_color}  ${reset_color}2nd MERGED PR${reset_color}  ${fg[blue]}2nd-merged${reset_color}  ${fg[green]}MERGED${reset_color}  "
-        assert ${lines[4]} same_as "${fg[yellow]}5${reset_color}  ${reset_color}2nd CLOSED PR${reset_color}  ${fg[blue]}2nd-closed${reset_color}  ${fg[green]}CLOSED${reset_color}  "
-        assert ${lines[5]} same_as "${fg[yellow]}4${reset_color}  ${reset_color}1st OPEN PR  ${reset_color}  ${fg[blue]}1st-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}  "
-        assert ${lines[6]} same_as "${fg[yellow]}3${reset_color}  ${reset_color}1st DRAFT PR ${reset_color}  ${fg[blue]}1st-draft ${reset_color}  ${fg[green]}DRAFT ${reset_color}  "
-        assert ${lines[7]} same_as "${fg[yellow]}2${reset_color}  ${reset_color}1st MERGED PR${reset_color}  ${fg[blue]}1st-merged${reset_color}  ${fg[green]}MERGED${reset_color}  "
-        assert ${lines[8]} same_as "${fg[yellow]}1${reset_color}  ${reset_color}1st CLOSED PR${reset_color}  ${fg[blue]}1st-closed${reset_color}  ${fg[green]}CLOSED${reset_color}  "
+        assert ${#lines} equals 9
+        assert ${lines[1]} same_as "${fg[yellow]}NUM${reset_color}  ${reset_color}TITLE        ${reset_color}  ${fg[blue]}BRANCH    ${reset_color}  ${fg[green]}STATE ${reset_color}  "
+        assert ${lines[2]} same_as "${fg[yellow]}8  ${reset_color}  ${reset_color}2nd OPEN PR  ${reset_color}  ${fg[blue]}2nd-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}  "
+        assert ${lines[3]} same_as "${fg[yellow]}7  ${reset_color}  ${reset_color}2nd DRAFT PR ${reset_color}  ${fg[blue]}2nd-draft ${reset_color}  ${fg[green]}DRAFT ${reset_color}  "
+        assert ${lines[4]} same_as "${fg[yellow]}6  ${reset_color}  ${reset_color}2nd MERGED PR${reset_color}  ${fg[blue]}2nd-merged${reset_color}  ${fg[green]}MERGED${reset_color}  "
+        assert ${lines[5]} same_as "${fg[yellow]}5  ${reset_color}  ${reset_color}2nd CLOSED PR${reset_color}  ${fg[blue]}2nd-closed${reset_color}  ${fg[green]}CLOSED${reset_color}  "
+        assert ${lines[6]} same_as "${fg[yellow]}4  ${reset_color}  ${reset_color}1st OPEN PR  ${reset_color}  ${fg[blue]}1st-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}  "
+        assert ${lines[7]} same_as "${fg[yellow]}3  ${reset_color}  ${reset_color}1st DRAFT PR ${reset_color}  ${fg[blue]}1st-draft ${reset_color}  ${fg[green]}DRAFT ${reset_color}  "
+        assert ${lines[8]} same_as "${fg[yellow]}2  ${reset_color}  ${reset_color}1st MERGED PR${reset_color}  ${fg[blue]}1st-merged${reset_color}  ${fg[green]}MERGED${reset_color}  "
+        assert ${lines[9]} same_as "${fg[yellow]}1  ${reset_color}  ${reset_color}1st CLOSED PR${reset_color}  ${fg[blue]}1st-closed${reset_color}  ${fg[green]}CLOSED${reset_color}  "
     }
 
     prefix=
@@ -426,22 +442,24 @@
     }
 
     _fzf_complete() {
-        assert $# equals 4
+        assert $# equals 5
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'gh pr review '
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'gh pr review '
 
         run cat
-        assert ${#lines} equals 8
-        assert ${lines[1]} same_as "${fg[yellow]}8${reset_color}  ${reset_color}2nd OPEN PR  ${reset_color}  ${fg[blue]}2nd-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}  "
-        assert ${lines[2]} same_as "${fg[yellow]}7${reset_color}  ${reset_color}2nd DRAFT PR ${reset_color}  ${fg[blue]}2nd-draft ${reset_color}  ${fg[green]}DRAFT ${reset_color}  "
-        assert ${lines[3]} same_as "${fg[yellow]}6${reset_color}  ${reset_color}2nd MERGED PR${reset_color}  ${fg[blue]}2nd-merged${reset_color}  ${fg[green]}MERGED${reset_color}  "
-        assert ${lines[4]} same_as "${fg[yellow]}5${reset_color}  ${reset_color}2nd CLOSED PR${reset_color}  ${fg[blue]}2nd-closed${reset_color}  ${fg[green]}CLOSED${reset_color}  "
-        assert ${lines[5]} same_as "${fg[yellow]}4${reset_color}  ${reset_color}1st OPEN PR  ${reset_color}  ${fg[blue]}1st-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}  "
-        assert ${lines[6]} same_as "${fg[yellow]}3${reset_color}  ${reset_color}1st DRAFT PR ${reset_color}  ${fg[blue]}1st-draft ${reset_color}  ${fg[green]}DRAFT ${reset_color}  "
-        assert ${lines[7]} same_as "${fg[yellow]}2${reset_color}  ${reset_color}1st MERGED PR${reset_color}  ${fg[blue]}1st-merged${reset_color}  ${fg[green]}MERGED${reset_color}  "
-        assert ${lines[8]} same_as "${fg[yellow]}1${reset_color}  ${reset_color}1st CLOSED PR${reset_color}  ${fg[blue]}1st-closed${reset_color}  ${fg[green]}CLOSED${reset_color}  "
+        assert ${#lines} equals 9
+        assert ${lines[1]} same_as "${fg[yellow]}NUM${reset_color}  ${reset_color}TITLE        ${reset_color}  ${fg[blue]}BRANCH    ${reset_color}  ${fg[green]}STATE ${reset_color}  "
+        assert ${lines[2]} same_as "${fg[yellow]}8  ${reset_color}  ${reset_color}2nd OPEN PR  ${reset_color}  ${fg[blue]}2nd-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}  "
+        assert ${lines[3]} same_as "${fg[yellow]}7  ${reset_color}  ${reset_color}2nd DRAFT PR ${reset_color}  ${fg[blue]}2nd-draft ${reset_color}  ${fg[green]}DRAFT ${reset_color}  "
+        assert ${lines[4]} same_as "${fg[yellow]}6  ${reset_color}  ${reset_color}2nd MERGED PR${reset_color}  ${fg[blue]}2nd-merged${reset_color}  ${fg[green]}MERGED${reset_color}  "
+        assert ${lines[5]} same_as "${fg[yellow]}5  ${reset_color}  ${reset_color}2nd CLOSED PR${reset_color}  ${fg[blue]}2nd-closed${reset_color}  ${fg[green]}CLOSED${reset_color}  "
+        assert ${lines[6]} same_as "${fg[yellow]}4  ${reset_color}  ${reset_color}1st OPEN PR  ${reset_color}  ${fg[blue]}1st-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}  "
+        assert ${lines[7]} same_as "${fg[yellow]}3  ${reset_color}  ${reset_color}1st DRAFT PR ${reset_color}  ${fg[blue]}1st-draft ${reset_color}  ${fg[green]}DRAFT ${reset_color}  "
+        assert ${lines[8]} same_as "${fg[yellow]}2  ${reset_color}  ${reset_color}1st MERGED PR${reset_color}  ${fg[blue]}1st-merged${reset_color}  ${fg[green]}MERGED${reset_color}  "
+        assert ${lines[9]} same_as "${fg[yellow]}1  ${reset_color}  ${reset_color}1st CLOSED PR${reset_color}  ${fg[blue]}1st-closed${reset_color}  ${fg[green]}CLOSED${reset_color}  "
     }
 
     prefix=
@@ -476,22 +494,24 @@
     }
 
     _fzf_complete() {
-        assert $# equals 4
+        assert $# equals 5
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--'
-        assert $4 same_as 'gh pr view '
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'gh pr view '
 
         run cat
-        assert ${#lines} equals 8
-        assert ${lines[1]} same_as "${fg[yellow]}8${reset_color}  ${reset_color}2nd OPEN PR  ${reset_color}  ${fg[blue]}2nd-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}  "
-        assert ${lines[2]} same_as "${fg[yellow]}7${reset_color}  ${reset_color}2nd DRAFT PR ${reset_color}  ${fg[blue]}2nd-draft ${reset_color}  ${fg[green]}DRAFT ${reset_color}  "
-        assert ${lines[3]} same_as "${fg[yellow]}6${reset_color}  ${reset_color}2nd MERGED PR${reset_color}  ${fg[blue]}2nd-merged${reset_color}  ${fg[green]}MERGED${reset_color}  "
-        assert ${lines[4]} same_as "${fg[yellow]}5${reset_color}  ${reset_color}2nd CLOSED PR${reset_color}  ${fg[blue]}2nd-closed${reset_color}  ${fg[green]}CLOSED${reset_color}  "
-        assert ${lines[5]} same_as "${fg[yellow]}4${reset_color}  ${reset_color}1st OPEN PR  ${reset_color}  ${fg[blue]}1st-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}  "
-        assert ${lines[6]} same_as "${fg[yellow]}3${reset_color}  ${reset_color}1st DRAFT PR ${reset_color}  ${fg[blue]}1st-draft ${reset_color}  ${fg[green]}DRAFT ${reset_color}  "
-        assert ${lines[7]} same_as "${fg[yellow]}2${reset_color}  ${reset_color}1st MERGED PR${reset_color}  ${fg[blue]}1st-merged${reset_color}  ${fg[green]}MERGED${reset_color}  "
-        assert ${lines[8]} same_as "${fg[yellow]}1${reset_color}  ${reset_color}1st CLOSED PR${reset_color}  ${fg[blue]}1st-closed${reset_color}  ${fg[green]}CLOSED${reset_color}  "
+        assert ${#lines} equals 9
+        assert ${lines[1]} same_as "${fg[yellow]}NUM${reset_color}  ${reset_color}TITLE        ${reset_color}  ${fg[blue]}BRANCH    ${reset_color}  ${fg[green]}STATE ${reset_color}  "
+        assert ${lines[2]} same_as "${fg[yellow]}8  ${reset_color}  ${reset_color}2nd OPEN PR  ${reset_color}  ${fg[blue]}2nd-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}  "
+        assert ${lines[3]} same_as "${fg[yellow]}7  ${reset_color}  ${reset_color}2nd DRAFT PR ${reset_color}  ${fg[blue]}2nd-draft ${reset_color}  ${fg[green]}DRAFT ${reset_color}  "
+        assert ${lines[4]} same_as "${fg[yellow]}6  ${reset_color}  ${reset_color}2nd MERGED PR${reset_color}  ${fg[blue]}2nd-merged${reset_color}  ${fg[green]}MERGED${reset_color}  "
+        assert ${lines[5]} same_as "${fg[yellow]}5  ${reset_color}  ${reset_color}2nd CLOSED PR${reset_color}  ${fg[blue]}2nd-closed${reset_color}  ${fg[green]}CLOSED${reset_color}  "
+        assert ${lines[6]} same_as "${fg[yellow]}4  ${reset_color}  ${reset_color}1st OPEN PR  ${reset_color}  ${fg[blue]}1st-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}  "
+        assert ${lines[7]} same_as "${fg[yellow]}3  ${reset_color}  ${reset_color}1st DRAFT PR ${reset_color}  ${fg[blue]}1st-draft ${reset_color}  ${fg[green]}DRAFT ${reset_color}  "
+        assert ${lines[8]} same_as "${fg[yellow]}2  ${reset_color}  ${reset_color}1st MERGED PR${reset_color}  ${fg[blue]}1st-merged${reset_color}  ${fg[green]}MERGED${reset_color}  "
+        assert ${lines[9]} same_as "${fg[yellow]}1  ${reset_color}  ${reset_color}1st CLOSED PR${reset_color}  ${fg[blue]}1st-closed${reset_color}  ${fg[green]}CLOSED${reset_color}  "
     }
 
     prefix=
