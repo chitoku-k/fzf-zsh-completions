@@ -725,7 +725,7 @@ _fzf_complete_git-ls-tree() {
     local fzf_options=$2
     shift 2
 
-    _fzf_complete --ansi --read0 --print0 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_ref < <(git ls-tree --name-only -r -z ${(Z+n+)git_options} ${treeish-HEAD} 2> /dev/null)
+    _fzf_complete --ansi --read0 --print0 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_ref < <(git ls-tree --name-only --full-tree -r -z ${(Z+n+)git_options} ${treeish-HEAD} 2> /dev/null)
 }
 
 _fzf_complete_git-ls-tree_post() {
