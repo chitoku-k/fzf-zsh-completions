@@ -91,7 +91,7 @@ _fzf_complete_kubectl() {
         --vmodule
     )
 
-    local inherit_option inherit_value
+    local inherit_option inherit_values
     local kubectl_inherited_options_argument_required=(
         --as
         --as-group
@@ -100,10 +100,14 @@ _fzf_complete_kubectl() {
         --client-key
         --cluster
         --context
+        -l
+        --label-columns
+        -L
         -n
         --namespace
         --password
         -s
+        --selector
         --server
         --tls-server-name
         --token
@@ -117,30 +121,30 @@ _fzf_complete_kubectl() {
 
     for inherit_option in ${kubectl_inherited_options_argument_required[@]}; do
         if [[ $inherit_option = --* ]]; then
-            if inherit_value=$(_fzf_complete_parse_option_argument '' "$inherit_option" $@$RBUFFER); then
-                kubectl_arguments+=($inherit_option=$inherit_value)
+            if inherit_values=$(_fzf_complete_parse_option_arguments '' "$inherit_option" $@$RBUFFER); then
+                kubectl_arguments+=($inherit_values)
             fi
         else
-            if inherit_value=$(_fzf_complete_parse_option_argument "$inherit_option" '' $@$RBUFFER); then
-                kubectl_arguments+=($inherit_option $inherit_value)
+            if inherit_values=$(_fzf_complete_parse_option_arguments "$inherit_option" '' $@$RBUFFER); then
+                kubectl_arguments+=($inherit_values)
             fi
         fi
     done
 
     for inherit_option in ${kubectl_inherited_options[@]}; do
         if [[ $inherit_option = --* ]]; then
-            if inherit_value=$(_fzf_complete_parse_option_argument '' "$inherit_option" $@$RBUFFER); then
-                kubectl_arguments+=($inherit_option)
+            if inherit_values=$(_fzf_complete_parse_option_arguments '' "$inherit_option" $@$RBUFFER); then
+                kubectl_arguments+=($inherit_values)
             fi
         else
-            if inherit_value=$(_fzf_complete_parse_option_argument "$inherit_option" '' $@$RBUFFER); then
-                kubectl_arguments+=($inherit_option)
+            if inherit_values=$(_fzf_complete_parse_option_arguments "$inherit_option" '' $@$RBUFFER); then
+                kubectl_arguments+=($inherit_values)
             fi
         fi
     done
 
     subcommands=($(_fzf_complete_parse_argument 2 1 "$arguments" "${(F)kubectl_options_argument_required}" || :))
-    namespace=$(_fzf_complete_parse_option_argument '-n' '--namespace' $@$RBUFFER || :)
+    namespace=$(_fzf_complete_parse_option_arguments '-n' '--namespace' $@$RBUFFER || :)
 
     if [[ ${subcommands[1]} != 'logs' ]]; then
         if [[ $last_argument =~ '(-[^-]*f|--filename)$' ]]; then

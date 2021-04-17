@@ -103,39 +103,63 @@ _fzf_complete_parse_argument() {
     return $(( index > #command_arguments ))
 }
 
-_fzf_complete_parse_option_argument() {
-    local idx value
+_fzf_complete_parse_option_arguments() {
+    local result=()
+    local current idx indices
     local short=${1#*-}
     local long=${2#*--}
     shift 2
 
-    if [[ -n $short ]]; then
-        if [[ -n ${(Q)${(z)@}[(r)-[^-]#$short?##]} ]]; then
-            idx=${(Q)${(z)@}[(i)-[^-]#$short?##]}
-            value=${(Q)${(z)@}[idx]/-[^-$short]#$short/}
+    local cmd=(${(Q)${(z)@}})
+    while [[ $idx -le ${#cmd} ]]; do
+        indices=()
+
+        if [[ -n $short ]]; then
+            if [[ -n ${cmd[(rb:idx+1:)-[^-]#$short?##]} ]]; then
+                current=${cmd[(ib:idx+1:)-[^-]#$short?##]}
+                indices+=($current)
+                result[current]=${(qq)${cmd[current]/-[^-$short]#$short/-$short}}
+            fi
+
+            if [[ -n ${cmd[(rb:idx+1:)-[^-]#$short]} ]]; then
+                current=${cmd[(ib:idx+1:)-[^-]#$short]}
+
+                if [[ ${#cmd} != $current ]]; then
+                    indices+=($current)
+                    result[current]=${(qq)${cmd[current]}}
+                    result[current+1]=${(qq)${cmd[current+1]}}
+                fi
+            fi
         fi
 
-        if [[ -n ${(Q)${(z)@}[(r)-[^-]#$short]} ]]; then
-            idx=${(Q)${(z)@}[(i)-[^-]#$short]}
-            value=${(Q)${(z)@}[idx+1]}
-        fi
-    fi
+        if [[ -n $long ]]; then
+            if [[ -n ${cmd[(rb:idx+1:)--$long=*]} ]]; then
+                current=${cmd[(ib:idx+1:)--$long=*]}
+                indices+=($current)
+                result[current]=${(qq)${cmd[current]}}
+            fi
 
-    if [[ -n $long ]]; then
-        if [[ -n ${(Q)${(z)@}[(r)--$long=*]} ]]; then
-            idx=${(Q)${(z)@}[(i)--$long=*]}
-            value=${(Q)${(z)@}[idx]/--$long=/}
+            if [[ -n ${cmd[(rb:idx+1:)--$long]} ]]; then
+                current=${cmd[(ib:idx+1:)--$long]}
+
+                if [[ ${#cmd} != $current ]]; then
+                    indices+=($current)
+                    result[current]=${(qq)${cmd[current]}}
+                    result[current+1]=${(qq)${cmd[current+1]}}
+                fi
+            fi
         fi
 
-        if [[ -n ${(Q)${(z)@}[(r)--$long]} ]]; then
-            idx=${(Q)${(z)@}[(i)--$long]}
-            value=${(Q)${(z)@}[idx+1]}
+        if [[ -z $indices ]]; then
+            break
         fi
-    fi
 
-    if [[ -z $idx ]]; then
+        idx=(${${(n)indices}[1]})
+    done
+
+    if [[ -z $result ]]; then
         return 1
     fi
 
-    echo - $value
+    echo - $result
 }
