@@ -180,9 +180,11 @@ _fzf_complete_kubectl() {
         resource=${prefix%/*}
         prefix_option=${prefix%/*}/
         prefix=${prefix#$prefix_option}
+    elif [[ ${subcommands[1]} = 'run' ]]; then
+        resource=pods
     fi
 
-    if [[ $last_argument =~ '(-[^-]*l|--selector)$' ]]; then
+    if [[ $last_argument =~ '(-[^-]*l|--labels|--selector)$' ]]; then
         if [[ -z $resource ]]; then
             return
         fi
@@ -196,7 +198,7 @@ _fzf_complete_kubectl() {
         return
     fi
 
-    if [[ $prefix =~ '^(-[^-]*l|--selector=)' ]]; then
+    if [[ $prefix =~ '^(-[^-]*l|--labels=|--selector=)' ]]; then
         if [[ -z $resource ]]; then
             return
         fi
