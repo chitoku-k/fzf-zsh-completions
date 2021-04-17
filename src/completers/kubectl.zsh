@@ -553,7 +553,7 @@ _fzf_complete_kubectl-label-columns() {
 
     _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
         _fzf_complete_tabularize $fg[yellow] < <(cat \
-            <(echo KEY VALUE) \
+            <(echo KEY VALUES) \
             <({
                 kubectl get "$resource" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{.items[*].metadata.labels}' | jq --slurp -r 'map(to_entries[]) | group_by(.key) | map("\(first | .key) \(map(.value) | unique | join(", "))")[]'
             } 2> /dev/null) \
