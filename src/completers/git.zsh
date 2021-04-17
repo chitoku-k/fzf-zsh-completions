@@ -507,7 +507,7 @@ _fzf_complete_git() {
     fi
 
     if [[ $subcommand = 'rm' ]]; then
-        _fzf_complete_git-ls-tree '' '--multi' $@
+        _fzf_complete_git-ls-files '' '--multi' $@
         return
     fi
 
@@ -718,6 +718,33 @@ _fzf_complete_git-commit-messages_post() {
     fi
 
     echo ${(qq)message}
+}
+
+_fzf_complete_git-ls-files() {
+    local git_options=$1
+    local fzf_options=$2
+    shift 2
+
+    _fzf_complete --ansi --read0 --print0 ${(Q)${(Z+n+)fzf_options}} -- $@ < <({
+        local cdup=$(git rev-parse --show-cdup 2> /dev/null)
+        local git_prefix=$(git rev-parse --show-prefix 2> /dev/null)
+        cd $(git rev-parse --show-toplevel 2> /dev/null)
+
+        local files=$(git ls-files --deduplicate -z ${(Z+n+)git_options} 2> /dev/null)
+        files=(${(0)files})
+        local paths=($cdup${^files})
+
+        echo -n ${(pj:\0:)paths}
+    })
+}
+
+_fzf_complete_git-ls-files_post() {
+    local filename
+    local input=$(cat)
+
+    for filename in ${(0)input}; do
+        echo ${${(q+)filename}//\\n/\\\\n}
+    done
 }
 
 _fzf_complete_git-ls-tree() {

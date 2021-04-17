@@ -4699,6 +4699,8 @@
     echo >> directory2/$'file4\ncontaining\nnewlines'
     echo >> ' file5 containing space '
     echo >> directory2/$'file6\ncontaining\nnewlines'
+    touch file_outside_tree_object
+    run git add file_outside_tree_object
 
     _fzf_complete() {
         assert $# equals 6
@@ -4723,21 +4725,24 @@
         assert ${actual2[1]} same_as 'containing'
 
         actual3=(${(0)lines[3]})
-        assert ${#actual3} equals 2
+        assert ${#actual3} equals 3
         assert ${actual3[1]} same_as 'newlines'
         assert ${actual3[2]} same_as 'file1'
+        assert ${actual3[3]} same_as 'file_outside_tree_object'
     }
 
     prefix=
     _fzf_complete_git 'git rm '
 }
 
-@test 'Testing completion in subcommand: git rm **' {
+@test 'Testing completion in subdirectory: git rm **' {
     run git checkout another-branch
     echo >> ' file3 containing space '
     echo >> directory2/$'file4\ncontaining\nnewlines'
     echo >> ' file5 containing space '
     echo >> directory2/$'file6\ncontaining\nnewlines'
+    touch file_outside_tree_object
+    run git add file_outside_tree_object
 
     cd directory2
 
@@ -4755,18 +4760,19 @@
 
         actual1=(${(0)lines[1]})
         assert ${#actual1} equals 3
-        assert ${actual1[1]} same_as ' file3 containing space '
-        assert ${actual1[2]} same_as 'directory1/file2'
-        assert ${actual1[3]} same_as 'directory2/file4'
+        assert ${actual1[1]} same_as '../ file3 containing space '
+        assert ${actual1[2]} same_as '../directory1/file2'
+        assert ${actual1[3]} same_as '../directory2/file4'
 
         actual2=(${(0)lines[2]})
         assert ${#actual2} equals 1
         assert ${actual2[1]} same_as 'containing'
 
         actual3=(${(0)lines[3]})
-        assert ${#actual3} equals 2
+        assert ${#actual3} equals 3
         assert ${actual3[1]} same_as 'newlines'
-        assert ${actual3[2]} same_as 'file1'
+        assert ${actual3[2]} same_as '../file1'
+        assert ${actual3[3]} same_as '../file_outside_tree_object'
     }
 
     prefix=
