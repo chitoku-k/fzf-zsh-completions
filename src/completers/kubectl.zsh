@@ -182,6 +182,54 @@ _fzf_complete_kubectl() {
         prefix=${prefix#$prefix_option}
     fi
 
+    if [[ -n $resource ]]; then
+        if [[ $last_argument =~ '(-[^-]*l|--selector)$' ]]; then
+            if [[ $prefix = *! ]]; then
+                prefix_option=${prefix%%!}!
+                prefix=${prefix#$prefix_option}
+            fi
+
+            _fzf_complete_kubectl-selectors '--multi' $@
+            return
+        fi
+
+        if [[ $prefix =~ '^(-[^-]*l|--selector=)' ]]; then
+            if [[ $prefix = --* ]]; then
+                prefix_option=${prefix/=*/=}
+                prefix=${prefix#$prefix_option}
+            else
+                prefix_option=${prefix%%l*}l
+                prefix=${prefix#$prefix_option}
+            fi
+
+            if [[ $prefix = *! ]]; then
+                prefix_option=${prefix%%!}!
+                prefix=${prefix#$prefix_option}
+            fi
+
+            _fzf_complete_kubectl-selectors '--multi' $@
+            return
+        fi
+    fi
+
+    if [[ $last_argument =~ '(-[^-]*L|--label-columns)$' ]]; then
+        _fzf_complete_kubectl-label-columns '' $@
+        return
+    fi
+
+    if [[ $prefix =~ '^(-[^-]*L|--label-columns=)' ]]; then
+        if [[ $prefix = --* ]]; then
+            prefix_option=${prefix/=*/=}
+            prefix=${prefix#$prefix_option}
+        else
+            prefix_option=${prefix%%L*}L
+            prefix=${prefix#$prefix_option}
+        fi
+
+        _fzf_complete_kubectl-label-columns '' $@
+        return
+    fi
+
     if [[ ${subcommands[1]} = 'annotate' ]]; then
         if [[ -z $resource ]]; then
             _fzf_complete_kubectl-resources '' $@
@@ -448,6 +496,54 @@ _fzf_complete_kubectl-annotations_post() {
     done
 }
 
+_fzf_complete_kubectl-selectors() {
+    local fzf_options=$1
+    shift
+
+    if [[ -z $namespace ]]; then
+        kubectl_arguments+=(--all-namespaces)
+    fi
+
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
+        _fzf_complete_tabularize $fg[yellow] < <(cat \
+            <(echo KEY VALUE) \
+            <({
+                kubectl get "$resource" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{.items[*].metadata.labels}' | jq --slurp -r 'map(to_entries[] | "\(.key) \(.value)") | flatten | sort | unique[]'
+            } 2> /dev/null) \
+        )
+    )
+}
+
+_fzf_complete_kubectl-selectors_post() {
+    if [[ $prefix_option = *! ]]; then
+        awk '{ print $1 }'
+    else
+        awk '{ printf "%s%s=%s", (NR > 1 ? "," : ""), $1, $2 } END { printf "\n" }'
+    fi
+}
+
+_fzf_complete_kubectl-label-columns() {
+    local fzf_options=$1
+    shift
+
+    if [[ -z $namespace ]]; then
+        kubectl_arguments+=(--all-namespaces)
+    fi
+
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
+        _fzf_complete_tabularize $fg[yellow] < <(cat \
+            <(echo KEY VALUE) \
+            <({
+                kubectl get "$resource" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{.items[*].metadata.labels}' | jq --slurp -r 'map(to_entries[]) | group_by(.key) | map("\(first | .key) \(map(.value) | unique | join(", "))")[]'
+            } 2> /dev/null) \
+        )
+    )
+}
+
+_fzf_complete_kubectl-label-columns_post() {
+    awk '{ print $1 }'
+}
+
 _fzf_complete_kubectl-labels() {
     local fzf_options=$1
     shift
@@ -456,7 +552,7 @@ _fzf_complete_kubectl-labels() {
         _fzf_complete_tabularize $fg[yellow] < <(cat \
             <(echo KEY VALUE) \
             <({
-              kubectl get "$resource" "$name" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{.metadata.labels}' | jq -r 'to_entries[] | "\(.key) \(.value)"'
+                kubectl get "$resource" "$name" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{.metadata.labels}' | jq -r 'to_entries[] | "\(.key) \(.value)"'
             } 2> /dev/null) \
         )
     )
