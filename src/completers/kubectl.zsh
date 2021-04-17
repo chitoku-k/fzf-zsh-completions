@@ -182,34 +182,40 @@ _fzf_complete_kubectl() {
         prefix=${prefix#$prefix_option}
     fi
 
-    if [[ -n $resource ]]; then
-        if [[ $last_argument =~ '(-[^-]*l|--selector)$' ]]; then
-            if [[ $prefix = *! ]]; then
-                prefix_option=${prefix%%!}!
-                prefix=${prefix#$prefix_option}
-            fi
-
-            _fzf_complete_kubectl-selectors '--multi' $@
+    if [[ $last_argument =~ '(-[^-]*l|--selector)$' ]]; then
+        if [[ -z $resource ]]; then
             return
         fi
 
-        if [[ $prefix =~ '^(-[^-]*l|--selector=)' ]]; then
-            if [[ $prefix = --* ]]; then
-                prefix_option=${prefix/=*/=}
-                prefix=${prefix#$prefix_option}
-            else
-                prefix_option=${prefix%%l*}l
-                prefix=${prefix#$prefix_option}
-            fi
+        if [[ $prefix = *! ]]; then
+            prefix_option=${prefix%%!}!
+            prefix=${prefix#$prefix_option}
+        fi
 
-            if [[ $prefix = *! ]]; then
-                prefix_option=${prefix%%!}!
-                prefix=${prefix#$prefix_option}
-            fi
+        _fzf_complete_kubectl-selectors '--multi' $@
+        return
+    fi
 
-            _fzf_complete_kubectl-selectors '--multi' $@
+    if [[ $prefix =~ '^(-[^-]*l|--selector=)' ]]; then
+        if [[ -z $resource ]]; then
             return
         fi
+
+        if [[ $prefix = --* ]]; then
+            prefix_option=${prefix/=*/=}
+            prefix=${prefix#$prefix_option}
+        else
+            prefix_option=${prefix%%l*}l
+            prefix=${prefix#$prefix_option}
+        fi
+
+        if [[ $prefix = *! ]]; then
+            prefix_option=${prefix%%!}!
+            prefix=${prefix#$prefix_option}
+        fi
+
+        _fzf_complete_kubectl-selectors '--multi' $@
+        return
     fi
 
     if [[ $last_argument =~ '(-[^-]*L|--label-columns)$' ]]; then
@@ -518,7 +524,17 @@ _fzf_complete_kubectl-selectors_post() {
     if [[ $prefix_option = *! ]]; then
         awk '{ print $1 }'
     else
-        awk '{ printf "%s%s=%s", (NR > 1 ? "," : ""), $1, $2 } END { printf "\n" }'
+        awk '
+            {
+                exectuted = 1
+                printf "%s%s=%s", (NR > 1 ? "," : ""), $1, $2
+            }
+            END {
+                if (exectuted) {
+                    printf "\n"
+                }
+            }
+        '
     fi
 }
 
