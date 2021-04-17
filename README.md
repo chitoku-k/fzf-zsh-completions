@@ -56,12 +56,12 @@ git rebase -i **<TAB>
   - Remotes (pull)
 - kubectl
   - Annotations (annotate)
-  - Containers (exec, logs and set)
+  - Containers (exec, logs, and set)
   - Files (apply)
-  - Labels (label)
+  - Labels (annotate, cordon, delete, describe, drain, diff, get, label, logs, run, scale, set, taint, uncordon, and wait)
   - Nodes (cordon, drain, and uncordon)
   - Ports (port-forward)
-  - Resources (annotate, autoscale, create, delete, describe, edit, exec, explain, expose, get, label, logs, patch, rollout, set and taint)
+  - Resources (annotate, autoscale, create, delete, describe, edit, exec, explain, expose, get, label, logs, patch, rollout, set, scale, and taint)
   - Taints (taint)
 - make
   - Targets
@@ -74,7 +74,7 @@ git rebase -i **<TAB>
 - docker
   - Containers (attach, commit, cp, diff, exec, export, inspect, kill, logs, pause, ports, rename, restart, rm, start, stats, stop, update, unpause, and wait)
   - Files (cp)
-  - Images (create, history, inspect, rmi, run, save, tag)
+  - Images (create, history, inspect, rmi, run, save, and tag)
   - Networks (inspect)
   - Repositories (push)
   - Volumes (inspect)
