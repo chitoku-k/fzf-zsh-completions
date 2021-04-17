@@ -218,24 +218,6 @@ _fzf_complete_kubectl() {
         return
     fi
 
-    if [[ $last_argument =~ '(-[^-]*L|--label-columns)$' ]]; then
-        _fzf_complete_kubectl-label-columns '' $@
-        return
-    fi
-
-    if [[ $prefix =~ '^(-[^-]*L|--label-columns=)' ]]; then
-        if [[ $prefix = --* ]]; then
-            prefix_option=${prefix/=*/=}
-            prefix=${prefix#$prefix_option}
-        else
-            prefix_option=${prefix%%L*}L
-            prefix=${prefix#$prefix_option}
-        fi
-
-        _fzf_complete_kubectl-label-columns '' $@
-        return
-    fi
-
     if [[ ${subcommands[1]} = 'annotate' ]]; then
         if [[ -z $resource ]]; then
             _fzf_complete_kubectl-resources '' $@
@@ -301,6 +283,26 @@ _fzf_complete_kubectl() {
         if [[ -z $resource ]]; then
             _fzf_complete_kubectl-resources '' $@
             return
+        fi
+
+        if [[ ${subcommands[1]} = 'get' ]]; then
+            if [[ $last_argument =~ '(-[^-]*L|--label-columns)$' ]]; then
+                _fzf_complete_kubectl-label-columns '' $@
+                return
+            fi
+
+            if [[ $prefix =~ '^(-[^-]*L|--label-columns=)' ]]; then
+                if [[ $prefix = --* ]]; then
+                    prefix_option=${prefix/=*/=}
+                    prefix=${prefix#$prefix_option}
+                else
+                    prefix_option=${prefix%%L*}L
+                    prefix=${prefix#$prefix_option}
+                fi
+
+                _fzf_complete_kubectl-label-columns '' $@
+                return
+            fi
         fi
 
         _fzf_complete_kubectl-resource-names '--multi' $@
