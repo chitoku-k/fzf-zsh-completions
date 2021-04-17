@@ -180,6 +180,8 @@ _fzf_complete_kubectl() {
         resource=${prefix%/*}
         prefix_option=${prefix%/*}/
         prefix=${prefix#$prefix_option}
+    elif [[ ${subcommands[1]} =~ '^(cordon|drain|uncordon)$' ]]; then
+        resource=nodes
     elif [[ ${subcommands[1]} = 'run' ]]; then
         resource=pods
     fi
@@ -246,7 +248,6 @@ _fzf_complete_kubectl() {
     fi
 
     if [[ ${subcommands[1]} =~ '^(cordon|drain|uncordon)$' ]]; then
-        resource=nodes
         _fzf_complete_kubectl-resource-names '' $@
         return
     fi
