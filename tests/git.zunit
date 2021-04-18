@@ -4699,7 +4699,7 @@
     echo >> directory2/$'file4\ncontaining\nnewlines'
     echo >> ' file5 containing space '
     echo >> directory2/$'file6\ncontaining\nnewlines'
-    touch file_outside_tree_object
+    run touch file_outside_tree_object
     run git add file_outside_tree_object
 
     _fzf_complete() {
@@ -4741,7 +4741,7 @@
     echo >> directory2/$'file4\ncontaining\nnewlines'
     echo >> ' file5 containing space '
     echo >> directory2/$'file6\ncontaining\nnewlines'
-    touch file_outside_tree_object
+    run touch file_outside_tree_object
     run git add file_outside_tree_object
 
     cd directory2
