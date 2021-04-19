@@ -7766,45 +7766,171 @@
 }
 
 @test 'Testing completion: kubectl taint **' {
-    kubectl_mock_1() {
-        assert $# equals 3
-        assert $1 same_as 'api-resources'
-        assert $2 same_as '--cached'
-        assert $3 same_as '--verbs=get'
-
-        echo 'NAME         SHORTNAMES   APIGROUP                    NAMESPACED   KIND'
-        echo 'configmaps   cm                                       true         ConfigMap'
-        echo 'namespaces   ns                                       false        Namespace'
-        echo 'nodes        no                                       false        Node'
-        echo 'pods         po                                       true         Pod'
-        echo 'secrets                                               true         Secret'
-        echo 'services     svc                                      true         Service'
-        echo 'ingresses    ing          extensions                  true         Ingress'
-        echo 'roles                     rbac.authorization.k8s.io   true         Role'
-    }
-
     _fzf_complete() {
-        assert $# equals 5
+        assert $# equals 4
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--'
-        assert $5 same_as 'kubectl taint '
+        assert $3 same_as '--'
+        assert $4 same_as 'kubectl taint '
 
         run cat
-        assert ${#lines} equals 9
-        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
-        assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
-        assert ${lines[3]} same_as "${fg[yellow]}namespaces   ${reset_color}ns                                       false        Namespace"
-        assert ${lines[4]} same_as "${fg[yellow]}nodes        ${reset_color}no                                       false        Node"
-        assert ${lines[5]} same_as "${fg[yellow]}pods         ${reset_color}po                                       true         Pod"
-        assert ${lines[6]} same_as "${fg[yellow]}secrets      ${reset_color}                                         true         Secret"
-        assert ${lines[7]} same_as "${fg[yellow]}services     ${reset_color}svc                                      true         Service"
-        assert ${lines[8]} same_as "${fg[yellow]}ingresses    ${reset_color}ing          extensions                  true         Ingress"
-        assert ${lines[9]} same_as "${fg[yellow]}roles        ${reset_color}             rbac.authorization.k8s.io   true         Role"
+        assert ${#lines} equals 1
+        assert ${lines[1]} same_as nodes
     }
 
     prefix=
+    _fzf_complete_kubectl 'kubectl taint '
+}
+
+@test 'Testing completion: kubectl taint --selector=**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'nodes'
+        assert $3 same_as '--all-namespaces'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={.items[*].metadata.labels}'
+
+        echo -n '{"kubernetes.io/arch":"amd64","kubernetes.io/hostname":"node01","kubernetes.io/os":"linux","node-role.kubernetes.io/control-plane":""}'
+        echo -n '{"kubernetes.io/arch":"amd64","kubernetes.io/hostname":"node02","kubernetes.io/os":"linux","node-role.kubernetes.io/control-plane":""}'
+        echo -n '{"kubernetes.io/arch":"amd64","kubernetes.io/hostname":"node03","kubernetes.io/os":"linux","node-role.kubernetes.io/control-plane":""}'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl taint --selector='
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}KEY                                  ${reset_color}  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}kubernetes.io/arch                   ${reset_color}  amd64"
+        assert ${lines[3]} same_as "${fg[yellow]}kubernetes.io/hostname               ${reset_color}  node01"
+        assert ${lines[4]} same_as "${fg[yellow]}kubernetes.io/hostname               ${reset_color}  node02"
+        assert ${lines[5]} same_as "${fg[yellow]}kubernetes.io/hostname               ${reset_color}  node03"
+        assert ${lines[6]} same_as "${fg[yellow]}kubernetes.io/os                     ${reset_color}  linux"
+        assert ${lines[7]} same_as "${fg[yellow]}node-role.kubernetes.io/control-plane${reset_color}  "
+    }
+
+    prefix=--selector=
+    _fzf_complete_kubectl 'kubectl taint '
+}
+
+@test 'Testing completion: kubectl taint --selector **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'nodes'
+        assert $3 same_as '--all-namespaces'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={.items[*].metadata.labels}'
+
+        echo -n '{"kubernetes.io/arch":"amd64","kubernetes.io/hostname":"node01","kubernetes.io/os":"linux","node-role.kubernetes.io/control-plane":""}'
+        echo -n '{"kubernetes.io/arch":"amd64","kubernetes.io/hostname":"node02","kubernetes.io/os":"linux","node-role.kubernetes.io/control-plane":""}'
+        echo -n '{"kubernetes.io/arch":"amd64","kubernetes.io/hostname":"node03","kubernetes.io/os":"linux","node-role.kubernetes.io/control-plane":""}'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl taint --selector '
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}KEY                                  ${reset_color}  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}kubernetes.io/arch                   ${reset_color}  amd64"
+        assert ${lines[3]} same_as "${fg[yellow]}kubernetes.io/hostname               ${reset_color}  node01"
+        assert ${lines[4]} same_as "${fg[yellow]}kubernetes.io/hostname               ${reset_color}  node02"
+        assert ${lines[5]} same_as "${fg[yellow]}kubernetes.io/hostname               ${reset_color}  node03"
+        assert ${lines[6]} same_as "${fg[yellow]}kubernetes.io/os                     ${reset_color}  linux"
+        assert ${lines[7]} same_as "${fg[yellow]}node-role.kubernetes.io/control-plane${reset_color}  "
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl taint --selector '
+}
+
+@test 'Testing completion: kubectl taint -l **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'nodes'
+        assert $3 same_as '--all-namespaces'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={.items[*].metadata.labels}'
+
+        echo -n '{"kubernetes.io/arch":"amd64","kubernetes.io/hostname":"node01","kubernetes.io/os":"linux","node-role.kubernetes.io/control-plane":""}'
+        echo -n '{"kubernetes.io/arch":"amd64","kubernetes.io/hostname":"node02","kubernetes.io/os":"linux","node-role.kubernetes.io/control-plane":""}'
+        echo -n '{"kubernetes.io/arch":"amd64","kubernetes.io/hostname":"node03","kubernetes.io/os":"linux","node-role.kubernetes.io/control-plane":""}'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl taint -l '
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}KEY                                  ${reset_color}  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}kubernetes.io/arch                   ${reset_color}  amd64"
+        assert ${lines[3]} same_as "${fg[yellow]}kubernetes.io/hostname               ${reset_color}  node01"
+        assert ${lines[4]} same_as "${fg[yellow]}kubernetes.io/hostname               ${reset_color}  node02"
+        assert ${lines[5]} same_as "${fg[yellow]}kubernetes.io/hostname               ${reset_color}  node03"
+        assert ${lines[6]} same_as "${fg[yellow]}kubernetes.io/os                     ${reset_color}  linux"
+        assert ${lines[7]} same_as "${fg[yellow]}node-role.kubernetes.io/control-plane${reset_color}  "
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl taint -l '
+}
+
+@test 'Testing completion: kubectl taint -l**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'nodes'
+        assert $3 same_as '--all-namespaces'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={.items[*].metadata.labels}'
+
+        echo -n '{"kubernetes.io/arch":"amd64","kubernetes.io/hostname":"node01","kubernetes.io/os":"linux","node-role.kubernetes.io/control-plane":""}'
+        echo -n '{"kubernetes.io/arch":"amd64","kubernetes.io/hostname":"node02","kubernetes.io/os":"linux","node-role.kubernetes.io/control-plane":""}'
+        echo -n '{"kubernetes.io/arch":"amd64","kubernetes.io/hostname":"node03","kubernetes.io/os":"linux","node-role.kubernetes.io/control-plane":""}'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl taint -l'
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}KEY                                  ${reset_color}  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}kubernetes.io/arch                   ${reset_color}  amd64"
+        assert ${lines[3]} same_as "${fg[yellow]}kubernetes.io/hostname               ${reset_color}  node01"
+        assert ${lines[4]} same_as "${fg[yellow]}kubernetes.io/hostname               ${reset_color}  node02"
+        assert ${lines[5]} same_as "${fg[yellow]}kubernetes.io/hostname               ${reset_color}  node03"
+        assert ${lines[6]} same_as "${fg[yellow]}kubernetes.io/os                     ${reset_color}  linux"
+        assert ${lines[7]} same_as "${fg[yellow]}node-role.kubernetes.io/control-plane${reset_color}  "
+    }
+
+    prefix=-l
     _fzf_complete_kubectl 'kubectl taint '
 }
 
@@ -7836,6 +7962,158 @@
     }
 
     prefix=
+    _fzf_complete_kubectl 'kubectl taint nodes '
+}
+
+@test 'Testing completion: kubectl taint nodes --selector=**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'nodes'
+        assert $3 same_as '--all-namespaces'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={.items[*].metadata.labels}'
+
+        echo -n '{"kubernetes.io/arch":"amd64","kubernetes.io/hostname":"node01","kubernetes.io/os":"linux","node-role.kubernetes.io/control-plane":""}'
+        echo -n '{"kubernetes.io/arch":"amd64","kubernetes.io/hostname":"node02","kubernetes.io/os":"linux","node-role.kubernetes.io/control-plane":""}'
+        echo -n '{"kubernetes.io/arch":"amd64","kubernetes.io/hostname":"node03","kubernetes.io/os":"linux","node-role.kubernetes.io/control-plane":""}'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl taint nodes --selector='
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}KEY                                  ${reset_color}  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}kubernetes.io/arch                   ${reset_color}  amd64"
+        assert ${lines[3]} same_as "${fg[yellow]}kubernetes.io/hostname               ${reset_color}  node01"
+        assert ${lines[4]} same_as "${fg[yellow]}kubernetes.io/hostname               ${reset_color}  node02"
+        assert ${lines[5]} same_as "${fg[yellow]}kubernetes.io/hostname               ${reset_color}  node03"
+        assert ${lines[6]} same_as "${fg[yellow]}kubernetes.io/os                     ${reset_color}  linux"
+        assert ${lines[7]} same_as "${fg[yellow]}node-role.kubernetes.io/control-plane${reset_color}  "
+    }
+
+    prefix=--selector=
+    _fzf_complete_kubectl 'kubectl taint nodes '
+}
+
+@test 'Testing completion: kubectl taint nodes --selector **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'nodes'
+        assert $3 same_as '--all-namespaces'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={.items[*].metadata.labels}'
+
+        echo -n '{"kubernetes.io/arch":"amd64","kubernetes.io/hostname":"node01","kubernetes.io/os":"linux","node-role.kubernetes.io/control-plane":""}'
+        echo -n '{"kubernetes.io/arch":"amd64","kubernetes.io/hostname":"node02","kubernetes.io/os":"linux","node-role.kubernetes.io/control-plane":""}'
+        echo -n '{"kubernetes.io/arch":"amd64","kubernetes.io/hostname":"node03","kubernetes.io/os":"linux","node-role.kubernetes.io/control-plane":""}'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl taint nodes --selector '
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}KEY                                  ${reset_color}  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}kubernetes.io/arch                   ${reset_color}  amd64"
+        assert ${lines[3]} same_as "${fg[yellow]}kubernetes.io/hostname               ${reset_color}  node01"
+        assert ${lines[4]} same_as "${fg[yellow]}kubernetes.io/hostname               ${reset_color}  node02"
+        assert ${lines[5]} same_as "${fg[yellow]}kubernetes.io/hostname               ${reset_color}  node03"
+        assert ${lines[6]} same_as "${fg[yellow]}kubernetes.io/os                     ${reset_color}  linux"
+        assert ${lines[7]} same_as "${fg[yellow]}node-role.kubernetes.io/control-plane${reset_color}  "
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl taint nodes --selector '
+}
+
+@test 'Testing completion: kubectl taint nodes -l **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'nodes'
+        assert $3 same_as '--all-namespaces'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={.items[*].metadata.labels}'
+
+        echo -n '{"kubernetes.io/arch":"amd64","kubernetes.io/hostname":"node01","kubernetes.io/os":"linux","node-role.kubernetes.io/control-plane":""}'
+        echo -n '{"kubernetes.io/arch":"amd64","kubernetes.io/hostname":"node02","kubernetes.io/os":"linux","node-role.kubernetes.io/control-plane":""}'
+        echo -n '{"kubernetes.io/arch":"amd64","kubernetes.io/hostname":"node03","kubernetes.io/os":"linux","node-role.kubernetes.io/control-plane":""}'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl taint nodes -l '
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}KEY                                  ${reset_color}  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}kubernetes.io/arch                   ${reset_color}  amd64"
+        assert ${lines[3]} same_as "${fg[yellow]}kubernetes.io/hostname               ${reset_color}  node01"
+        assert ${lines[4]} same_as "${fg[yellow]}kubernetes.io/hostname               ${reset_color}  node02"
+        assert ${lines[5]} same_as "${fg[yellow]}kubernetes.io/hostname               ${reset_color}  node03"
+        assert ${lines[6]} same_as "${fg[yellow]}kubernetes.io/os                     ${reset_color}  linux"
+        assert ${lines[7]} same_as "${fg[yellow]}node-role.kubernetes.io/control-plane${reset_color}  "
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl taint nodes -l '
+}
+
+@test 'Testing completion: kubectl taint nodes -l**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'nodes'
+        assert $3 same_as '--all-namespaces'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={.items[*].metadata.labels}'
+
+        echo -n '{"kubernetes.io/arch":"amd64","kubernetes.io/hostname":"node01","kubernetes.io/os":"linux","node-role.kubernetes.io/control-plane":""}'
+        echo -n '{"kubernetes.io/arch":"amd64","kubernetes.io/hostname":"node02","kubernetes.io/os":"linux","node-role.kubernetes.io/control-plane":""}'
+        echo -n '{"kubernetes.io/arch":"amd64","kubernetes.io/hostname":"node03","kubernetes.io/os":"linux","node-role.kubernetes.io/control-plane":""}'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl taint nodes -l'
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}KEY                                  ${reset_color}  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}kubernetes.io/arch                   ${reset_color}  amd64"
+        assert ${lines[3]} same_as "${fg[yellow]}kubernetes.io/hostname               ${reset_color}  node01"
+        assert ${lines[4]} same_as "${fg[yellow]}kubernetes.io/hostname               ${reset_color}  node02"
+        assert ${lines[5]} same_as "${fg[yellow]}kubernetes.io/hostname               ${reset_color}  node03"
+        assert ${lines[6]} same_as "${fg[yellow]}kubernetes.io/os                     ${reset_color}  linux"
+        assert ${lines[7]} same_as "${fg[yellow]}node-role.kubernetes.io/control-plane${reset_color}  "
+    }
+
+    prefix=-l
     _fzf_complete_kubectl 'kubectl taint nodes '
 }
 

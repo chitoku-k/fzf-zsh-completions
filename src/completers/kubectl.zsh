@@ -413,7 +413,8 @@ _fzf_complete_kubectl() {
 
     if [[ ${subcommands[1]} = 'taint' ]]; then
         if [[ -z $resource ]]; then
-            _fzf_complete_kubectl-resources '' $@
+            local taint_resources=(nodes)
+            _fzf_complete_constants '' "${(F)taint_resources}" $@
             return
         fi
 
@@ -507,6 +508,10 @@ _fzf_complete_kubectl-selectors() {
 
     if [[ -z $namespace ]]; then
         kubectl_arguments+=(--all-namespaces)
+    fi
+
+    if [[ ${subcommands[1]} = 'taint' ]]; then
+        resource=nodes
     fi
 
     _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
