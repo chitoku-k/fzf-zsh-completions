@@ -184,13 +184,11 @@ _fzf_complete_kubectl() {
         resource=nodes
     elif [[ ${subcommands[1]} = 'run' ]]; then
         resource=pods
+    elif [[ ${subcommands[1]} = 'scale' ]]; then
+        resource=deployments,replicaset,replicationcontrollers,statefulset
     fi
 
     if [[ $last_argument =~ '(-[^-]*l|--labels|--selector)$' ]]; then
-        if [[ -z $resource ]]; then
-            return
-        fi
-
         if [[ $prefix = *! ]]; then
             prefix_option=${prefix%%!}!
             prefix=${prefix#$prefix_option}
@@ -201,10 +199,6 @@ _fzf_complete_kubectl() {
     fi
 
     if [[ $prefix =~ '^(-[^-]*l|--labels=|--selector=)' ]]; then
-        if [[ -z $resource ]]; then
-            return
-        fi
-
         if [[ $prefix = --* ]]; then
             prefix_option=${prefix/=*/=}
             prefix=${prefix#$prefix_option}
@@ -519,7 +513,7 @@ _fzf_complete_kubectl-selectors() {
         _fzf_complete_tabularize $fg[yellow] < <(cat \
             <(echo KEY VALUE) \
             <({
-                kubectl get "$resource" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{.items[*].metadata.labels}' | jq --slurp -r 'map(to_entries[] | "\(.key) \(.value)") | flatten | sort | unique[]'
+                kubectl get "${resource:-all}" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{.items[*].metadata.labels}' | jq --slurp -r 'map(to_entries[] | "\(.key) \(.value)") | flatten | sort | unique[]'
             } 2> /dev/null) \
         )
     )

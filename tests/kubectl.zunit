@@ -164,6 +164,166 @@
     _fzf_complete_kubectl 'kubectl '
 }
 
+@test 'Testing completion: kubectl diff --labels=**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'all'
+        assert $3 same_as '--all-namespaces'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={.items[*].metadata.labels}'
+
+        echo -n '{"component":"etcd","tier":"control-plane"}'
+        echo -n '{"component":"kube-apiserver","tier":"control-plane"}'
+        echo -n '{"component":"kube-controller-manager","tier":"control-plane"}'
+        echo -n '{"k8s-app":"kube-proxy"}'
+        echo -n '{"component":"kube-scheduler","tier":"control-plane"}'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl diff --labels='
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
+        assert ${lines[3]} same_as "${fg[yellow]}component${reset_color}  kube-apiserver"
+        assert ${lines[4]} same_as "${fg[yellow]}component${reset_color}  kube-controller-manager"
+        assert ${lines[5]} same_as "${fg[yellow]}component${reset_color}  kube-scheduler"
+        assert ${lines[6]} same_as "${fg[yellow]}k8s-app  ${reset_color}  kube-proxy"
+        assert ${lines[7]} same_as "${fg[yellow]}tier     ${reset_color}  control-plane"
+    }
+
+    prefix=--labels=
+    _fzf_complete_kubectl 'kubectl diff '
+}
+
+@test 'Testing completion: kubectl diff --labels **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'all'
+        assert $3 same_as '--all-namespaces'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={.items[*].metadata.labels}'
+
+        echo -n '{"component":"etcd","tier":"control-plane"}'
+        echo -n '{"component":"kube-apiserver","tier":"control-plane"}'
+        echo -n '{"component":"kube-controller-manager","tier":"control-plane"}'
+        echo -n '{"k8s-app":"kube-proxy"}'
+        echo -n '{"component":"kube-scheduler","tier":"control-plane"}'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl diff --labels '
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
+        assert ${lines[3]} same_as "${fg[yellow]}component${reset_color}  kube-apiserver"
+        assert ${lines[4]} same_as "${fg[yellow]}component${reset_color}  kube-controller-manager"
+        assert ${lines[5]} same_as "${fg[yellow]}component${reset_color}  kube-scheduler"
+        assert ${lines[6]} same_as "${fg[yellow]}k8s-app  ${reset_color}  kube-proxy"
+        assert ${lines[7]} same_as "${fg[yellow]}tier     ${reset_color}  control-plane"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl diff --labels '
+}
+
+@test 'Testing completion: kubectl diff -l **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'all'
+        assert $3 same_as '--all-namespaces'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={.items[*].metadata.labels}'
+
+        echo -n '{"component":"etcd","tier":"control-plane"}'
+        echo -n '{"component":"kube-apiserver","tier":"control-plane"}'
+        echo -n '{"component":"kube-controller-manager","tier":"control-plane"}'
+        echo -n '{"k8s-app":"kube-proxy"}'
+        echo -n '{"component":"kube-scheduler","tier":"control-plane"}'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl diff -l '
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
+        assert ${lines[3]} same_as "${fg[yellow]}component${reset_color}  kube-apiserver"
+        assert ${lines[4]} same_as "${fg[yellow]}component${reset_color}  kube-controller-manager"
+        assert ${lines[5]} same_as "${fg[yellow]}component${reset_color}  kube-scheduler"
+        assert ${lines[6]} same_as "${fg[yellow]}k8s-app  ${reset_color}  kube-proxy"
+        assert ${lines[7]} same_as "${fg[yellow]}tier     ${reset_color}  control-plane"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl diff -l '
+}
+
+@test 'Testing completion: kubectl diff -l**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'all'
+        assert $3 same_as '--all-namespaces'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={.items[*].metadata.labels}'
+
+        echo -n '{"component":"etcd","tier":"control-plane"}'
+        echo -n '{"component":"kube-apiserver","tier":"control-plane"}'
+        echo -n '{"component":"kube-controller-manager","tier":"control-plane"}'
+        echo -n '{"k8s-app":"kube-proxy"}'
+        echo -n '{"component":"kube-scheduler","tier":"control-plane"}'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl diff -l'
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
+        assert ${lines[3]} same_as "${fg[yellow]}component${reset_color}  kube-apiserver"
+        assert ${lines[4]} same_as "${fg[yellow]}component${reset_color}  kube-controller-manager"
+        assert ${lines[5]} same_as "${fg[yellow]}component${reset_color}  kube-scheduler"
+        assert ${lines[6]} same_as "${fg[yellow]}k8s-app  ${reset_color}  kube-proxy"
+        assert ${lines[7]} same_as "${fg[yellow]}tier     ${reset_color}  control-plane"
+    }
+
+    prefix=-l
+    _fzf_complete_kubectl 'kubectl diff '
+}
+
 @test 'Testing completion: kubectl run --labels=**' {
     kubectl_mock_1() {
         assert $# equals 5
@@ -322,6 +482,235 @@
 
     prefix=-l
     _fzf_complete_kubectl 'kubectl run '
+}
+
+@test 'Testing completion: kubectl scale --labels=**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'deployments,replicaset,replicationcontrollers,statefulset'
+        assert $3 same_as '--all-namespaces'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={.items[*].metadata.labels}'
+
+        echo -n '{"component":"etcd","tier":"control-plane"}'
+        echo -n '{"component":"kube-apiserver","tier":"control-plane"}'
+        echo -n '{"component":"kube-controller-manager","tier":"control-plane"}'
+        echo -n '{"k8s-app":"kube-proxy"}'
+        echo -n '{"component":"kube-scheduler","tier":"control-plane"}'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl scale --labels='
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
+        assert ${lines[3]} same_as "${fg[yellow]}component${reset_color}  kube-apiserver"
+        assert ${lines[4]} same_as "${fg[yellow]}component${reset_color}  kube-controller-manager"
+        assert ${lines[5]} same_as "${fg[yellow]}component${reset_color}  kube-scheduler"
+        assert ${lines[6]} same_as "${fg[yellow]}k8s-app  ${reset_color}  kube-proxy"
+        assert ${lines[7]} same_as "${fg[yellow]}tier     ${reset_color}  control-plane"
+    }
+
+    prefix=--labels=
+    _fzf_complete_kubectl 'kubectl scale '
+}
+
+@test 'Testing completion: kubectl scale --labels **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'deployments,replicaset,replicationcontrollers,statefulset'
+        assert $3 same_as '--all-namespaces'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={.items[*].metadata.labels}'
+
+        echo -n '{"component":"etcd","tier":"control-plane"}'
+        echo -n '{"component":"kube-apiserver","tier":"control-plane"}'
+        echo -n '{"component":"kube-controller-manager","tier":"control-plane"}'
+        echo -n '{"k8s-app":"kube-proxy"}'
+        echo -n '{"component":"kube-scheduler","tier":"control-plane"}'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl scale --labels '
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
+        assert ${lines[3]} same_as "${fg[yellow]}component${reset_color}  kube-apiserver"
+        assert ${lines[4]} same_as "${fg[yellow]}component${reset_color}  kube-controller-manager"
+        assert ${lines[5]} same_as "${fg[yellow]}component${reset_color}  kube-scheduler"
+        assert ${lines[6]} same_as "${fg[yellow]}k8s-app  ${reset_color}  kube-proxy"
+        assert ${lines[7]} same_as "${fg[yellow]}tier     ${reset_color}  control-plane"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl scale --labels '
+}
+
+@test 'Testing completion: kubectl scale -l **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'deployments,replicaset,replicationcontrollers,statefulset'
+        assert $3 same_as '--all-namespaces'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={.items[*].metadata.labels}'
+
+        echo -n '{"component":"etcd","tier":"control-plane"}'
+        echo -n '{"component":"kube-apiserver","tier":"control-plane"}'
+        echo -n '{"component":"kube-controller-manager","tier":"control-plane"}'
+        echo -n '{"k8s-app":"kube-proxy"}'
+        echo -n '{"component":"kube-scheduler","tier":"control-plane"}'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl scale -l '
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
+        assert ${lines[3]} same_as "${fg[yellow]}component${reset_color}  kube-apiserver"
+        assert ${lines[4]} same_as "${fg[yellow]}component${reset_color}  kube-controller-manager"
+        assert ${lines[5]} same_as "${fg[yellow]}component${reset_color}  kube-scheduler"
+        assert ${lines[6]} same_as "${fg[yellow]}k8s-app  ${reset_color}  kube-proxy"
+        assert ${lines[7]} same_as "${fg[yellow]}tier     ${reset_color}  control-plane"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl scale -l '
+}
+
+@test 'Testing completion: kubectl scale -l**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'deployments,replicaset,replicationcontrollers,statefulset'
+        assert $3 same_as '--all-namespaces'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={.items[*].metadata.labels}'
+
+        echo -n '{"component":"etcd","tier":"control-plane"}'
+        echo -n '{"component":"kube-apiserver","tier":"control-plane"}'
+        echo -n '{"component":"kube-controller-manager","tier":"control-plane"}'
+        echo -n '{"k8s-app":"kube-proxy"}'
+        echo -n '{"component":"kube-scheduler","tier":"control-plane"}'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl scale -l'
+
+        run cat
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
+        assert ${lines[3]} same_as "${fg[yellow]}component${reset_color}  kube-apiserver"
+        assert ${lines[4]} same_as "${fg[yellow]}component${reset_color}  kube-controller-manager"
+        assert ${lines[5]} same_as "${fg[yellow]}component${reset_color}  kube-scheduler"
+        assert ${lines[6]} same_as "${fg[yellow]}k8s-app  ${reset_color}  kube-proxy"
+        assert ${lines[7]} same_as "${fg[yellow]}tier     ${reset_color}  control-plane"
+    }
+
+    prefix=-l
+    _fzf_complete_kubectl 'kubectl scale '
+}
+
+@test 'Testing completion: kubectl scale daemonsets/**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'daemonsets'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAMESPACE     NAME                    READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                          SELECTOR'
+        echo 'default       test-0000000000-00000   1/1     1            1           1d    web          nginx:latest                    app=test'
+        echo 'kube-system   kube-proxy-00000        2/2     2            2           1d    kube-proxy   k8s.gcr.io/kube-proxy:v1.20.5   k8s-app=kube-proxy'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl scale daemonsets/'
+
+        run cat
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                    ${reset_color}READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                          SELECTOR"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000   ${reset_color}1/1     1            1           1d    web          nginx:latest                    app=test"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000        ${reset_color}2/2     2            2           1d    kube-proxy   k8s.gcr.io/kube-proxy:v1.20.5   k8s-app=kube-proxy"
+    }
+
+    prefix=daemonsets/
+    _fzf_complete_kubectl 'kubectl scale '
+}
+
+@test 'Testing completion: kubectl scale daemonsets/** --namespace=kube-system' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'daemonsets'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--namespace=kube-system'
+
+        echo 'NAMESPACE     NAME                    READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                          SELECTOR'
+        echo 'default       test-0000000000-00000   1/1     1            1           1d    web          nginx:latest                    app=test'
+        echo 'kube-system   kube-proxy-00000        2/2     2            2           1d    kube-proxy   k8s.gcr.io/kube-proxy:v1.20.5   k8s-app=kube-proxy'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl scale daemonsets/'
+
+        run cat
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                    ${reset_color}READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                          SELECTOR"
+        assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000   ${reset_color}1/1     1            1           1d    web          nginx:latest                    app=test"
+        assert ${lines[3]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}kube-proxy-00000        ${reset_color}2/2     2            2           1d    kube-proxy   k8s.gcr.io/kube-proxy:v1.20.5   k8s-app=kube-proxy"
+    }
+
+    RBUFFER=' --namespace=kube-system'
+    prefix=daemonsets/
+    _fzf_complete_kubectl 'kubectl scale '
 }
 
 @test 'Testing completion: kubectl apply --filename=**' {
