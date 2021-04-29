@@ -276,7 +276,7 @@ _fzf_complete_kubectl() {
         return
     fi
 
-    if [[ ${subcommands[1]} =~ '^(delete|describe|get|scale)$' ]]; then
+    if [[ ${subcommands[1]} =~ '^(delete|describe|get|scale|wait)$' ]]; then
         if [[ -z $resource ]]; then
             _fzf_complete_kubectl-resources '' $@
             return

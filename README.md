@@ -58,10 +58,10 @@ git rebase -i **<TAB>
   - Annotations (annotate)
   - Containers (exec, logs, and set)
   - Files (apply)
-  - Labels (annotate, cordon, delete, describe, drain, diff, get, label, logs, run, scale, set, taint, uncordon, and wait)
+  - Labels (annotate, cordon, delete, describe, drain, diff, get, label, logs, run, scale, set, taint, top, uncordon, and wait)
   - Nodes (cordon, drain, and uncordon)
   - Ports (port-forward)
-  - Resources (annotate, autoscale, create, delete, describe, edit, exec, explain, expose, get, label, logs, patch, rollout, set, scale, and taint)
+  - Resources (annotate, autoscale, create, delete, describe, edit, exec, explain, expose, get, label, logs, patch, rollout, set, scale, taint, top, and wait)
   - Taints (taint)
 - make
   - Targets
