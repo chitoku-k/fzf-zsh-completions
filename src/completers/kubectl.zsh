@@ -427,6 +427,20 @@ _fzf_complete_kubectl() {
         return
     fi
 
+    if [[ ${subcommands[1]} = 'top' ]]; then
+        if [[ -z $resource ]]; then
+            local top_resources=(nodes pods)
+            _fzf_complete_constants '' "${(F)top_resources}" $@
+            return
+        fi
+
+        if [[ -z $name ]]; then
+            _fzf_complete_kubectl-resource-names '' $@
+            return
+        fi
+        return
+    fi
+
     _fzf_path_completion "$prefix" $@
 }
 
@@ -512,6 +526,8 @@ _fzf_complete_kubectl-selectors() {
 
     if [[ ${subcommands[1]} = 'taint' ]]; then
         resource=nodes
+    elif [[ ${subcommands[1]} = 'top' ]] && [[ -z $resource ]]; then
+        return
     fi
 
     _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
