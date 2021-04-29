@@ -164,7 +164,7 @@ _fzf_complete_kubectl() {
         fi
     fi
 
-    if [[ ${subcommands[1]} =~ '^(rollout|set)$' ]]; then
+    if [[ ${subcommands[1]} =~ '^(apply|rollout|set)$' ]]; then
         subcommands+=($(_fzf_complete_parse_argument 2 2 "$arguments" "${(F)kubectl_options_argument_required}" || :))
         resource=$(_fzf_complete_parse_argument 2 3 "$arguments" "${(F)kubectl_options_argument_required}" || :)
         name=$(_fzf_complete_parse_argument 2 4 "$arguments" "${(F)kubectl_options_argument_required}" || :)
@@ -228,6 +228,26 @@ _fzf_complete_kubectl() {
         fi
 
         _fzf_complete_kubectl-annotations '--multi' $@
+        return
+    fi
+
+    if [[ ${subcommands[1]} = 'apply' ]]; then
+        if [[ ${#subcommands[@]} != 2 ]]; then
+            return
+        fi
+
+        if [[ -z $resource ]]; then
+            _fzf_complete_kubectl-resources '' $@
+            return
+        fi
+
+        if [[ -z $name ]]; then
+            if [[ ${subcommands[2]} = 'edit-last-applied' ]]; then
+                _fzf_complete_kubectl-resource-names '' $@
+            elif [[ ${subcommands[2]} = 'view-last-applied' ]]; then
+                _fzf_complete_kubectl-resource-names '--multi' $@
+            fi
+        fi
         return
     fi
 
