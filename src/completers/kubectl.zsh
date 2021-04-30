@@ -448,7 +448,7 @@ _fzf_complete_kubectl() {
         fi
 
         if [[ ${subcommands[1]} = 'get' ]] && [[ $completing_option =~ '^(-L|--label-columns)$' ]]; then
-            _fzf_complete_kubectl-label-columns '' $@
+            _fzf_complete_kubectl-label-columns '--multi' $@
             return
         fi
     fi
@@ -978,7 +978,10 @@ _fzf_complete_kubectl-label-columns() {
 }
 
 _fzf_complete_kubectl-label-columns_post() {
-    awk '{ print $1 }'
+    awk '{
+        exectuted = 1
+        printf "%s%s", (NR > 1 ? "," : ""), $1
+    }'
 }
 
 _fzf_complete_kubectl-labels() {

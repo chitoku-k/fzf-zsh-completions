@@ -4844,12 +4844,13 @@
     }
 
     _fzf_complete() {
-        assert $# equals 5
+        assert $# equals 6
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--'
-        assert $5 same_as 'kubectl get pods --label-columns='
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl get pods --label-columns='
 
         run cat
         assert ${#lines} equals 4
@@ -4880,12 +4881,13 @@
     }
 
     _fzf_complete() {
-        assert $# equals 5
+        assert $# equals 6
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--'
-        assert $5 same_as 'kubectl get pods --label-columns '
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl get pods --label-columns '
 
         run cat
         assert ${#lines} equals 4
@@ -4916,12 +4918,13 @@
     }
 
     _fzf_complete() {
-        assert $# equals 5
+        assert $# equals 6
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--'
-        assert $5 same_as 'kubectl get pods -L '
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl get pods -L '
 
         run cat
         assert ${#lines} equals 4
@@ -4952,12 +4955,13 @@
     }
 
     _fzf_complete() {
-        assert $# equals 5
+        assert $# equals 6
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--'
-        assert $5 same_as 'kubectl get pods -L'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl get pods -L'
 
         run cat
         assert ${#lines} equals 4
