@@ -775,7 +775,7 @@ _fzf_complete_kubectl() {
         fi
     fi
 
-    if [[ ${subcommands[1]} =~ '^(|diff|run)$' ]]; then
+    if [[ ${subcommands[1]} =~ '^(diff|run)?$' ]]; then
         kubectl_options_argument_required+=(
             --annotations
             --cascade
