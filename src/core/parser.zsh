@@ -22,8 +22,8 @@ _fzf_complete_parse_completing_option() {
                 ;;
 
             --*)
-                if [[ -n ${options_argument_required[(r)${current%=*}]} ]] || [[ -n ${options_argument_optional[(r)${current%=*}]} ]]; then
-                    completing_option=${current%=*}
+                if [[ -n ${options_argument_required[(r)${current%%=*}]} ]] || [[ -n ${options_argument_optional[(r)${current%%=*}]} ]]; then
+                    completing_option=${current%%=*}
                     completing_option_source=prefix
                     break
                 fi
