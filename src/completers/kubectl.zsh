@@ -942,7 +942,12 @@ _fzf_complete_kubectl-selectors() {
         _fzf_complete_tabularize $fg[yellow] < <(cat \
             <(echo KEY VALUE) \
             <({
-                kubectl get "${resource:-all}" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{.items[*].metadata.labels}' | jq --slurp -r 'map(to_entries[] | "\(.key) \(.value)") | flatten | sort | unique[]'
+                kubectl get "${resource:-all}" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{.items[*].metadata.labels}' |
+                    if [[ $prefix_option = *! ]]; then
+                        jq --slurp -r 'map(to_entries[]) | group_by(.key) | map("\(first | .key) \(map(.value) | unique | join(", "))")[]'
+                    else
+                        jq --slurp -r 'map(to_entries[] | "\(.key) \(.value)") | flatten | sort | unique[]'
+                    fi
             } 2> /dev/null) \
         )
     )
@@ -950,12 +955,9 @@ _fzf_complete_kubectl-selectors() {
 
 _fzf_complete_kubectl-selectors_post() {
     if [[ $prefix_option = *! ]]; then
-        awk '{ print $1 }'
+        awk '{ printf "%s%s", (NR > 1 ? ",\\!" : ""), $1 }'
     else
-        awk '{
-            exectuted = 1
-            printf "%s%s=%s", (NR > 1 ? "," : ""), $1, $2
-        }'
+        awk '{ printf "%s%s=%s", (NR > 1 ? "," : ""), $1, $2 }'
     fi
 }
 
@@ -971,17 +973,15 @@ _fzf_complete_kubectl-label-columns() {
         _fzf_complete_tabularize $fg[yellow] < <(cat \
             <(echo KEY VALUES) \
             <({
-                kubectl get "$resource" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{.items[*].metadata.labels}' | jq --slurp -r 'map(to_entries[]) | group_by(.key) | map("\(first | .key) \(map(.value) | unique | join(", "))")[]'
+                kubectl get "$resource" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{.items[*].metadata.labels}' |
+                    jq --slurp -r 'map(to_entries[]) | group_by(.key) | map("\(first | .key) \(map(.value) | unique | join(", "))")[]'
             } 2> /dev/null) \
         )
     )
 }
 
 _fzf_complete_kubectl-label-columns_post() {
-    awk '{
-        exectuted = 1
-        printf "%s%s", (NR > 1 ? "," : ""), $1
-    }'
+    awk '{ printf "%s%s", (NR > 1 ? "," : ""), $1 }'
 }
 
 _fzf_complete_kubectl-labels() {
@@ -992,7 +992,8 @@ _fzf_complete_kubectl-labels() {
         _fzf_complete_tabularize $fg[yellow] < <(cat \
             <(echo KEY VALUE) \
             <({
-                kubectl get "$resource" "$name" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{.metadata.labels}' | jq -r 'to_entries[] | "\(.key) \(.value)"'
+                kubectl get "$resource" "$name" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{.metadata.labels}' |
+                    jq -r 'to_entries[] | "\(.key) \(.value)"'
             } 2> /dev/null) \
         )
     )
