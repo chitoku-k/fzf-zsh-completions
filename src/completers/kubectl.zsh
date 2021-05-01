@@ -845,6 +845,8 @@ _fzf_complete_kubectl() {
             local selector=${prefix%%=}=
             prefix_option=$prefix_option$selector
             prefix=${prefix#$selector}
+            _fzf_complete_kubectl-selectors '' $@
+            return
         fi
 
         _fzf_complete_kubectl-selectors '--multi' $@
