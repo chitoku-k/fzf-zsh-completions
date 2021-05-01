@@ -841,6 +841,12 @@ _fzf_complete_kubectl() {
             prefix=${prefix#$selector}
         fi
 
+        if [[ $prefix = *= ]]; then
+            local selector=${prefix%%=}=
+            prefix_option=$prefix_option$selector
+            prefix=${prefix#$selector}
+        fi
+
         _fzf_complete_kubectl-selectors '--multi' $@
         return
     fi
@@ -938,6 +944,11 @@ _fzf_complete_kubectl-selectors() {
         kubectl_arguments+=(--all-namespaces)
     fi
 
+    if [[ $selector = *= ]]; then
+        selector=${${${prefix_option##*,}%%=*}%%!}
+        kubectl_arguments+=(--selector=$selector)
+    fi
+
     if [[ ${subcommands[1]} = 'taint' ]]; then
         resource=nodes
     elif [[ ${subcommands[1]} = 'top' ]] && [[ -z $resource ]]; then
@@ -955,6 +966,8 @@ _fzf_complete_kubectl-selectors() {
             kubectl get "${resource:-all}" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{.items[*].metadata.labels}' |
                 if [[ $prefix_option = *! ]]; then
                     jq --slurp -r 'map(to_entries[]) | group_by(.key) | map("\(first | .key) \(map(.value) | unique | join(", "))")[]'
+                elif [[ $selector =~ '[^!,]$' ]]; then
+                    jq --slurp -r --arg selector "$selector" 'map(to_entries[] | select(.key == $selector) | "\(.key) \(.value)") | flatten | sort | unique[]'
                 else
                     jq --slurp -r 'map(to_entries[] | "\(.key) \(.value)") | flatten | sort | unique[]'
                 fi
@@ -965,6 +978,8 @@ _fzf_complete_kubectl-selectors() {
 _fzf_complete_kubectl-selectors_post() {
     if [[ $prefix_option = *! ]]; then
         awk '{ printf "%s%s", (NR > 1 ? ",\\!" : ""), $1 }'
+    elif [[ $selector =~ '[^!,]$' ]]; then
+        awk '{ printf "%s%s", (NR > 1 ? ",\\!" : ""), $2 }'
     else
         awk '{ printf "%s%s=%s", (NR > 1 ? "," : ""), $1, $2 }'
     fi
