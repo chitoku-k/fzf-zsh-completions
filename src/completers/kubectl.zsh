@@ -448,6 +448,12 @@ _fzf_complete_kubectl() {
         fi
 
         if [[ ${subcommands[1]} = 'get' ]] && [[ $completing_option =~ '^(-L|--label-columns)$' ]]; then
+            if [[ $prefix = *, ]]; then
+                local selector=${prefix%%,},
+                prefix_option=$prefix_option$selector
+                prefix=${prefix#$selector}
+            fi
+
             _fzf_complete_kubectl-label-columns '--multi' $@
             return
         fi
@@ -940,7 +946,13 @@ _fzf_complete_kubectl-selectors() {
 
     _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
         _fzf_complete_tabularize $fg[yellow] < <(cat \
-            <(echo KEY VALUE) \
+            <({
+                if [[ $prefix_option = *! ]]; then
+                    echo KEY VALUES
+                else
+                    echo KEY VALUE
+                fi
+            }) \
             <({
                 kubectl get "${resource:-all}" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{.items[*].metadata.labels}' |
                     if [[ $prefix_option = *! ]]; then
