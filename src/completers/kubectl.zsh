@@ -945,23 +945,20 @@ _fzf_complete_kubectl-selectors() {
     fi
 
     _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
-        _fzf_complete_tabularize $fg[yellow] < <(cat \
-            <({
+        _fzf_complete_tabularize $fg[yellow] < <({
+            if [[ $prefix_option = *! ]]; then
+                echo KEY VALUES
+            else
+                echo KEY VALUE
+            fi
+
+            kubectl get "${resource:-all}" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{.items[*].metadata.labels}' |
                 if [[ $prefix_option = *! ]]; then
-                    echo KEY VALUES
+                    jq --slurp -r 'map(to_entries[]) | group_by(.key) | map("\(first | .key) \(map(.value) | unique | join(", "))")[]'
                 else
-                    echo KEY VALUE
+                    jq --slurp -r 'map(to_entries[] | "\(.key) \(.value)") | flatten | sort | unique[]'
                 fi
-            }) \
-            <({
-                kubectl get "${resource:-all}" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{.items[*].metadata.labels}' |
-                    if [[ $prefix_option = *! ]]; then
-                        jq --slurp -r 'map(to_entries[]) | group_by(.key) | map("\(first | .key) \(map(.value) | unique | join(", "))")[]'
-                    else
-                        jq --slurp -r 'map(to_entries[] | "\(.key) \(.value)") | flatten | sort | unique[]'
-                    fi
-            } 2> /dev/null) \
-        )
+        } 2> /dev/null)
     )
 }
 
@@ -982,13 +979,11 @@ _fzf_complete_kubectl-label-columns() {
     fi
 
     _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
-        _fzf_complete_tabularize $fg[yellow] < <(cat \
-            <(echo KEY VALUES) \
-            <({
-                kubectl get "$resource" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{.items[*].metadata.labels}' |
-                    jq --slurp -r 'map(to_entries[]) | group_by(.key) | map("\(first | .key) \(map(.value) | unique | join(", "))")[]'
-            } 2> /dev/null) \
-        )
+        _fzf_complete_tabularize $fg[yellow] < <({
+            echo KEY VALUES
+            kubectl get "$resource" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{.items[*].metadata.labels}' |
+                jq --slurp -r 'map(to_entries[]) | group_by(.key) | map("\(first | .key) \(map(.value) | unique | join(", "))")[]'
+        } 2> /dev/null)
     )
 }
 
@@ -1001,13 +996,11 @@ _fzf_complete_kubectl-labels() {
     shift
 
     _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
-        _fzf_complete_tabularize $fg[yellow] < <(cat \
-            <(echo KEY VALUE) \
-            <({
-                kubectl get "$resource" "$name" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{.metadata.labels}' |
-                    jq -r 'to_entries[] | "\(.key) \(.value)"'
-            } 2> /dev/null) \
-        )
+        _fzf_complete_tabularize $fg[yellow] < <({
+            echo KEY VALUE
+            kubectl get "$resource" "$name" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{.metadata.labels}' |
+                jq -r 'to_entries[] | "\(.key) \(.value)"'
+        } 2> /dev/null)
     )
 }
 
@@ -1020,9 +1013,9 @@ _fzf_complete_kubectl-taints() {
     shift
 
     _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
-        _fzf_complete_tabularize $fg[yellow] $reset_color < <(cat \
-            <(echo KEY VALUE EFFECT) \
-            <(kubectl get "$resource" "$name" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{range .spec.taints[*]}{.key} {.value} {.effect}{"\n"}{end}' 2> /dev/null)
+        _fzf_complete_tabularize $fg[yellow] $reset_color < <(
+            echo KEY VALUE EFFECT
+            kubectl get "$resource" "$name" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{range .spec.taints[*]}{.key} {.value} {.effect}{"\n"}{end}' 2> /dev/null
         )
     )
 }
