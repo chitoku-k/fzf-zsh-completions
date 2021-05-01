@@ -61,7 +61,7 @@ git rebase -i **<TAB>
   - Labels (annotate, apply, cordon, delete, describe, drain, diff, get, label, logs, run, scale, set, taint, top, uncordon, and wait)
   - Nodes (cordon, drain, and uncordon)
   - Ports (port-forward)
-  - Resources (annotate, apply, autoscale, create, delete, describe, edit, exec, explain, expose, get, label, logs, patch, rollout, set, scale, taint, top, and wait)
+  - Resources (annotate, apply, autoscale, create, delete, describe, edit, exec, explain, expose, get, label, logs, patch, port-forward, rollout, set, scale, taint, top, and wait)
   - Taints (taint)
 - make
   - Targets
