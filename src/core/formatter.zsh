@@ -50,9 +50,13 @@ _fzf_complete_colorize() {
         -v reset=$reset_color '
         BEGIN {
             split(colors_args, colors, " ")
-            fields[1] = 1
+            header = 1
         }
-        NR == 1 {
+        header {
+            delete fields
+            fields[1] = 1
+            header = 0
+
             for (i = 2; i <= length($0); ++i) {
                 if (substr($0, i - 1, 1) == " " && substr($0, i, 1) != " ") {
                     fields[length(fields) + 1] = i
@@ -68,6 +72,9 @@ _fzf_complete_colorize() {
             }
 
             printf "%s\n", substr($0, total + 1)
+        }
+        /^$/ {
+            header = 1
         }
     '
 }
