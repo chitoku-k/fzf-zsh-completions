@@ -10,7 +10,7 @@ _zunit_assert_mock_times() {
     fi
 
     local i
-    for (( i = 1; i <= $len; i++ )); do
+    for (( i = 1; i <= len; i++ )); do
         local mock=${target}_mock_$i
         if [[ -e ${mock}_fail ]]; then
             echo "$mock: $(cat -- ${mock}_fail)"
