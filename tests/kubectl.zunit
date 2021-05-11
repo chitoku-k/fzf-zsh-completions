@@ -2,19 +2,13 @@
 
 @setup {
     load ../fzf-zsh-completions.plugin.zsh
-
-    echo 0 > kubectl_mock_times
-
-    kubectl() {
-        kubectl_mock_times=$(($(cat kubectl_mock_times) + 1))
-        echo $kubectl_mock_times > kubectl_mock_times
-
-        kubectl_mock_$kubectl_mock_times $@
-    }
+    load _helpers/mock.zsh
+    load _helpers/assertions.zsh
+    mock kubectl
 }
 
 @teardown {
-    rm -f kubectl_mock_times
+    unmock kubectl
 }
 
 @test 'Testing completion: kubectl **' {
@@ -55,6 +49,7 @@
         assert $5 same_as 'kubectl --namespace='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME          ${reset_color}STATUS   AGE"
         assert ${lines[2]} same_as "${fg[yellow]}default       ${reset_color}Active   1d"
@@ -88,6 +83,7 @@
         assert $5 same_as 'kubectl --namespace '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME          ${reset_color}STATUS   AGE"
         assert ${lines[2]} same_as "${fg[yellow]}default       ${reset_color}Active   1d"
@@ -121,6 +117,7 @@
         assert $5 same_as 'kubectl -n '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME          ${reset_color}STATUS   AGE"
         assert ${lines[2]} same_as "${fg[yellow]}default       ${reset_color}Active   1d"
@@ -154,6 +151,7 @@
         assert $5 same_as 'kubectl -n'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME          ${reset_color}STATUS   AGE"
         assert ${lines[2]} same_as "${fg[yellow]}default       ${reset_color}Active   1d"
@@ -190,6 +188,7 @@
         assert $6 same_as 'kubectl diff --labels='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -230,6 +229,7 @@
         assert $6 same_as 'kubectl diff --labels '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -270,6 +270,7 @@
         assert $6 same_as 'kubectl diff -l '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -310,6 +311,7 @@
         assert $6 same_as 'kubectl diff -l'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -350,6 +352,7 @@
         assert $6 same_as 'kubectl run --labels='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -390,6 +393,7 @@
         assert $6 same_as 'kubectl run --labels '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -430,6 +434,7 @@
         assert $6 same_as 'kubectl run -l '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -470,6 +475,7 @@
         assert $6 same_as 'kubectl run -l'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -510,6 +516,7 @@
         assert $6 same_as 'kubectl scale --selector='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -550,6 +557,7 @@
         assert $6 same_as 'kubectl scale --selector '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -590,6 +598,7 @@
         assert $6 same_as 'kubectl scale -l '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -630,6 +639,7 @@
         assert $6 same_as 'kubectl scale -l'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -668,6 +678,7 @@
         assert $6 same_as 'kubectl scale daemonsets/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                    ${reset_color}READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                          SELECTOR"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000   ${reset_color}1/1     1            1           1d    web          nginx:latest                    app=test"
@@ -702,6 +713,7 @@
         assert $6 same_as 'kubectl scale daemonsets/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                    ${reset_color}READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                          SELECTOR"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000   ${reset_color}1/1     1            1           1d    web          nginx:latest                    app=test"
@@ -740,6 +752,7 @@
         assert $5 same_as 'kubectl wait '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 9
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
         assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
@@ -784,6 +797,7 @@
         assert $6 same_as 'kubectl wait pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -826,6 +840,7 @@
         assert $6 same_as 'kubectl wait pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -866,6 +881,7 @@
         assert $6 same_as 'kubectl wait pods --selector='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -906,6 +922,7 @@
         assert $6 same_as 'kubectl wait pods --selector '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -946,6 +963,7 @@
         assert $6 same_as 'kubectl wait pods -l '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -986,6 +1004,7 @@
         assert $6 same_as 'kubectl wait pods -l'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -1028,6 +1047,7 @@
         assert $6 same_as 'kubectl wait pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -1071,6 +1091,7 @@
         assert $6 same_as 'kubectl wait pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -1113,6 +1134,7 @@
         assert $5 same_as 'kubectl annotate '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 9
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
         assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
@@ -1156,6 +1178,7 @@
         assert $5 same_as 'kubectl annotate pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -1197,6 +1220,7 @@
         assert $5 same_as 'kubectl annotate pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -1237,6 +1261,7 @@
         assert $6 same_as 'kubectl annotate pods --selector='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -1277,6 +1302,7 @@
         assert $6 same_as 'kubectl annotate pods --selector '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -1317,6 +1343,7 @@
         assert $6 same_as 'kubectl annotate pods -l '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -1357,6 +1384,7 @@
         assert $6 same_as 'kubectl annotate pods -l'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -1394,6 +1422,7 @@
         assert $7 same_as 'kubectl annotate pods etcd-minikube '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 2
 
         actual1=(${(0)lines[1]})
@@ -1435,6 +1464,7 @@
         assert $7 same_as 'kubectl annotate pods/etcd-minikube '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 2
 
         actual1=(${(0)lines[1]})
@@ -1480,6 +1510,7 @@
         assert $5 same_as 'kubectl annotate pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -1522,6 +1553,7 @@
         assert $5 same_as 'kubectl annotate pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -1561,6 +1593,7 @@
         assert $7 same_as 'kubectl annotate pods etcd-minikube '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 2
 
         actual1=(${(0)lines[1]})
@@ -1604,6 +1637,7 @@
         assert $7 same_as 'kubectl annotate pods/etcd-minikube '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 2
 
         actual1=(${(0)lines[1]})
@@ -1726,6 +1760,7 @@
         assert $5 same_as 'kubectl apply edit-last-applied '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 9
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
         assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
@@ -1769,6 +1804,7 @@
         assert $5 same_as 'kubectl apply edit-last-applied pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -1810,6 +1846,7 @@
         assert $5 same_as 'kubectl apply edit-last-applied pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -1851,6 +1888,7 @@
         assert $5 same_as 'kubectl apply edit-last-applied pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -1893,6 +1931,7 @@
         assert $5 same_as 'kubectl apply edit-last-applied pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -1935,6 +1974,7 @@
         assert $5 same_as 'kubectl apply view-last-applied '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 9
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
         assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
@@ -1979,6 +2019,7 @@
         assert $6 same_as 'kubectl apply view-last-applied pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -2021,6 +2062,7 @@
         assert $6 same_as 'kubectl apply view-last-applied pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -2061,6 +2103,7 @@
         assert $6 same_as 'kubectl apply view-last-applied pods --selector='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -2101,6 +2144,7 @@
         assert $6 same_as 'kubectl apply view-last-applied pods --selector '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -2141,6 +2185,7 @@
         assert $6 same_as 'kubectl apply view-last-applied pods -l '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -2181,6 +2226,7 @@
         assert $6 same_as 'kubectl apply view-last-applied pods -l'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -2223,6 +2269,7 @@
         assert $6 same_as 'kubectl apply view-last-applied pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -2266,6 +2313,7 @@
         assert $6 same_as 'kubectl apply view-last-applied pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -2308,6 +2356,7 @@
         assert $5 same_as 'kubectl autoscale '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 9
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
         assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
@@ -2351,6 +2400,7 @@
         assert $5 same_as 'kubectl autoscale pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -2392,6 +2442,7 @@
         assert $5 same_as 'kubectl autoscale pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -2433,6 +2484,7 @@
         assert $5 same_as 'kubectl autoscale pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -2475,6 +2527,7 @@
         assert $5 same_as 'kubectl autoscale pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -2517,6 +2570,7 @@
         assert $5 same_as 'kubectl edit '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 9
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
         assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
@@ -2560,6 +2614,7 @@
         assert $5 same_as 'kubectl edit pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -2601,6 +2656,7 @@
         assert $5 same_as 'kubectl edit pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -2642,6 +2698,7 @@
         assert $5 same_as 'kubectl edit pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -2684,6 +2741,7 @@
         assert $5 same_as 'kubectl edit pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -2726,6 +2784,7 @@
         assert $5 same_as 'kubectl expose '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 9
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
         assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
@@ -2769,6 +2828,7 @@
         assert $5 same_as 'kubectl expose pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -2810,6 +2870,7 @@
         assert $5 same_as 'kubectl expose pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -2851,6 +2912,7 @@
         assert $5 same_as 'kubectl expose pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -2893,6 +2955,7 @@
         assert $5 same_as 'kubectl expose pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -2935,6 +2998,7 @@
         assert $5 same_as 'kubectl patch '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 9
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
         assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
@@ -2978,6 +3042,7 @@
         assert $5 same_as 'kubectl patch pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -3019,6 +3084,7 @@
         assert $5 same_as 'kubectl patch pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -3060,6 +3126,7 @@
         assert $5 same_as 'kubectl patch pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -3102,6 +3169,7 @@
         assert $5 same_as 'kubectl patch pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -3139,6 +3207,7 @@
         assert $5 same_as 'kubectl cordon '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 2
         assert ${lines[1]} same_as "${fg[yellow]}NAME       ${reset_color}STATUS   ROLES    AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE     KERNEL-VERSION   CONTAINER-RUNTIME"
         assert ${lines[2]} same_as "${fg[yellow]}minikube   ${reset_color}Ready    master   20d   v1.19.2   192.0.2.1     <none>        Arch Linux   5.8.14-arch1-1   docker://19.3.13"
@@ -3172,6 +3241,7 @@
         assert $6 same_as 'kubectl cordon --selector='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY                                  ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}kubernetes.io/arch                   ${reset_color}  amd64"
@@ -3210,6 +3280,7 @@
         assert $6 same_as 'kubectl cordon --selector '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY                                  ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}kubernetes.io/arch                   ${reset_color}  amd64"
@@ -3248,6 +3319,7 @@
         assert $6 same_as 'kubectl cordon -l '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY                                  ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}kubernetes.io/arch                   ${reset_color}  amd64"
@@ -3286,6 +3358,7 @@
         assert $6 same_as 'kubectl cordon -l'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY                                  ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}kubernetes.io/arch                   ${reset_color}  amd64"
@@ -3322,6 +3395,7 @@
         assert $5 same_as 'kubectl drain '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 2
         assert ${lines[1]} same_as "${fg[yellow]}NAME       ${reset_color}STATUS   ROLES    AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE     KERNEL-VERSION   CONTAINER-RUNTIME"
         assert ${lines[2]} same_as "${fg[yellow]}minikube   ${reset_color}Ready    master   20d   v1.19.2   192.0.2.1     <none>        Arch Linux   5.8.14-arch1-1   docker://19.3.13"
@@ -3355,6 +3429,7 @@
         assert $6 same_as 'kubectl drain --selector='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY                                  ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}kubernetes.io/arch                   ${reset_color}  amd64"
@@ -3393,6 +3468,7 @@
         assert $6 same_as 'kubectl drain --selector '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY                                  ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}kubernetes.io/arch                   ${reset_color}  amd64"
@@ -3431,6 +3507,7 @@
         assert $6 same_as 'kubectl drain -l '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY                                  ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}kubernetes.io/arch                   ${reset_color}  amd64"
@@ -3469,6 +3546,7 @@
         assert $6 same_as 'kubectl drain -l'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY                                  ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}kubernetes.io/arch                   ${reset_color}  amd64"
@@ -3505,6 +3583,7 @@
         assert $5 same_as 'kubectl uncordon '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 2
         assert ${lines[1]} same_as "${fg[yellow]}NAME       ${reset_color}STATUS   ROLES    AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE     KERNEL-VERSION   CONTAINER-RUNTIME"
         assert ${lines[2]} same_as "${fg[yellow]}minikube   ${reset_color}Ready    master   20d   v1.19.2   192.0.2.1     <none>        Arch Linux   5.8.14-arch1-1   docker://19.3.13"
@@ -3538,6 +3617,7 @@
         assert $6 same_as 'kubectl uncordon --selector='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY                                  ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}kubernetes.io/arch                   ${reset_color}  amd64"
@@ -3576,6 +3656,7 @@
         assert $6 same_as 'kubectl uncordon --selector '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY                                  ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}kubernetes.io/arch                   ${reset_color}  amd64"
@@ -3614,6 +3695,7 @@
         assert $6 same_as 'kubectl uncordon -l '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY                                  ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}kubernetes.io/arch                   ${reset_color}  amd64"
@@ -3652,6 +3734,7 @@
         assert $6 same_as 'kubectl uncordon -l'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY                                  ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}kubernetes.io/arch                   ${reset_color}  amd64"
@@ -3675,6 +3758,7 @@
         assert $4 same_as 'kubectl create '
 
         run cat
+        assert kubectl mock_times 0
         assert ${#lines} equals 23
         assert ${lines[1]} same_as 'clusterrole'
         assert ${lines[2]} same_as 'clusterrolebinding'
@@ -3732,6 +3816,7 @@
         assert $5 same_as 'kubectl delete '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 9
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
         assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
@@ -3776,6 +3861,7 @@
         assert $6 same_as 'kubectl delete pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -3818,6 +3904,7 @@
         assert $6 same_as 'kubectl delete pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -3858,6 +3945,7 @@
         assert $6 same_as 'kubectl delete pods --selector='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -3898,6 +3986,7 @@
         assert $6 same_as 'kubectl delete pods --selector '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -3938,6 +4027,7 @@
         assert $6 same_as 'kubectl delete pods -l '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -3978,6 +4068,7 @@
         assert $6 same_as 'kubectl delete pods -l'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -4020,6 +4111,7 @@
         assert $6 same_as 'kubectl delete pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -4063,6 +4155,7 @@
         assert $6 same_as 'kubectl delete pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -4105,6 +4198,7 @@
         assert $5 same_as 'kubectl describe '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 9
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
         assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
@@ -4149,6 +4243,7 @@
         assert $6 same_as 'kubectl describe pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -4191,6 +4286,7 @@
         assert $6 same_as 'kubectl describe pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -4231,6 +4327,7 @@
         assert $6 same_as 'kubectl describe pods --selector='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -4271,6 +4368,7 @@
         assert $6 same_as 'kubectl describe pods --selector '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -4311,6 +4409,7 @@
         assert $6 same_as 'kubectl describe pods -l '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -4351,6 +4450,7 @@
         assert $6 same_as 'kubectl describe pods -l'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -4393,6 +4493,7 @@
         assert $6 same_as 'kubectl describe pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -4436,6 +4537,7 @@
         assert $6 same_as 'kubectl describe pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -4478,6 +4580,7 @@
         assert $5 same_as 'kubectl get '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 9
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
         assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
@@ -4522,6 +4625,7 @@
         assert $6 same_as 'kubectl get pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -4564,6 +4668,7 @@
         assert $6 same_as 'kubectl get pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -4604,6 +4709,7 @@
         assert $6 same_as 'kubectl get pods --selector='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -4644,6 +4750,7 @@
         assert $6 same_as 'kubectl get pods --selector=tier=control-plane,'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -4683,6 +4790,7 @@
         assert $6 same_as 'kubectl get pods --selector=tier=control-plane,'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -4722,6 +4830,7 @@
         assert $6 same_as 'kubectl get pods --selector=tier=control-plane,\!'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUES"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd, kube-apiserver, kube-controller-manager, kube-scheduler"
@@ -4758,6 +4867,7 @@
         assert $6 same_as 'kubectl get pods --selector=tier=control-plane,\!'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUES"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd, kube-apiserver, kube-controller-manager, kube-scheduler"
@@ -4793,6 +4903,7 @@
         assert $5 same_as 'kubectl get pods --selector=tier=control-plane,component='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -4830,6 +4941,7 @@
         assert $5 same_as 'kubectl get pods --selector=tier=control-plane,component='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -4867,6 +4979,7 @@
         assert $5 same_as 'kubectl get pods --selector=tier=control-plane,component=='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -4904,6 +5017,7 @@
         assert $5 same_as 'kubectl get pods --selector=tier=control-plane,component=='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -4941,6 +5055,7 @@
         assert $5 same_as 'kubectl get pods --selector=tier=control-plane,component!='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -4978,6 +5093,7 @@
         assert $5 same_as 'kubectl get pods --selector=tier=control-plane,component!='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -5016,6 +5132,7 @@
         assert $6 same_as 'kubectl get pods --selector '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -5056,6 +5173,7 @@
         assert $6 same_as 'kubectl get pods --selector tier=control-plane,'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -5095,6 +5213,7 @@
         assert $6 same_as 'kubectl get pods --selector tier=control-plane,'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -5134,6 +5253,7 @@
         assert $6 same_as 'kubectl get pods --selector tier=control-plane,\!'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUES"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd, kube-apiserver, kube-controller-manager, kube-scheduler"
@@ -5170,6 +5290,7 @@
         assert $6 same_as 'kubectl get pods --selector tier=control-plane,\!'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUES"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd, kube-apiserver, kube-controller-manager, kube-scheduler"
@@ -5205,6 +5326,7 @@
         assert $5 same_as 'kubectl get pods --selector tier=control-plane,component='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -5242,6 +5364,7 @@
         assert $5 same_as 'kubectl get pods --selector tier=control-plane,component='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -5279,6 +5402,7 @@
         assert $5 same_as 'kubectl get pods --selector tier=control-plane,component=='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -5316,6 +5440,7 @@
         assert $5 same_as 'kubectl get pods --selector tier=control-plane,component=='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -5353,6 +5478,7 @@
         assert $5 same_as 'kubectl get pods --selector tier=control-plane,component!='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -5390,6 +5516,7 @@
         assert $5 same_as 'kubectl get pods --selector tier=control-plane,component!='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -5428,6 +5555,7 @@
         assert $6 same_as 'kubectl get pods -l '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -5468,6 +5596,7 @@
         assert $6 same_as 'kubectl get pods -l tier=control-plane,'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -5507,6 +5636,7 @@
         assert $6 same_as 'kubectl get pods -l tier=control-plane,'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -5546,6 +5676,7 @@
         assert $6 same_as 'kubectl get pods -l tier=control-plane,\!'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUES"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd, kube-apiserver, kube-controller-manager, kube-scheduler"
@@ -5582,6 +5713,7 @@
         assert $6 same_as 'kubectl get pods -l tier=control-plane,\!'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUES"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd, kube-apiserver, kube-controller-manager, kube-scheduler"
@@ -5617,6 +5749,7 @@
         assert $5 same_as 'kubectl get pods -l tier=control-plane,component='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -5654,6 +5787,7 @@
         assert $5 same_as 'kubectl get pods -l tier=control-plane,component='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -5691,6 +5825,7 @@
         assert $5 same_as 'kubectl get pods -l tier=control-plane,component=='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -5728,6 +5863,7 @@
         assert $5 same_as 'kubectl get pods -l tier=control-plane,component=='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -5765,6 +5901,7 @@
         assert $5 same_as 'kubectl get pods -l tier=control-plane,component!='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -5802,6 +5939,7 @@
         assert $5 same_as 'kubectl get pods -l tier=control-plane,component!='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -5840,6 +5978,7 @@
         assert $6 same_as 'kubectl get pods -l'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -5880,6 +6019,7 @@
         assert $6 same_as 'kubectl get pods -ltier=control-plane,'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -5919,6 +6059,7 @@
         assert $6 same_as 'kubectl get pods -ltier=control-plane,'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -5958,6 +6099,7 @@
         assert $6 same_as 'kubectl get pods -ltier=control-plane,\!'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUES"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd, kube-apiserver, kube-controller-manager, kube-scheduler"
@@ -5994,6 +6136,7 @@
         assert $6 same_as 'kubectl get pods -ltier=control-plane,\!'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUES"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd, kube-apiserver, kube-controller-manager, kube-scheduler"
@@ -6029,6 +6172,7 @@
         assert $5 same_as 'kubectl get pods -ltier=control-plane,component='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -6066,6 +6210,7 @@
         assert $5 same_as 'kubectl get pods -ltier=control-plane,component='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -6103,6 +6248,7 @@
         assert $5 same_as 'kubectl get pods -ltier=control-plane,component=='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -6140,6 +6286,7 @@
         assert $5 same_as 'kubectl get pods -ltier=control-plane,component=='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -6177,6 +6324,7 @@
         assert $5 same_as 'kubectl get pods -ltier=control-plane,component!='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -6214,6 +6362,7 @@
         assert $5 same_as 'kubectl get pods -ltier=control-plane,component!='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -6255,6 +6404,7 @@
         assert $6 same_as 'kubectl get pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES   COMPONENT                 K8S-APP"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -6300,6 +6450,7 @@
         assert $6 same_as 'kubectl get pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES   COMPONENT                 K8S-APP"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -6341,6 +6492,7 @@
         assert $6 same_as 'kubectl get pods --label-columns='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 4
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUES"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd, kube-apiserver, kube-controller-manager, kube-scheduler"
@@ -6378,6 +6530,7 @@
         assert $6 same_as 'kubectl get pods --label-columns=tier,'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUES"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd, kube-apiserver, kube-controller-manager, kube-scheduler"
@@ -6414,6 +6567,7 @@
         assert $6 same_as 'kubectl get pods --label-columns=tier,'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUES"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd, kube-apiserver, kube-controller-manager, kube-scheduler"
@@ -6450,6 +6604,7 @@
         assert $6 same_as 'kubectl get pods --label-columns '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 4
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUES"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd, kube-apiserver, kube-controller-manager, kube-scheduler"
@@ -6487,6 +6642,7 @@
         assert $6 same_as 'kubectl get pods --label-columns tier,'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUES"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd, kube-apiserver, kube-controller-manager, kube-scheduler"
@@ -6523,6 +6679,7 @@
         assert $6 same_as 'kubectl get pods --label-columns tier,'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUES"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd, kube-apiserver, kube-controller-manager, kube-scheduler"
@@ -6559,6 +6716,7 @@
         assert $6 same_as 'kubectl get pods -L '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 4
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUES"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd, kube-apiserver, kube-controller-manager, kube-scheduler"
@@ -6596,6 +6754,7 @@
         assert $6 same_as 'kubectl get pods -L tier,'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUES"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd, kube-apiserver, kube-controller-manager, kube-scheduler"
@@ -6632,6 +6791,7 @@
         assert $6 same_as 'kubectl get pods -L tier,'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUES"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd, kube-apiserver, kube-controller-manager, kube-scheduler"
@@ -6668,6 +6828,7 @@
         assert $6 same_as 'kubectl get pods -L'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 4
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUES"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd, kube-apiserver, kube-controller-manager, kube-scheduler"
@@ -6705,6 +6866,7 @@
         assert $6 same_as 'kubectl get pods -Ltier,'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUES"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd, kube-apiserver, kube-controller-manager, kube-scheduler"
@@ -6741,6 +6903,7 @@
         assert $6 same_as 'kubectl get pods -Ltier,'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUES"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd, kube-apiserver, kube-controller-manager, kube-scheduler"
@@ -6779,6 +6942,7 @@
         assert $6 same_as 'kubectl get pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -6822,6 +6986,7 @@
         assert $6 same_as 'kubectl get pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -6864,6 +7029,7 @@
         assert $5 same_as 'kubectl exec '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -6905,6 +7071,7 @@
         assert $5 same_as 'kubectl exec pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -6951,6 +7118,7 @@
         assert $5 same_as 'kubectl exec etcd-minikube --container='
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -6993,6 +7161,7 @@
         assert $5 same_as 'kubectl exec pods/etcd-minikube --container='
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -7035,6 +7204,7 @@
         assert $5 same_as 'kubectl exec etcd-minikube --container '
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -7077,6 +7247,7 @@
         assert $5 same_as 'kubectl exec pods/etcd-minikube --container '
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -7119,6 +7290,7 @@
         assert $5 same_as 'kubectl exec etcd-minikube -c '
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -7161,6 +7333,7 @@
         assert $5 same_as 'kubectl exec pods/etcd-minikube -c '
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -7203,6 +7376,7 @@
         assert $5 same_as 'kubectl exec etcd-minikube -c'
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -7245,6 +7419,7 @@
         assert $5 same_as 'kubectl exec pods/etcd-minikube -c'
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -7281,6 +7456,7 @@
         assert $5 same_as 'kubectl exec '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
@@ -7321,6 +7497,7 @@
         assert $5 same_as 'kubectl exec pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
@@ -7369,6 +7546,7 @@
         assert $5 same_as 'kubectl exec etcd-minikube --container='
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -7414,6 +7592,7 @@
         assert $5 same_as 'kubectl exec pods/etcd-minikube --container='
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -7459,6 +7638,7 @@
         assert $5 same_as 'kubectl exec etcd-minikube --container '
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -7504,6 +7684,7 @@
         assert $5 same_as 'kubectl exec pods/etcd-minikube --container '
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -7549,6 +7730,7 @@
         assert $5 same_as 'kubectl exec etcd-minikube -c '
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -7594,6 +7776,7 @@
         assert $5 same_as 'kubectl exec pods/etcd-minikube -c '
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -7639,6 +7822,7 @@
         assert $5 same_as 'kubectl exec etcd-minikube -c'
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -7684,6 +7868,7 @@
         assert $5 same_as 'kubectl exec pods/etcd-minikube -c'
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -7722,6 +7907,7 @@
         assert $5 same_as 'kubectl explain '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 9
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
         assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
@@ -7765,6 +7951,7 @@
         assert $5 same_as 'kubectl label '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 9
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
         assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
@@ -7808,6 +7995,7 @@
         assert $5 same_as 'kubectl label pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -7849,6 +8037,7 @@
         assert $5 same_as 'kubectl label pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -7889,6 +8078,7 @@
         assert $6 same_as 'kubectl label pods --selector='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -7929,6 +8119,7 @@
         assert $6 same_as 'kubectl label pods --selector '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -7969,6 +8160,7 @@
         assert $6 same_as 'kubectl label pods -l '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -8009,6 +8201,7 @@
         assert $6 same_as 'kubectl label pods -l'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -8045,6 +8238,7 @@
         assert $6 same_as 'kubectl label pods etcd-minikube '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -8077,6 +8271,7 @@
         assert $6 same_as 'kubectl label pods/etcd-minikube '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -8114,6 +8309,7 @@
         assert $5 same_as 'kubectl label pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -8156,6 +8352,7 @@
         assert $5 same_as 'kubectl label pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -8194,6 +8391,7 @@
         assert $6 same_as 'kubectl label pods etcd-minikube '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -8228,6 +8426,7 @@
         assert $6 same_as 'kubectl label pods/etcd-minikube '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -8266,6 +8465,7 @@
         assert $5 same_as 'kubectl logs '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -8307,6 +8507,7 @@
         assert $5 same_as 'kubectl logs -f '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -8348,6 +8549,7 @@
         assert $5 same_as 'kubectl logs pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -8388,6 +8590,7 @@
         assert $6 same_as 'kubectl logs pods --selector='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -8428,6 +8631,7 @@
         assert $6 same_as 'kubectl logs pods --selector '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -8468,6 +8672,7 @@
         assert $6 same_as 'kubectl logs pods -l '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -8508,6 +8713,7 @@
         assert $6 same_as 'kubectl logs pods -l'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -8554,6 +8760,7 @@
         assert $5 same_as 'kubectl logs etcd-minikube --container='
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -8596,6 +8803,7 @@
         assert $5 same_as 'kubectl logs pods/etcd-minikube --container='
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -8638,6 +8846,7 @@
         assert $5 same_as 'kubectl logs etcd-minikube --container '
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -8680,6 +8889,7 @@
         assert $5 same_as 'kubectl logs pods/etcd-minikube --container '
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -8722,6 +8932,7 @@
         assert $5 same_as 'kubectl logs etcd-minikube -c '
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -8764,6 +8975,7 @@
         assert $5 same_as 'kubectl logs pods/etcd-minikube -c '
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -8806,6 +9018,7 @@
         assert $5 same_as 'kubectl logs etcd-minikube -c'
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -8848,6 +9061,7 @@
         assert $5 same_as 'kubectl logs pods/etcd-minikube -c'
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -8884,6 +9098,7 @@
         assert $5 same_as 'kubectl logs '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
@@ -8924,6 +9139,7 @@
         assert $5 same_as 'kubectl logs pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
@@ -8972,6 +9188,7 @@
         assert $5 same_as 'kubectl logs etcd-minikube --container='
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -9017,6 +9234,7 @@
         assert $5 same_as 'kubectl logs pods/etcd-minikube --container='
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -9062,6 +9280,7 @@
         assert $5 same_as 'kubectl logs etcd-minikube --container '
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -9107,6 +9326,7 @@
         assert $5 same_as 'kubectl logs pods/etcd-minikube --container '
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -9152,6 +9372,7 @@
         assert $5 same_as 'kubectl logs etcd-minikube -c '
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -9197,6 +9418,7 @@
         assert $5 same_as 'kubectl logs pods/etcd-minikube -c '
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -9242,6 +9464,7 @@
         assert $5 same_as 'kubectl logs etcd-minikube -c'
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -9287,6 +9510,7 @@
         assert $5 same_as 'kubectl logs pods/etcd-minikube -c'
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -9322,6 +9546,7 @@
         assert $5 same_as 'kubectl port-forward '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 4
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                      ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000     ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -9357,6 +9582,7 @@
         assert $5 same_as 'kubectl port-forward pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 4
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                      ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000     ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -9391,6 +9617,7 @@
         assert $5 same_as 'kubectl port-forward services/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME         ${reset_color}TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)                  AGE   SELECTOR"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}kubernetes   ${reset_color}ClusterIP   10.96.0.1    <none>        443/TCP                  1d    <none>"
@@ -9426,6 +9653,7 @@
         assert $6 same_as 'kubectl port-forward coredns-000000000-00000 '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 4
         assert ${lines[1]} same_as "${fg[yellow]}PORT$reset_color  ${reset_color}PROTOCOL$reset_color  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}53  $reset_color  ${reset_color}UDP     $reset_color  dns"
@@ -9462,6 +9690,7 @@
         assert $6 same_as 'kubectl port-forward pods/coredns-000000000-00000 '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 4
         assert ${lines[1]} same_as "${fg[yellow]}PORT$reset_color  ${reset_color}PROTOCOL$reset_color  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}53  $reset_color  ${reset_color}UDP     $reset_color  dns"
@@ -9498,6 +9727,7 @@
         assert $6 same_as 'kubectl port-forward services/kube-dns '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 4
         assert ${lines[1]} same_as "${fg[yellow]}PORT$reset_color  ${reset_color}PROTOCOL$reset_color  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}53  $reset_color  ${reset_color}UDP     $reset_color  dns"
@@ -9534,6 +9764,7 @@
         assert $6 same_as 'kubectl port-forward coredns-000000000-00000 53:'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 4
         assert ${lines[1]} same_as "${fg[yellow]}PORT$reset_color  ${reset_color}PROTOCOL$reset_color  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}53  $reset_color  ${reset_color}UDP     $reset_color  dns"
@@ -9570,6 +9801,7 @@
         assert $6 same_as 'kubectl port-forward pods/coredns-000000000-00000 53:'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 4
         assert ${lines[1]} same_as "${fg[yellow]}PORT$reset_color  ${reset_color}PROTOCOL$reset_color  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}53  $reset_color  ${reset_color}UDP     $reset_color  dns"
@@ -9606,6 +9838,7 @@
         assert $6 same_as 'kubectl port-forward services/kube-dns 53:'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 4
         assert ${lines[1]} same_as "${fg[yellow]}PORT$reset_color  ${reset_color}PROTOCOL$reset_color  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}53  $reset_color  ${reset_color}UDP     $reset_color  dns"
@@ -9640,6 +9873,7 @@
         assert $5 same_as 'kubectl port-forward '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME                      ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "${fg[yellow]}coredns-000000000-00000   ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
@@ -9674,6 +9908,7 @@
         assert $5 same_as 'kubectl port-forward pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME                      ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "${fg[yellow]}coredns-000000000-00000   ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
@@ -9707,6 +9942,7 @@
         assert $5 same_as 'kubectl port-forward services/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 2
         assert ${lines[1]} same_as "${fg[yellow]}NAME       ${reset_color}TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)                  AGE   SELECTOR"
         assert ${lines[2]} same_as "${fg[yellow]}kube-dns   ${reset_color}ClusterIP   10.96.0.10   <none>        53/UDP,53/TCP,9153/TCP   1d    k8s-app=kube-dns"
@@ -9743,6 +9979,7 @@
         assert $6 same_as 'kubectl port-forward coredns-000000000-00000 '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 4
         assert ${lines[1]} same_as "${fg[yellow]}PORT$reset_color  ${reset_color}PROTOCOL$reset_color  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}53  $reset_color  ${reset_color}UDP     $reset_color  dns"
@@ -9781,6 +10018,7 @@
         assert $6 same_as 'kubectl port-forward pods/coredns-000000000-00000 '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 4
         assert ${lines[1]} same_as "${fg[yellow]}PORT$reset_color  ${reset_color}PROTOCOL$reset_color  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}53  $reset_color  ${reset_color}UDP     $reset_color  dns"
@@ -9819,6 +10057,7 @@
         assert $6 same_as 'kubectl port-forward services/kube-dns '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 4
         assert ${lines[1]} same_as "${fg[yellow]}PORT$reset_color  ${reset_color}PROTOCOL$reset_color  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}53  $reset_color  ${reset_color}UDP     $reset_color  dns"
@@ -9857,6 +10096,7 @@
         assert $6 same_as 'kubectl port-forward coredns-000000000-00000 53:'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 4
         assert ${lines[1]} same_as "${fg[yellow]}PORT$reset_color  ${reset_color}PROTOCOL$reset_color  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}53  $reset_color  ${reset_color}UDP     $reset_color  dns"
@@ -9895,6 +10135,7 @@
         assert $6 same_as 'kubectl port-forward pods/coredns-000000000-00000 53:'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 4
         assert ${lines[1]} same_as "${fg[yellow]}PORT$reset_color  ${reset_color}PROTOCOL$reset_color  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}53  $reset_color  ${reset_color}UDP     $reset_color  dns"
@@ -9933,6 +10174,7 @@
         assert $6 same_as 'kubectl port-forward services/kube-dns 53:'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 4
         assert ${lines[1]} same_as "${fg[yellow]}PORT$reset_color  ${reset_color}PROTOCOL$reset_color  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}53  $reset_color  ${reset_color}UDP     $reset_color  dns"
@@ -9954,6 +10196,7 @@
         assert $4 same_as 'kubectl rollout '
 
         run cat
+        assert kubectl mock_times 0
         assert ${#lines} equals 6
         assert ${lines[1]} same_as history
         assert ${lines[2]} same_as pause
@@ -9994,6 +10237,7 @@
         assert $5 same_as 'kubectl rollout restart '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 9
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
         assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
@@ -10038,6 +10282,7 @@
         assert $6 same_as 'kubectl rollout restart deployments '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -10080,6 +10325,7 @@
         assert $6 same_as 'kubectl rollout restart deployments/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -10122,6 +10368,7 @@
         assert $6 same_as 'kubectl rollout restart deployments '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -10165,6 +10412,7 @@
         assert $6 same_as 'kubectl rollout restart deployments/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -10189,6 +10437,7 @@
         assert $4 same_as 'kubectl set '
 
         run cat
+        assert kubectl mock_times 0
         assert ${#lines} equals 6
         assert ${lines[1]} same_as env
         assert ${lines[2]} same_as image
@@ -10229,6 +10478,7 @@
         assert $5 same_as 'kubectl set env '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 9
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
         assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
@@ -10272,6 +10522,7 @@
         assert $5 same_as 'kubectl set env pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -10313,6 +10564,7 @@
         assert $5 same_as 'kubectl set env pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -10353,6 +10605,7 @@
         assert $6 same_as 'kubectl set env pods --selector='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -10393,6 +10646,7 @@
         assert $6 same_as 'kubectl set env pods --selector '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -10433,6 +10687,7 @@
         assert $6 same_as 'kubectl set env pods -l '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -10473,6 +10728,7 @@
         assert $6 same_as 'kubectl set env pods -l'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -10514,6 +10770,7 @@
         assert $5 same_as 'kubectl set env pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -10556,6 +10813,7 @@
         assert $5 same_as 'kubectl set env pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -10598,6 +10856,7 @@
         assert $5 same_as 'kubectl set image '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 9
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
         assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
@@ -10641,6 +10900,7 @@
         assert $5 same_as 'kubectl set image pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -10682,6 +10942,7 @@
         assert $5 same_as 'kubectl set image pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -10722,6 +10983,7 @@
         assert $6 same_as 'kubectl set image pods --selector='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -10762,6 +11024,7 @@
         assert $6 same_as 'kubectl set image pods --selector '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -10802,6 +11065,7 @@
         assert $6 same_as 'kubectl set image pods -l '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -10842,6 +11106,7 @@
         assert $6 same_as 'kubectl set image pods -l'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -10889,6 +11154,7 @@
         assert $6 same_as 'kubectl set image pods etcd-minikube '
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -10932,6 +11198,7 @@
         assert $6 same_as 'kubectl set image pods/etcd-minikube '
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -10969,6 +11236,7 @@
         assert $5 same_as 'kubectl set image pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -11011,6 +11279,7 @@
         assert $5 same_as 'kubectl set image pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -11061,6 +11330,7 @@
         assert $6 same_as 'kubectl set image pods etcd-minikube '
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -11107,6 +11377,7 @@
         assert $6 same_as 'kubectl set image pods/etcd-minikube '
 
         run cat
+        assert kubectl mock_times 2
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}  IMAGE"
         assert ${lines[2]} same_as "${fg[yellow]}initcontainer${reset_color}  busybox:musl"
@@ -11145,6 +11416,7 @@
         assert $5 same_as 'kubectl set resources '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 9
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
         assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
@@ -11188,6 +11460,7 @@
         assert $5 same_as 'kubectl set resources pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -11229,6 +11502,7 @@
         assert $5 same_as 'kubectl set resources pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -11269,6 +11543,7 @@
         assert $6 same_as 'kubectl set resources pods --selector='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -11309,6 +11584,7 @@
         assert $6 same_as 'kubectl set resources pods --selector '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -11349,6 +11625,7 @@
         assert $6 same_as 'kubectl set resources pods -l '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -11389,6 +11666,7 @@
         assert $6 same_as 'kubectl set resources pods -l'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -11430,6 +11708,7 @@
         assert $5 same_as 'kubectl set resources pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -11472,6 +11751,7 @@
         assert $5 same_as 'kubectl set resources pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -11514,6 +11794,7 @@
         assert $5 same_as 'kubectl set subject '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 9
         assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
         assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
@@ -11557,6 +11838,7 @@
         assert $5 same_as 'kubectl set subject pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -11598,6 +11880,7 @@
         assert $5 same_as 'kubectl set subject pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -11638,6 +11921,7 @@
         assert $6 same_as 'kubectl set subject pods --selector='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -11678,6 +11962,7 @@
         assert $6 same_as 'kubectl set subject pods --selector '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -11718,6 +12003,7 @@
         assert $6 same_as 'kubectl set subject pods -l '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -11758,6 +12044,7 @@
         assert $6 same_as 'kubectl set subject pods -l'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -11799,6 +12086,7 @@
         assert $5 same_as 'kubectl set subject pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -11841,6 +12129,7 @@
         assert $5 same_as 'kubectl set subject pods/'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -11865,6 +12154,7 @@
         assert $4 same_as 'kubectl taint '
 
         run cat
+        assert kubectl mock_times 0
         assert ${#lines} equals 1
         assert ${lines[1]} same_as nodes
     }
@@ -11897,6 +12187,7 @@
         assert $6 same_as 'kubectl taint --selector='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY                                  ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}kubernetes.io/arch                   ${reset_color}  amd64"
@@ -11935,6 +12226,7 @@
         assert $6 same_as 'kubectl taint --selector '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY                                  ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}kubernetes.io/arch                   ${reset_color}  amd64"
@@ -11973,6 +12265,7 @@
         assert $6 same_as 'kubectl taint -l '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY                                  ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}kubernetes.io/arch                   ${reset_color}  amd64"
@@ -12011,6 +12304,7 @@
         assert $6 same_as 'kubectl taint -l'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY                                  ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}kubernetes.io/arch                   ${reset_color}  amd64"
@@ -12047,6 +12341,7 @@
         assert $5 same_as 'kubectl taint nodes '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 2
         assert ${lines[1]} same_as "${fg[yellow]}NAME       ${reset_color}STATUS   ROLES    AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE     KERNEL-VERSION   CONTAINER-RUNTIME"
         assert ${lines[2]} same_as "${fg[yellow]}minikube   ${reset_color}Ready    master   20d   v1.19.2   192.0.2.1     <none>        Arch Linux   5.8.14-arch1-1   docker://19.3.13"
@@ -12080,6 +12375,7 @@
         assert $6 same_as 'kubectl taint nodes --selector='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY                                  ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}kubernetes.io/arch                   ${reset_color}  amd64"
@@ -12118,6 +12414,7 @@
         assert $6 same_as 'kubectl taint nodes --selector '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY                                  ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}kubernetes.io/arch                   ${reset_color}  amd64"
@@ -12156,6 +12453,7 @@
         assert $6 same_as 'kubectl taint nodes -l '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY                                  ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}kubernetes.io/arch                   ${reset_color}  amd64"
@@ -12194,6 +12492,7 @@
         assert $6 same_as 'kubectl taint nodes -l'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY                                  ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}kubernetes.io/arch                   ${reset_color}  amd64"
@@ -12231,6 +12530,7 @@
         assert $6 same_as 'kubectl taint nodes minikube '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}KEY ${reset_color}  ${reset_color}VALUE ${reset_color}  EFFECT"
         assert ${lines[2]} same_as "${fg[yellow]}key1${reset_color}  ${reset_color}value1${reset_color}  NoSchedule"
@@ -12250,6 +12550,7 @@
         assert $4 same_as 'kubectl top '
 
         run cat
+        assert kubectl mock_times 0
         assert ${#lines} equals 2
         assert ${lines[1]} same_as nodes
         assert ${lines[2]} same_as pods
@@ -12281,6 +12582,7 @@
         assert $5 same_as 'kubectl top nodes '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 2
         assert ${lines[1]} same_as "${fg[yellow]}NAME       ${reset_color}STATUS   ROLES    AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE     KERNEL-VERSION   CONTAINER-RUNTIME"
         assert ${lines[2]} same_as "${fg[yellow]}minikube   ${reset_color}Ready    master   20d   v1.19.2   192.0.2.1     <none>        Arch Linux   5.8.14-arch1-1   docker://19.3.13"
@@ -12314,6 +12616,7 @@
         assert $6 same_as 'kubectl top nodes --selector='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY                                  ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}kubernetes.io/arch                   ${reset_color}  amd64"
@@ -12352,6 +12655,7 @@
         assert $6 same_as 'kubectl top nodes --selector '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY                                  ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}kubernetes.io/arch                   ${reset_color}  amd64"
@@ -12390,6 +12694,7 @@
         assert $6 same_as 'kubectl top nodes -l '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY                                  ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}kubernetes.io/arch                   ${reset_color}  amd64"
@@ -12428,6 +12733,7 @@
         assert $6 same_as 'kubectl top nodes -l'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY                                  ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}kubernetes.io/arch                   ${reset_color}  amd64"
@@ -12469,6 +12775,7 @@
         assert $5 same_as 'kubectl top pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
@@ -12509,6 +12816,7 @@
         assert $6 same_as 'kubectl top pods --selector='
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -12549,6 +12857,7 @@
         assert $6 same_as 'kubectl top pods --selector '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -12589,6 +12898,7 @@
         assert $6 same_as 'kubectl top pods -l '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -12629,6 +12939,7 @@
         assert $6 same_as 'kubectl top pods -l'
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
         assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
@@ -12670,6 +12981,7 @@
         assert $5 same_as 'kubectl top pods '
 
         run cat
+        assert kubectl mock_times 1
         assert ${#lines} equals 7
         assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
         assert ${lines[2]} same_as "\x1c${fg[green]}default       $reset_color${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
