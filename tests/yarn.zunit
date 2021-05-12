@@ -2,6 +2,8 @@
 
 @setup {
     load ../fzf-zsh-completions.plugin.zsh
+    load _helpers/assertions.zsh
+
     pushd tests/_support/npm
 }
 
