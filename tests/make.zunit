@@ -2,13 +2,17 @@
 
 @setup {
     load ../fzf-zsh-completions.plugin.zsh
+    load _helpers/mock.zsh
+    load _helpers/assertions.zsh
+
     pushd tests/_support/make
     tmpfile=$(mktemp)
     zmodload zsh/stat
 }
 
 @teardown {
-    rm -f $tmpfile grep_mock_times
+    unmock grep
+    rm -f -- $tmpfile
 }
 
 @test 'Testing completion: make **' {
@@ -30,14 +34,7 @@
 }
 
 @test 'Testing output: make **' {
-    echo 0 > grep_mock_times
-
-    grep() {
-        grep_mock_times=$(($(cat grep_mock_times) + 1))
-        echo $grep_mock_times > grep_mock_times
-
-        grep_mock_$grep_mock_times $@
-    }
+    mock grep
 
     grep_mock_1() {
         assert $# equals 3
@@ -46,7 +43,6 @@
         assert $3 same_as 'Makefile'
 
         echo "grep_mock_$grep_mock_times error" >&2
-        return 1
     }
 
     _fzf_complete() {
@@ -57,6 +53,7 @@
         assert $4 same_as 'make '
 
         run cat
+        assert grep mock_times 1
         assert ${#lines} equals 1
     }
 

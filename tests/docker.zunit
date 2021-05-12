@@ -2,10 +2,13 @@
 
 @setup {
     load ../fzf-zsh-completions.plugin.zsh
+    load _helpers/mock.zsh
+    load _helpers/assertions.zsh
+    mock docker
 }
 
 @teardown {
-    rm -f docker_mock_times
+    unmock docker
 }
 
 @test 'Testing completion: docker **' {
@@ -24,15 +27,6 @@
 }
 
 @test 'Testing completion: docker create **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 3
         assert $1 same_as 'images'
@@ -56,6 +50,7 @@
         assert $5 same_as 'docker create '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}IMAGE ID    ${reset_color}  ${reset_color}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
         assert ${lines[2]} same_as "${fg[yellow]}e7d92cdc71fe${reset_color}  ${reset_color}alpine      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 hours ago ${reset_color}  5.59MB"
@@ -70,15 +65,6 @@
 }
 
 @test 'Testing completion: docker history **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 3
         assert $1 same_as 'images'
@@ -102,6 +88,7 @@
         assert $5 same_as 'docker history '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}IMAGE ID    ${reset_color}  ${reset_color}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
         assert ${lines[2]} same_as "${fg[yellow]}e7d92cdc71fe${reset_color}  ${reset_color}alpine      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 hours ago ${reset_color}  5.59MB"
@@ -116,15 +103,6 @@
 }
 
 @test 'Testing completion: docker push **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 5
         assert $1 same_as 'images'
@@ -149,6 +127,7 @@
         assert $5 same_as 'docker push '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}REPOSITORY  ${reset_color}  ${reset_color}IMAGE ID    ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
         assert ${lines[2]} same_as "${fg[yellow]}alpine      ${reset_color}  ${reset_color}e7d92cdc71fe${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 hours ago ${reset_color}  5.59MB"
@@ -162,15 +141,6 @@
 }
 
 @test 'Testing completion: docker run **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 3
         assert $1 same_as 'images'
@@ -194,6 +164,7 @@
         assert $5 same_as 'docker run '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}IMAGE ID    ${reset_color}  ${reset_color}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
         assert ${lines[2]} same_as "${fg[yellow]}e7d92cdc71fe${reset_color}  ${reset_color}alpine      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 hours ago ${reset_color}  5.59MB"
@@ -208,15 +179,6 @@
 }
 
 @test 'Testing completion: docker rmi **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 3
         assert $1 same_as 'images'
@@ -241,6 +203,7 @@
         assert $6 same_as 'docker rmi '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}IMAGE ID    ${reset_color}  ${reset_color}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
         assert ${lines[2]} same_as "${fg[yellow]}e7d92cdc71fe${reset_color}  ${reset_color}alpine      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 hours ago ${reset_color}  5.59MB"
@@ -255,15 +218,6 @@
 }
 
 @test 'Testing completion: docker save **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 3
         assert $1 same_as 'images'
@@ -288,6 +242,7 @@
         assert $6 same_as 'docker save '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}IMAGE ID    ${reset_color}  ${reset_color}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
         assert ${lines[2]} same_as "${fg[yellow]}e7d92cdc71fe${reset_color}  ${reset_color}alpine      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 hours ago ${reset_color}  5.59MB"
@@ -302,15 +257,6 @@
 }
 
 @test 'Testing completion: docker tag **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 3
         assert $1 same_as 'images'
@@ -335,6 +281,7 @@
         assert $6 same_as 'docker tag '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}IMAGE ID    ${reset_color}  ${reset_color}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
         assert ${lines[2]} same_as "${fg[yellow]}e7d92cdc71fe${reset_color}  ${reset_color}alpine      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 hours ago ${reset_color}  5.59MB"
@@ -349,15 +296,6 @@
 }
 
 @test 'Testing completion: docker attach **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 4
         assert $1 same_as 'container'
@@ -378,6 +316,7 @@
         assert $5 same_as 'docker attach '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 2
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE    ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS     ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}295e3ea0de41${reset_color}  ${reset_color}archlinux${reset_color}  ${reset_color}\"/bin/zsh --login\"${reset_color}  ${reset_color}4 weeks ago${reset_color}  ${reset_color}Up 1 second${reset_color}  ${reset_color}     ${reset_color}  thankful_smyth"
@@ -388,15 +327,6 @@
 }
 
 @test 'Testing completion: docker exec **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 4
         assert $1 same_as 'container'
@@ -417,6 +347,7 @@
         assert $5 same_as 'docker exec '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 2
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE    ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS     ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}295e3ea0de41${reset_color}  ${reset_color}archlinux${reset_color}  ${reset_color}\"/bin/zsh --login\"${reset_color}  ${reset_color}4 weeks ago${reset_color}  ${reset_color}Up 1 second${reset_color}  ${reset_color}     ${reset_color}  thankful_smyth"
@@ -427,15 +358,6 @@
 }
 
 @test 'Testing completion: docker top **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 4
         assert $1 same_as 'container'
@@ -456,6 +378,7 @@
         assert $5 same_as 'docker top '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 2
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE    ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS     ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}295e3ea0de41${reset_color}  ${reset_color}archlinux${reset_color}  ${reset_color}\"/bin/zsh --login\"${reset_color}  ${reset_color}4 weeks ago${reset_color}  ${reset_color}Up 1 second${reset_color}  ${reset_color}     ${reset_color}  thankful_smyth"
@@ -466,15 +389,6 @@
 }
 
 @test 'Testing completion: docker kill **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 4
         assert $1 same_as 'container'
@@ -496,6 +410,7 @@
         assert $6 same_as 'docker kill '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 2
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE    ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS     ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}295e3ea0de41${reset_color}  ${reset_color}archlinux${reset_color}  ${reset_color}\"/bin/zsh --login\"${reset_color}  ${reset_color}4 weeks ago${reset_color}  ${reset_color}Up 1 second${reset_color}  ${reset_color}     ${reset_color}  thankful_smyth"
@@ -506,15 +421,6 @@
 }
 
 @test 'Testing completion: docker pause **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 4
         assert $1 same_as 'container'
@@ -536,6 +442,7 @@
         assert $6 same_as 'docker pause '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 2
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE    ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS     ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}295e3ea0de41${reset_color}  ${reset_color}archlinux${reset_color}  ${reset_color}\"/bin/zsh --login\"${reset_color}  ${reset_color}4 weeks ago${reset_color}  ${reset_color}Up 1 second${reset_color}  ${reset_color}     ${reset_color}  thankful_smyth"
@@ -546,15 +453,6 @@
 }
 
 @test 'Testing completion: docker stop **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 4
         assert $1 same_as 'container'
@@ -576,6 +474,7 @@
         assert $6 same_as 'docker stop '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 2
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE    ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS     ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}295e3ea0de41${reset_color}  ${reset_color}archlinux${reset_color}  ${reset_color}\"/bin/zsh --login\"${reset_color}  ${reset_color}4 weeks ago${reset_color}  ${reset_color}Up 1 second${reset_color}  ${reset_color}     ${reset_color}  thankful_smyth"
@@ -586,15 +485,6 @@
 }
 
 @test 'Testing completion: docker unpause **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 4
         assert $1 same_as 'container'
@@ -616,6 +506,7 @@
         assert $6 same_as 'docker unpause '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 2
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE    ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS     ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}295e3ea0de41${reset_color}  ${reset_color}archlinux${reset_color}  ${reset_color}\"/bin/zsh --login\"${reset_color}  ${reset_color}4 weeks ago${reset_color}  ${reset_color}Up 1 second${reset_color}  ${reset_color}     ${reset_color}  thankful_smyth"
@@ -626,15 +517,6 @@
 }
 
 @test 'Testing completion: docker commit **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 5
         assert $1 same_as 'container'
@@ -660,6 +542,7 @@
         assert $5 same_as 'docker commit '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}728e677dd292${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  affectionate_curie"
@@ -674,15 +557,6 @@
 }
 
 @test 'Testing completion: docker cp **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 5
         assert $1 same_as 'container'
@@ -708,6 +582,7 @@
         assert $5 same_as 'docker cp '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}728e677dd292${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  affectionate_curie"
@@ -722,15 +597,6 @@
 }
 
 @test 'Testing completion: docker diff **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 5
         assert $1 same_as 'container'
@@ -756,6 +622,7 @@
         assert $5 same_as 'docker diff '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}728e677dd292${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  affectionate_curie"
@@ -770,15 +637,6 @@
 }
 
 @test 'Testing completion: docker export **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 5
         assert $1 same_as 'container'
@@ -804,6 +662,7 @@
         assert $5 same_as 'docker export '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}728e677dd292${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  affectionate_curie"
@@ -818,15 +677,6 @@
 }
 
 @test 'Testing completion: docker logs **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 5
         assert $1 same_as 'container'
@@ -852,6 +702,7 @@
         assert $5 same_as 'docker logs '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}728e677dd292${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  affectionate_curie"
@@ -866,15 +717,6 @@
 }
 
 @test 'Testing completion: docker port **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 5
         assert $1 same_as 'container'
@@ -900,6 +742,7 @@
         assert $5 same_as 'docker port '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}728e677dd292${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  affectionate_curie"
@@ -914,15 +757,6 @@
 }
 
 @test 'Testing completion: docker rename **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 5
         assert $1 same_as 'container'
@@ -948,6 +782,7 @@
         assert $5 same_as 'docker rename '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}728e677dd292${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  affectionate_curie"
@@ -962,15 +797,6 @@
 }
 
 @test 'Testing completion: docker inspect **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 5
         assert $1 same_as 'container'
@@ -997,6 +823,7 @@
         assert $6 same_as 'docker inspect '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}728e677dd292${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  affectionate_curie"
@@ -1011,15 +838,6 @@
 }
 
 @test 'Testing completion: docker inspect --type=container **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 5
         assert $1 same_as 'container'
@@ -1046,6 +864,7 @@
         assert $6 same_as 'docker inspect --type=container '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}728e677dd292${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  affectionate_curie"
@@ -1060,15 +879,6 @@
 }
 
 @test 'Testing completion: docker inspect --type container **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 5
         assert $1 same_as 'container'
@@ -1095,6 +905,7 @@
         assert $6 same_as 'docker inspect --type container '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}728e677dd292${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  affectionate_curie"
@@ -1109,15 +920,6 @@
 }
 
 @test 'Testing completion: docker inspect --type=image **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 3
         assert $1 same_as 'images'
@@ -1142,6 +944,7 @@
         assert $6 same_as 'docker inspect --type=image '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}IMAGE ID    ${reset_color}  ${reset_color}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
         assert ${lines[2]} same_as "${fg[yellow]}e7d92cdc71fe${reset_color}  ${reset_color}alpine      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 hours ago ${reset_color}  5.59MB"
@@ -1156,15 +959,6 @@
 }
 
 @test 'Testing completion: docker inspect --type image **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 3
         assert $1 same_as 'images'
@@ -1189,6 +983,7 @@
         assert $6 same_as 'docker inspect --type image '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}IMAGE ID    ${reset_color}  ${reset_color}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
         assert ${lines[2]} same_as "${fg[yellow]}e7d92cdc71fe${reset_color}  ${reset_color}alpine      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 hours ago ${reset_color}  5.59MB"
@@ -1203,15 +998,6 @@
 }
 
 @test 'Testing completion: docker inspect --type=network **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 4
         assert $1 same_as 'network'
@@ -1235,6 +1021,7 @@
         assert $6 same_as 'docker inspect --type=network '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 4
         assert ${lines[1]} same_as "${fg[yellow]}NETWORK ID  ${reset_color}  ${reset_color}NAME  ${reset_color}  ${reset_color}DRIVER${reset_color}  SCOPE"
         assert ${lines[2]} same_as "${fg[yellow]}e19a403182e9${reset_color}  ${reset_color}bridge${reset_color}  ${reset_color}bridge${reset_color}  local"
@@ -1247,15 +1034,6 @@
 }
 
 @test 'Testing completion: docker inspect --type network **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 4
         assert $1 same_as 'network'
@@ -1279,6 +1057,7 @@
         assert $6 same_as 'docker inspect --type network '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 4
         assert ${lines[1]} same_as "${fg[yellow]}NETWORK ID  ${reset_color}  ${reset_color}NAME  ${reset_color}  ${reset_color}DRIVER${reset_color}  SCOPE"
         assert ${lines[2]} same_as "${fg[yellow]}e19a403182e9${reset_color}  ${reset_color}bridge${reset_color}  ${reset_color}bridge${reset_color}  local"
@@ -1291,15 +1070,6 @@
 }
 
 @test 'Testing completion: docker inspect --type=volume **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 4
         assert $1 same_as 'volume'
@@ -1323,6 +1093,7 @@
         assert $6 same_as 'docker inspect --type=volume '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 4
         assert ${lines[1]} same_as "${fg[yellow]}VOLUME ID                                                       ${reset_color}  ${reset_color}DRIVER${reset_color}  SCOPE"
         assert ${lines[2]} same_as "${fg[yellow]}0b9526ec0aa7f7ded03c88328e9b60f519be17ec53d9b504c2e4b07626a456ec${reset_color}  ${reset_color}local ${reset_color}  local"
@@ -1335,15 +1106,6 @@
 }
 
 @test 'Testing completion: docker inspect --type volume **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 4
         assert $1 same_as 'volume'
@@ -1367,6 +1129,7 @@
         assert $6 same_as 'docker inspect --type volume '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 4
         assert ${lines[1]} same_as "${fg[yellow]}VOLUME ID                                                       ${reset_color}  ${reset_color}DRIVER${reset_color}  SCOPE"
         assert ${lines[2]} same_as "${fg[yellow]}0b9526ec0aa7f7ded03c88328e9b60f519be17ec53d9b504c2e4b07626a456ec${reset_color}  ${reset_color}local ${reset_color}  local"
@@ -1379,15 +1142,6 @@
 }
 
 @test 'Testing completion: docker inspect --type=task **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -1395,19 +1149,10 @@
     prefix=
     _fzf_complete_docker 'docker inspect --type=task '
 
-    assert $(cat docker_mock_times) equals 0
+    assert docker mock_times 0
 }
 
 @test 'Testing completion: docker inspect --type task **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -1415,19 +1160,10 @@
     prefix=
     _fzf_complete_docker 'docker inspect --type task '
 
-    assert $(cat docker_mock_times) equals 0
+    assert docker mock_times 0
 }
 
 @test 'Testing completion: docker restart **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 5
         assert $1 same_as 'container'
@@ -1454,6 +1190,7 @@
         assert $6 same_as 'docker restart '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}728e677dd292${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  affectionate_curie"
@@ -1468,15 +1205,6 @@
 }
 
 @test 'Testing completion: docker rm **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 5
         assert $1 same_as 'container'
@@ -1503,6 +1231,7 @@
         assert $6 same_as 'docker rm '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}728e677dd292${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  affectionate_curie"
@@ -1517,15 +1246,6 @@
 }
 
 @test 'Testing completion: docker start **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 5
         assert $1 same_as 'container'
@@ -1552,6 +1272,7 @@
         assert $6 same_as 'docker start '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}728e677dd292${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  affectionate_curie"
@@ -1566,15 +1287,6 @@
 }
 
 @test 'Testing completion: docker stats **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 5
         assert $1 same_as 'container'
@@ -1601,6 +1313,7 @@
         assert $6 same_as 'docker stats '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}728e677dd292${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  affectionate_curie"
@@ -1615,15 +1328,6 @@
 }
 
 @test 'Testing completion: docker update **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 5
         assert $1 same_as 'container'
@@ -1650,6 +1354,7 @@
         assert $6 same_as 'docker update '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}728e677dd292${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  affectionate_curie"
@@ -1664,15 +1369,6 @@
 }
 
 @test 'Testing completion: docker wait **' {
-    echo 0 > docker_mock_times
-
-    docker() {
-        docker_mock_times=$(($(cat docker_mock_times) + 1))
-        echo $docker_mock_times > docker_mock_times
-
-        docker_mock_$docker_mock_times $@
-    }
-
     docker_mock_1() {
         assert $# equals 5
         assert $1 same_as 'container'
@@ -1699,6 +1395,7 @@
         assert $6 same_as 'docker wait '
 
         run cat
+        assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
         assert ${lines[2]} same_as "${fg[yellow]}728e677dd292${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  affectionate_curie"

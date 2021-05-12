@@ -2,6 +2,10 @@
 
 @setup {
     load ../fzf-zsh-completions.plugin.zsh
+    load _helpers/mock.zsh
+    load _helpers/assertions.zsh
+    mock systemctl
+    mock xargs
     FZF_DEFAULT_OPTS=--reverse
 
     preview() {
@@ -14,20 +18,11 @@
 }
 
 @teardown {
-    rm -f systemctl_mock_times
-    rm -f xargs_mock_times
+    unmock systemctl
+    unmock xargs
 }
 
 @test 'Testing completion: systemctl status **' {
-    echo 0 > systemctl_mock_times
-
-    systemctl() {
-        systemctl_mock_times=$(($(cat systemctl_mock_times) + 1))
-        echo $systemctl_mock_times > systemctl_mock_times
-
-        systemctl_mock_$systemctl_mock_times $@
-    }
-
     systemctl_mock_1() {
         assert $# equals 5
         assert $1 same_as 'list-units'
@@ -57,6 +52,7 @@
         assert $7 same_as 'systemctl status '
 
         run cat
+        assert systemctl mock_times 1
         assert ${#lines} equals 8
         assert ${lines[1]} same_as "${fg[green]}●${reset_color} -.mount"
         assert ${lines[2]} same_as "${fg[green]}●${reset_color} -.slice"
@@ -73,15 +69,6 @@
 }
 
 @test 'Testing preview: systemctl status **' {
-    echo 0 > xargs_mock_times
-
-    xargs() {
-        xargs_mock_times=$(($(cat xargs_mock_times) + 1))
-        echo $xargs_mock_times > xargs_mock_times
-
-        xargs_mock_$xargs_mock_times $@
-    }
-
     xargs_mock_1() {
         assert $# equals 3
         assert $1 same_as 'systemctl'
@@ -124,6 +111,7 @@
     _fzf_complete() {
         output=$(fzf_options=($@) preview '● basic.target')
         lines=(${(f)output})
+        assert xargs mock_times 1
         assert ${#lines} equals 4
         assert ${lines[1]} same_as '● basic.target - Basic System'
         assert ${lines[2]} same_as '     Loaded: loaded (/usr/lib/systemd/system/basic.target; static; vendor preset: disabled)'
@@ -132,6 +120,7 @@
 
         output=$(fzf_options=($@) preview '● boot.mount')
         lines=(${(f)output})
+        assert xargs mock_times 2
         assert ${lines[1]} same_as '● boot.mount - /boot'
         assert ${lines[2]} same_as '     Loaded: loaded (/etc/fstab; generated)'
         assert ${lines[3]} same_as '     Active: active (mounted) since Wed 2020-01-01 00:00:00 JST; 2h ago'

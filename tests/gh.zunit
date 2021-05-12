@@ -2,10 +2,13 @@
 
 @setup {
     load ../fzf-zsh-completions.plugin.zsh
+    load _helpers/mock.zsh
+    load _helpers/assertions.zsh
+    mock gh
 }
 
 @teardown {
-    rm -f gh_mock_times
+    unmock gh
 }
 
 @test 'Testing completion: gh **' {
@@ -35,15 +38,6 @@
 }
 
 @test 'Testing completion: gh pr close **' {
-    echo 0 > gh_mock_times
-
-    gh() {
-        gh_mock_times=$(($(cat gh_mock_times) + 1))
-        echo $gh_mock_times > gh_mock_times
-
-        gh_mock_$gh_mock_times $@
-    }
-
     gh_mock_1() {
         assert $# equals 4
         assert $1 same_as 'pr'
@@ -66,6 +60,7 @@
         assert $5 same_as 'gh pr close '
 
         run cat
+        assert gh mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}#${reset_color}  ${reset_color}TITLE       ${reset_color}  ${fg[blue]}HEAD     ${reset_color}  ${fg[green]}STATE${reset_color}  "
         assert ${lines[2]} same_as "${fg[yellow]}8${reset_color}  ${reset_color}2nd OPEN PR ${reset_color}  ${fg[blue]}2nd-open ${reset_color}  ${fg[green]}OPEN ${reset_color}  "
@@ -79,15 +74,6 @@
 }
 
 @test 'Testing completion: gh pr merge **' {
-    echo 0 > gh_mock_times
-
-    gh() {
-        gh_mock_times=$(($(cat gh_mock_times) + 1))
-        echo $gh_mock_times > gh_mock_times
-
-        gh_mock_$gh_mock_times $@
-    }
-
     gh_mock_1() {
         assert $# equals 4
         assert $1 same_as 'pr'
@@ -110,6 +96,7 @@
         assert $5 same_as 'gh pr merge '
 
         run cat
+        assert gh mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}#${reset_color}  ${reset_color}TITLE       ${reset_color}  ${fg[blue]}HEAD     ${reset_color}  ${fg[green]}STATE${reset_color}  "
         assert ${lines[2]} same_as "${fg[yellow]}8${reset_color}  ${reset_color}2nd OPEN PR ${reset_color}  ${fg[blue]}2nd-open ${reset_color}  ${fg[green]}OPEN ${reset_color}  "
@@ -123,15 +110,6 @@
 }
 
 @test 'Testing completion: gh pr ready **' {
-    echo 0 > gh_mock_times
-
-    gh() {
-        gh_mock_times=$(($(cat gh_mock_times) + 1))
-        echo $gh_mock_times > gh_mock_times
-
-        gh_mock_$gh_mock_times $@
-    }
-
     gh_mock_1() {
         assert $# equals 4
         assert $1 same_as 'pr'
@@ -154,6 +132,7 @@
         assert $5 same_as 'gh pr ready '
 
         run cat
+        assert gh mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}#${reset_color}  ${reset_color}TITLE       ${reset_color}  ${fg[blue]}HEAD     ${reset_color}  ${fg[green]}STATE${reset_color}  "
         assert ${lines[2]} same_as "${fg[yellow]}8${reset_color}  ${reset_color}2nd OPEN PR ${reset_color}  ${fg[blue]}2nd-open ${reset_color}  ${fg[green]}OPEN ${reset_color}  "
@@ -167,15 +146,6 @@
 }
 
 @test 'Testing completion: gh pr reopen **' {
-    echo 0 > gh_mock_times
-
-    gh() {
-        gh_mock_times=$(($(cat gh_mock_times) + 1))
-        echo $gh_mock_times > gh_mock_times
-
-        gh_mock_$gh_mock_times $@
-    }
-
     gh_mock_1() {
         assert $# equals 4
         assert $1 same_as 'pr'
@@ -196,6 +166,7 @@
         assert $5 same_as 'gh pr reopen '
 
         run cat
+        assert gh mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}#${reset_color}  ${reset_color}TITLE        ${reset_color}  ${fg[blue]}HEAD      ${reset_color}  ${fg[green]}STATE ${reset_color}  "
         assert ${lines[2]} same_as "${fg[yellow]}5${reset_color}  ${reset_color}2nd CLOSED PR${reset_color}  ${fg[blue]}2nd-closed${reset_color}  ${fg[green]}CLOSED${reset_color}  "
@@ -207,15 +178,6 @@
 }
 
 @test 'Testing completion: gh pr checkout **' {
-    echo 0 > gh_mock_times
-
-    gh() {
-        gh_mock_times=$(($(cat gh_mock_times) + 1))
-        echo $gh_mock_times > gh_mock_times
-
-        gh_mock_$gh_mock_times $@
-    }
-
     gh_mock_1() {
         assert $# equals 4
         assert $1 same_as 'pr'
@@ -242,6 +204,7 @@
         assert $5 same_as 'gh pr checkout '
 
         run cat
+        assert gh mock_times 1
         assert ${#lines} equals 9
         assert ${lines[1]} same_as "${fg[yellow]}#${reset_color}  ${reset_color}TITLE        ${reset_color}  ${fg[blue]}HEAD      ${reset_color}  ${fg[green]}STATE ${reset_color}  "
         assert ${lines[2]} same_as "${fg[yellow]}8${reset_color}  ${reset_color}2nd OPEN PR  ${reset_color}  ${fg[blue]}2nd-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}  "
@@ -259,15 +222,6 @@
 }
 
 @test 'Testing completion: gh pr comment **' {
-    echo 0 > gh_mock_times
-
-    gh() {
-        gh_mock_times=$(($(cat gh_mock_times) + 1))
-        echo $gh_mock_times > gh_mock_times
-
-        gh_mock_$gh_mock_times $@
-    }
-
     gh_mock_1() {
         assert $# equals 4
         assert $1 same_as 'pr'
@@ -294,6 +248,7 @@
         assert $5 same_as 'gh pr comment '
 
         run cat
+        assert gh mock_times 1
         assert ${#lines} equals 9
         assert ${lines[1]} same_as "${fg[yellow]}#${reset_color}  ${reset_color}TITLE        ${reset_color}  ${fg[blue]}HEAD      ${reset_color}  ${fg[green]}STATE ${reset_color}  "
         assert ${lines[2]} same_as "${fg[yellow]}8${reset_color}  ${reset_color}2nd OPEN PR  ${reset_color}  ${fg[blue]}2nd-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}  "
@@ -311,15 +266,6 @@
 }
 
 @test 'Testing completion: gh pr diff **' {
-    echo 0 > gh_mock_times
-
-    gh() {
-        gh_mock_times=$(($(cat gh_mock_times) + 1))
-        echo $gh_mock_times > gh_mock_times
-
-        gh_mock_$gh_mock_times $@
-    }
-
     gh_mock_1() {
         assert $# equals 4
         assert $1 same_as 'pr'
@@ -346,6 +292,7 @@
         assert $5 same_as 'gh pr diff '
 
         run cat
+        assert gh mock_times 1
         assert ${#lines} equals 9
         assert ${lines[1]} same_as "${fg[yellow]}#${reset_color}  ${reset_color}TITLE        ${reset_color}  ${fg[blue]}HEAD      ${reset_color}  ${fg[green]}STATE ${reset_color}  "
         assert ${lines[2]} same_as "${fg[yellow]}8${reset_color}  ${reset_color}2nd OPEN PR  ${reset_color}  ${fg[blue]}2nd-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}  "
@@ -363,15 +310,6 @@
 }
 
 @test 'Testing completion: gh pr edit **' {
-    echo 0 > gh_mock_times
-
-    gh() {
-        gh_mock_times=$(($(cat gh_mock_times) + 1))
-        echo $gh_mock_times > gh_mock_times
-
-        gh_mock_$gh_mock_times $@
-    }
-
     gh_mock_1() {
         assert $# equals 4
         assert $1 same_as 'pr'
@@ -398,6 +336,7 @@
         assert $5 same_as 'gh pr edit '
 
         run cat
+        assert gh mock_times 1
         assert ${#lines} equals 9
         assert ${lines[1]} same_as "${fg[yellow]}#${reset_color}  ${reset_color}TITLE        ${reset_color}  ${fg[blue]}HEAD      ${reset_color}  ${fg[green]}STATE ${reset_color}  "
         assert ${lines[2]} same_as "${fg[yellow]}8${reset_color}  ${reset_color}2nd OPEN PR  ${reset_color}  ${fg[blue]}2nd-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}  "
@@ -415,15 +354,6 @@
 }
 
 @test 'Testing completion: gh pr review **' {
-    echo 0 > gh_mock_times
-
-    gh() {
-        gh_mock_times=$(($(cat gh_mock_times) + 1))
-        echo $gh_mock_times > gh_mock_times
-
-        gh_mock_$gh_mock_times $@
-    }
-
     gh_mock_1() {
         assert $# equals 4
         assert $1 same_as 'pr'
@@ -450,6 +380,7 @@
         assert $5 same_as 'gh pr review '
 
         run cat
+        assert gh mock_times 1
         assert ${#lines} equals 9
         assert ${lines[1]} same_as "${fg[yellow]}#${reset_color}  ${reset_color}TITLE        ${reset_color}  ${fg[blue]}HEAD      ${reset_color}  ${fg[green]}STATE ${reset_color}  "
         assert ${lines[2]} same_as "${fg[yellow]}8${reset_color}  ${reset_color}2nd OPEN PR  ${reset_color}  ${fg[blue]}2nd-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}  "
@@ -467,15 +398,6 @@
 }
 
 @test 'Testing completion: gh pr view **' {
-    echo 0 > gh_mock_times
-
-    gh() {
-        gh_mock_times=$(($(cat gh_mock_times) + 1))
-        echo $gh_mock_times > gh_mock_times
-
-        gh_mock_$gh_mock_times $@
-    }
-
     gh_mock_1() {
         assert $# equals 4
         assert $1 same_as 'pr'
@@ -502,6 +424,7 @@
         assert $5 same_as 'gh pr view '
 
         run cat
+        assert gh mock_times 1
         assert ${#lines} equals 9
         assert ${lines[1]} same_as "${fg[yellow]}#${reset_color}  ${reset_color}TITLE        ${reset_color}  ${fg[blue]}HEAD      ${reset_color}  ${fg[green]}STATE ${reset_color}  "
         assert ${lines[2]} same_as "${fg[yellow]}8${reset_color}  ${reset_color}2nd OPEN PR  ${reset_color}  ${fg[blue]}2nd-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}  "
