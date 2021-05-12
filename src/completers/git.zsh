@@ -847,16 +847,7 @@ _fzf_complete_git-refs() {
 }
 
 _fzf_complete_git-refs_post() {
-    local ref
-    local input=$(cat)
-
-    if [[ -z $input ]]; then
-        return
-    fi
-
-    for ref in ${(f)input}; do
-        echo ${${ref#*/}%% *}
-    done
+    awk '{ print $1 }'
 }
 
 _fzf_complete_git-notes() {

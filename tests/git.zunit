@@ -5442,8 +5442,8 @@
 
 @test 'Testing post: git refs' {
     input=(
-        'origin/another-branch   2nd commit'
-        'origin/master  1st commit'
+        'feat/another-branch   2nd commit'
+        'master  1st commit'
     )
 
     run _fzf_complete_git-refs_post <<< ${(F)input}
@@ -5451,7 +5451,7 @@
     assert $state equals 0
     assert ${#lines} equals 2
 
-    assert ${lines[1]} same_as 'another-branch'
+    assert ${lines[1]} same_as 'feat/another-branch'
     assert ${lines[2]} same_as 'master'
 }
 
