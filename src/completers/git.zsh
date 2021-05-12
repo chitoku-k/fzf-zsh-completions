@@ -836,16 +836,11 @@ _fzf_complete_git-refs() {
 
     _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option$prefix_ref < <(
         git ls-remote --quiet --heads --tags "$repository" 2> /dev/null | awk '
-            {
-                if(match($2, /refs\/heads\//)) {
-                    kind = "branch"
-                } else if(match($2, /refs\/tags\//)) {
-                    kind = "tag"
-                } else {
-                    next
-                }
-
-                print substr($2, RSTART + RLENGTH), kind
+            match($2, /^refs\/heads\//) {
+                print substr($2, RSTART + RLENGTH), "branch"
+            }
+            match($2, /^refs\/tags\//) {
+                print substr($2, RSTART + RLENGTH), "tag"
             }
         ' | _fzf_complete_tabularize ${fg[yellow]} ${fg[green]}
     )
