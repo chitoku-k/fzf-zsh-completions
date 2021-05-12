@@ -12,7 +12,7 @@
 
 @teardown {
     unmock grep
-    rm -f $tmpfile
+    rm -f -- $tmpfile
 }
 
 @test 'Testing completion: make **' {
