@@ -3549,11 +3549,12 @@
         assert $5 same_as 'git fetch origin '
 
         run cat
-        assert ${#lines} equals 4
+        assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color  "
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  "
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  "
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color  "
+        assert ${lines[3]} same_as "${fg[yellow]}annotated     $reset_color  ${fg[green]}tag   $reset_color  "
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  "
+        assert ${lines[5]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color  "
     }
 
     prefix=
@@ -4290,11 +4291,12 @@
         assert $5 same_as 'git pull origin '
 
         run cat
-        assert ${#lines} equals 4
+        assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color  "
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  "
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  "
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color  "
+        assert ${lines[3]} same_as "${fg[yellow]}annotated     $reset_color  ${fg[green]}tag   $reset_color  "
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  "
+        assert ${lines[5]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color  "
     }
 
     prefix=
@@ -4336,11 +4338,12 @@
         assert $5 same_as 'git pull origin --cleanup strip --quiet '
 
         run cat
-        assert ${#lines} equals 4
+        assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color  "
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  "
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  "
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color  "
+        assert ${lines[3]} same_as "${fg[yellow]}annotated     $reset_color  ${fg[green]}tag   $reset_color  "
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  "
+        assert ${lines[5]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color  "
     }
 
     prefix=
@@ -4382,11 +4385,12 @@
         assert $5 same_as 'git pull -- origin '
 
         run cat
-        assert ${#lines} equals 4
+        assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color  "
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  "
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  "
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color  "
+        assert ${lines[3]} same_as "${fg[yellow]}annotated     $reset_color  ${fg[green]}tag   $reset_color  "
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  "
+        assert ${lines[5]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color  "
     }
 
     prefix=
@@ -4684,11 +4688,12 @@
         assert $4 same_as 'git push origin master:'
 
         run cat
-        assert ${#lines} equals 4
+        assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color  "
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  "
-        assert ${lines[3]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  "
-        assert ${lines[4]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color  "
+        assert ${lines[3]} same_as "${fg[yellow]}annotated     $reset_color  ${fg[green]}tag   $reset_color  "
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  "
+        assert ${lines[5]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color  "
     }
 
     prefix=master:
