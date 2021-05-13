@@ -839,7 +839,7 @@ _fzf_complete_git-refs() {
             match($2, /^refs\/heads\//) {
                 print substr($2, RSTART + RLENGTH), "branch"
             }
-            match($2, /^refs\/tags\//) && $2 !~ /\^{}$/ {
+            match($2, /^refs\/tags\//) && $2 !~ /\^\{\}$/ {
                 print substr($2, RSTART + RLENGTH), "tag"
             }
         ' | _fzf_complete_tabularize ${fg[yellow]} ${fg[green]}
