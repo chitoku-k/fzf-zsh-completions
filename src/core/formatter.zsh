@@ -31,9 +31,12 @@ _fzf_complete_tabularize() {
         END {
             for (i = 1; i <= NR; ++i) {
                 for (j = 1; j <= length(colors); ++j) {
-                    printf "%s%-" field_max[j] "s%s  ", colors[j], fields[i, j], reset
+                    printf "%s%s%-" field_max[j] "s%s", (j > 1 ? "  " : ""), colors[j], fields[i, j], reset
                 }
-                print fields[i, j]
+                if ((i, j) in fields) {
+                    printf "  %s", fields[i, j]
+                }
+                printf "\n"
             }
         }
     '
