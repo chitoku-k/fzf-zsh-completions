@@ -3550,11 +3550,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color  "
-        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  "
-        assert ${lines[3]} same_as "${fg[yellow]}annotated     $reset_color  ${fg[green]}tag   $reset_color  "
-        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  "
-        assert ${lines[5]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color  "
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color"
+        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color"
+        assert ${lines[3]} same_as "${fg[yellow]}annotated     $reset_color  ${fg[green]}tag   $reset_color"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color"
+        assert ${lines[5]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color"
     }
 
     prefix=
@@ -4292,11 +4292,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color  "
-        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  "
-        assert ${lines[3]} same_as "${fg[yellow]}annotated     $reset_color  ${fg[green]}tag   $reset_color  "
-        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  "
-        assert ${lines[5]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color  "
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color"
+        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color"
+        assert ${lines[3]} same_as "${fg[yellow]}annotated     $reset_color  ${fg[green]}tag   $reset_color"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color"
+        assert ${lines[5]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color"
     }
 
     prefix=
@@ -4339,11 +4339,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color  "
-        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  "
-        assert ${lines[3]} same_as "${fg[yellow]}annotated     $reset_color  ${fg[green]}tag   $reset_color  "
-        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  "
-        assert ${lines[5]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color  "
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color"
+        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color"
+        assert ${lines[3]} same_as "${fg[yellow]}annotated     $reset_color  ${fg[green]}tag   $reset_color"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color"
+        assert ${lines[5]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color"
     }
 
     prefix=
@@ -4386,11 +4386,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color  "
-        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  "
-        assert ${lines[3]} same_as "${fg[yellow]}annotated     $reset_color  ${fg[green]}tag   $reset_color  "
-        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  "
-        assert ${lines[5]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color  "
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color"
+        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color"
+        assert ${lines[3]} same_as "${fg[yellow]}annotated     $reset_color  ${fg[green]}tag   $reset_color"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color"
+        assert ${lines[5]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color"
     }
 
     prefix=
@@ -4689,11 +4689,11 @@
 
         run cat
         assert ${#lines} equals 5
-        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color  "
-        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  "
-        assert ${lines[3]} same_as "${fg[yellow]}annotated     $reset_color  ${fg[green]}tag   $reset_color  "
-        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  "
-        assert ${lines[5]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color  "
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color"
+        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color"
+        assert ${lines[3]} same_as "${fg[yellow]}annotated     $reset_color  ${fg[green]}tag   $reset_color"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color"
+        assert ${lines[5]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color"
     }
 
     prefix=master:
