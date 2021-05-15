@@ -105,24 +105,29 @@ _fzf_complete_parse_argument() {
 
 _fzf_complete_parse_option_arguments() {
     local result=()
-    local current idx indices
+    local current idx indices preoptions
     local short=${1#*-}
     local long=${2#*--}
-    shift 2
+    local options_argument_required=(${(z)3})
+    shift 3
 
     local cmd=(${(Q)${(z)@}})
     while [[ $idx -le ${#cmd} ]]; do
         indices=()
 
         if [[ -n $short ]]; then
-            if [[ -n ${cmd[(rb:idx+1:)-[^-]#$short?##]} ]]; then
-                current=${cmd[(ib:idx+1:)-[^-]#$short?##]}
-                indices+=($current)
-                result[current]=${(qq)${cmd[current]/-[^-$short]#$short/-$short}}
+            if [[ -n ${cmd[(rb:idx+1:)-[^-=]#$short?##]} ]]; then
+                current=${cmd[(ib:idx+1:)-[^-=]#$short?##]}
+                preoptions=(-${^${(ps::)${${cmd[current]%%$short*}#-}}})
+
+                if [[ -z ${options_argument_required:*preoptions} ]]; then
+                    indices+=($current)
+                    result[current]=${(qq)${cmd[current]/-[^-=$short]#$short/-$short}}
+                fi
             fi
 
-            if [[ -n ${cmd[(rb:idx+1:)-[^-]#$short]} ]]; then
-                current=${cmd[(ib:idx+1:)-[^-]#$short]}
+            if [[ -n ${cmd[(rb:idx+1:)-[^-=]#$short]} ]]; then
+                current=${cmd[(ib:idx+1:)-[^-=]#$short]}
 
                 if [[ ${#cmd} != $current ]]; then
                     indices+=($current)

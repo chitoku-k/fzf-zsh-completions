@@ -9,7 +9,36 @@ _fzf_complete_kubectl() {
     local last_argument=${${(Q)${(z)@}}[-1]}
     local prefix_option completing_option arg subcommands namespace resource name
 
+    local inherit_option inherit_values
+    local kubectl_inherited_options_argument_required=(
+        --as
+        --as-group
+        --certificate-authority
+        --client-certificate
+        --client-key
+        --cluster
+        --context
+        -l
+        --label-columns
+        -L
+        -n
+        --namespace
+        --password
+        -s
+        --selector
+        --server
+        --tls-server-name
+        --token
+        --user
+        --username
+    )
+    local kubectl_inherited_options=(
+        --insecure-skip-tls-verify
+        --match-server-version
+    )
+
     local kubectl_options_argument_required=(
+        $kubectl_inherited_options_argument_required
         --application-metrics-count-limit
         --as
         --as-group
@@ -72,44 +101,17 @@ _fzf_complete_kubectl() {
     )
     local kubectl_options_argument_optional=()
 
-    local inherit_option inherit_values
-    local kubectl_inherited_options_argument_required=(
-        --as
-        --as-group
-        --certificate-authority
-        --client-certificate
-        --client-key
-        --cluster
-        --context
-        -l
-        --label-columns
-        -L
-        -n
-        --namespace
-        --password
-        -s
-        --selector
-        --server
-        --tls-server-name
-        --token
-        --user
-        --username
-    )
-    local kubectl_inherited_options=(
-        --insecure-skip-tls-verify
-        --match-server-version
-    )
 
     for inherit_option in ${kubectl_inherited_options_argument_required[@]} ${kubectl_inherited_options[@]}; do
         if [[ $inherit_option = --* ]]; then
             for arg in "$@" "$RBUFFER"; do
-                if inherit_values=$(_fzf_complete_parse_option_arguments '' "$inherit_option" "$arg"); then
+                if inherit_values=$(_fzf_complete_parse_option_arguments '' "$inherit_option" "${(F)kubectl_options_argument_required}" "$arg"); then
                     kubectl_arguments+=($inherit_values)
                 fi
             done
         else
             for arg in "$@" "$RBUFFER"; do
-                if inherit_values=$(_fzf_complete_parse_option_arguments "$inherit_option" '' "$arg"); then
+                if inherit_values=$(_fzf_complete_parse_option_arguments "$inherit_option" '' "${(F)kubectl_options_argument_required}" "$arg"); then
                     kubectl_arguments+=($inherit_values)
                 fi
             done
@@ -117,7 +119,7 @@ _fzf_complete_kubectl() {
     done
 
     subcommands=($(_fzf_complete_parse_argument 2 1 "$arguments" "${(F)kubectl_options_argument_required}" || :))
-    namespace=$(_fzf_complete_parse_option_arguments '-n' '--namespace' $@$RBUFFER || :)
+    namespace=$(_fzf_complete_parse_option_arguments '-n' '--namespace' "${(F)kubectl_options_argument_required}" $@$RBUFFER || :)
 
     if [[ ${subcommands[1]} =~ '^(apply|rollout|set)$' ]]; then
         subcommands+=($(_fzf_complete_parse_argument 2 2 "$arguments" "${(F)kubectl_options_argument_required}" || :))
