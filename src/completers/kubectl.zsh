@@ -7,7 +7,7 @@ _fzf_complete_kubectl() {
     local arguments=$@
     local kubectl_arguments=()
     local last_argument=${${(Q)${(z)@}}[-1]}
-    local prefix_option completing_option subcommands namespace resource name
+    local prefix_option completing_option arg subcommands namespace resource name
 
     local kubectl_options_argument_required=(
         --application-metrics-count-limit
@@ -102,13 +102,17 @@ _fzf_complete_kubectl() {
 
     for inherit_option in ${kubectl_inherited_options_argument_required[@]} ${kubectl_inherited_options[@]}; do
         if [[ $inherit_option = --* ]]; then
-            if inherit_values=$(_fzf_complete_parse_option_arguments '' "$inherit_option" $@$RBUFFER); then
-                kubectl_arguments+=($inherit_values)
-            fi
+            for arg in "$@" "$RBUFFER"; do
+                if inherit_values=$(_fzf_complete_parse_option_arguments '' "$inherit_option" "$arg"); then
+                    kubectl_arguments+=($inherit_values)
+                fi
+            done
         else
-            if inherit_values=$(_fzf_complete_parse_option_arguments "$inherit_option" '' $@$RBUFFER); then
-                kubectl_arguments+=($inherit_values)
-            fi
+            for arg in "$@" "$RBUFFER"; do
+                if inherit_values=$(_fzf_complete_parse_option_arguments "$inherit_option" '' "$arg"); then
+                    kubectl_arguments+=($inherit_values)
+                fi
+            done
         fi
     done
 
