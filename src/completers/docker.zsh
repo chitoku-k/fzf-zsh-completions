@@ -47,32 +47,34 @@ _fzf_complete_docker() {
     fi
 
     if [[ $subcommand = 'inspect' ]]; then
-        local inspect_type_idx=${${(Q)${(z)arguments}}[(i)--type]}
+        local inspect_type
+        inspect_type=($(_fzf_complete_parse_option_arguments '' '--type' $arguments || :))
+        inspect_type=${${${(Q)inspect_type}:#--type}#--type=}
 
-        if [[ -z ${${(Q)${(z)arguments}}[(r)--type*]} ]] ||
-            [[ -n ${${(Q)${(z)arguments}}[(r)--type=container]} ]] ||
-            [[ ${${(Q)${(z)arguments}}[inspect_type_idx+1]} = 'container' ]]; then
-            _fzf_complete_docker-containers '--all' '--multi' $@
-            return
-        fi
+        case $inspect_type in
+            image)
+                _fzf_complete_docker-images '--multi' $@
+                ;;
 
-        if [[ -n ${${(Q)${(z)arguments}}[(r)--type=image]} ]] ||
-            [[ ${${(Q)${(z)arguments}}[inspect_type_idx+1]} = 'image' ]]; then
-            _fzf_complete_docker-images '--multi' $@
-            return
-        fi
+            network)
+                _fzf_complete_docker-networks '--multi' $@
+                ;;
 
-        if [[ -n ${${(Q)${(z)arguments}}[(r)--type=network]} ]] ||
-            [[ ${${(Q)${(z)arguments}}[inspect_type_idx+1]} = 'network' ]]; then
-            _fzf_complete_docker-networks '--multi' $@
-            return
-        fi
+            volume)
+                _fzf_complete_docker-volumes '--multi' $@
+                ;;
 
-        if [[ -n ${${(Q)${(z)arguments}}[(r)--type=volume]} ]] ||
-            [[ ${${(Q)${(z)arguments}}[inspect_type_idx+1]} = 'volume' ]]; then
-            _fzf_complete_docker-volumes '--multi' $@
-            return
-        fi
+            container)
+                _fzf_complete_docker-containers '--all' '--multi' $@
+                ;;
+
+            task)
+                ;;
+
+            '')
+                _fzf_complete_docker-containers '--all' '--multi' $@
+                ;;
+        esac
 
         return
     fi
