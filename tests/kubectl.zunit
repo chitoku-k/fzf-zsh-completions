@@ -4724,6 +4724,82 @@
     _fzf_complete_kubectl 'kubectl get pods '
 }
 
+@test 'Testing completion: kubectl get pods --selector=** --namespace=kube-system' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '--namespace=kube-system'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={.items[*].metadata.labels}'
+
+        echo -n '{"component":"etcd","tier":"control-plane"}'
+        echo -n '{"component":"kube-apiserver","tier":"control-plane"}'
+        echo -n '{"component":"kube-controller-manager","tier":"control-plane"}'
+        echo -n '{"k8s-app":"kube-proxy"}'
+        echo -n '{"component":"kube-scheduler","tier":"control-plane"}'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl get pods --selector='
+
+        run cat
+        assert kubectl mock_times 1
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
+        assert ${lines[3]} same_as "${fg[yellow]}component${reset_color}  kube-apiserver"
+        assert ${lines[4]} same_as "${fg[yellow]}component${reset_color}  kube-controller-manager"
+        assert ${lines[5]} same_as "${fg[yellow]}component${reset_color}  kube-scheduler"
+        assert ${lines[6]} same_as "${fg[yellow]}k8s-app  ${reset_color}  kube-proxy"
+        assert ${lines[7]} same_as "${fg[yellow]}tier     ${reset_color}  control-plane"
+    }
+
+    RBUFFER=' --namespace=kube-system'
+    prefix=--selector=
+    _fzf_complete_kubectl 'kubectl get pods '
+}
+
+@test 'Testing completion: kubectl get pods --selector=tier=control-plane --namespace=**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'namespaces'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAME          STATUS   AGE'
+        echo 'default       Active   1d'
+        echo 'kube-system   Active   1d'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl get pods --selector=tier=control-plane --namespace='
+
+        run cat
+        assert kubectl mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}NAME          ${reset_color}STATUS   AGE"
+        assert ${lines[2]} same_as "${fg[yellow]}default       ${reset_color}Active   1d"
+        assert ${lines[3]} same_as "${fg[yellow]}kube-system   ${reset_color}Active   1d"
+    }
+
+    prefix=--namespace=
+    _fzf_complete_kubectl 'kubectl get pods --selector=tier=control-plane '
+}
+
 @test 'Testing completion: kubectl get pods --selector=tier=control-plane,**' {
     kubectl_mock_1() {
         assert $# equals 6
@@ -5106,48 +5182,6 @@
     _fzf_complete_kubectl 'kubectl get pods '
 }
 
-@test 'Testing completion: kubectl get pods --selector=** --namespace=kube-system' {
-    kubectl_mock_1() {
-        assert $# equals 5
-        assert $1 same_as 'get'
-        assert $2 same_as 'pods'
-        assert $3 same_as '--namespace=kube-system'
-        assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath={.items[*].metadata.labels}'
-
-        echo -n '{"component":"etcd","tier":"control-plane"}'
-        echo -n '{"component":"kube-apiserver","tier":"control-plane"}'
-        echo -n '{"component":"kube-controller-manager","tier":"control-plane"}'
-        echo -n '{"k8s-app":"kube-proxy"}'
-        echo -n '{"component":"kube-scheduler","tier":"control-plane"}'
-    }
-
-    _fzf_complete() {
-        assert $# equals 6
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--multi'
-        assert $5 same_as '--'
-        assert $6 same_as 'kubectl get pods --selector='
-
-        run cat
-        assert kubectl mock_times 1
-        assert ${#lines} equals 7
-        assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
-        assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
-        assert ${lines[3]} same_as "${fg[yellow]}component${reset_color}  kube-apiserver"
-        assert ${lines[4]} same_as "${fg[yellow]}component${reset_color}  kube-controller-manager"
-        assert ${lines[5]} same_as "${fg[yellow]}component${reset_color}  kube-scheduler"
-        assert ${lines[6]} same_as "${fg[yellow]}k8s-app  ${reset_color}  kube-proxy"
-        assert ${lines[7]} same_as "${fg[yellow]}tier     ${reset_color}  control-plane"
-    }
-
-    RBUFFER=' --namespace=kube-system'
-    prefix=--selector=
-    _fzf_complete_kubectl 'kubectl get pods '
-}
-
 @test 'Testing completion: kubectl get pods --selector **' {
     kubectl_mock_1() {
         assert $# equals 5
@@ -5187,6 +5221,82 @@
 
     prefix=
     _fzf_complete_kubectl 'kubectl get pods --selector '
+}
+
+@test 'Testing completion: kubectl get pods --selector ** --namespace=kube-system' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '--namespace=kube-system'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={.items[*].metadata.labels}'
+
+        echo -n '{"component":"etcd","tier":"control-plane"}'
+        echo -n '{"component":"kube-apiserver","tier":"control-plane"}'
+        echo -n '{"component":"kube-controller-manager","tier":"control-plane"}'
+        echo -n '{"k8s-app":"kube-proxy"}'
+        echo -n '{"component":"kube-scheduler","tier":"control-plane"}'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl get pods --selector '
+
+        run cat
+        assert kubectl mock_times 1
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
+        assert ${lines[3]} same_as "${fg[yellow]}component${reset_color}  kube-apiserver"
+        assert ${lines[4]} same_as "${fg[yellow]}component${reset_color}  kube-controller-manager"
+        assert ${lines[5]} same_as "${fg[yellow]}component${reset_color}  kube-scheduler"
+        assert ${lines[6]} same_as "${fg[yellow]}k8s-app  ${reset_color}  kube-proxy"
+        assert ${lines[7]} same_as "${fg[yellow]}tier     ${reset_color}  control-plane"
+    }
+
+    RBUFFER=' --namespace=kube-system'
+    prefix=
+    _fzf_complete_kubectl 'kubectl get pods --selector '
+}
+
+@test 'Testing completion: kubectl get pods --selector tier=control-plane --namespace=**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'namespaces'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAME          STATUS   AGE'
+        echo 'default       Active   1d'
+        echo 'kube-system   Active   1d'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl get pods --selector tier=control-plane --namespace='
+
+        run cat
+        assert kubectl mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}NAME          ${reset_color}STATUS   AGE"
+        assert ${lines[2]} same_as "${fg[yellow]}default       ${reset_color}Active   1d"
+        assert ${lines[3]} same_as "${fg[yellow]}kube-system   ${reset_color}Active   1d"
+    }
+
+    prefix=--namespace=
+    _fzf_complete_kubectl 'kubectl get pods --selector tier=control-plane '
 }
 
 @test 'Testing completion: kubectl get pods --selector tier=control-plane,**' {
@@ -5571,48 +5681,6 @@
     _fzf_complete_kubectl 'kubectl get pods --selector '
 }
 
-@test 'Testing completion: kubectl get pods --selector ** --namespace=kube-system' {
-    kubectl_mock_1() {
-        assert $# equals 5
-        assert $1 same_as 'get'
-        assert $2 same_as 'pods'
-        assert $3 same_as '--namespace=kube-system'
-        assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath={.items[*].metadata.labels}'
-
-        echo -n '{"component":"etcd","tier":"control-plane"}'
-        echo -n '{"component":"kube-apiserver","tier":"control-plane"}'
-        echo -n '{"component":"kube-controller-manager","tier":"control-plane"}'
-        echo -n '{"k8s-app":"kube-proxy"}'
-        echo -n '{"component":"kube-scheduler","tier":"control-plane"}'
-    }
-
-    _fzf_complete() {
-        assert $# equals 6
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--multi'
-        assert $5 same_as '--'
-        assert $6 same_as 'kubectl get pods --selector '
-
-        run cat
-        assert kubectl mock_times 1
-        assert ${#lines} equals 7
-        assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
-        assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
-        assert ${lines[3]} same_as "${fg[yellow]}component${reset_color}  kube-apiserver"
-        assert ${lines[4]} same_as "${fg[yellow]}component${reset_color}  kube-controller-manager"
-        assert ${lines[5]} same_as "${fg[yellow]}component${reset_color}  kube-scheduler"
-        assert ${lines[6]} same_as "${fg[yellow]}k8s-app  ${reset_color}  kube-proxy"
-        assert ${lines[7]} same_as "${fg[yellow]}tier     ${reset_color}  control-plane"
-    }
-
-    RBUFFER=' --namespace=kube-system'
-    prefix=
-    _fzf_complete_kubectl 'kubectl get pods --selector '
-}
-
 @test 'Testing completion: kubectl get pods -l **' {
     kubectl_mock_1() {
         assert $# equals 5
@@ -5652,6 +5720,82 @@
 
     prefix=
     _fzf_complete_kubectl 'kubectl get pods -l '
+}
+
+@test 'Testing completion: kubectl get pods -l ** --namespace=kube-system' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '--namespace=kube-system'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={.items[*].metadata.labels}'
+
+        echo -n '{"component":"etcd","tier":"control-plane"}'
+        echo -n '{"component":"kube-apiserver","tier":"control-plane"}'
+        echo -n '{"component":"kube-controller-manager","tier":"control-plane"}'
+        echo -n '{"k8s-app":"kube-proxy"}'
+        echo -n '{"component":"kube-scheduler","tier":"control-plane"}'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl get pods -l '
+
+        run cat
+        assert kubectl mock_times 1
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
+        assert ${lines[3]} same_as "${fg[yellow]}component${reset_color}  kube-apiserver"
+        assert ${lines[4]} same_as "${fg[yellow]}component${reset_color}  kube-controller-manager"
+        assert ${lines[5]} same_as "${fg[yellow]}component${reset_color}  kube-scheduler"
+        assert ${lines[6]} same_as "${fg[yellow]}k8s-app  ${reset_color}  kube-proxy"
+        assert ${lines[7]} same_as "${fg[yellow]}tier     ${reset_color}  control-plane"
+    }
+
+    RBUFFER=' --namespace=kube-system'
+    prefix=
+    _fzf_complete_kubectl 'kubectl get pods -l '
+}
+
+@test 'Testing completion: kubectl get pods -l tier=control-plane --namespace=**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'namespaces'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAME          STATUS   AGE'
+        echo 'default       Active   1d'
+        echo 'kube-system   Active   1d'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl get pods -l tier=control-plane --namespace='
+
+        run cat
+        assert kubectl mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}NAME          ${reset_color}STATUS   AGE"
+        assert ${lines[2]} same_as "${fg[yellow]}default       ${reset_color}Active   1d"
+        assert ${lines[3]} same_as "${fg[yellow]}kube-system   ${reset_color}Active   1d"
+    }
+
+    prefix=--namespace=
+    _fzf_complete_kubectl 'kubectl get pods -l tier=control-plane '
 }
 
 @test 'Testing completion: kubectl get pods -l tier=control-plane,**' {
@@ -6036,48 +6180,6 @@
     _fzf_complete_kubectl 'kubectl get pods -l '
 }
 
-@test 'Testing completion: kubectl get pods -l ** --namespace=kube-system' {
-    kubectl_mock_1() {
-        assert $# equals 5
-        assert $1 same_as 'get'
-        assert $2 same_as 'pods'
-        assert $3 same_as '--namespace=kube-system'
-        assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath={.items[*].metadata.labels}'
-
-        echo -n '{"component":"etcd","tier":"control-plane"}'
-        echo -n '{"component":"kube-apiserver","tier":"control-plane"}'
-        echo -n '{"component":"kube-controller-manager","tier":"control-plane"}'
-        echo -n '{"k8s-app":"kube-proxy"}'
-        echo -n '{"component":"kube-scheduler","tier":"control-plane"}'
-    }
-
-    _fzf_complete() {
-        assert $# equals 6
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--multi'
-        assert $5 same_as '--'
-        assert $6 same_as 'kubectl get pods -l '
-
-        run cat
-        assert kubectl mock_times 1
-        assert ${#lines} equals 7
-        assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
-        assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
-        assert ${lines[3]} same_as "${fg[yellow]}component${reset_color}  kube-apiserver"
-        assert ${lines[4]} same_as "${fg[yellow]}component${reset_color}  kube-controller-manager"
-        assert ${lines[5]} same_as "${fg[yellow]}component${reset_color}  kube-scheduler"
-        assert ${lines[6]} same_as "${fg[yellow]}k8s-app  ${reset_color}  kube-proxy"
-        assert ${lines[7]} same_as "${fg[yellow]}tier     ${reset_color}  control-plane"
-    }
-
-    RBUFFER=' --namespace=kube-system'
-    prefix=
-    _fzf_complete_kubectl 'kubectl get pods -l '
-}
-
 @test 'Testing completion: kubectl get pods -l**' {
     kubectl_mock_1() {
         assert $# equals 5
@@ -6117,6 +6219,82 @@
 
     prefix=-l
     _fzf_complete_kubectl 'kubectl get pods '
+}
+
+@test 'Testing completion: kubectl get pods -l** --namespace=kube-system' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '--namespace=kube-system'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={.items[*].metadata.labels}'
+
+        echo -n '{"component":"etcd","tier":"control-plane"}'
+        echo -n '{"component":"kube-apiserver","tier":"control-plane"}'
+        echo -n '{"component":"kube-controller-manager","tier":"control-plane"}'
+        echo -n '{"k8s-app":"kube-proxy"}'
+        echo -n '{"component":"kube-scheduler","tier":"control-plane"}'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl get pods -l'
+
+        run cat
+        assert kubectl mock_times 1
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
+        assert ${lines[3]} same_as "${fg[yellow]}component${reset_color}  kube-apiserver"
+        assert ${lines[4]} same_as "${fg[yellow]}component${reset_color}  kube-controller-manager"
+        assert ${lines[5]} same_as "${fg[yellow]}component${reset_color}  kube-scheduler"
+        assert ${lines[6]} same_as "${fg[yellow]}k8s-app  ${reset_color}  kube-proxy"
+        assert ${lines[7]} same_as "${fg[yellow]}tier     ${reset_color}  control-plane"
+    }
+
+    RBUFFER=' --namespace=kube-system'
+    prefix=-l
+    _fzf_complete_kubectl 'kubectl get pods '
+}
+
+@test 'Testing completion: kubectl get pods -ltier=control-plane --namespace=**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'namespaces'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAME          STATUS   AGE'
+        echo 'default       Active   1d'
+        echo 'kube-system   Active   1d'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl get pods -ltier=control-plane --namespace='
+
+        run cat
+        assert kubectl mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}NAME          ${reset_color}STATUS   AGE"
+        assert ${lines[2]} same_as "${fg[yellow]}default       ${reset_color}Active   1d"
+        assert ${lines[3]} same_as "${fg[yellow]}kube-system   ${reset_color}Active   1d"
+    }
+
+    prefix=--namespace=
+    _fzf_complete_kubectl 'kubectl get pods -ltier=control-plane '
 }
 
 @test 'Testing completion: kubectl get pods -ltier=control-plane,**' {
@@ -6498,48 +6676,6 @@
     }
 
     prefix=-ltier=control-plane,component!=etcd
-    _fzf_complete_kubectl 'kubectl get pods '
-}
-
-@test 'Testing completion: kubectl get pods -l** --namespace=kube-system' {
-    kubectl_mock_1() {
-        assert $# equals 5
-        assert $1 same_as 'get'
-        assert $2 same_as 'pods'
-        assert $3 same_as '--namespace=kube-system'
-        assert $4 same_as '-o'
-        assert $5 same_as 'jsonpath={.items[*].metadata.labels}'
-
-        echo -n '{"component":"etcd","tier":"control-plane"}'
-        echo -n '{"component":"kube-apiserver","tier":"control-plane"}'
-        echo -n '{"component":"kube-controller-manager","tier":"control-plane"}'
-        echo -n '{"k8s-app":"kube-proxy"}'
-        echo -n '{"component":"kube-scheduler","tier":"control-plane"}'
-    }
-
-    _fzf_complete() {
-        assert $# equals 6
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--tiebreak=index'
-        assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--multi'
-        assert $5 same_as '--'
-        assert $6 same_as 'kubectl get pods -l'
-
-        run cat
-        assert kubectl mock_times 1
-        assert ${#lines} equals 7
-        assert ${lines[1]} same_as "${fg[yellow]}KEY      ${reset_color}  VALUE"
-        assert ${lines[2]} same_as "${fg[yellow]}component${reset_color}  etcd"
-        assert ${lines[3]} same_as "${fg[yellow]}component${reset_color}  kube-apiserver"
-        assert ${lines[4]} same_as "${fg[yellow]}component${reset_color}  kube-controller-manager"
-        assert ${lines[5]} same_as "${fg[yellow]}component${reset_color}  kube-scheduler"
-        assert ${lines[6]} same_as "${fg[yellow]}k8s-app  ${reset_color}  kube-proxy"
-        assert ${lines[7]} same_as "${fg[yellow]}tier     ${reset_color}  control-plane"
-    }
-
-    RBUFFER=' --namespace=kube-system'
-    prefix=-l
     _fzf_complete_kubectl 'kubectl get pods '
 }
 

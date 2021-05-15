@@ -829,6 +829,9 @@ _fzf_complete_kubectl() {
     fi
 
     if [[ $completing_option =~ '^(-n|--namespace)$' ]]; then
+        kubectl_arguments=${kubectl_arguments:#\'-l*}
+        kubectl_arguments=${kubectl_arguments:#\'--selector*}
+
         resource=namespaces
         _fzf_complete_kubectl-resource-names '' $@
         return
