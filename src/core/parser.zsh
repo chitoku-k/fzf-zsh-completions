@@ -168,3 +168,37 @@ _fzf_complete_parse_option_arguments() {
 
     echo - $result
 }
+
+_fzf_complete_parse_option() {
+    local result=()
+    local short=$1
+    local long=$2
+    shift 2
+
+    local shorts=${(pj::)${${(z)short}#*-}}
+    local longs=${(pj:|:)${(z)long}}
+
+    local cmd=(${(Q)${(z)@}})
+    local idx=1
+    while [[ $idx -le ${#cmd} ]]; do
+        if [[ -n $shorts ]]; then
+            if [[ ${cmd[idx]} =~ ^-([^\-$shorts]*[$shorts]+[^$shorts]*)+$ ]]; then
+                result+=(${(qq)cmd[idx]})
+            fi
+        fi
+
+        if [[ -n $longs ]]; then
+            if [[ ${cmd[idx]} =~ $longs ]]; then
+                result+=(${(qq)cmd[idx]})
+            fi
+        fi
+
+        (( idx += 1 ))
+    done
+
+    if [[ -z $result ]]; then
+        return 1
+    fi
+
+    echo - $result
+}
