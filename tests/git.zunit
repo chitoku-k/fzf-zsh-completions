@@ -775,7 +775,7 @@
 
 @test 'Testing completion: git reset another-branch **' {
     echo >> newfile
-    run git add newlines
+    run git add newfile
 
     _fzf_complete() {
         assert $# equals 6
@@ -929,7 +929,7 @@
     }
 
     prefix=
-    _fzf_complete_git 'git reset --hard another-branch-- '
+    _fzf_complete_git 'git reset --hard another-branch -- '
 }
 
 @test 'Testing completion: git reset --merge another-branch -- **' {
@@ -958,7 +958,7 @@
     }
 
     prefix=
-    _fzf_complete_git 'git reset --merge another-branch-- '
+    _fzf_complete_git 'git reset --merge another-branch -- '
 }
 
 @test 'Testing completion: git reset --keep another-branch -- **' {
@@ -1013,9 +1013,9 @@
 
         actual1=(${(0)lines[1]})
         assert ${#actual1} equals 3
-        assert ${actual1[1]} same_as ' file3 containing space '
-        assert ${actual1[2]} same_as 'directory1/file2'
-        assert ${actual1[3]} same_as 'directory2/file4'
+        assert ${actual1[1]} same_as '../ file3 containing space '
+        assert ${actual1[2]} same_as '../directory1/file2'
+        assert ${actual1[3]} same_as '../directory2/file4'
 
         actual2=(${(0)lines[2]})
         assert ${#actual2} equals 1
@@ -1024,7 +1024,7 @@
         actual3=(${(0)lines[3]})
         assert ${#actual3} equals 2
         assert ${actual3[1]} same_as 'newlines'
-        assert ${actual3[2]} same_as 'file1'
+        assert ${actual3[2]} same_as '../file1'
     }
 
     prefix=
