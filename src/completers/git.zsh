@@ -813,7 +813,7 @@ _fzf_complete_git-ls-files-and-ls-tree() {
 
         local files=()
         local ls_files=$(git ls-files --deduplicate -z ${(Z+n+)git_ls_files_options} 2> /dev/null)
-        local ls_tree=$(git ls-tree --name-only --full-tree -r -z ${(Z+n+)git_ls_tree_options} ${treeish-HEAD} 2> /dev/null)
+        local ls_tree=$(git ls-tree --name-only --full-tree -r -z ${(Z+n+)git_ls_tree_options} ${treeish:-HEAD} 2> /dev/null)
         ls_files=(${(0)ls_files})
         ls_tree=(${(0)ls_tree})
 
