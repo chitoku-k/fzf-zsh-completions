@@ -824,7 +824,7 @@ _fzf_complete_git-ls-files-and-ls-tree() {
             files+=($ls_tree)
         fi
 
-        local paths=($cdup${^${(u)files}})
+        local paths=($cdup${^${(u)${(o)files}}})
 
         echo -n ${(pj:\0:)paths}
     })
