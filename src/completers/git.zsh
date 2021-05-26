@@ -274,7 +274,10 @@ _fzf_complete_git() {
                     return
                 fi
 
-                local both=$(_fzf_complete_parse_option '' '--soft --hard --merge --keep' $arguments || :)
+                if _fzf_complete_parse_option '' '--soft --hard --merge --keep' $arguments > /dev/null; then
+                    return
+                fi
+
                 _fzf_complete_git-ls-files-and-ls-tree '' '' '--multi' $@
                 ;;
         esac
@@ -814,15 +817,8 @@ _fzf_complete_git-ls-files-and-ls-tree() {
         local files=()
         local ls_files=$(git ls-files --deduplicate -z ${(Z+n+)git_ls_files_options} 2> /dev/null)
         local ls_tree=$(git ls-tree --name-only --full-tree -r -z ${(Z+n+)git_ls_tree_options} ${treeish:-HEAD} 2> /dev/null)
-        ls_files=(${(0)ls_files})
-        ls_tree=(${(0)ls_tree})
-
-        if [[ -n $both ]]; then
-            files=(${ls_files:*ls_tree})
-        else
-            files+=($ls_files)
-            files+=($ls_tree)
-        fi
+        files+=(${(0)ls_files})
+        files+=(${(0)ls_tree})
 
         local paths=($cdup${^${(u)${(o)files}}})
 
