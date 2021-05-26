@@ -874,120 +874,48 @@
     _fzf_complete_git 'git reset another-branch -- '
 }
 
-@test 'Testing completion: git reset --soft another-branch -- **' {
-    echo >> newfile
-    echo >> ' file3 containing space '
-    run git add newfile
-    run git add ' file3 containing space '
-
+@test 'Testing completion: git reset --soft -- **' {
     _fzf_complete() {
-        assert $# equals 6
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--read0'
-        assert $3 same_as '--print0'
-        assert $4 same_as '--multi'
-        assert $5 same_as '--'
-        assert $6 same_as 'git reset --soft another-branch -- '
-
-        run cat
-        assert ${#lines} equals 1
-
-        actual1=(${(0)lines[1]})
-        assert ${#actual1} equals 3
-        assert ${actual1[1]} same_as ' file3 containing space '
-        assert ${actual1[2]} same_as 'directory1/file2'
-        assert ${actual1[3]} same_as 'file1'
+        fail '_fzf_complete should not be invoked'
     }
 
     prefix=
-    _fzf_complete_git 'git reset --soft another-branch -- '
+    _fzf_complete_git 'git reset --soft -- '
+
+    pass
 }
 
-@test 'Testing completion: git reset --hard another-branch -- **' {
-    echo >> newfile
-    echo >> ' file3 containing space '
-    run git add newfile
-    run git add ' file3 containing space '
-
+@test 'Testing completion: git reset --hard -- **' {
     _fzf_complete() {
-        assert $# equals 6
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--read0'
-        assert $3 same_as '--print0'
-        assert $4 same_as '--multi'
-        assert $5 same_as '--'
-        assert $6 same_as 'git reset --hard another-branch -- '
-
-        run cat
-        assert ${#lines} equals 1
-
-        actual1=(${(0)lines[1]})
-        assert ${#actual1} equals 3
-        assert ${actual1[1]} same_as ' file3 containing space '
-        assert ${actual1[2]} same_as 'directory1/file2'
-        assert ${actual1[3]} same_as 'file1'
+        fail '_fzf_complete should not be invoked'
     }
 
     prefix=
-    _fzf_complete_git 'git reset --hard another-branch -- '
+    _fzf_complete_git 'git reset --hard -- '
+
+    pass
 }
 
-@test 'Testing completion: git reset --merge another-branch -- **' {
-    echo >> newfile
-    echo >> ' file3 containing space '
-    run git add newfile
-    run git add ' file3 containing space '
-
+@test 'Testing completion: git reset --merge -- **' {
     _fzf_complete() {
-        assert $# equals 6
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--read0'
-        assert $3 same_as '--print0'
-        assert $4 same_as '--multi'
-        assert $5 same_as '--'
-        assert $6 same_as 'git reset --merge another-branch -- '
-
-        run cat
-        assert ${#lines} equals 1
-
-        actual1=(${(0)lines[1]})
-        assert ${#actual1} equals 3
-        assert ${actual1[1]} same_as ' file3 containing space '
-        assert ${actual1[2]} same_as 'directory1/file2'
-        assert ${actual1[3]} same_as 'file1'
+        fail '_fzf_complete should not be invoked'
     }
 
     prefix=
-    _fzf_complete_git 'git reset --merge another-branch -- '
+    _fzf_complete_git 'git reset --merge -- '
+
+    pass
 }
 
-@test 'Testing completion: git reset --keep another-branch -- **' {
-    echo >> newfile
-    echo >> ' file3 containing space '
-    run git add newfile
-    run git add ' file3 containing space '
-
+@test 'Testing completion: git reset --keep -- **' {
     _fzf_complete() {
-        assert $# equals 6
-        assert $1 same_as '--ansi'
-        assert $2 same_as '--read0'
-        assert $3 same_as '--print0'
-        assert $4 same_as '--multi'
-        assert $5 same_as '--'
-        assert $6 same_as 'git reset --keep another-branch -- '
-
-        run cat
-        assert ${#lines} equals 1
-
-        actual1=(${(0)lines[1]})
-        assert ${#actual1} equals 3
-        assert ${actual1[1]} same_as ' file3 containing space '
-        assert ${actual1[2]} same_as 'directory1/file2'
-        assert ${actual1[3]} same_as 'file1'
+        fail '_fzf_complete should not be invoked'
     }
 
     prefix=
-    _fzf_complete_git 'git reset --keep another-branch -- '
+    _fzf_complete_git 'git reset --keep -- '
+
+    pass
 }
 
 @test 'Testing completion in subdirectory: git reset -- **' {
