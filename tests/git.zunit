@@ -5589,6 +5589,29 @@
     assert ${lines[6]} same_as "\$'directory2/file6\\ncontaining\\nnewlines'"
 }
 
+@test 'Testing post: git files in tree and index' {
+    input=(
+        'file1'
+        'directory1/file2'
+        ' file3 containing space '
+        $'file4\ncontaining\nnewlines'
+        ' file5 containing space '
+        $'directory2/file6\ncontaining\nnewlines'
+    )
+
+    run _fzf_complete_git-files_tree_and_index_post <<< ${(pj:\0:)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 6
+
+    assert ${lines[1]} same_as 'file1'
+    assert ${lines[2]} same_as 'directory1/file2'
+    assert ${lines[3]} same_as "' file3 containing space '"
+    assert ${lines[4]} same_as "\$'file4\\ncontaining\\nnewlines'"
+    assert ${lines[5]} same_as "' file5 containing space '"
+    assert ${lines[6]} same_as "\$'directory2/file6\\ncontaining\\nnewlines'"
+}
+
 @test 'Testing post: git notes' {
     input=(
         "notes/note1    Notes added by 'git notes add'"
