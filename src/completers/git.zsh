@@ -87,7 +87,7 @@ _fzf_complete_git() {
             fi
 
             if [[ $subcommand = 'log' ]]; then
-                _fzf_complete_git-ls-tree '' '--multi' $@
+                _fzf_complete_git-files_index '' '--multi' $@
                 return
             fi
         fi
@@ -131,7 +131,7 @@ _fzf_complete_git() {
             *)
                 local treeish
                 if treeish=$(_fzf_complete_git_parse_argument 1 "${arguments%% -- *}" "${(F)git_options_argument_required}") || [[ -n $treeish ]]; then
-                    _fzf_complete_git-ls-tree '' '--multi' $@
+                    _fzf_complete_git-files_index '' '--multi' $@
                     return
                 fi
 
@@ -230,7 +230,7 @@ _fzf_complete_git() {
 
             *)
                 if [[ -n ${${(Q)${(z)arguments}}[(r)--source(|(=*))]} ]] || [[ -n ${${(Q)${(z)arguments}}[(r)-[^-]#s*]} ]]; then
-                    _fzf_complete_git-ls-tree '' '--multi' $@
+                    _fzf_complete_git-files_index '' '--multi' $@
                     return
                 fi
 
@@ -278,7 +278,7 @@ _fzf_complete_git() {
                     return
                 fi
 
-                _fzf_complete_git-ls-files-and-ls-tree '' '' '--multi' $@
+                _fzf_complete_git-files_tree_and_index '' '' '--multi' $@
                 ;;
         esac
 
@@ -546,7 +546,7 @@ _fzf_complete_git() {
     fi
 
     if [[ $subcommand = 'rm' ]]; then
-        _fzf_complete_git-ls-files '' '--multi' $@
+        _fzf_complete_git-files_tree '' '--multi' $@
         return
     fi
 
@@ -670,7 +670,7 @@ _fzf_complete_git() {
 
                 if [[ $prefix = *:* ]]; then
                     treeish=${prefix%:*}
-                    prefix=${prefix#*:} _fzf_complete_git-ls-tree '' '' $@
+                    prefix=${prefix#*:} _fzf_complete_git-files_index '' '' $@
                     return
                 fi
 
@@ -759,7 +759,7 @@ _fzf_complete_git-commit-messages_post() {
     echo ${(qq)message}
 }
 
-_fzf_complete_git-ls-files() {
+_fzf_complete_git-files_tree() {
     local git_options=$1
     local fzf_options=$2
     shift 2
@@ -777,7 +777,7 @@ _fzf_complete_git-ls-files() {
     })
 }
 
-_fzf_complete_git-ls-files_post() {
+_fzf_complete_git-files_tree_post() {
     local filename
     local input=$(cat)
 
@@ -786,7 +786,7 @@ _fzf_complete_git-ls-files_post() {
     done
 }
 
-_fzf_complete_git-ls-tree() {
+_fzf_complete_git-files_index() {
     local git_options=$1
     local fzf_options=$2
     shift 2
@@ -794,7 +794,7 @@ _fzf_complete_git-ls-tree() {
     _fzf_complete --ansi --read0 --print0 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_ref < <(git ls-tree --name-only --full-tree -r -z ${(Z+n+)git_options} ${treeish-HEAD} 2> /dev/null)
 }
 
-_fzf_complete_git-ls-tree_post() {
+_fzf_complete_git-files_index_post() {
     local filename
     local input=$(cat)
 
@@ -803,7 +803,7 @@ _fzf_complete_git-ls-tree_post() {
     done
 }
 
-_fzf_complete_git-ls-files-and-ls-tree() {
+_fzf_complete_git-files_tree_and_index() {
     local git_ls_files_options=$1
     local git_ls_tree_options=$2
     local fzf_options=$3
@@ -826,7 +826,7 @@ _fzf_complete_git-ls-files-and-ls-tree() {
     })
 }
 
-_fzf_complete_git-ls-files-and-ls-tree_post() {
+_fzf_complete_git-files_tree_and_index_post() {
     local filename
     local input=$(cat)
 
