@@ -882,7 +882,7 @@
     prefix=
     _fzf_complete_git 'git reset --soft -- '
 
-    pass
+    assert $? equals 0
 }
 
 @test 'Testing completion: git reset --hard -- **' {
@@ -893,7 +893,7 @@
     prefix=
     _fzf_complete_git 'git reset --hard -- '
 
-    pass
+    assert $? equals 0
 }
 
 @test 'Testing completion: git reset --merge -- **' {
@@ -904,7 +904,7 @@
     prefix=
     _fzf_complete_git 'git reset --merge -- '
 
-    pass
+    assert $? equals 0
 }
 
 @test 'Testing completion: git reset --keep -- **' {
@@ -915,7 +915,7 @@
     prefix=
     _fzf_complete_git 'git reset --keep -- '
 
-    pass
+    assert $? equals 0
 }
 
 @test 'Testing completion in subdirectory: git reset -- **' {
