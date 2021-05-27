@@ -773,12 +773,9 @@
     _fzf_complete_git 'git reset '
 }
 
-@test 'Testing completion: git reset -- **' {
-    run git checkout another-branch
-    echo >> ' file3 containing space '
-    echo >> directory2/$'file4\ncontaining\nnewlines'
-    echo >> ' file5 containing space '
-    echo >> directory2/$'file6\ncontaining\nnewlines'
+@test 'Testing completion: git reset another-branch **' {
+    echo >> newfile
+    run git add newfile
 
     _fzf_complete() {
         assert $# equals 6
@@ -787,7 +784,7 @@
         assert $3 same_as '--print0'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'git reset -- '
+        assert $6 same_as 'git reset another-branch '
 
         run cat
         assert ${#lines} equals 3
@@ -803,13 +800,122 @@
         assert ${actual2[1]} same_as 'containing'
 
         actual3=(${(0)lines[3]})
-        assert ${#actual3} equals 2
+        assert ${#actual3} equals 3
         assert ${actual3[1]} same_as 'newlines'
         assert ${actual3[2]} same_as 'file1'
+        assert ${actual3[3]} same_as 'newfile'
+    }
+
+    prefix=
+    _fzf_complete_git 'git reset another-branch '
+}
+
+@test 'Testing completion: git reset -- **' {
+    echo >> newfile
+    run git add newfile
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--read0'
+        assert $3 same_as '--print0'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'git reset -- '
+
+        run cat
+        assert ${#lines} equals 1
+
+        actual1=(${(0)lines[1]})
+        assert ${#actual1} equals 3
+        assert ${actual1[1]} same_as 'directory1/file2'
+        assert ${actual1[2]} same_as 'file1'
+        assert ${actual1[3]} same_as 'newfile'
     }
 
     prefix=
     _fzf_complete_git 'git reset -- '
+}
+
+@test 'Testing completion: git reset another-branch -- **' {
+    echo >> newfile
+    run git add newfile
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--read0'
+        assert $3 same_as '--print0'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'git reset another-branch -- '
+
+        run cat
+        assert ${#lines} equals 3
+
+        actual1=(${(0)lines[1]})
+        assert ${#actual1} equals 3
+        assert ${actual1[1]} same_as ' file3 containing space '
+        assert ${actual1[2]} same_as 'directory1/file2'
+        assert ${actual1[3]} same_as 'directory2/file4'
+
+        actual2=(${(0)lines[2]})
+        assert ${#actual2} equals 1
+        assert ${actual2[1]} same_as 'containing'
+
+        actual3=(${(0)lines[3]})
+        assert ${#actual3} equals 3
+        assert ${actual3[1]} same_as 'newlines'
+        assert ${actual3[2]} same_as 'file1'
+        assert ${actual3[3]} same_as 'newfile'
+    }
+
+    prefix=
+    _fzf_complete_git 'git reset another-branch -- '
+}
+
+@test 'Testing completion: git reset --soft -- **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_git 'git reset --soft -- '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git reset --hard -- **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_git 'git reset --hard -- '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git reset --merge -- **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_git 'git reset --merge -- '
+
+    assert $? equals 0
+}
+
+@test 'Testing completion: git reset --keep -- **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_git 'git reset --keep -- '
+
+    assert $? equals 0
 }
 
 @test 'Testing completion in subdirectory: git reset -- **' {
@@ -835,9 +941,9 @@
 
         actual1=(${(0)lines[1]})
         assert ${#actual1} equals 3
-        assert ${actual1[1]} same_as ' file3 containing space '
-        assert ${actual1[2]} same_as 'directory1/file2'
-        assert ${actual1[3]} same_as 'directory2/file4'
+        assert ${actual1[1]} same_as '../ file3 containing space '
+        assert ${actual1[2]} same_as '../directory1/file2'
+        assert ${actual1[3]} same_as '../directory2/file4'
 
         actual2=(${(0)lines[2]})
         assert ${#actual2} equals 1
@@ -846,7 +952,7 @@
         actual3=(${(0)lines[3]})
         assert ${#actual3} equals 2
         assert ${actual3[1]} same_as 'newlines'
-        assert ${actual3[2]} same_as 'file1'
+        assert ${actual3[2]} same_as '../file1'
     }
 
     prefix=
@@ -5471,6 +5577,29 @@
     )
 
     run _fzf_complete_git-show-files_post <<< ${(pj:\0:)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 6
+
+    assert ${lines[1]} same_as 'file1'
+    assert ${lines[2]} same_as 'directory1/file2'
+    assert ${lines[3]} same_as "' file3 containing space '"
+    assert ${lines[4]} same_as "\$'file4\\ncontaining\\nnewlines'"
+    assert ${lines[5]} same_as "' file5 containing space '"
+    assert ${lines[6]} same_as "\$'directory2/file6\\ncontaining\\nnewlines'"
+}
+
+@test 'Testing post: git files in tree and index' {
+    input=(
+        'file1'
+        'directory1/file2'
+        ' file3 containing space '
+        $'file4\ncontaining\nnewlines'
+        ' file5 containing space '
+        $'directory2/file6\ncontaining\nnewlines'
+    )
+
+    run _fzf_complete_git-files_tree_and_index_post <<< ${(pj:\0:)input}
 
     assert $state equals 0
     assert ${#lines} equals 6
