@@ -274,7 +274,7 @@ _fzf_complete_git() {
                     return
                 fi
 
-                if _fzf_complete_parse_option '' '--soft --hard --merge --keep' $arguments > /dev/null; then
+                if _fzf_complete_parse_option '' '--soft --hard --merge --keep' '' $arguments > /dev/null; then
                     return
                 fi
 

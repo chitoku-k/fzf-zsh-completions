@@ -105,30 +105,23 @@ _fzf_complete_parse_argument() {
 
 _fzf_complete_parse_option() {
     local result=()
-    local short=$1
-    local long=$2
-    shift 2
-
-    local shorts=${(pj::)${${(z)short}#*-}}
-    local longs=${(pj:|:)${(z)long}}
+    local shorts=(${(z)1})
+    local longs=(${(z)2})
+    local options_argument_required=(${(z)3})
+    shift 3
 
     local cmd=(${(Q)${(z)@}})
-    local idx=1
-    while [[ $idx -le ${#cmd} ]]; do
-        if [[ -n $shorts ]]; then
-            if [[ ${cmd[idx]} =~ ^-([^\-$shorts]*[$shorts]+[^$shorts]*)+$ ]]; then
-                result+=(${(qq)cmd[idx]})
-            fi
-        fi
+    local cmd_shorts=(${(M)cmd:#-[^-]*})
 
-        if [[ -n $longs ]]; then
-            if [[ ${cmd[idx]} =~ $longs ]]; then
-                result+=(${(qq)cmd[idx]})
-            fi
-        fi
-
-        (( idx += 1 ))
+    local option_argument_required
+    for option_argument_required in $options_argument_required; do
+        cmd_shorts=(${cmd_shorts%%${option_argument_required#-}*})
     done
+
+    cmd_shorts=(-${^${(ps::)cmd_shorts}})
+
+    result+=(${cmd_shorts:*shorts})
+    result+=(${cmd:*longs})
 
     if [[ -z $result ]]; then
         return 1
