@@ -3789,6 +3789,134 @@
     _fzf_complete_kubectl 'kubectl create '
 }
 
+@test 'Testing completion: kubectl create job --from=**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'cronjob'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAMESPACE     NAME                  SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE   CONTAINERS    IMAGES                                       SELECTOR'
+        echo 'kube-system   descheduler-cronjob   */2 * * * *   False     0        90s             1d    descheduler   k8s.gcr.io/descheduler/descheduler:v0.20.0   <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl create job --from=cronjob/'
+
+        run cat
+        assert kubectl mock_times 1
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                  ${reset_color}SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE   CONTAINERS    IMAGES                                       SELECTOR"
+        assert ${lines[2]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}descheduler-cronjob   ${reset_color}*/2 * * * *   False     0        90s             1d    descheduler   k8s.gcr.io/descheduler/descheduler:v0.20.0   <none>"
+    }
+
+    prefix=--from=
+    _fzf_complete_kubectl 'kubectl create job '
+}
+
+@test 'Testing completion: kubectl create job --from=cronjob/**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'cronjob'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAMESPACE     NAME                  SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE   CONTAINERS    IMAGES                                       SELECTOR'
+        echo 'kube-system   descheduler-cronjob   */2 * * * *   False     0        90s             1d    descheduler   k8s.gcr.io/descheduler/descheduler:v0.20.0   <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl create job --from=cronjob/'
+
+        run cat
+        assert kubectl mock_times 1
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                  ${reset_color}SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE   CONTAINERS    IMAGES                                       SELECTOR"
+        assert ${lines[2]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}descheduler-cronjob   ${reset_color}*/2 * * * *   False     0        90s             1d    descheduler   k8s.gcr.io/descheduler/descheduler:v0.20.0   <none>"
+    }
+
+    prefix=--from=cronjob/
+    _fzf_complete_kubectl 'kubectl create job '
+}
+
+@test 'Testing completion: kubectl create job --from **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'cronjob'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAMESPACE     NAME                  SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE   CONTAINERS    IMAGES                                       SELECTOR'
+        echo 'kube-system   descheduler-cronjob   */2 * * * *   False     0        90s             1d    descheduler   k8s.gcr.io/descheduler/descheduler:v0.20.0   <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl create job --from cronjob/'
+
+        run cat
+        assert kubectl mock_times 1
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                  ${reset_color}SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE   CONTAINERS    IMAGES                                       SELECTOR"
+        assert ${lines[2]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}descheduler-cronjob   ${reset_color}*/2 * * * *   False     0        90s             1d    descheduler   k8s.gcr.io/descheduler/descheduler:v0.20.0   <none>"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl create job --from '
+}
+
+@test 'Testing completion: kubectl create job --from cronjob/**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'cronjob'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAMESPACE     NAME                  SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE   CONTAINERS    IMAGES                                       SELECTOR'
+        echo 'kube-system   descheduler-cronjob   */2 * * * *   False     0        90s             1d    descheduler   k8s.gcr.io/descheduler/descheduler:v0.20.0   <none>'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl create job --from cronjob/'
+
+        run cat
+        assert kubectl mock_times 1
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "\x1c${fg[green]}NAMESPACE     $reset_color${fg[yellow]}NAME                  ${reset_color}SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE   CONTAINERS    IMAGES                                       SELECTOR"
+        assert ${lines[2]} same_as "\x1c${fg[green]}kube-system   $reset_color${fg[yellow]}descheduler-cronjob   ${reset_color}*/2 * * * *   False     0        90s             1d    descheduler   k8s.gcr.io/descheduler/descheduler:v0.20.0   <none>"
+    }
+
+    prefix=cronjob/
+    _fzf_complete_kubectl 'kubectl create job --from '
+}
+
 @test 'Testing completion: kubectl delete **' {
     kubectl_mock_1() {
         assert $# equals 3
