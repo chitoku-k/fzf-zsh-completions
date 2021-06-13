@@ -121,7 +121,7 @@ _fzf_complete_kubectl() {
     subcommands=($(_fzf_complete_parse_argument 2 1 "$arguments" "${(F)kubectl_options_argument_required}" || :))
     namespace=$(_fzf_complete_parse_option_arguments '-n' '--namespace' "${(F)kubectl_options_argument_required}" $@$RBUFFER || :)
 
-    if [[ ${subcommands[1]} =~ '^(apply|rollout|set)$' ]]; then
+    if [[ ${subcommands[1]} =~ '^(apply|create|rollout|set)$' ]]; then
         subcommands+=($(_fzf_complete_parse_argument 2 2 "$arguments" "${(F)kubectl_options_argument_required}" || :))
         resource=$(_fzf_complete_parse_argument 2 3 "$arguments" "${(F)kubectl_options_argument_required}" || :)
         name=$(_fzf_complete_parse_argument 2 4 "$arguments" "${(F)kubectl_options_argument_required}" || :)
@@ -133,7 +133,7 @@ _fzf_complete_kubectl() {
     if [[ $resource = */* ]]; then
         name=${resource#*/}
         resource=${resource%/*}
-    elif [[ -z $resource ]] && [[ $prefix =~ / ]]; then
+    elif [[ -z $resource ]] && [[ $prefix != -* ]] && [[ $prefix = */* ]]; then
         resource=${prefix%/*}
         prefix_option=${prefix%/*}/
         prefix=${prefix#$prefix_option}
@@ -399,6 +399,16 @@ _fzf_complete_kubectl() {
                 prefix_option=${prefix%%${completing_option[-1]}*}${completing_option[-1]}
             fi
             prefix=${prefix#$prefix_option}
+        fi
+
+        if [[ ${subcommands[2]} = 'job' ]]; then
+            if [[ $completing_option = '--from' ]]; then
+                prefix=${prefix##*/}
+                prefix_option=${prefix_option##*/}cronjob/
+                resource=cronjob
+                _fzf_complete_kubectl-resource-names '' $@
+                return
+            fi
         fi
 
         if [[ -z $completing_option ]]; then
