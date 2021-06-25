@@ -1,0 +1,34 @@
+#!/usr/bin/env zunit
+
+@setup {
+    load ../fzf-zsh-completions.plugin.zsh
+    load _helpers/mock.zsh
+    load _helpers/assertions.zsh
+    mock _fzf_complete_docker
+}
+
+@teardown {
+    unmock _fzf_complete_docker
+}
+
+@test 'Testing completion: sudo docker **' {
+    _fzf_complete_docker() {
+        assert $# equals 1
+        assert $1 same_as 'docker '
+    }
+
+    LBUFFER='sudo docker '
+    prefix=
+    _fzf_complete_sudo 'sudo docker '
+}
+
+@test 'Testing completion: sudo docker start **' {
+    _fzf_complete_docker() {
+        assert $# equals 1
+        assert $1 same_as 'docker start '
+    }
+
+    LBUFFER='sudo docker start '
+    prefix=
+    _fzf_complete_sudo 'sudo docker start '
+}
