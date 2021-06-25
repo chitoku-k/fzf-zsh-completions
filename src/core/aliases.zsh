@@ -1,5 +1,5 @@
 _fzf_complete_enable_aliases() {
-    local expr name value completer
+    local expr name value completer arguments
     local completers=(${@:t:r})
 
     local IFS=$'\n'
