@@ -17,7 +17,7 @@ _fzf_complete_systemctl() {
     _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)${_fzf_complete_preview_systemctl_status/\$SYSTEMCTL_OPTIONS/$systemctl_options}}} ${(Q)${(Z+n+)FZF_DEFAULT_OPTS}} -- $@ < \
         <({
             systemctl list-units ${(Q)${(Z+n+)systemctl_options}} "$prefix*"
-            systemctl list-unit-files ${(Q)${(Z+n+)systemctl_options}} "$prefix*" | awk '{ print $1 }'
+            systemctl list-unit-files ${(Q)${(Z+n+)systemctl_options}} "$prefix*"
         } |
             LC_ALL=C sort -b -f -k 1,1 -k 3,3r |
             awk \
