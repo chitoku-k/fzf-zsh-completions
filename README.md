@@ -21,7 +21,8 @@ sequence that defaults to `**`.
 Load `fzf-zsh-completions.plugin.zsh`.
 
 For those who prefer to install via package managers, see the instructions
-below.
+below. Be sure to load the plugin after `alias` calls for aliased completions to
+work.
 
 ### Antigen
 
