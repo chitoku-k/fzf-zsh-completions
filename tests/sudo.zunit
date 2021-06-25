@@ -20,6 +20,8 @@
     LBUFFER='sudo docker '
     prefix=
     _fzf_complete_sudo 'sudo docker '
+
+    assert $LBUFFER same_as 'sudo docker '
 }
 
 @test 'Testing completion: sudo docker start **' {
@@ -31,4 +33,6 @@
     LBUFFER='sudo docker start '
     prefix=
     _fzf_complete_sudo 'sudo docker start '
+
+    assert $LBUFFER same_as 'sudo docker start '
 }
