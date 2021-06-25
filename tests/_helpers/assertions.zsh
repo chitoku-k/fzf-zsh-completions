@@ -5,7 +5,7 @@ _zunit_assert_mock_times() {
 
     local len=$(cat -- ${target}_mock_times)
     if [[ $len != $count ]]; then
-        echo "'$target' is called for $len times(s)"
+        echo "'$target' is called $len time(s)"
         exit 1
     fi
 
@@ -14,6 +14,7 @@ _zunit_assert_mock_times() {
         local mock=${target}_mock_$i
         if [[ -e ${mock}_fail ]]; then
             echo "$mock: $(cat -- ${mock}_fail)"
+            rm -f -- ${mock}_fail
             exit 1
         fi
     done
