@@ -1,0 +1,37 @@
+name: Completion Request
+description: Request a new completion
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to request a feature. In order to help us better understand what completion would be helpful, please fill out the template below.
+  - type: input
+    attributes:
+      label: Command name
+      placeholder: git
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Completion context
+      description: 'Completion context with `**<TAB>` indicating the cursor'
+      placeholder: 'git commit -m **<TAB>'
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: What happens now?
+      description: The current completion
+      placeholder: Files
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: What do you expect to complete?
+      description: The expected completion
+      placeholder: All commit messages of the current branch
+    validations:
+      required: true
