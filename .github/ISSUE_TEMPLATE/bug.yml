@@ -1,0 +1,79 @@
+name: Bug Report
+description: Create a bug report
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. In order to help us better understand the problem, please fill out the issue template below.
+  - type: textarea
+    attributes:
+      label: OS version
+      placeholder: Ubuntu 20.04
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: zsh version
+      description: '`zsh --version` output'
+      placeholder: zsh 5.8 (x86_64-pc-linux-gnu)
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: awk version
+      description: '`awk --version` output'
+      placeholder: 'GNU Awk 5.1.0, API: 3.0 (GNU MPFR 4.1.0, GNU MP 6.2.1)'
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: jq version
+      description: '`jq --version` output'
+      placeholder: jq-1.6
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: fzf version
+      description: '`fzf --version` output'
+      placeholder: 0.27.2 (8255aa2)
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Command version(s)
+      description: 'Command version(s) for completing command (e.g., `git --version` for git completion)'
+      placeholder: git version 2.32.0
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Installed zsh plugins (if applicable)
+      description: '`antigen list`, `zplug list`, and their equivalents’ output'
+      placeholder: zsh-users/zsh-completions @ master
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: What happened?
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: What did you expect to happen?
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Steps to reproduce
+    validations:
+      required: true
