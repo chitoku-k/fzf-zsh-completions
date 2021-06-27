@@ -13,10 +13,12 @@ _fzf_complete_enable_aliases() {
             local original_func=$(declare -f _fzf_complete_$completer)
             eval "
                 _fzf_complete_$name() {
-                    ${original_func/_fzf_complete_$completer/_fzf_complete_${completer}_original}
+                    local wrapper=\$(declare -f _fzf_complete_$name)
+                    $original_func
                     LBUFFER=\"\${LBUFFER/$name/$completer $arguments}\"
-                    _fzf_complete_${completer}_original \${@/$name/$completer $arguments}
+                    _fzf_complete_${completer} \${@/$name/$completer $arguments}
                     LBUFFER=\"\${LBUFFER/$completer $arguments/$name}\"
+                    eval \"\$wrapper\"
                 }
             "
         fi
