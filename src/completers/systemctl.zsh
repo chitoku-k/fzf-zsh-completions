@@ -10,9 +10,15 @@ PREVIEW_OPTIONS
 )
 
 _fzf_complete_systemctl() {
-    local arguments=$@
+    _fzf_complete_systemctl-units '' $@
+}
+
+_fzf_complete_systemctl-units() {
+    local fzf_options=$1
+    shift
+
     local systemctl_options=(--full --no-legend --no-pager)
-    systemctl_options+=($(_fzf_complete_parse_option '' '--user --system' '' $arguments)) || :
+    systemctl_options+=($(_fzf_complete_parse_option '' '--user --system' '' $@)) || :
 
     _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)${_fzf_complete_preview_systemctl_status/\$SYSTEMCTL_OPTIONS/$systemctl_options}}} ${(Q)${(Z+n+)FZF_DEFAULT_OPTS}} -- $@ < \
         <({
@@ -41,6 +47,6 @@ _fzf_complete_systemctl() {
                 }')
 }
 
-_fzf_complete_systemctl_post() {
+_fzf_complete_systemctl-units_post() {
     awk '{ print $2 }'
 }
