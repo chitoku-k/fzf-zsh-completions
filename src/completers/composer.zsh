@@ -1,7 +1,9 @@
 #!/usr/bin/env zsh
 
 _fzf_complete_composer() {
-    if [[ $@ = 'composer'* ]]; then
+    local arguments=$(_fzf_complete_trim_env $@)
+
+    if [[ $arguments = 'composer'* ]]; then
         _fzf_complete_composer-run-script '' $@
         return
     fi

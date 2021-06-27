@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 _fzf_complete_yarn() {
-    local arguments=$@
+    local arguments=$(_fzf_complete_trim_env $@)
     local subcommand=${${(Q)${(z)arguments}}[2]}
 
     if [[ $subcommand = 'workspace' ]]; then

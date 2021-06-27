@@ -5,6 +5,10 @@
     load _helpers/assertions.zsh
 
     pushd tests/_support/npm
+
+    __fzf_extract_command() {
+        echo 'yarn'
+    }
 }
 
 @test 'Testing completion: yarn **' {

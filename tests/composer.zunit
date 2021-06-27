@@ -5,6 +5,10 @@
     load _helpers/assertions.zsh
 
     pushd tests/_support/composer
+
+    __fzf_extract_command() {
+        echo 'composer'
+    }
 }
 
 @test 'Testing completion: composer **' {

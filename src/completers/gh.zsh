@@ -4,7 +4,7 @@ autoload -U colors
 colors
 
 _fzf_complete_gh() {
-    local arguments=$@
+    local arguments=$(_fzf_complete_trim_env $@)
     local gh_command=${${(Q)${(z)arguments}}[2]}
     local gh_subcommand=${${(Q)${(z)arguments}}[3]}
     local last_argument=${${(Q)${(z)arguments}}[-1]}

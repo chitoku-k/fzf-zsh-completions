@@ -4,9 +4,9 @@ autoload -U colors
 colors
 
 _fzf_complete_kubectl() {
-    local arguments=$@
+    local arguments=$(_fzf_complete_trim_env $@)
     local kubectl_arguments=()
-    local last_argument=${${(Q)${(z)@}}[-1]}
+    local last_argument=${${(Q)${(z)arguments}}[-1]}
     local prefix_option completing_option arg subcommands namespace resource name
 
     local inherit_option inherit_values
@@ -104,13 +104,13 @@ _fzf_complete_kubectl() {
 
     for inherit_option in ${kubectl_inherited_options_argument_required[@]} ${kubectl_inherited_options[@]}; do
         if [[ $inherit_option = --* ]]; then
-            for arg in "$@" "$RBUFFER"; do
+            for arg in "$arguments" "$RBUFFER"; do
                 if inherit_values=$(_fzf_complete_parse_option_arguments '' "$inherit_option" "${(F)kubectl_options_argument_required}" "$arg"); then
                     kubectl_arguments+=($inherit_values)
                 fi
             done
         else
-            for arg in "$@" "$RBUFFER"; do
+            for arg in "$arguments" "$RBUFFER"; do
                 if inherit_values=$(_fzf_complete_parse_option_arguments "$inherit_option" '' "${(F)kubectl_options_argument_required}" "$arg"); then
                     kubectl_arguments+=($inherit_values)
                 fi
@@ -119,7 +119,7 @@ _fzf_complete_kubectl() {
     done
 
     subcommands=($(_fzf_complete_parse_argument 2 1 "$arguments" "${(F)kubectl_options_argument_required}" || :))
-    namespace=$(_fzf_complete_parse_option_arguments '-n' '--namespace' "${(F)kubectl_options_argument_required}" $@$RBUFFER || :)
+    namespace=$(_fzf_complete_parse_option_arguments '-n' '--namespace' "${(F)kubectl_options_argument_required}" $arguments$RBUFFER || :)
 
     if [[ ${subcommands[1]} =~ '^(apply|create|rollout|set)$' ]]; then
         subcommands+=($(_fzf_complete_parse_argument 2 2 "$arguments" "${(F)kubectl_options_argument_required}" || :))

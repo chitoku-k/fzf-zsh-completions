@@ -1,5 +1,12 @@
 #!/usr/bin/env zsh
 
+_fzf_complete_trim_env() {
+    local arguments=(${(Q)${(z)@}})
+    local cmd=$(__fzf_extract_command $@)
+
+    echo ${(q)arguments[${arguments[(i)$cmd]}, -1]}
+}
+
 _fzf_complete_parse_completing_option() {
     local prefix=$1
     local last_argument=$2

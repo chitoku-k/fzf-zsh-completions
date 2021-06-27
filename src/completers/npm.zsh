@@ -1,7 +1,10 @@
 #!/usr/bin/env zsh
 
 _fzf_complete_npm() {
-    if [[ $@ = 'npm run'* ]]; then
+    local arguments=$(_fzf_complete_trim_env $@)
+    local subcommand=${${(Q)${(z)arguments}}[2]}
+
+    if [[ $subcommand = 'run' ]]; then
         _fzf_complete_npm-run '' $@
         return
     fi

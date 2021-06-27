@@ -5,6 +5,10 @@
     load _helpers/mock.zsh
     load _helpers/assertions.zsh
     mock kubectl
+
+    __fzf_extract_command() {
+        echo 'kubectl'
+    }
 }
 
 @teardown {
