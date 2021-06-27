@@ -10,6 +10,7 @@ _fzf_complete_enable_aliases() {
         arguments=${(@)value[2,-1]}
 
         if [[ -n $completer ]]; then
+            source -- ${@[(r)*completers/$completer.zsh]}
             local original_func_body=$functions[_fzf_complete_$completer]
             eval "
                 _fzf_complete_$name() {
