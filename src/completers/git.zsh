@@ -76,8 +76,8 @@ _fzf_complete_git() {
         resolved_commands+=($subcommand)
     done
 
-    local subcommand=${${(Q)${(z)arguments}}[2]}
-    local last_argument=${${(Q)${(z)arguments}}[-1]}
+    local subcommand=${${(Q)${(z)arguments}}[(w)2]}
+    local last_argument=${${(Q)${(z)arguments}}[(w)-1]}
 
     if [[ $subcommand =~ '(diff|log|rebase|switch)' ]]; then
         if [[ ${${(Q)${(z)arguments}}[(r)--]} = -- ]]; then

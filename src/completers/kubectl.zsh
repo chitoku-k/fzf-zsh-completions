@@ -6,7 +6,7 @@ colors
 _fzf_complete_kubectl() {
     local arguments=$(_fzf_complete_trim_env $@)
     local kubectl_arguments=()
-    local last_argument=${${(Q)${(z)arguments}}[-1]}
+    local last_argument=${${(Q)${(z)arguments}}[(w)-1]}
     local prefix_option completing_option arg subcommands namespace resource name
 
     local inherit_option inherit_values

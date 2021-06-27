@@ -2,8 +2,9 @@
 
 _fzf_complete_composer() {
     local arguments=$(_fzf_complete_trim_env $@)
+    local cmd=${${(Q)${(z)arguments}}[(w)1]}
 
-    if [[ $arguments = 'composer'* ]]; then
+    if [[ $cmd = 'composer' ]]; then
         _fzf_complete_composer-run-script '' $@
         return
     fi

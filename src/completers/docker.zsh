@@ -5,7 +5,7 @@ colors
 
 _fzf_complete_docker() {
     local arguments=$(_fzf_complete_trim_env $@)
-    local subcommand=${${(Q)${(z)arguments}}[2]}
+    local subcommand=${${(Q)${(z)arguments}}[(w)2]}
 
     if [[ $subcommand =~ ^(create|history|run)$ ]]; then
         _fzf_complete_docker-images '' $@

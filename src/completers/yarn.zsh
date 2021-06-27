@@ -2,7 +2,8 @@
 
 _fzf_complete_yarn() {
     local arguments=$(_fzf_complete_trim_env $@)
-    local subcommand=${${(Q)${(z)arguments}}[2]}
+    local cmd=${${(Q)${(z)arguments}}[(w)1]}
+    local subcommand=${${(Q)${(z)arguments}}[(w)2]}
 
     if [[ $subcommand = 'workspace' ]]; then
         local workspace
@@ -18,7 +19,7 @@ _fzf_complete_yarn() {
         return
     fi
 
-    if [[ $@ = 'yarn ' ]] || [[ $@ = 'yarn run ' ]]; then
+    if [[ $cmd = 'yarn' ]] || [[ $subcommand = 'run' ]]; then
         _fzf_complete_npm-run '' $@
         return
     fi
