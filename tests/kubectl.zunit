@@ -13429,6 +13429,54 @@
     _fzf_complete_kubectl 'kubectl top pods '
 }
 
+@test 'Testing post: a resource type without API group' {
+    input=(
+        'podtemplates                v1           true         PodTemplate'
+    )
+
+    run _fzf_complete_kubectl-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'podtemplates'
+}
+
+@test 'Testing post: a resource type without API group (shortname)' {
+    input=(
+        'pods           po           v1           true         Pod'
+    )
+
+    run _fzf_complete_kubectl-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'pods'
+}
+
+@test 'Testing post: a resource type with API group' {
+    input=(
+        'jobs                        batch/v1     true         Job'
+    )
+
+    run _fzf_complete_kubectl-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'jobs.batch'
+}
+
+@test 'Testing post: a resource type with API group (shortname)' {
+    input=(
+        'deployments    deploy       apps/v1      true         Deployment'
+    )
+
+    run _fzf_complete_kubectl-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'deployments.apps'
+}
+
 @test 'Testing post: a resource name' {
     input=(
         'test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
