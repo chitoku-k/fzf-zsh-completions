@@ -9,7 +9,7 @@ _fzf_complete_enable_aliases() {
         completer=${completers[(r)$value[1]]}
         arguments=${(@)value[2,-1]}
 
-        if [[ -n $completer ]]; then
+        if [[ -n $completer ]] && [[ $name != $completer ]]; then
             eval "
                 _fzf_complete_$name() {
                     LBUFFER=\"\${LBUFFER/$name/$completer $arguments}\"
