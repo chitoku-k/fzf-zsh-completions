@@ -5,14 +5,12 @@
     load _helpers/mock.zsh
     load _helpers/assertions.zsh
     mock gh
-
-    __fzf_extract_command() {
-        echo 'gh'
-    }
+    mock __fzf_extract_command
 }
 
 @teardown {
     unmock gh
+    unmock __fzf_extract_command
 }
 
 @test 'Testing completion: gh **' {
@@ -20,10 +18,19 @@
         fail '_fzf_complete should not be invoked'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'gh '
+
+        echo 'gh'
+    }
+
     _fzf_path_completion() {
         assert $# equals 2
         assert $1 same_as ''
         assert $2 same_as 'gh '
+
+        assert __fzf_extract_command mock_times 1
     }
 
     prefix=
@@ -35,10 +42,19 @@
         fail '_fzf_complete should not be invoked'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'TEST1=value1 TEST2=value2 gh '
+
+        echo 'gh'
+    }
+
     _fzf_path_completion() {
         assert $# equals 2
         assert $1 same_as ''
         assert $2 same_as 'TEST1=value1 TEST2=value2 gh '
+
+        assert __fzf_extract_command mock_times 1
     }
 
     prefix=
@@ -50,10 +66,18 @@
         fail '_fzf_complete should not be invoked'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'gh pr '
+
+        echo 'gh'
+    }
+
     prefix=
     _fzf_complete_gh 'gh pr '
 
     assert $? equals 0
+    assert __fzf_extract_command mock_times 1
 }
 
 @test 'Testing completion: gh pr close **' {
@@ -70,6 +94,13 @@
         echo "3\t1st DRAFT PR\t1st-draft\tDRAFT"
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'gh pr close '
+
+        echo 'gh'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -79,6 +110,7 @@
         assert $5 same_as 'gh pr close '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert gh mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}#${reset_color}  ${reset_color}TITLE       ${reset_color}  ${fg[blue]}HEAD     ${reset_color}  ${fg[green]}STATE${reset_color}"
@@ -106,6 +138,13 @@
         echo "3\t1st DRAFT PR\t1st-draft\tDRAFT"
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'gh pr merge '
+
+        echo 'gh'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -115,6 +154,7 @@
         assert $5 same_as 'gh pr merge '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert gh mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}#${reset_color}  ${reset_color}TITLE       ${reset_color}  ${fg[blue]}HEAD     ${reset_color}  ${fg[green]}STATE${reset_color}"
@@ -142,6 +182,13 @@
         echo "3\t1st DRAFT PR\t1st-draft\tDRAFT"
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'gh pr ready '
+
+        echo 'gh'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -151,6 +198,7 @@
         assert $5 same_as 'gh pr ready '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert gh mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}#${reset_color}  ${reset_color}TITLE       ${reset_color}  ${fg[blue]}HEAD     ${reset_color}  ${fg[green]}STATE${reset_color}"
@@ -176,6 +224,13 @@
         echo "1\t1st CLOSED PR\t1st-closed\tCLOSED"
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'gh pr reopen '
+
+        echo 'gh'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -185,6 +240,7 @@
         assert $5 same_as 'gh pr reopen '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert gh mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}#${reset_color}  ${reset_color}TITLE        ${reset_color}  ${fg[blue]}HEAD      ${reset_color}  ${fg[green]}STATE ${reset_color}"
@@ -214,6 +270,13 @@
         echo "1\t1st CLOSED PR\t1st-closed\tCLOSED"
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'gh pr checkout '
+
+        echo 'gh'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -223,6 +286,7 @@
         assert $5 same_as 'gh pr checkout '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert gh mock_times 1
         assert ${#lines} equals 9
         assert ${lines[1]} same_as "${fg[yellow]}#${reset_color}  ${reset_color}TITLE        ${reset_color}  ${fg[blue]}HEAD      ${reset_color}  ${fg[green]}STATE ${reset_color}"
@@ -258,6 +322,13 @@
         echo "1\t1st CLOSED PR\t1st-closed\tCLOSED"
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'gh pr comment '
+
+        echo 'gh'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -267,6 +338,7 @@
         assert $5 same_as 'gh pr comment '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert gh mock_times 1
         assert ${#lines} equals 9
         assert ${lines[1]} same_as "${fg[yellow]}#${reset_color}  ${reset_color}TITLE        ${reset_color}  ${fg[blue]}HEAD      ${reset_color}  ${fg[green]}STATE ${reset_color}"
@@ -302,6 +374,13 @@
         echo "1\t1st CLOSED PR\t1st-closed\tCLOSED"
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'gh pr diff '
+
+        echo 'gh'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -311,6 +390,7 @@
         assert $5 same_as 'gh pr diff '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert gh mock_times 1
         assert ${#lines} equals 9
         assert ${lines[1]} same_as "${fg[yellow]}#${reset_color}  ${reset_color}TITLE        ${reset_color}  ${fg[blue]}HEAD      ${reset_color}  ${fg[green]}STATE ${reset_color}"
@@ -346,6 +426,13 @@
         echo "1\t1st CLOSED PR\t1st-closed\tCLOSED"
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'gh pr edit '
+
+        echo 'gh'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -355,6 +442,7 @@
         assert $5 same_as 'gh pr edit '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert gh mock_times 1
         assert ${#lines} equals 9
         assert ${lines[1]} same_as "${fg[yellow]}#${reset_color}  ${reset_color}TITLE        ${reset_color}  ${fg[blue]}HEAD      ${reset_color}  ${fg[green]}STATE ${reset_color}"
@@ -390,6 +478,13 @@
         echo "1\t1st CLOSED PR\t1st-closed\tCLOSED"
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'gh pr review '
+
+        echo 'gh'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -399,6 +494,7 @@
         assert $5 same_as 'gh pr review '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert gh mock_times 1
         assert ${#lines} equals 9
         assert ${lines[1]} same_as "${fg[yellow]}#${reset_color}  ${reset_color}TITLE        ${reset_color}  ${fg[blue]}HEAD      ${reset_color}  ${fg[green]}STATE ${reset_color}"
@@ -434,6 +530,13 @@
         echo "1\t1st CLOSED PR\t1st-closed\tCLOSED"
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'gh pr view '
+
+        echo 'gh'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -443,6 +546,7 @@
         assert $5 same_as 'gh pr view '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert gh mock_times 1
         assert ${#lines} equals 9
         assert ${lines[1]} same_as "${fg[yellow]}#${reset_color}  ${reset_color}TITLE        ${reset_color}  ${fg[blue]}HEAD      ${reset_color}  ${fg[green]}STATE ${reset_color}"
