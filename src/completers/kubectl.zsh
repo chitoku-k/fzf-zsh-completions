@@ -896,7 +896,64 @@ _fzf_complete_kubectl-resources() {
 }
 
 _fzf_complete_kubectl-resources_post() {
-    awk '{ print $1 }'
+    awk '
+        NF == 4 {
+            name = $1
+            group = "." $2
+        }
+        NF == 5 {
+            name = $1
+            group = "." $3
+        }
+        group !~ /[\/]/ {
+            group = ""
+        }
+        {
+            gsub(/\/.*/, "", group)
+            print name group
+        }
+    '
+}
+
+_fzf_complete_kubectl-resource-names() {
+    local fzf_options=$1
+    shift
+
+    if [[ -z $namespace ]]; then
+        kubectl_arguments+=(--all-namespaces)
+    fi
+
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
+        local result=$(kubectl get "$resource" -o wide ${(Q)${(z)kubectl_arguments}} 2> /dev/null)
+        if [[ $result = NAMESPACE\ * ]]; then
+            _fzf_complete_colorize $fg[green] $fg[yellow] | awk '{ print SUBSEP $0 }'
+        else
+            _fzf_complete_colorize $fg[yellow]
+        fi <<< "$result"
+    )
+}
+
+_fzf_complete_kubectl-resource-names_post() {
+    awk \
+        -v prefix_option=$prefix_option '
+        NR > 1 && prefix_option ~ /\/$/ {
+            printf "%s", prefix_option
+        }
+        /^\x1c/ {
+            sub(SUBSEP, "", $1)
+            namespace = $1
+            print $2
+            next
+        }
+        {
+            print $1
+        }
+        END {
+            if (namespace != "") {
+                print "--namespace=" namespace
+            }
+        }
+    '
 }
 
 _fzf_complete_kubectl-containers() {
@@ -955,6 +1012,23 @@ _fzf_complete_kubectl-annotations_post() {
         echo -n ${item%=*}=${${(q+)item#*=}//\\n/\\\\n}
         first=
     done
+}
+
+_fzf_complete_kubectl-labels() {
+    local fzf_options=$1
+    shift
+
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
+        _fzf_complete_tabularize $fg[yellow] < <({
+            echo KEY VALUE
+            kubectl get "$resource" "$name" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{.metadata.labels}' |
+                jq -r 'to_entries[] | "\(.key) \(.value)"'
+        } 2> /dev/null)
+    )
+}
+
+_fzf_complete_kubectl-labels_post() {
+    awk '{ printf "%s%s=%s", (NR > 1 ? "\n" : ""), $1, $2 }'
 }
 
 _fzf_complete_kubectl-selectors() {
@@ -1037,23 +1111,6 @@ _fzf_complete_kubectl-label-columns_post() {
     awk '{ printf "%s%s", (NR > 1 ? "," : ""), $1 }'
 }
 
-_fzf_complete_kubectl-labels() {
-    local fzf_options=$1
-    shift
-
-    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
-        _fzf_complete_tabularize $fg[yellow] < <({
-            echo KEY VALUE
-            kubectl get "$resource" "$name" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{.metadata.labels}' |
-                jq -r 'to_entries[] | "\(.key) \(.value)"'
-        } 2> /dev/null)
-    )
-}
-
-_fzf_complete_kubectl-labels_post() {
-    awk '{ printf "%s%s=%s", (NR > 1 ? "\n" : ""), $1, $2 }'
-}
-
 _fzf_complete_kubectl-taints() {
     local fzf_options=$1
     shift
@@ -1068,45 +1125,4 @@ _fzf_complete_kubectl-taints() {
 
 _fzf_complete_kubectl-taints_post() {
     awk '{ printf "%s%s=%s:%s", (NR > 1 ? "\n" : ""), $1, $2, $3 }'
-}
-
-_fzf_complete_kubectl-resource-names() {
-    local fzf_options=$1
-    shift
-
-    if [[ -z $namespace ]]; then
-        kubectl_arguments+=(--all-namespaces)
-    fi
-
-    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
-        local result=$(kubectl get "$resource" -o wide ${(Q)${(z)kubectl_arguments}} 2> /dev/null)
-        if [[ $result = NAMESPACE\ * ]]; then
-            _fzf_complete_colorize $fg[green] $fg[yellow] | awk '{ print SUBSEP $0 }'
-        else
-            _fzf_complete_colorize $fg[yellow]
-        fi <<< "$result"
-    )
-}
-
-_fzf_complete_kubectl-resource-names_post() {
-    awk \
-        -v prefix_option=$prefix_option '
-        NR > 1 && prefix_option ~ /\/$/ {
-            printf "%s", prefix_option
-        }
-        /^\x1c/ {
-            sub(SUBSEP, "", $1)
-            namespace = $1
-            print $2
-            next
-        }
-        {
-            print $1
-        }
-        END {
-            if (namespace != "") {
-                print "--namespace=" namespace
-            }
-        }
-    '
 }
