@@ -94,6 +94,74 @@
     _fzf_complete_systemctl 'systemctl status '
 }
 
+@test 'Testing completion: TEST1=value1 TEST2=value2 systemctl status **' {
+    systemctl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'list-units'
+        assert $2 same_as '--full'
+        assert $3 same_as '--no-legend'
+        assert $4 same_as '--no-pager'
+        assert $5 same_as '*'
+
+        echo '-.mount      loaded active mounted Root Mount'
+        echo 'boot.mount   loaded active mounted /boot'
+        echo 'dbus.service loaded active running D-Bus System Message Bus'
+        echo '-.slice      loaded active active  Root Slice'
+        echo 'system.slice loaded active active  System Slice'
+        echo 'user.slice   loaded active active  User and Session Slice'
+        echo 'basic.target loaded active active  Basic System'
+        echo 'dbus.socket  loaded failed running D-Bus System Message Bus Socket'
+    }
+
+    systemctl_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'list-unit-files'
+        assert $2 same_as '--full'
+        assert $3 same_as '--no-legend'
+        assert $4 same_as '--no-pager'
+        assert $5 same_as '*'
+
+        echo '-.mount           generated -'
+        echo 'boot.mount        generated -'
+        echo 'dbus.service      static    -'
+        echo 'ip6tables.service disabled  disabled'
+        echo 'iptables.service  disabled  disabled'
+        echo 'user@.service     static    -'
+        echo 'user.slice        static    -'
+        echo 'basic.target      static    -'
+        echo 'blockdev@.target  static    -'
+        echo 'dbus.socket       static    -'
+    }
+
+    _fzf_complete() {
+        assert $# equals 7
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--preview-window=right:70%:wrap'
+        assert $4 matches '--preview=*'
+        assert $5 same_as '--reverse'
+        assert $6 same_as '--'
+        assert $7 same_as 'TEST1=value1 TEST2=value2 systemctl status '
+
+        run cat
+        assert systemctl mock_times 2
+        assert ${#lines} equals 10
+        assert ${lines[1]} same_as "${fg[green]}●${reset_color} -.mount"
+        assert ${lines[2]} same_as "${fg[green]}●${reset_color} -.slice"
+        assert ${lines[3]} same_as "${fg[green]}●${reset_color} basic.target"
+        assert ${lines[4]} same_as "${fg[green]}●${reset_color} boot.mount"
+        assert ${lines[5]} same_as "${fg[green]}●${reset_color} dbus.service"
+        assert ${lines[6]} same_as "${fg[red]}●${reset_color} dbus.socket"
+        assert ${lines[7]} same_as "○ ip6tables.service"
+        assert ${lines[8]} same_as "○ iptables.service"
+        assert ${lines[9]} same_as "${fg[green]}●${reset_color} system.slice"
+        assert ${lines[10]} same_as "${fg[green]}●${reset_color} user.slice"
+    }
+
+    prefix=
+    _fzf_complete_systemctl 'TEST1=value1 TEST2=value2 systemctl status '
+}
+
 @test 'Testing completion: systemctl status --user **' {
     systemctl_mock_1() {
         assert $# equals 6

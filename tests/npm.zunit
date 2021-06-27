@@ -26,6 +26,21 @@
     _fzf_complete_npm 'npm '
 }
 
+@test 'Testing completion: TEST1=value1 TEST2=value2 npm **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'TEST1=value1 TEST2=value2 npm '
+    }
+
+    prefix=
+    _fzf_complete_npm 'TEST1=value1 TEST2=value2 npm '
+}
+
 @test 'Testing completion: npm run **' {
     _fzf_complete() {
         assert $# equals 6

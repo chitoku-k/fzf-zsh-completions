@@ -30,6 +30,21 @@
     _fzf_complete_docker 'docker '
 }
 
+@test 'Testing completion: TEST1=value1 TEST2=value2 docker **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'TEST1=value1 TEST2=value2 docker '
+    }
+
+    prefix=
+    _fzf_complete_docker 'TEST1=value1 TEST2=value2 docker '
+}
+
 @test 'Testing completion: docker create **' {
     docker_mock_1() {
         assert $# equals 3

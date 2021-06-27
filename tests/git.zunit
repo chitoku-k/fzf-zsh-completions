@@ -55,6 +55,21 @@
     _fzf_complete_git 'git '
 }
 
+@test 'Testing completion: TEST1=value1 TEST2=value2 git **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'TEST1=value1 TEST2=value2 git '
+    }
+
+    prefix=
+    _fzf_complete_git 'TEST1=value1 TEST2=value2 git '
+}
+
 @test 'Testing completion: git checkout **' {
     _fzf_complete() {
         assert $# equals 4

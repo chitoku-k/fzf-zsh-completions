@@ -30,6 +30,21 @@
     _fzf_complete_kubectl 'kubectl '
 }
 
+@test 'Testing completion: TEST1=value1 TEST2=value2 kubectl **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'TEST1=value1 TEST2=value2 kubectl '
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'TEST1=value1 TEST2=value2 kubectl '
+}
+
 @test 'Testing completion: kubectl --namespace=**' {
     kubectl_mock_1() {
         assert $# equals 5

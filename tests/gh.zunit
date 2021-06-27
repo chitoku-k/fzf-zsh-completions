@@ -30,6 +30,21 @@
     _fzf_complete_docker 'gh '
 }
 
+@test 'Testing completion: TEST1=value1 TEST2=value2 gh **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'TEST1=value1 TEST2=value2 gh '
+    }
+
+    prefix=
+    _fzf_complete_docker 'TEST1=value1 TEST2=value2 gh '
+}
+
 @test 'Testing completion: gh pr **' {
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
