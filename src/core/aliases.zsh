@@ -11,12 +11,11 @@ _fzf_complete_enable_aliases() {
 
         if [[ -n $completer ]]; then
             source -- ${@[(r)*completers/$completer.zsh]}
-            local original_func_body=$functions[_fzf_complete_$completer]
             eval "
                 _fzf_complete_$name() {
                     LBUFFER=\"\${LBUFFER/$name/$completer $arguments}\"
                     () {
-                        $original_func_body
+                        $functions[_fzf_complete_$completer]
                     } \${@/$name/$completer $arguments}
                     LBUFFER=\"\${LBUFFER/$completer $arguments/$name}\"
                 }
