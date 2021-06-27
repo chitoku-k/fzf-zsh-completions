@@ -10,15 +10,14 @@ _fzf_complete_enable_aliases() {
         arguments=${(@)value[2,-1]}
 
         if [[ -n $completer ]]; then
-            local original_func=$(declare -f _fzf_complete_$completer)
+            local original_func_body=$functions[_fzf_complete_$completer]
             eval "
                 _fzf_complete_$name() {
-                    local wrapper=\$(declare -f _fzf_complete_$name)
-                    $original_func
                     LBUFFER=\"\${LBUFFER/$name/$completer $arguments}\"
-                    _fzf_complete_${completer} \${@/$name/$completer $arguments}
+                    () {
+                        $original_func_body
+                    } \${@/$name/$completer $arguments}
                     LBUFFER=\"\${LBUFFER/$completer $arguments/$name}\"
-                    eval \"\$wrapper\"
                 }
             "
         fi
