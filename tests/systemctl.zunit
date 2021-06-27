@@ -316,7 +316,7 @@
         '● docker.service'
     )
 
-    run _fzf_complete_systemctl_post <<< ${(F)input}
+    run _fzf_complete_systemctl-units_post <<< ${(F)input}
 
     assert $state equals 0
     assert ${#lines} equals 5
