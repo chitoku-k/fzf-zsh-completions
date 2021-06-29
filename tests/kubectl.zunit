@@ -13429,6 +13429,38 @@
     _fzf_complete_kubectl 'kubectl top pods '
 }
 
+@test 'Testing completion: kubectl "" top pods **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAMESPACE     NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'default       test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'kube-system   etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-system   kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-system   kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-system   kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-system   kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'kubectl "" top pods '
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl "" top pods '
+}
+
 @test 'Testing post: a resource type without API group' {
     input=(
         'podtemplates                v1           true         PodTemplate'

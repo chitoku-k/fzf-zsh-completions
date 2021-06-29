@@ -10,7 +10,16 @@ PREVIEW_OPTIONS
 )
 
 _fzf_complete_systemctl() {
-    _fzf_complete_systemctl-units '' $@
+    local arguments=("${(Q)${(z)@}[@]}")
+    local subcommand=${arguments[2]}
+
+    # The condition is needed to reconsider when the options of `systemctl` are supported.
+    if [[ ${#arguments} = 1 ]] || [[ $subcommand = 'status' ]]; then
+        _fzf_complete_systemctl-units '' $@
+        return
+    fi
+
+    _fzf_path_completion "$prefix" $@
 }
 
 _fzf_complete_systemctl-units() {

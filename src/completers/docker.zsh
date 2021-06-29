@@ -4,8 +4,8 @@ autoload -U colors
 colors
 
 _fzf_complete_docker() {
-    local arguments=$@
-    local subcommand=${${(Q)${(z)@}}[2]}
+    local arguments=("${(Q)${(z)@}[@]}")
+    local subcommand=${arguments[2]}
 
     if [[ $subcommand =~ ^(create|history|run)$ ]]; then
         _fzf_complete_docker-images '' $@

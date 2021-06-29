@@ -441,6 +441,21 @@
     _fzf_complete_gh 'gh pr view '
 }
 
+@test 'Testing completion: gh "" pr view **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'gh "" pr view '
+    }
+
+    prefix=
+    _fzf_complete_gh 'gh "" pr view '
+}
+
 @test 'Testing post: gh-pr' {
     input=(
         '8  2nd OPEN PR  2nd-open  OPEN'

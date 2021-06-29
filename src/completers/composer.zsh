@@ -1,7 +1,11 @@
 #!/usr/bin/env zsh
 
 _fzf_complete_composer() {
-    if [[ $@ = 'composer'* ]]; then
+    local arguments=("${(Q)${(z)@}[@]}")
+    local subcommand=${arguments[2]}
+
+    # The condition is needed to reconsider when the options of `composer` are supported.
+    if [[ ${#arguments} = 1 ]] || [[ $subcommand = 'run-script' ]]; then
         _fzf_complete_composer-run-script '' $@
         return
     fi

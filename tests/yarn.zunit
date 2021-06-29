@@ -275,3 +275,18 @@
 
     assert $? equals 0
 }
+
+@test 'Testing completion: yarn "" run **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'yarn "" run '
+    }
+
+    prefix=
+    _fzf_complete_yarn 'yarn "" run '
+}
