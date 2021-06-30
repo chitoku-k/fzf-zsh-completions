@@ -118,16 +118,16 @@ _fzf_complete_kubectl() {
         fi
     done
 
-    subcommands=($(_fzf_complete_parse_argument 2 1 "${(q)arguments}" "${(F)kubectl_options_argument_required}" || :))
+    subcommands=($(_fzf_complete_parse_argument 2 1 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :))
     namespace=$(_fzf_complete_parse_option_arguments '-n' '--namespace' "${(F)kubectl_options_argument_required}" $@$RBUFFER || :)
 
     if [[ ${subcommands[1]} =~ '^(apply|create|rollout|set)$' ]]; then
-        subcommands+=($(_fzf_complete_parse_argument 2 2 "${(q)arguments}" "${(F)kubectl_options_argument_required}" || :))
-        resource=$(_fzf_complete_parse_argument 2 3 "${(q)arguments}" "${(F)kubectl_options_argument_required}" || :)
-        name=$(_fzf_complete_parse_argument 2 4 "${(q)arguments}" "${(F)kubectl_options_argument_required}" || :)
+        subcommands+=($(_fzf_complete_parse_argument 2 2 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :))
+        resource=$(_fzf_complete_parse_argument 2 3 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+        name=$(_fzf_complete_parse_argument 2 4 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
     else
-        resource=$(_fzf_complete_parse_argument 2 2 "${(q)arguments}" "${(F)kubectl_options_argument_required}" || :)
-        name=$(_fzf_complete_parse_argument 2 3 "${(q)arguments}" "${(F)kubectl_options_argument_required}" || :)
+        resource=$(_fzf_complete_parse_argument 2 2 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+        name=$(_fzf_complete_parse_argument 2 3 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
     fi
 
     if [[ $resource = */* ]]; then

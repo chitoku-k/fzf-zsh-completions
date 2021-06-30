@@ -72,7 +72,7 @@ _fzf_complete_parse_completing_option() {
 _fzf_complete_parse_argument() {
     local start_index=$1
     local index=$2
-    local arguments=(${(z)3})
+    local arguments=("${(Q)${(z)3}[@]}")
     local options_argument_required=(${(z)4})
     shift 4
 
