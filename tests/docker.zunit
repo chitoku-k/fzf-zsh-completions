@@ -1422,6 +1422,8 @@
 
     prefix=
     _fzf_complete_docker 'docker "" wait '
+
+    assert docker mock_times 0
 }
 
 @test 'Testing post: docker-images' {

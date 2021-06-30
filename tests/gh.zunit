@@ -454,6 +454,8 @@
 
     prefix=
     _fzf_complete_gh 'gh "" pr view '
+
+    assert gh mock_times 0
 }
 
 @test 'Testing post: gh-pr' {

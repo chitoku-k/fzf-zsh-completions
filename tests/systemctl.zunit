@@ -160,6 +160,8 @@
 
     prefix=
     _fzf_complete_systemctl 'systemctl "" status '
+
+    assert systemctl mock_times 0
 }
 
 @test 'Testing preview: systemctl status **' {

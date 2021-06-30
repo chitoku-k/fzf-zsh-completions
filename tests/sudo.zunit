@@ -50,4 +50,6 @@
 
     prefix=
     _fzf_complete_sudo 'sudo "" docker start '
+
+    assert _fzf_complete_docker mock_times 0
 }

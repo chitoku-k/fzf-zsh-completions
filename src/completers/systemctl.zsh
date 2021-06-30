@@ -13,7 +13,6 @@ _fzf_complete_systemctl() {
     local arguments=("${(Q)${(z)@}[@]}")
     local subcommand=${arguments[2]}
 
-    # The condition is needed to reconsider when the options of `systemctl` are supported.
     if [[ ${#arguments} = 1 ]] || [[ $subcommand = 'status' ]]; then
         _fzf_complete_systemctl-units '' $@
         return

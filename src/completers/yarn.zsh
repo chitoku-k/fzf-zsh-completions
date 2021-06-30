@@ -18,7 +18,6 @@ _fzf_complete_yarn() {
         return
     fi
 
-    # The condition is needed to reconsider when the options of `yarn` are supported.
     if [[ ${#arguments} = 1 ]] || [[ $subcommand = 'run' ]]; then
         _fzf_complete_npm-run '' $@
         return
