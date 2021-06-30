@@ -147,23 +147,6 @@
     _fzf_complete_systemctl 'systemctl status --user '
 }
 
-@test 'Testing completion: systemctl "" status **' {
-    _fzf_complete() {
-        fail '_fzf_complete should not be invoked'
-    }
-
-    _fzf_path_completion() {
-        assert $# equals 2
-        assert $1 same_as ''
-        assert $2 same_as 'systemctl "" status '
-    }
-
-    prefix=
-    _fzf_complete_systemctl 'systemctl "" status '
-
-    assert systemctl mock_times 0
-}
-
 @test 'Testing preview: systemctl status **' {
     systemctl_mock_1() {}
     systemctl_mock_2() {}
