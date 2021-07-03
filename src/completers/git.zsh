@@ -82,7 +82,7 @@ _fzf_complete_git() {
     local last_argument=${${(Q)${(z)arguments}}[-1]}
 
     if [[ $subcommand =~ '(diff|log|rebase|switch)' ]]; then
-        if [[ ${${(Q)${(z)arguments}}[(r)--]} = -- ]]; then
+        if [[ ${arguments[(r)--]} = -- ]]; then
             if [[ $subcommand =~ 'diff' ]]; then
                 _fzf_complete_git-status-files 'unstaged' '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
                 return
@@ -137,7 +137,7 @@ _fzf_complete_git() {
                     return
                 fi
 
-                if [[ -z ${${(Q)${(z)arguments}}[(r)--]} ]]; then
+                if [[ -z ${arguments[(r)--]} ]]; then
                     _fzf_complete_git-commits '' $@
                     return
                 fi
@@ -231,12 +231,12 @@ _fzf_complete_git() {
                 ;;
 
             *)
-                if [[ -n ${${(Q)${(z)arguments}}[(r)--source(|(=*))]} ]] || [[ -n ${${(Q)${(z)arguments}}[(r)-[^-]#s*]} ]]; then
+                if [[ -n ${arguments[(r)--source(|(=*))]} ]] || [[ -n ${arguments[(r)-[^-]#s*]} ]]; then
                     _fzf_complete_git-files_index '' '--multi' $@
                     return
                 fi
 
-                if [[ -n ${${(Q)${(z)arguments}}[(r)--staged]} ]] || [[ -n ${${(Q)${(z)arguments}}[(r)-[^-]#S[[:alpha:]]#]} ]]; then
+                if [[ -n ${arguments[(r)--staged]} ]] || [[ -n ${arguments[(r)-[^-]#S[[:alpha:]]#]} ]]; then
                     _fzf_complete_git-status-files 'staged' '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff_cached $FZF_DEFAULT_OPTS" $@
                     return
                 fi
@@ -270,7 +270,7 @@ _fzf_complete_git() {
                 local treeish
                 if ! treeish=$(_fzf_complete_parse_argument "$(( ${arguments[(i)$subcommand]} + 1 ))" 1 "${${(q)arguments[1, ${arguments[(i)--]} - 1][@]}}" "${(F)git_options_argument_required}") &&
                     [[ -z $treeish ]] &&
-                    [[ -z ${(Q)${(z)arguments}[(r)--]} ]]; then
+                    [[ -z ${arguments[(r)--]} ]]; then
 
                     _fzf_complete_git-commits '' $@
                     return
@@ -288,7 +288,7 @@ _fzf_complete_git() {
     fi
 
     if [[ $subcommand = 'commit' ]]; then
-        if [[ -n ${${(Q)${(z)arguments}}[(r)--]} ]] || [[ $last_argument != -* && $prefix != -* ]]; then
+        if [[ -n ${arguments[(r)--]} ]] || [[ $last_argument != -* && $prefix != -* ]]; then
             _fzf_complete_git-status-files 'unstaged' '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" $@
             return
         fi
@@ -676,7 +676,7 @@ _fzf_complete_git() {
                     return
                 fi
 
-                if [[ -n ${(Q)${(Z+n+)arguments}[(r)--]} ]]; then
+                if [[ -n ${arguments[(r)--]} ]]; then
                     local args=($(_fzf_complete_parse_argument "$(( ${arguments[(i)$subcommand]} + 1 ))" 0 "${${(q)arguments[1, ${arguments[(i)--]} - 1][@]}}" "${(F)git_options_argument_required}"))
                     treeish=${args:#*:*}
                     _fzf_complete_git-show-files '--multi' $@
