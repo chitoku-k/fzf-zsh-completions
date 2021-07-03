@@ -3,6 +3,9 @@
 @setup {
     load ../fzf-zsh-completions.plugin.zsh
     load _helpers/assertions.zsh
+    load _helpers/mock.zsh
+
+    mock git
 
     pushd tests/_support/git
     DIR=$PWD
@@ -27,6 +30,8 @@
 
 @teardown {
     pushd $DIR
+
+    unmock git
 
     {
         git reset --hard master
@@ -5253,6 +5258,32 @@
 }
 
 @test 'Testing completion (alias): git "" commit **' {
+    git_mock_1() {
+        assert $# equals 2
+        assert $1 same_as 'checkout'
+        assert $2 same_as 'another-branch'
+
+        command git "$@"
+    }
+
+    git_mock_2() {
+        assert $# equals 3
+        assert $1 same_as 'config'
+        assert $2 same_as 'alias.commit-all'
+        assert $3 same_as '"" commit -a'
+
+        command git "$@"
+    }
+
+    git_mock_3() {
+        assert $# equals 3
+        assert $1 same_as 'config'
+        assert $2 same_as '--get-regexp'
+        assert $3 same_as '^alias\.'
+
+        command git "$@"
+    }
+
     run git checkout another-branch
     run git config alias.commit-all '"" commit -a'
 
@@ -5268,6 +5299,8 @@
 
     prefix=
     _fzf_complete_git 'git commit-all '
+
+    assert git mock_times 0
 }
 
 @test 'Testing completion (alias): git commit **' {
