@@ -5143,7 +5143,7 @@
 
     _fzf_path_completion() {
         assert $# equals 2
-        assert $1 same_as ''
+        assert $1 same_as '--notes='
         assert $2 same_as 'git "" show '
     }
 
