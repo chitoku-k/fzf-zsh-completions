@@ -67,7 +67,7 @@ _fzf_complete_git() {
             break
         fi
 
-        # Ignores empty strings
+        # Ignore empty strings
         local subcommand=${${(Q)${(z)resolved}}[2]}
         if [[ ${resolved_commands[(r)$subcommand]} = $subcommand ]]; then
             break
@@ -77,7 +77,7 @@ _fzf_complete_git() {
         resolved_commands+=($subcommand)
     done
 
-    # Ignores empty strings
+    # Ignore empty strings
     local subcommand=${${(Q)${(z)arguments}}[2]}
     local last_argument=${${(Q)${(z)arguments}}[-1]}
 
@@ -132,7 +132,7 @@ _fzf_complete_git() {
 
             *)
                 local treeish
-                if treeish=$(_fzf_complete_git_parse_argument 1 "${${(q)arguments[1, ${arguments[(i)--]} - 1][@]}}" "${(F)git_options_argument_required}") || [[ -n $treeish ]]; then
+                if treeish=$(_fzf_complete_parse_argument "$(( ${arguments[(i)$subcommand]} + 1 ))" 1 "${${(q)arguments[1, ${arguments[(i)--]} - 1][@]}}" "${(F)git_options_argument_required}") || [[ -n $treeish ]]; then
                     _fzf_complete_git-files_index '' '--multi' $@
                     return
                 fi
@@ -268,7 +268,7 @@ _fzf_complete_git() {
 
             *)
                 local treeish
-                if ! treeish=$(_fzf_complete_git_parse_argument 1 "${${(q)arguments[1, ${arguments[(i)--]} - 1][@]}}" "${(F)git_options_argument_required}") &&
+                if ! treeish=$(_fzf_complete_parse_argument "$(( ${arguments[(i)$subcommand]} + 1 ))" 1 "${${(q)arguments[1, ${arguments[(i)--]} - 1][@]}}" "${(F)git_options_argument_required}") &&
                     [[ -z $treeish ]] &&
                     [[ -z ${(Q)${(z)arguments}[(r)--]} ]]; then
 
@@ -387,7 +387,7 @@ _fzf_complete_git() {
 
             *)
                 local repository
-                if [[ $@ =~ '--multiple' ]] || ! repository=$(_fzf_complete_git_parse_argument 1 "${${(q)arguments[@]}}" "${(F)git_options_argument_required}") && [[ -z $repository ]]; then
+                if [[ $@ =~ '--multiple' ]] || ! repository=$(_fzf_complete_parse_argument "$(( ${arguments[(i)$subcommand]} + 1 ))" 1 "${${(q)arguments[@]}}" "${(F)git_options_argument_required}") && [[ -z $repository ]]; then
                     _fzf_complete_git-repositories '--multi' $@
                     return
                 fi
@@ -475,7 +475,7 @@ _fzf_complete_git() {
 
             *)
                 local repository
-                if ! repository=$(_fzf_complete_git_parse_argument 1 "${${(q)arguments[@]}}" "${(F)git_options_argument_required}") && [[ -z $repository ]]; then
+                if ! repository=$(_fzf_complete_parse_argument "$(( ${arguments[(i)$subcommand]} + 1 ))" 1 "${${(q)arguments[@]}}" "${(F)git_options_argument_required}") && [[ -z $repository ]]; then
                     _fzf_complete_git-repositories '' $@
                     return
                 fi
@@ -530,7 +530,7 @@ _fzf_complete_git() {
 
             *)
                 local repository
-                if ! repository=$(_fzf_complete_git_parse_argument 1 "${${(q)arguments[@]}}" "${(F)git_options_argument_required}") && [[ -z $repository ]]; then
+                if ! repository=$(_fzf_complete_parse_argument "$(( ${arguments[(i)$subcommand]} + 1 ))" 1 "${${(q)arguments[@]}}" "${(F)git_options_argument_required}") && [[ -z $repository ]]; then
                     _fzf_complete_git-repositories '' $@
                     return
                 fi
@@ -677,7 +677,7 @@ _fzf_complete_git() {
                 fi
 
                 if [[ -n ${(Q)${(Z+n+)arguments}[(r)--]} ]]; then
-                    local args=($(_fzf_complete_git_parse_argument 0 "${${(q)arguments[1, ${arguments[(i)--]} - 1][@]}}" "${(F)git_options_argument_required}"))
+                    local args=($(_fzf_complete_parse_argument "$(( ${arguments[(i)$subcommand]} + 1 ))" 0 "${${(q)arguments[1, ${arguments[(i)--]} - 1][@]}}" "${(F)git_options_argument_required}"))
                     treeish=${args:#*:*}
                     _fzf_complete_git-show-files '--multi' $@
                     return
@@ -967,14 +967,4 @@ _fzf_complete_git_resolve_alias() {
     done
 
     echo $git_alias_resolved
-}
-
-_fzf_complete_git_parse_argument() {
-    local arguments=("${(Q)${(z)2}[@]}")
-
-    if (( ${#arguments} <= ${arguments[(i)$subcommand]} )); then
-        return 1
-    fi
-
-    _fzf_complete_parse_argument $(( ${arguments[(i)$subcommand]} + 1 )) $@
 }
