@@ -5,8 +5,6 @@
     load _helpers/assertions.zsh
     load _helpers/mock.zsh
 
-    mock git
-
     pushd tests/_support/git
     DIR=$PWD
     FZF_DEFAULT_OPTS=--reverse
@@ -26,17 +24,19 @@
             fi
         done
     }
+
+    mock git
 }
 
 @teardown {
-    pushd $DIR
-
     unmock git
+    which git
+    pushd $DIR
 
     {
         git reset --hard master
         git clean -d -f
-    } &> /dev/null
+    }
 
     rm -rf .git
 }
