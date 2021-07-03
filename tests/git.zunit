@@ -5147,7 +5147,7 @@
         assert $2 same_as 'git "" show '
     }
 
-    prefix=
+    prefix=--notes=
     _fzf_complete_git 'git "" show '
 }
 
