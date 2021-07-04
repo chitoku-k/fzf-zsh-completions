@@ -36,20 +36,3 @@
 
     assert $LBUFFER same_as 'sudo docker start '
 }
-
-@test 'Testing completion: sudo "" docker start **' {
-    _fzf_complete() {
-        fail '_fzf_complete should not be invoked'
-    }
-
-    _fzf_path_completion() {
-        assert $# equals 2
-        assert $1 same_as ''
-        assert $2 same_as 'sudo "" docker start '
-    }
-
-    prefix=
-    _fzf_complete_sudo 'sudo "" docker start '
-
-    assert _fzf_complete_docker mock_times 0
-}

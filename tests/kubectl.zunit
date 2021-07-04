@@ -13448,23 +13448,6 @@
     _fzf_complete_kubectl 'kubectl top pods '
 }
 
-@test 'Testing completion: kubectl "" top pods **' {
-    _fzf_complete() {
-        fail '_fzf_complete should not be invoked'
-    }
-
-    _fzf_path_completion() {
-        assert $# equals 2
-        assert $1 same_as ''
-        assert $2 same_as 'kubectl "" top pods '
-    }
-
-    prefix=
-    _fzf_complete_kubectl 'kubectl "" top pods '
-
-    assert kubectl mock_times 0
-}
-
 @test 'Testing post: a resource type without API group' {
     input=(
         'podtemplates                v1           true         PodTemplate'
