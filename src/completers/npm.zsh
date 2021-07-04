@@ -1,8 +1,8 @@
 #!/usr/bin/env zsh
 
 _fzf_complete_npm() {
-    local arguments=$(_fzf_complete_trim_env $@)
-    local subcommand=${${(Q)${(z)arguments}}[(w)2]}
+    local arguments=("${(Q)${(z)@}[@]}")
+    local subcommand=${arguments[2]}
 
     if [[ $subcommand = 'run' ]]; then
         _fzf_complete_npm-run '' $@

@@ -79,7 +79,7 @@ _fzf_complete_parse_completing_option() {
 _fzf_complete_parse_argument() {
     local start_index=$1
     local index=$2
-    local arguments=(${(z)3})
+    local arguments=("${(Q)${(z)3}[@]}")
     local options_argument_required=(${(z)4})
     shift 4
 
@@ -90,11 +90,11 @@ _fzf_complete_parse_argument() {
     local i
     local command_arguments=()
     for i in {$start_index..${#arguments}}; do
-        if [[ ${(Q)arguments[$i]} = -(#c1,2)* ]]; then
+        if [[ ${arguments[$i]} = -(#c1,2)* ]]; then
             continue
         fi
 
-        local previous_argument=$(_fzf_complete_parse_completing_option '' "${(Q)arguments[i - 1]}" "${(F)options_argument_required}" '')
+        local previous_argument=$(_fzf_complete_parse_completing_option '' "${arguments[i - 1]}" "${(F)options_argument_required}" '')
         if [[ -n $previous_argument ]] && [[ ${options_argument_required[(r)$previous_argument]} = $previous_argument ]]; then
             continue
         fi
@@ -103,11 +103,11 @@ _fzf_complete_parse_argument() {
     done
 
     if [[ $index = 0 ]]; then
-        echo - ${command_arguments}
+        echo - $command_arguments
         return
     fi
     echo - ${command_arguments[$index]}
-    return $(( index > #command_arguments ))
+    return $(( index > ${#command_arguments} ))
 }
 
 _fzf_complete_parse_option() {
@@ -117,7 +117,7 @@ _fzf_complete_parse_option() {
     local options_argument_required=(${(z)3})
     shift 3
 
-    local cmd=(${(Q)${(z)@}})
+    local cmd=("${(Q)${(z)@}[@]}")
     local cmd_shorts=(${(M)cmd:#-[^-]*})
 
     local option_argument_required
@@ -145,7 +145,7 @@ _fzf_complete_parse_option_arguments() {
     local options_argument_required=(${(z)3})
     shift 3
 
-    local cmd=(${(Q)${(z)@}})
+    local cmd=("${(Q)${(z)@}[@]}")
     while [[ $idx -le ${#cmd} ]]; do
         indices=()
 
