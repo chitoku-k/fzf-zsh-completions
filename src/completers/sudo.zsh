@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 _fzf_complete_sudo() {
-    local args=(${(Q)${(z)@}})
+    local args=("${(Q)${(z)@}[@]}")
     local subcommand=${args:1:1}
 
     if (( $+functions[_fzf_complete_$subcommand] )); then

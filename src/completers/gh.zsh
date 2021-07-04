@@ -4,10 +4,10 @@ autoload -U colors
 colors
 
 _fzf_complete_gh() {
-    local arguments=$@
-    local gh_command=${${(Q)${(z)arguments}}[2]}
-    local gh_subcommand=${${(Q)${(z)arguments}}[3]}
-    local last_argument=${${(Q)${(z)arguments}}[-1]}
+    local arguments=("${(Q)${(z)@}[@]}")
+    local gh_command=${arguments[2]}
+    local gh_subcommand=${arguments[3]}
+    local last_argument=${arguments[-1]}
 
     if [[ $gh_command = 'pr' ]]; then
         local prefix_option completing_option

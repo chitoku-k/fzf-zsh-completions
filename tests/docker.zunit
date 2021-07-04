@@ -1409,6 +1409,23 @@
     _fzf_complete_docker 'docker wait '
 }
 
+@test 'Testing completion: docker "" wait **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'docker "" wait '
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker "" wait '
+
+    assert docker mock_times 0
+}
+
 @test 'Testing post: docker-images' {
     input=(
         'e7d92cdc71fe  alpine        latest  18 hours ago   5.59MB'

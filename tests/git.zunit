@@ -5133,6 +5133,24 @@
     _fzf_complete_git 'git show '
 }
 
+@test 'Testing completion: git "" show --notes=**' {
+    run git notes add -m 'Note1'
+    run git notes --ref=note add -m 'Note2'
+
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as '--notes='
+        assert $2 same_as 'git "" show '
+    }
+
+    prefix=--notes=
+    _fzf_complete_git 'git "" show '
+}
+
 @test 'Testing completion (alias): git commit --squash **' {
     run git config alias.squash 'commit --squash'
 
@@ -5232,6 +5250,24 @@
 
     prefix=
     _fzf_complete_git 'git commit-cleanup '
+}
+
+@test 'Testing completion (alias): git "" commit **' {
+    run git checkout another-branch
+    run git config alias.commit-all '"" commit -a'
+
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'git commit-all '
+    }
+
+    prefix=
+    _fzf_complete_git 'git commit-all '
 }
 
 @test 'Testing completion (alias): git commit **' {

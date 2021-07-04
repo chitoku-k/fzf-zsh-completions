@@ -1,8 +1,8 @@
 #!/usr/bin/env zsh
 
 _fzf_complete_yarn() {
-    local arguments=$@
-    local subcommand=${${(Q)${(z)arguments}}[2]}
+    local arguments=("${(Q)${(z)@}[@]}")
+    local subcommand=${arguments[2]}
 
     if [[ $subcommand = 'workspace' ]]; then
         local workspace
@@ -18,7 +18,7 @@ _fzf_complete_yarn() {
         return
     fi
 
-    if [[ $@ = 'yarn ' ]] || [[ $@ = 'yarn run ' ]]; then
+    if [[ ${#arguments} = 1 ]] || [[ $subcommand = 'run' ]]; then
         _fzf_complete_npm-run '' $@
         return
     fi
