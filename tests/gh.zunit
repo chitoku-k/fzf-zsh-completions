@@ -569,6 +569,13 @@
         fail '_fzf_complete should not be invoked'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'gh "" pr view '
+
+        echo 'gh'
+    }
+
     _fzf_path_completion() {
         assert $# equals 2
         assert $1 same_as ''
@@ -578,6 +585,7 @@
     prefix=
     _fzf_complete_gh 'gh "" pr view '
 
+    assert __fzf_extract_command mock_times 1
     assert gh mock_times 0
 }
 
