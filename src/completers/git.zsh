@@ -62,7 +62,7 @@ _fzf_complete_git() {
     local resolved_commands=()
 
     while true; do
-        local resolved=$(_fzf_complete_git_resolve_alias $arguments)
+        local resolved=$(_fzf_complete_git_resolve_alias "${(q)arguments[@]}")
         if [[ -z $resolved ]]; then
             break
         fi
@@ -274,7 +274,7 @@ _fzf_complete_git() {
                     return
                 fi
 
-                if _fzf_complete_parse_option '' '--soft --hard --merge --keep' '' $arguments > /dev/null; then
+                if _fzf_complete_parse_option '' '--soft --hard --merge --keep' '' "${(q)arguments[@]}" > /dev/null; then
                     return
                 fi
 

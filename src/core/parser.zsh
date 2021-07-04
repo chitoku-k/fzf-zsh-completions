@@ -110,7 +110,7 @@ _fzf_complete_parse_option() {
     local options_argument_required=(${(z)3})
     shift 3
 
-    local cmd=(${(Q)${(z)@}})
+    local cmd=("${(Q)${(z)@}[@]}")
     local cmd_shorts=(${(M)cmd:#-[^-]*})
 
     local option_argument_required
@@ -138,7 +138,7 @@ _fzf_complete_parse_option_arguments() {
     local options_argument_required=(${(z)3})
     shift 3
 
-    local cmd=(${(Q)${(z)@}})
+    local cmd=("${(Q)${(z)@}[@]}")
     while [[ $idx -le ${#cmd} ]]; do
         indices=()
 
