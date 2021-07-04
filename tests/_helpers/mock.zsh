@@ -10,7 +10,7 @@ mock() {
         local mock_failfile=${target}_mock_${mock_times}_fail
         echo $mock_times > ${target}_mock_times
 
-        if ${target}_mock_$mock_times $@ &> $mock_failfile; then
+        if ${target}_mock_$mock_times "$@" &> $mock_failfile; then
             cat -- $mock_failfile
             rm -- $mock_failfile
         fi
