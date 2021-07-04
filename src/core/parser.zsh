@@ -96,11 +96,11 @@ _fzf_complete_parse_argument() {
     done
 
     if [[ $index = 0 ]]; then
-        echo - ${command_arguments}
+        echo - $command_arguments
         return
     fi
     echo - ${command_arguments[$index]}
-    return $(( index > #command_arguments ))
+    return $(( index > ${#command_arguments} ))
 }
 
 _fzf_complete_parse_option() {
