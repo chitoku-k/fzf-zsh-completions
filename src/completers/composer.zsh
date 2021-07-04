@@ -1,10 +1,10 @@
 #!/usr/bin/env zsh
 
 _fzf_complete_composer() {
-    local arguments=$(_fzf_complete_trim_env $@)
-    local cmd=${${(Q)${(z)arguments}}[(w)1]}
+    local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env $@)"}[@]}")
+    local subcommand=${arguments[2]}
 
-    if [[ $cmd = 'composer' ]]; then
+    if [[ ${#arguments} = 1 ]] || [[ $subcommand = 'run-script' ]]; then
         _fzf_complete_composer-run-script '' $@
         return
     fi

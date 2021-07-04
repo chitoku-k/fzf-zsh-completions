@@ -142,3 +142,18 @@
     prefix=
     _fzf_complete_composer 'composer run-script '
 }
+
+@test 'Testing completion: composer "" run-script **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'composer "" run-script '
+    }
+
+    prefix=
+    _fzf_complete_composer 'composer "" run-script '
+}
