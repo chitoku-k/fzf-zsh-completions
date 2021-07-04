@@ -1,8 +1,9 @@
+typeset -g mock_dir=${funcsourcetrace[1]:P:h:h}/_support/mock
+
 mock() {
     local target=$1
     shift
 
-    typeset -g mock_dir=${funcsourcetrace[1]:P:h:h}/_support/mock
     local mock_timesfile=$mock_dir/${target}_mock_times
 
     echo 0 > $mock_timesfile
