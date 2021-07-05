@@ -5,7 +5,6 @@ mock() {
     shift
 
     local mock_timesfile=$mock_dir/${target}_mock_times
-
     echo 0 > $mock_timesfile
 
     $target() {
