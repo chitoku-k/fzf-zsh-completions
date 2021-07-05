@@ -2,7 +2,7 @@
 
 _fzf_complete_trim_env() {
     local arguments=("${(Q)${(z)@}[@]}")
-    local cmd=$(__fzf_extract_command $@)
+    local cmd=$(__fzf_extract_command "$@")
     local idx=${arguments[(i)$cmd]}
     echo ${(q)arguments[$idx, -1]}
 }
