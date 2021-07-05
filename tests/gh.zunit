@@ -9,8 +9,8 @@
 }
 
 @teardown {
-    unmock gh
-    unmock __fzf_extract_command
+    (unmock gh)
+    (unmock __fzf_extract_command)
 }
 
 @test 'Testing completion: gh **' {

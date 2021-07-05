@@ -3,15 +3,24 @@
 @setup {
     load ../fzf-zsh-completions.plugin.zsh
     load _helpers/assertions.zsh
+    load _helpers/mock.zsh
+    mock __fzf_extract_command
 
     pushd tests/_support/composer
+}
 
-    __fzf_extract_command() {
-        echo 'composer'
-    }
+@teardown {
+    (unmock __fzf_extract_command)
 }
 
 @test 'Testing completion: composer **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'composer '
+
+        echo 'composer'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -22,6 +31,7 @@
         assert $6 same_as 'composer '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 6
 
         actual1=(${(0)lines[1]})
@@ -56,6 +66,13 @@
 }
 
 @test 'Testing completion: TEST1=value1 TEST2=value2 composer **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'TEST1=value1 TEST2=value2 composer '
+
+        echo 'composer'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -66,6 +83,7 @@
         assert $6 same_as 'TEST1=value1 TEST2=value2 composer '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 6
 
         actual1=(${(0)lines[1]})
@@ -100,6 +118,13 @@
 }
 
 @test 'Testing completion: composer run-script **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'composer run-script '
+
+        echo 'composer'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -110,6 +135,7 @@
         assert $6 same_as 'composer run-script '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 6
 
         actual1=(${(0)lines[1]})
@@ -144,6 +170,13 @@
 }
 
 @test 'Testing completion: composer "" run-script **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'composer "" run-script '
+
+        echo 'composer'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -152,6 +185,8 @@
         assert $# equals 2
         assert $1 same_as ''
         assert $2 same_as 'composer "" run-script '
+
+        assert __fzf_extract_command mock_times 1
     }
 
     prefix=

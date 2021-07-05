@@ -3,15 +3,25 @@
 @setup {
     load ../fzf-zsh-completions.plugin.zsh
     load _helpers/assertions.zsh
+    load _helpers/mock.zsh
+
+    mock __fzf_extract_command
 
     pushd tests/_support/npm
+}
 
-    __fzf_extract_command() {
-        echo 'yarn'
-    }
+@teardown {
+    (unmock __fzf_extract_command)
 }
 
 @test 'Testing completion: yarn **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'yarn '
+
+        echo 'yarn'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -22,6 +32,7 @@
         assert $6 same_as 'yarn '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 6
 
         actual1=(${(0)lines[1]})
@@ -56,6 +67,13 @@
 }
 
 @test 'Testing completion: TEST1=value1 TEST2=value2 yarn **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'TEST1=value1 TEST2=value2 yarn '
+
+        echo 'yarn'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -66,6 +84,7 @@
         assert $6 same_as 'TEST1=value1 TEST2=value2 yarn '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 6
 
         actual1=(${(0)lines[1]})
@@ -100,6 +119,13 @@
 }
 
 @test 'Testing completion: yarn run **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'yarn run '
+
+        echo 'yarn'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -110,6 +136,7 @@
         assert $6 same_as 'yarn run '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 6
 
         actual1=(${(0)lines[1]})
@@ -147,6 +174,13 @@
     popd
     pushd tests/_support/yarn/workspace
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'yarn workspace '
+
+        echo 'yarn'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -155,6 +189,7 @@
         assert $4 same_as 'yarn workspace '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         assert ${lines[1]} same_as 'package-a'
@@ -170,6 +205,13 @@
     popd
     pushd tests/_support/yarn/workspace
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'yarn workspace package-a '
+
+        echo 'yarn'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -180,6 +222,7 @@
         assert $6 same_as 'yarn workspace package-a '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 6
 
         actual1=(${(0)lines[1]})
@@ -218,6 +261,13 @@
     popd
     pushd tests/_support/yarn/workspace
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'yarn workspace package-b '
+
+        echo 'yarn'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -228,6 +278,7 @@
         assert $6 same_as 'yarn workspace package-b '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 6
 
         actual1=(${(0)lines[1]})
@@ -266,6 +317,13 @@
     popd
     pushd tests/_support/yarn/workspace
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'yarn workspace examples-a '
+
+        echo 'yarn'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -276,6 +334,7 @@
         assert $6 same_as 'yarn workspace examples-a '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 6
 
         actual1=(${(0)lines[1]})
@@ -314,6 +373,13 @@
     popd
     pushd tests/_support/yarn/workspace
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'yarn workspace no-workspace '
+
+        echo 'yarn'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -321,10 +387,18 @@
     prefix=
     _fzf_complete_yarn 'yarn workspace no-workspace '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: yarn "" run **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'yarn "" run '
+
+        echo 'yarn'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -333,6 +407,8 @@
         assert $# equals 2
         assert $1 same_as ''
         assert $2 same_as 'yarn "" run '
+
+        assert __fzf_extract_command mock_times 1
     }
 
     prefix=

@@ -6,6 +6,7 @@
     load _helpers/assertions.zsh
     mock systemctl
     mock xargs
+    mock __fzf_extract_command
     FZF_DEFAULT_OPTS=--reverse
 
     preview() {
@@ -15,15 +16,12 @@
             fi
         done
     }
-
-    __fzf_extract_command() {
-        echo 'systemctl'
-    }
 }
 
 @teardown {
-    unmock systemctl
-    unmock xargs
+    (unmock systemctl)
+    (unmock xargs)
+    (unmock __fzf_extract_command)
 }
 
 @test 'Testing completion: systemctl status **' {
@@ -65,6 +63,13 @@
         echo 'dbus.socket       static    -'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'systemctl status '
+
+        echo 'systemctl'
+    }
+
     _fzf_complete() {
         assert $# equals 7
         assert $1 same_as '--ansi'
@@ -76,6 +81,7 @@
         assert $7 same_as 'systemctl status '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert systemctl mock_times 2
         assert ${#lines} equals 10
         assert ${lines[1]} same_as "${fg[green]}●${reset_color} -.mount"
@@ -133,6 +139,13 @@
         echo 'dbus.socket       static    -'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'TEST1=value1 TEST2=value2 systemctl status '
+
+        echo 'systemctl'
+    }
+
     _fzf_complete() {
         assert $# equals 7
         assert $1 same_as '--ansi'
@@ -144,6 +157,7 @@
         assert $7 same_as 'TEST1=value1 TEST2=value2 systemctl status '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert systemctl mock_times 2
         assert ${#lines} equals 10
         assert ${lines[1]} same_as "${fg[green]}●${reset_color} -.mount"
@@ -194,6 +208,13 @@
         echo 'dbus.socket       static    -'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'systemctl status --user '
+
+        echo 'systemctl'
+    }
+
     _fzf_complete() {
         assert $# equals 7
         assert $1 same_as '--ansi'
@@ -205,6 +226,7 @@
         assert $7 same_as 'systemctl status --user '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert systemctl mock_times 2
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[green]}●${reset_color} -.mount"
@@ -347,6 +369,13 @@
         echo '      Tasks: 0 (limit: 2367)'
         echo '     Memory: 120.0K'
         echo '     CGroup: /system.slice/boot.mount'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'systemctl status --user '
+
+        echo 'systemctl'
     }
 
     _fzf_complete() {
