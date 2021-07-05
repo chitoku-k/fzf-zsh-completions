@@ -317,7 +317,7 @@ _fzf_complete_git() {
                 ;;
 
             -F|-t|--file|--pathspec-from-file|--template)
-                __fzf_generic_path_completion "${prefix#$prefix_option}" "$@"$prefix_option _fzf_compgen_path '' '' ' '
+                __fzf_generic_path_completion "${prefix#$prefix_option}" "$@$prefix_option" _fzf_compgen_path '' '' ' '
                 ;;
 
             --cleanup)
@@ -385,7 +385,7 @@ _fzf_complete_git() {
 
             *)
                 local repository
-                if [[ "$@" =~ '--multiple' ]] || ! repository=$(_fzf_complete_parse_argument 3 1 "${${(q)arguments[@]}}" "${(F)git_options_argument_required}") && [[ -z $repository ]]; then
+                if [[ $@ =~ '--multiple' ]] || ! repository=$(_fzf_complete_parse_argument 3 1 "${${(q)arguments[@]}}" "${(F)git_options_argument_required}") && [[ -z $repository ]]; then
                     _fzf_complete_git-repositories '--multi' "$@"
                     return
                 fi
@@ -696,7 +696,7 @@ _fzf_complete_git-commits() {
     local fzf_options=$1
     shift
 
-    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- "$@"$prefix_option$prefix_ref < <({
+    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option$prefix_ref" < <({
         git for-each-ref refs/heads refs/remotes --format='%(refname:short) branch %(contents:subject)' 2> /dev/null
         git for-each-ref refs/tags --format='%(refname:short) tag %(contents:subject)' --sort=-version:refname 2> /dev/null
         git log --format='%h commit %s' 2> /dev/null
@@ -727,7 +727,7 @@ _fzf_complete_git-commits-not-in-head() {
     local rev_list_head=$(git rev-list HEAD --oneline 2> /dev/null)
     rev_list_head=(${(q)${(f)rev_list_head}})
 
-    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- "$@"$prefix_option$prefix_ref < <(
+    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option$prefix_ref" < <(
         _fzf_complete_tabularize ${fg[yellow]} <<< ${(Q)${(F)rev_list_all:|rev_list_head}}
     )
 }
@@ -740,7 +740,7 @@ _fzf_complete_git-commit-messages() {
     local fzf_options=$1
     shift
 
-    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- "$@"$prefix_option < <(
+    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <(
         git log --format='%h %s' 2> /dev/null | _fzf_complete_tabularize ${fg[yellow]}
     )
 }
@@ -791,7 +791,7 @@ _fzf_complete_git-files_index() {
     local fzf_options=$2
     shift 2
 
-    _fzf_complete --ansi --read0 --print0 ${(Q)${(Z+n+)fzf_options}} -- "$@"$prefix_ref < <(git ls-tree --name-only --full-tree -r -z ${(Z+n+)git_options} ${treeish-HEAD} 2> /dev/null)
+    _fzf_complete --ansi --read0 --print0 ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_ref" < <(git ls-tree --name-only --full-tree -r -z ${(Z+n+)git_options} ${treeish-HEAD} 2> /dev/null)
 }
 
 _fzf_complete_git-files_index_post() {
@@ -886,7 +886,7 @@ _fzf_complete_git-repositories() {
         groups=${(Q)${(F)${${(q)${(f)groups}}#remotes.}}}
     fi
 
-    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- "$@"$prefix_option < <({
+    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <({
         git remote --verbose 2> /dev/null | awk '
             /\(fetch\)$/ {
                 gsub(/\t/, " ")
@@ -905,7 +905,7 @@ _fzf_complete_git-refs() {
     local fzf_options=$1
     shift
 
-    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- "$@"$prefix_option$prefix_ref < <(
+    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option$prefix_ref" < <(
         git ls-remote --quiet --heads --tags "$repository" 2> /dev/null | awk '
             match($2, /^refs\/heads\//) {
                 print substr($2, RSTART + RLENGTH), "branch"
@@ -925,7 +925,7 @@ _fzf_complete_git-notes() {
     local fzf_options=$1
     shift
 
-    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- "$@"$prefix_option$prefix_ref < <(
+    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option$prefix_ref" < <(
         git for-each-ref refs/notes --format='%(refname:short) %(contents:subject)' 2> /dev/null |
             _fzf_complete_tabularize ${fg[yellow]}
     )
@@ -939,7 +939,7 @@ _fzf_complete_git-show-files() {
     local fzf_options=$1
     shift
 
-    _fzf_complete --ansi --read0 --print0 ${(Q)${(Z+n+)fzf_options}} -- "$@"$prefix_option < <(
+    _fzf_complete --ansi --read0 --print0 ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <(
         local result=$(git show --pretty=format: --name-only -z ${(ps: :)treeish} 2> /dev/null)
         echo -n ${(pj:\0:)${(u)${(o)${(0)result}}}}
     )
