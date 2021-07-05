@@ -34,7 +34,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'gh '
+    _fzf_complete_gh 'gh '
 }
 
 @test 'Testing completion: TEST1=value1 TEST2=value2 gh **' {
@@ -58,7 +58,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'TEST1=value1 TEST2=value2 gh '
+    _fzf_complete_gh 'TEST1=value1 TEST2=value2 gh '
 }
 
 @test 'Testing completion: gh pr **' {
@@ -594,7 +594,7 @@
         '8  2nd OPEN PR  2nd-open  OPEN'
     )
 
-    run _fzf_complete_docker-images_post <<< ${(F)input}
+    run _fzf_complete_gh-pr_post <<< ${(F)input}
 
     assert $state equals 0
     assert ${#lines} equals 1
