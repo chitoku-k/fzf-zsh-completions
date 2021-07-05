@@ -30,7 +30,6 @@ unmock() {
         unfunction $target
     fi
 
-    : ${mock_dir:=${funcsourcetrace[1]:P:h:h}/_support/mock}
     local mock_timesfile=$mock_dir/${target}_mock_times
     local mock_failfile=$mock_dir/${mock}_fail
 

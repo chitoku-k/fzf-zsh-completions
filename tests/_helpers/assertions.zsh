@@ -3,8 +3,6 @@ _zunit_assert_mock_times() {
     local count=$2
     shift 2
 
-    : ${mock_dir:=${funcsourcetrace[1]:P:h:h}/_support/mock}
-
     local len=$(cat -- $mock_dir/${target}_mock_times)
     if [[ $len != $count ]]; then
         echo "'$target' is called $len time(s)"
