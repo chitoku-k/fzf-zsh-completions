@@ -881,7 +881,7 @@ _fzf_complete_kubectl() {
             return
         fi
 
-        __fzf_generic_path_completion "${prefix#$prefix_option}" "$@"$prefix_option _fzf_compgen_path '' '' ' '
+        __fzf_generic_path_completion "${prefix#$prefix_option}" "$@$prefix_option" _fzf_compgen_path '' '' ' '
         return
     fi
 
