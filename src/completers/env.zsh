@@ -7,10 +7,10 @@ _fzf_complete_env() {
 
     if (( $+functions[_fzf_complete_$cmd] )); then
         LBUFFER=${LBUFFER/env /}
-        _fzf_complete_$cmd ${@/env /}
+        _fzf_complete_$cmd "${@/env /}"
         LBUFFER="env $LBUFFER"
         return
     fi
 
-    _fzf_path_completion "$prefix" $@
+    _fzf_path_completion "$prefix" "$@"
 }

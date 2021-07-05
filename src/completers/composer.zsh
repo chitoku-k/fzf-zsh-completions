@@ -1,15 +1,15 @@
 #!/usr/bin/env zsh
 
 _fzf_complete_composer() {
-    local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env $@)"}[@]}")
+    local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$@")"}[@]}")
     local subcommand=${arguments[2]}
 
     if [[ ${#arguments} = 1 ]] || [[ $subcommand = 'run-script' ]]; then
-        _fzf_complete_composer-run-script '' $@
+        _fzf_complete_composer-run-script '' "$@"
         return
     fi
 
-    _fzf_path_completion "$prefix" $@
+    _fzf_path_completion "$prefix" "$@"
 }
 
 _fzf_complete_composer-run-script() {
@@ -21,7 +21,7 @@ _fzf_complete_composer-run-script() {
         return
     fi
 
-    _fzf_complete --ansi --read0 --print0 --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@ < <(php -r '
+    _fzf_complete --ansi --read0 --print0 --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- "$@" < <(php -r '
         echo implode(
             "\0",
             array_keys(

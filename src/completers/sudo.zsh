@@ -11,5 +11,5 @@ _fzf_complete_sudo() {
         return
     fi
 
-    _fzf_path_completion "$prefix" $@
+    _fzf_path_completion "$prefix" "$@"
 }
