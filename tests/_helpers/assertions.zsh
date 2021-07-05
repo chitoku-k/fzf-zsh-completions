@@ -3,7 +3,7 @@ _zunit_assert_mock_times() {
     local count=$2
     shift 2
 
-    local len=$(cat -- ${target}_mock_times)
+    local len=$(cat -- $mock_dir/${target}_mock_times)
     if [[ $len != $count ]]; then
         echo "'$target' is called $len time(s)"
         exit 1
@@ -12,9 +12,10 @@ _zunit_assert_mock_times() {
     local i
     for (( i = 1; i <= len; i++ )); do
         local mock=${target}_mock_$i
-        if [[ -e ${mock}_fail ]]; then
-            echo "$mock: $(cat -- ${mock}_fail)"
-            rm -f -- ${mock}_fail
+        local mock_failfile=$mock_dir/${mock}_fail
+        if [[ -e $mock_failfile ]]; then
+            echo "$mock: $(cat -- $mock_failfile)"
+            rm -f -- $mock_failfile
             exit 1
         fi
     done
