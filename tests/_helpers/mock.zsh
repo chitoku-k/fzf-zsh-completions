@@ -30,12 +30,12 @@ unmock() {
     fi
 
     local mock_timesfile=$mock_dir/${target}_mock_times
-    local mock_failfile=$mock_dir/${mock}_fail
 
     local i
     local len=$(cat -- $mock_timesfile)
     for (( i = 1; i <= len; i++ )); do
         local mock=${target}_mock_$i
+        local mock_failfile=$mock_dir/${mock}_fail
         if [[ -e $mock_failfile ]]; then
             echo "$mock: $(cat -- $mock_failfile)"
         fi
