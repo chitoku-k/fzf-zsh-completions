@@ -4,7 +4,7 @@ autoload -U colors
 colors
 
 _fzf_complete_kubectl() {
-    local arguments=("${(Q)${(z)@}[@]}")
+    local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$@")"}[@]}")
     local kubectl_arguments=()
     local last_argument=${arguments[-1]}
     local prefix_option completing_option arg subcommands namespace resource name
@@ -103,13 +103,13 @@ _fzf_complete_kubectl() {
 
     for inherit_option in ${kubectl_inherited_options_argument_required[@]} ${kubectl_inherited_options[@]}; do
         if [[ $inherit_option = --* ]]; then
-            for arg in "$@" "$RBUFFER"; do
+            for arg in "$arguments" "$RBUFFER"; do
                 if inherit_values=$(_fzf_complete_parse_option_arguments '' "$inherit_option" "${(F)kubectl_options_argument_required}" "$arg"); then
                     kubectl_arguments+=("${(Q)${(z)inherit_values}[@]}")
                 fi
             done
         else
-            for arg in "$@" "$RBUFFER"; do
+            for arg in "$arguments" "$RBUFFER"; do
                 if inherit_values=$(_fzf_complete_parse_option_arguments "$inherit_option" '' "${(F)kubectl_options_argument_required}" "$arg"); then
                     kubectl_arguments+=("${(Q)${(z)inherit_values}[@]}")
                 fi
@@ -118,7 +118,7 @@ _fzf_complete_kubectl() {
     done
 
     subcommands=($(_fzf_complete_parse_argument 2 1 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :))
-    namespace=$(_fzf_complete_parse_option_arguments '-n' '--namespace' "${(F)kubectl_options_argument_required}" $@$RBUFFER || :)
+    namespace=$(_fzf_complete_parse_option_arguments '-n' '--namespace' "${(F)kubectl_options_argument_required}" "$@$RBUFFER" || :)
 
     if [[ ${subcommands[1]} =~ '^(apply|create|rollout|set)$' ]]; then
         subcommands+=($(_fzf_complete_parse_argument 2 2 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :))
@@ -881,7 +881,7 @@ _fzf_complete_kubectl() {
             return
         fi
 
-        __fzf_generic_path_completion "${prefix#$prefix_option}" $@$prefix_option _fzf_compgen_path '' '' ' '
+        __fzf_generic_path_completion "${prefix#$prefix_option}" "$@$prefix_option" _fzf_compgen_path '' '' ' '
         return
     fi
 
@@ -926,7 +926,7 @@ _fzf_complete_kubectl-resource-names() {
         kubectl_arguments+=(--all-namespaces)
     fi
 
-    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <(
         local result=$(kubectl get "$resource" -o wide "${kubectl_arguments[@]}" 2> /dev/null)
         if [[ $result = NAMESPACE\ * ]]; then
             _fzf_complete_colorize $fg[green] $fg[yellow] | awk '{ print SUBSEP $0 }'
@@ -963,7 +963,7 @@ _fzf_complete_kubectl-containers() {
     local fzf_options=$1
     shift
 
-    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <({
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <({
         echo NAME IMAGE
         kubectl get "$resource" "$name" "${kubectl_arguments[@]}" -o jsonpath='{range ..initContainers[*]}{.name} {.image}{"\n"}{end}' 2> /dev/null
         kubectl get "$resource" "$name" "${kubectl_arguments[@]}" -o jsonpath='{range ..containers[*]}{.name} {.image}{"\n"}{end}' 2> /dev/null
@@ -983,7 +983,7 @@ _fzf_complete_kubectl-ports() {
     local fzf_options=$1
     shift
 
-    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <(
         kubectl get "$resource" "$name" "${kubectl_arguments[@]}" -o jsonpath='PORT PROTOCOL NAME{"\n"}{range ..ports[*]}{.targetPort} {.containerPort} {.protocol} {.name}{"\n"}{end}' 2> /dev/null |
         awk '{ print $1, $2, $3 }' |
         _fzf_complete_tabularize $fg[yellow] $reset_color
@@ -998,7 +998,7 @@ _fzf_complete_kubectl-annotations() {
     local fzf_options=$1
     shift
 
-    _fzf_complete --ansi --read0 --print0 --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <({
+    _fzf_complete --ansi --read0 --print0 --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <({
         kubectl get "$resource" "$name" "${kubectl_arguments[@]}" -o jsonpath='{.metadata.annotations}' | jq -jr 'to_entries | map("\(.key)=\(.value)") | join("\u0000")'
     } 2> /dev/null)
 }
@@ -1021,7 +1021,7 @@ _fzf_complete_kubectl-labels() {
     local fzf_options=$1
     shift
 
-    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <(
         _fzf_complete_tabularize $fg[yellow] < <({
             echo KEY VALUE
             kubectl get "$resource" "$name" "${kubectl_arguments[@]}" -o jsonpath='{.metadata.labels}' |
@@ -1058,7 +1058,7 @@ _fzf_complete_kubectl-selectors() {
         return
     fi
 
-    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <(
         _fzf_complete_tabularize $fg[yellow] < <({
             if [[ $prefix_option = *! ]]; then
                 echo KEY VALUES
@@ -1101,7 +1101,7 @@ _fzf_complete_kubectl-label-columns() {
         kubectl_arguments+=(--label-columns=$label_columns)
     fi
 
-    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <(
         _fzf_complete_tabularize $fg[yellow] < <({
             echo KEY VALUES
             kubectl get "$resource" "${kubectl_arguments[@]}" -o jsonpath='{.items[*].metadata.labels}' |
@@ -1118,7 +1118,7 @@ _fzf_complete_kubectl-taints() {
     local fzf_options=$1
     shift
 
-    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <(
         _fzf_complete_tabularize $fg[yellow] $reset_color < <(
             echo KEY VALUE EFFECT
             kubectl get "$resource" "$name" "${kubectl_arguments[@]}" -o jsonpath='{range .spec.taints[*]}{.key} {.value} {.effect}{"\n"}{end}' 2> /dev/null

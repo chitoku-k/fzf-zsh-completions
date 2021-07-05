@@ -4,44 +4,44 @@ autoload -U colors
 colors
 
 _fzf_complete_docker() {
-    local arguments=("${(Q)${(z)@}[@]}")
+    local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$@")"}[@]}")
     local subcommand=${arguments[2]}
 
     if [[ $subcommand =~ ^(create|history|run)$ ]]; then
-        _fzf_complete_docker-images '' $@
+        _fzf_complete_docker-images '' "$@"
         return
     fi
 
     if [[ $subcommand = 'push' ]]; then
-        _fzf_complete_docker-images-repository '' $@
+        _fzf_complete_docker-images-repository '' "$@"
         return
     fi
 
     if [[ $subcommand =~ ^(rmi|save|tag)$ ]]; then
-        _fzf_complete_docker-images '--multi' $@
+        _fzf_complete_docker-images '--multi' "$@"
         return
     fi
 
     if [[ $subcommand =~ ^(attach|exec|top)$ ]]; then
-        _fzf_complete_docker-containers '' '' $@
+        _fzf_complete_docker-containers '' '' "$@"
         return
     fi
 
     if [[ $subcommand =~ ^(kill|pause|stop|unpause)$ ]]; then
-        _fzf_complete_docker-containers '' '--multi' $@
+        _fzf_complete_docker-containers '' '--multi' "$@"
         return
     fi
 
     if [[ $subcommand =~ ^(commit|diff|export|logs|port|rename)$ ]]; then
-        _fzf_complete_docker-containers '--all' '' $@
+        _fzf_complete_docker-containers '--all' '' "$@"
         return
     fi
 
     if [[ $subcommand = 'cp' ]]; then
         if [[ $prefix = */* ]]; then
-            _fzf_path_completion "$prefix" $@
+            _fzf_path_completion "$prefix" "$@"
         else
-            _fzf_complete_docker-containers '--all' '' $@
+            _fzf_complete_docker-containers '--all' '' "$@"
         fi
         return
     fi
@@ -53,26 +53,26 @@ _fzf_complete_docker() {
 
         case $inspect_type in
             image)
-                _fzf_complete_docker-images '--multi' $@
+                _fzf_complete_docker-images '--multi' "$@"
                 ;;
 
             network)
-                _fzf_complete_docker-networks '--multi' $@
+                _fzf_complete_docker-networks '--multi' "$@"
                 ;;
 
             volume)
-                _fzf_complete_docker-volumes '--multi' $@
+                _fzf_complete_docker-volumes '--multi' "$@"
                 ;;
 
             container)
-                _fzf_complete_docker-containers '--all' '--multi' $@
+                _fzf_complete_docker-containers '--all' '--multi' "$@"
                 ;;
 
             task)
                 ;;
 
             '')
-                _fzf_complete_docker-containers '--all' '--multi' $@
+                _fzf_complete_docker-containers '--all' '--multi' "$@"
                 ;;
         esac
 
@@ -80,18 +80,18 @@ _fzf_complete_docker() {
     fi
 
     if [[ $subcommand =~ ^(restart|rm|start|stats|update|wait)$ ]]; then
-        _fzf_complete_docker-containers '--all' '--multi' $@
+        _fzf_complete_docker-containers '--all' '--multi' "$@"
         return
     fi
 
-    _fzf_path_completion "$prefix" $@
+    _fzf_path_completion "$prefix" "$@"
 }
 
 _fzf_complete_docker-images() {
     local fzf_options=$1
     shift 1
 
-    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@ < <(
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@" < <(
         docker images --format 'table {{.ID}};{{.Repository}};{{.Tag}};{{if .CreatedSince}}{{.CreatedSince}}{{else}}N/A{{end}};{{.Size}}' 2> /dev/null \
             | FS=';' _fzf_complete_tabularize $fg[yellow] $reset_color{,,}
     )
@@ -105,7 +105,7 @@ _fzf_complete_docker-images-repository() {
     local fzf_options=$1
     shift 1
 
-    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@ < <(
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@" < <(
         docker images --filter 'dangling=false' --format 'table {{.Repository}};{{.ID}};{{.Tag}};{{if .CreatedSince}}{{.CreatedSince}}{{else}}N/A{{end}};{{.Size}}' 2> /dev/null \
             | FS=';' _fzf_complete_tabularize $fg[yellow] $reset_color{,,}
     )
@@ -126,7 +126,7 @@ _fzf_complete_docker-containers() {
     local fzf_options=$2
     shift 2
 
-    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@ < <(
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@" < <(
         docker container list ${(Q)${(Z+n+)docker_options}} \
             --format 'table {{.ID}};{{.Image}};{{.Command}};{{.RunningFor}};{{.Status}};{{.Ports}};{{.Names}}' 2> /dev/null \
                 | FS=';' _fzf_complete_tabularize $fg[yellow] $reset_color{,,,,}
@@ -151,7 +151,7 @@ _fzf_complete_docker-networks() {
     local fzf_options=$1
     shift
 
-    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@ < <(
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@" < <(
         docker network list --format 'table {{.ID}};{{.Name}};{{.Driver}};{{.Scope}}' 2> /dev/null \
             | FS=';' _fzf_complete_tabularize $fg[yellow] $reset_color{,}
     )
@@ -165,7 +165,7 @@ _fzf_complete_docker-volumes() {
     local fzf_options=$1
     shift
 
-    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@ < <(
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@" < <(
         docker volume list --format 'table {{.Name}};{{.Driver}};{{.Scope}}' 2> /dev/null \
             | FS=';' _fzf_complete_tabularize $fg[yellow] $reset_color
     )

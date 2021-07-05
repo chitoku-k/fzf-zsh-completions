@@ -1,6 +1,6 @@
 _fzf_complete_enable_aliases() {
     local expr name value completer arguments
-    local completers=(${@:t:r})
+    local completers=("${@[@]:t:r}")
 
     local IFS=$'\n'
     for expr in $(alias); do
@@ -10,13 +10,13 @@ _fzf_complete_enable_aliases() {
         arguments=${(@)value[2,-1]}
 
         if [[ -n $completer ]]; then
-            source -- ${@[(r)*completers/$completer.zsh]}
+            source -- "${@[(r)*completers/$completer.zsh]}"
             eval "
                 _fzf_complete_$name() {
                     LBUFFER=\"\${LBUFFER/$name/$completer $arguments}\"
                     () {
                         $functions[_fzf_complete_$completer]
-                    } \${@/$name/$completer $arguments}
+                    } \"\${@/$name/$completer $arguments}\"
                     LBUFFER=\"\${LBUFFER/$completer $arguments/$name}\"
                 }
             "

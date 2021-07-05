@@ -3,11 +3,25 @@
 @setup {
     load ../fzf-zsh-completions.plugin.zsh
     load _helpers/assertions.zsh
+    load _helpers/mock.zsh
+
+    mock __fzf_extract_command
 
     pushd tests/_support/npm
 }
 
+@teardown {
+    (unmock __fzf_extract_command)
+}
+
 @test 'Testing completion: npm **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'npm '
+
+        echo 'npm'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -16,13 +30,46 @@
         assert $# equals 2
         assert $1 same_as ''
         assert $2 same_as 'npm '
+
+        assert __fzf_extract_command mock_times 1
     }
 
     prefix=
     _fzf_complete_npm 'npm '
 }
 
+@test 'Testing completion: TEST1=value1 TEST2=value2 npm **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'TEST1=value1 TEST2=value2 npm '
+
+        echo 'npm'
+    }
+
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'TEST1=value1 TEST2=value2 npm '
+
+        assert __fzf_extract_command mock_times 1
+    }
+
+    prefix=
+    _fzf_complete_npm 'TEST1=value1 TEST2=value2 npm '
+}
+
 @test 'Testing completion: npm run **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'npm run '
+
+        echo 'npm'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -33,6 +80,7 @@
         assert $6 same_as 'npm run '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 6
 
         actual1=(${(0)lines[1]})
@@ -67,6 +115,13 @@
 }
 
 @test 'Testing completion: npm "" run **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'npm "" run '
+
+        echo 'npm'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -75,6 +130,8 @@
         assert $# equals 2
         assert $1 same_as ''
         assert $2 same_as 'npm "" run '
+
+        assert __fzf_extract_command mock_times 1
     }
 
     prefix=

@@ -10,17 +10,18 @@ PREVIEW_OPTIONS
 )
 
 _fzf_complete_systemctl() {
-    _fzf_complete_systemctl-units '' $@
+    _fzf_complete_systemctl-units '' "$@"
 }
 
 _fzf_complete_systemctl-units() {
     local fzf_options=$1
     shift
 
+    local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$@")"}[@]}")
     local systemctl_options=(--full --no-legend --no-pager)
-    systemctl_options+=($(_fzf_complete_parse_option '' '--user --system' '' $@)) || :
+    systemctl_options+=($(_fzf_complete_parse_option '' '--user --system' '' "${${(q)arguments[@]}}")) || :
 
-    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)${_fzf_complete_preview_systemctl_status/\$SYSTEMCTL_OPTIONS/$systemctl_options}}} ${(Q)${(Z+n+)FZF_DEFAULT_OPTS}} -- $@ < \
+    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)${_fzf_complete_preview_systemctl_status/\$SYSTEMCTL_OPTIONS/$systemctl_options}}} ${(Q)${(Z+n+)FZF_DEFAULT_OPTS}} -- "$@" < \
         <({
             systemctl list-units ${(Q)${(Z+n+)systemctl_options}} "$prefix*"
             systemctl list-unit-files ${(Q)${(Z+n+)systemctl_options}} "$prefix*"

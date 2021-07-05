@@ -5,13 +5,22 @@
     load _helpers/mock.zsh
     load _helpers/assertions.zsh
     mock docker
+    mock __fzf_extract_command
 }
 
 @teardown {
-    unmock docker
+    (unmock docker)
+    (unmock __fzf_extract_command)
 }
 
 @test 'Testing completion: docker **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -20,10 +29,36 @@
         assert $# equals 2
         assert $1 same_as ''
         assert $2 same_as 'docker '
+
+        assert __fzf_extract_command mock_times 1
     }
 
     prefix=
     _fzf_complete_docker 'docker '
+}
+
+@test 'Testing completion: TEST1=value1 TEST2=value2 docker **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'TEST1=value1 TEST2=value2 docker '
+
+        echo 'docker'
+    }
+
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'TEST1=value1 TEST2=value2 docker '
+
+        assert __fzf_extract_command mock_times 1
+    }
+
+    prefix=
+    _fzf_complete_docker 'TEST1=value1 TEST2=value2 docker '
 }
 
 @test 'Testing completion: docker create **' {
@@ -41,6 +76,13 @@
         echo '0152bf6f0800;archlinux;latest;18 months ago;409MB'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker create '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -50,6 +92,7 @@
         assert $5 same_as 'docker create '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}IMAGE ID    ${reset_color}  ${reset_color}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
@@ -79,6 +122,13 @@
         echo '0152bf6f0800;archlinux;latest;18 months ago;409MB'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker history '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -88,6 +138,7 @@
         assert $5 same_as 'docker history '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}IMAGE ID    ${reset_color}  ${reset_color}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
@@ -118,6 +169,13 @@
         echo 'archlinux;0152bf6f0800;latest;18 months ago;409MB'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker push '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -127,6 +185,7 @@
         assert $5 same_as 'docker push '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}REPOSITORY  ${reset_color}  ${reset_color}IMAGE ID    ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
@@ -155,6 +214,13 @@
         echo '0152bf6f0800;archlinux;latest;18 months ago;409MB'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker run '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -164,6 +230,7 @@
         assert $5 same_as 'docker run '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}IMAGE ID    ${reset_color}  ${reset_color}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
@@ -193,6 +260,13 @@
         echo '0152bf6f0800;archlinux;latest;18 months ago;409MB'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker rmi '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -203,6 +277,7 @@
         assert $6 same_as 'docker rmi '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}IMAGE ID    ${reset_color}  ${reset_color}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
@@ -232,6 +307,13 @@
         echo '0152bf6f0800;archlinux;latest;18 months ago;409MB'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker save '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -242,6 +324,7 @@
         assert $6 same_as 'docker save '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}IMAGE ID    ${reset_color}  ${reset_color}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
@@ -271,6 +354,13 @@
         echo '0152bf6f0800;archlinux;latest;18 months ago;409MB'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker tag '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -281,6 +371,7 @@
         assert $6 same_as 'docker tag '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}IMAGE ID    ${reset_color}  ${reset_color}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
@@ -307,6 +398,13 @@
         echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker attach '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -316,6 +414,7 @@
         assert $5 same_as 'docker attach '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 2
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE    ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS     ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
@@ -338,6 +437,13 @@
         echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker exec '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -347,6 +453,7 @@
         assert $5 same_as 'docker exec '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 2
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE    ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS     ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
@@ -369,6 +476,13 @@
         echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker top '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -378,6 +492,7 @@
         assert $5 same_as 'docker top '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 2
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE    ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS     ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
@@ -400,6 +515,13 @@
         echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker kill '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -410,6 +532,7 @@
         assert $6 same_as 'docker kill '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 2
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE    ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS     ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
@@ -432,6 +555,13 @@
         echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker pause '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -442,6 +572,7 @@
         assert $6 same_as 'docker pause '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 2
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE    ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS     ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
@@ -464,6 +595,13 @@
         echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker stop '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -474,6 +612,7 @@
         assert $6 same_as 'docker stop '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 2
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE    ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS     ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
@@ -496,6 +635,13 @@
         echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker unpause '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -506,6 +652,7 @@
         assert $6 same_as 'docker unpause '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 2
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE    ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS     ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
@@ -533,6 +680,13 @@
         echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker commit '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -542,6 +696,7 @@
         assert $5 same_as 'docker commit '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
@@ -573,6 +728,13 @@
         echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker cp '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -582,6 +744,7 @@
         assert $5 same_as 'docker cp '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
@@ -613,6 +776,13 @@
         echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker diff '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -622,6 +792,7 @@
         assert $5 same_as 'docker diff '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
@@ -653,6 +824,13 @@
         echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker export '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -662,6 +840,7 @@
         assert $5 same_as 'docker export '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
@@ -693,6 +872,13 @@
         echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker logs '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -702,6 +888,7 @@
         assert $5 same_as 'docker logs '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
@@ -733,6 +920,13 @@
         echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker port '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -742,6 +936,7 @@
         assert $5 same_as 'docker port '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
@@ -773,6 +968,13 @@
         echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker rename '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -782,6 +984,7 @@
         assert $5 same_as 'docker rename '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
@@ -813,6 +1016,13 @@
         echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker inspect '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -823,6 +1033,7 @@
         assert $6 same_as 'docker inspect '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
@@ -854,6 +1065,13 @@
         echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker inspect --type=container '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -864,6 +1082,7 @@
         assert $6 same_as 'docker inspect --type=container '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
@@ -895,6 +1114,13 @@
         echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker inspect --type container '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -905,6 +1131,7 @@
         assert $6 same_as 'docker inspect --type container '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
@@ -934,6 +1161,13 @@
         echo '0152bf6f0800;archlinux;latest;18 months ago;409MB'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker inspect --type=image '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -944,6 +1178,7 @@
         assert $6 same_as 'docker inspect --type=image '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}IMAGE ID    ${reset_color}  ${reset_color}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
@@ -973,6 +1208,13 @@
         echo '0152bf6f0800;archlinux;latest;18 months ago;409MB'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker inspect --type image '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -983,6 +1225,7 @@
         assert $6 same_as 'docker inspect --type image '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}IMAGE ID    ${reset_color}  ${reset_color}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
@@ -1011,6 +1254,13 @@
         echo '97628061152b;none;null;local'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker inspect --type=network '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -1021,6 +1271,7 @@
         assert $6 same_as 'docker inspect --type=network '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 4
         assert ${lines[1]} same_as "${fg[yellow]}NETWORK ID  ${reset_color}  ${reset_color}NAME  ${reset_color}  ${reset_color}DRIVER${reset_color}  SCOPE"
@@ -1047,6 +1298,13 @@
         echo '97628061152b;none;null;local'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker inspect --type network '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -1057,6 +1315,7 @@
         assert $6 same_as 'docker inspect --type network '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 4
         assert ${lines[1]} same_as "${fg[yellow]}NETWORK ID  ${reset_color}  ${reset_color}NAME  ${reset_color}  ${reset_color}DRIVER${reset_color}  SCOPE"
@@ -1083,6 +1342,13 @@
         echo '7fb9e47eb7e7efd9672213fdc0f77296f8230abd5a2682bb5eacfad8cbb93ca2;local;local'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker inspect --type=volume '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -1093,6 +1359,7 @@
         assert $6 same_as 'docker inspect --type=volume '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 4
         assert ${lines[1]} same_as "${fg[yellow]}VOLUME ID                                                       ${reset_color}  ${reset_color}DRIVER${reset_color}  SCOPE"
@@ -1119,6 +1386,13 @@
         echo '7fb9e47eb7e7efd9672213fdc0f77296f8230abd5a2682bb5eacfad8cbb93ca2;local;local'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker inspect --type volume '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -1129,6 +1403,7 @@
         assert $6 same_as 'docker inspect --type volume '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 4
         assert ${lines[1]} same_as "${fg[yellow]}VOLUME ID                                                       ${reset_color}  ${reset_color}DRIVER${reset_color}  SCOPE"
@@ -1142,6 +1417,13 @@
 }
 
 @test 'Testing completion: docker inspect --type=task **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker inspect --type=task '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -1149,10 +1431,18 @@
     prefix=
     _fzf_complete_docker 'docker inspect --type=task '
 
+    assert __fzf_extract_command mock_times 1
     assert docker mock_times 0
 }
 
 @test 'Testing completion: docker inspect --type task **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker inspect --type task '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -1160,6 +1450,7 @@
     prefix=
     _fzf_complete_docker 'docker inspect --type task '
 
+    assert __fzf_extract_command mock_times 1
     assert docker mock_times 0
 }
 
@@ -1180,6 +1471,13 @@
         echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker restart '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -1190,6 +1488,7 @@
         assert $6 same_as 'docker restart '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
@@ -1221,6 +1520,13 @@
         echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker rm '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -1231,6 +1537,7 @@
         assert $6 same_as 'docker rm '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
@@ -1262,6 +1569,13 @@
         echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker start '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -1272,6 +1586,7 @@
         assert $6 same_as 'docker start '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
@@ -1303,6 +1618,13 @@
         echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker stats '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -1313,6 +1635,7 @@
         assert $6 same_as 'docker stats '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
@@ -1344,6 +1667,13 @@
         echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker update '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -1354,6 +1684,7 @@
         assert $6 same_as 'docker update '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
@@ -1385,6 +1716,13 @@
         echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
     }
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker wait '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -1395,6 +1733,7 @@
         assert $6 same_as 'docker wait '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert docker mock_times 1
         assert ${#lines} equals 6
         assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
@@ -1410,6 +1749,13 @@
 }
 
 @test 'Testing completion: docker "" wait **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker "" wait '
+
+        echo 'docker'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -1418,6 +1764,8 @@
         assert $# equals 2
         assert $1 same_as ''
         assert $2 same_as 'docker "" wait '
+
+        assert __fzf_extract_command mock_times 1
     }
 
     prefix=

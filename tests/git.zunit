@@ -2,7 +2,9 @@
 
 @setup {
     load ../fzf-zsh-completions.plugin.zsh
+    load _helpers/mock.zsh
     load _helpers/assertions.zsh
+    mock __fzf_extract_command
 
     pushd tests/_support/git
     DIR=$PWD
@@ -26,6 +28,7 @@
 }
 
 @teardown {
+    (unmock __fzf_extract_command)
     pushd $DIR
 
     {
@@ -37,6 +40,13 @@
 }
 
 @test 'Testing completion: git **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -45,13 +55,46 @@
         assert $# equals 2
         assert $1 same_as ''
         assert $2 same_as 'git '
+
+        assert __fzf_extract_command mock_times 1
     }
 
     prefix=
     _fzf_complete_git 'git '
 }
 
+@test 'Testing completion: TEST1=value1 TEST2=value2 git **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'TEST1=value1 TEST2=value2 git '
+
+        echo 'git'
+    }
+
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'TEST1=value1 TEST2=value2 git '
+
+        assert __fzf_extract_command mock_times 1
+    }
+
+    prefix=
+    _fzf_complete_git 'TEST1=value1 TEST2=value2 git '
+}
+
 @test 'Testing completion: git checkout **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git checkout '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -60,6 +103,7 @@
         assert $4 same_as 'git checkout '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -79,6 +123,13 @@
     echo >> ' file5 containing space '
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git checkout -- '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 9
         assert $1 same_as '--ansi'
@@ -92,6 +143,7 @@
         assert $9 same_as 'git checkout -- '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -121,6 +173,13 @@
     echo >> ' file5 containing space '
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git checkout -- file '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 9
         assert $1 same_as '--ansi'
@@ -134,6 +193,7 @@
         assert $9 same_as 'git checkout -- file '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -169,6 +229,13 @@
 
     cd directory2/directory3
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git checkout -- '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 9
         assert $1 same_as '--ansi'
@@ -182,6 +249,7 @@
         assert $9 same_as 'git checkout -- '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -217,6 +285,13 @@
 
     cd directory2/directory3
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git checkout -- file '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 9
         assert $1 same_as '--ansi'
@@ -230,6 +305,7 @@
         assert $9 same_as 'git checkout -- file '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -253,6 +329,13 @@
 }
 
 @test 'Testing completion: git checkout another-branch **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git checkout another-branch '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -263,6 +346,7 @@
         assert $6 same_as 'git checkout another-branch '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -288,6 +372,13 @@
 @test 'Testing completion in subdirectory: git checkout another-branch **' {
     cd directory1
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git checkout another-branch '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -298,6 +389,7 @@
         assert $6 same_as 'git checkout another-branch '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -321,6 +413,13 @@
 }
 
 @test 'Testing completion: git checkout another-branch -- **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git checkout another-branch -- '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -331,6 +430,7 @@
         assert $6 same_as 'git checkout another-branch -- '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -356,6 +456,13 @@
 @test 'Testing completion in subdirectory: git checkout another-branch -- **' {
     cd directory1
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git checkout another-branch -- '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -366,6 +473,7 @@
         assert $6 same_as 'git checkout another-branch -- '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -389,6 +497,13 @@
 }
 
 @test 'Testing completion: git checkout another-branch -- file **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git checkout another-branch -- file '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -399,6 +514,7 @@
         assert $6 same_as 'git checkout another-branch -- file '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -424,6 +540,13 @@
 @test 'Testing completion in subdirectory: git checkout another-branch -- file **' {
     cd directory1
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git checkout another-branch -- file '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -434,6 +557,7 @@
         assert $6 same_as 'git checkout another-branch -- file '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -457,6 +581,13 @@
 }
 
 @test 'Testing completion: git checkout branch-that-does-not-exist **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git checkout branch-that-does-not-exist '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -467,6 +598,7 @@
         assert $6 same_as 'git checkout branch-that-does-not-exist '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 1
 
         actual1=(${(0)lines[1]})
@@ -478,6 +610,13 @@
 }
 
 @test 'Testing completion: git checkout branch-that-does-not-exist -- **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git checkout branch-that-does-not-exist -- '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -488,6 +627,7 @@
         assert $6 same_as 'git checkout branch-that-does-not-exist -- '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 1
 
         actual1=(${(0)lines[1]})
@@ -499,6 +639,13 @@
 }
 
 @test 'Testing completion: git checkout branch-that-does-not-exist -- file **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git checkout branch-that-does-not-exist -- file '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -509,6 +656,7 @@
         assert $6 same_as 'git checkout branch-that-does-not-exist -- file '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 1
 
         actual1=(${(0)lines[1]})
@@ -520,6 +668,13 @@
 }
 
 @test 'Testing completion: git diff **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git diff '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -528,6 +683,7 @@
         assert $4 same_as 'git diff '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -547,6 +703,13 @@
     echo >> ' file5 containing space '
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git diff -- '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 9
         assert $1 same_as '--ansi'
@@ -560,6 +723,7 @@
         assert $9 same_as 'git diff -- '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -595,6 +759,13 @@
 
     cd directory2/directory3
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git diff -- '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 9
         assert $1 same_as '--ansi'
@@ -608,6 +779,7 @@
         assert $9 same_as 'git diff -- '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -631,6 +803,13 @@
 }
 
 @test 'Testing completion: git log **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git log '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -639,6 +818,7 @@
         assert $4 same_as 'git log '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -658,6 +838,13 @@
     echo >> ' file5 containing space '
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git log -- '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -668,6 +855,7 @@
         assert $6 same_as 'git log -- '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -699,6 +887,13 @@
 
     cd directory1
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git log -- '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -709,6 +904,7 @@
         assert $6 same_as 'git log -- '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -732,6 +928,13 @@
 }
 
 @test 'Testing completion: git rebase **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git rebase '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -740,6 +943,7 @@
         assert $4 same_as 'git rebase '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -753,6 +957,13 @@
 }
 
 @test 'Testing completion: git reset **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git reset '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -761,6 +972,7 @@
         assert $4 same_as 'git reset '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -777,6 +989,13 @@
     echo >> newfile
     run git add newfile
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git reset another-branch '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -787,6 +1006,7 @@
         assert $6 same_as 'git reset another-branch '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -814,6 +1034,13 @@
     echo >> newfile
     run git add newfile
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git reset -- '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -824,6 +1051,7 @@
         assert $6 same_as 'git reset -- '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 1
 
         actual1=(${(0)lines[1]})
@@ -841,6 +1069,13 @@
     echo >> newfile
     run git add newfile
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git reset another-branch -- '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -851,6 +1086,7 @@
         assert $6 same_as 'git reset another-branch -- '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -875,6 +1111,13 @@
 }
 
 @test 'Testing completion: git reset --soft -- **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git reset --soft -- '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -882,10 +1125,18 @@
     prefix=
     _fzf_complete_git 'git reset --soft -- '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git reset --hard -- **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git reset --hard -- '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -893,10 +1144,18 @@
     prefix=
     _fzf_complete_git 'git reset --hard -- '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git reset --merge -- **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git reset --merge -- '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -904,10 +1163,18 @@
     prefix=
     _fzf_complete_git 'git reset --merge -- '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git reset --keep -- **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git reset --keep -- '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -915,6 +1182,7 @@
     prefix=
     _fzf_complete_git 'git reset --keep -- '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
@@ -927,6 +1195,13 @@
 
     cd directory1
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git reset -- '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -937,6 +1212,7 @@
         assert $6 same_as 'git reset -- '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -960,6 +1236,13 @@
 }
 
 @test 'Testing completion: git switch **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git switch '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -968,6 +1251,7 @@
         assert $4 same_as 'git switch '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -981,6 +1265,13 @@
 }
 
 @test 'Testing completion: git branch **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git branch -D '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -990,6 +1281,7 @@
         assert $5 same_as 'git branch -D '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -1003,6 +1295,13 @@
 }
 
 @test 'Testing completion: git cherry-pick --cleanup=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git cherry-pick '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -1011,6 +1310,7 @@
         assert $4 same_as 'git cherry-pick --cleanup='
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as strip
         assert ${lines[2]} same_as whitespace
@@ -1024,6 +1324,13 @@
 }
 
 @test 'Testing completion: git cherry-pick --cleanup **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git cherry-pick --cleanup '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -1032,6 +1339,7 @@
         assert $4 same_as 'git cherry-pick --cleanup '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as strip
         assert ${lines[2]} same_as whitespace
@@ -1045,6 +1353,13 @@
 }
 
 @test 'Testing completion: git cherry-pick --strategy=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git cherry-pick '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -1053,6 +1368,7 @@
         assert $4 same_as 'git cherry-pick --strategy='
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as octopus
         assert ${lines[2]} same_as ours
@@ -1066,6 +1382,13 @@
 }
 
 @test 'Testing completion: git cherry-pick --strategy **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git cherry-pick --strategy '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -1074,6 +1397,7 @@
         assert $4 same_as 'git cherry-pick --strategy '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as octopus
         assert ${lines[2]} same_as ours
@@ -1087,6 +1411,13 @@
 }
 
 @test 'Testing completion: git cherry-pick -X **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git cherry-pick -X '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -1095,6 +1426,7 @@
         assert $4 same_as 'git cherry-pick -X '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 19
         assert ${lines[1]} same_as diff-algorithm=histogram
         assert ${lines[2]} same_as diff-algorithm=minimal
@@ -1122,6 +1454,13 @@
 }
 
 @test 'Testing completion: git cherry-pick -X**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git cherry-pick '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -1130,6 +1469,7 @@
         assert $4 same_as 'git cherry-pick -X'
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 19
         assert ${lines[1]} same_as diff-algorithm=histogram
         assert ${lines[2]} same_as diff-algorithm=minimal
@@ -1157,6 +1497,13 @@
 }
 
 @test 'Testing completion: git cherry-pick -qX **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git cherry-pick -qX '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -1165,6 +1512,7 @@
         assert $4 same_as 'git cherry-pick -qX '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 19
         assert ${lines[1]} same_as diff-algorithm=histogram
         assert ${lines[2]} same_as diff-algorithm=minimal
@@ -1192,6 +1540,13 @@
 }
 
 @test 'Testing completion: git cherry-pick -qX**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git cherry-pick '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -1200,6 +1555,7 @@
         assert $4 same_as 'git cherry-pick -qX'
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 19
         assert ${lines[1]} same_as diff-algorithm=histogram
         assert ${lines[2]} same_as diff-algorithm=minimal
@@ -1227,6 +1583,13 @@
 }
 
 @test 'Testing completion: git cherry-pick --strategy-option=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git cherry-pick '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -1235,6 +1598,7 @@
         assert $4 same_as 'git cherry-pick --strategy-option='
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 19
         assert ${lines[1]} same_as diff-algorithm=histogram
         assert ${lines[2]} same_as diff-algorithm=minimal
@@ -1261,6 +1625,13 @@
 }
 
 @test 'Testing completion: git cherry-pick --strategy-option **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git cherry-pick --strategy-option '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -1269,6 +1640,7 @@
         assert $4 same_as 'git cherry-pick --strategy-option '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 19
         assert ${lines[1]} same_as diff-algorithm=histogram
         assert ${lines[2]} same_as diff-algorithm=minimal
@@ -1296,6 +1668,13 @@
 }
 
 @test 'Testing completion: git cherry-pick **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git cherry-pick '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -1305,6 +1684,7 @@
         assert $5 same_as 'git cherry-pick '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 1
         assert ${lines[1]} same_as "${fg[yellow]}6088ecf$reset_color   2nd commit"
     }
@@ -1314,6 +1694,13 @@
 }
 
 @test 'Testing completion: git merge **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git merge '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -1323,6 +1710,7 @@
         assert $5 same_as 'git merge '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -1336,6 +1724,13 @@
 }
 
 @test 'Testing completion: git revert **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git revert '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -1345,6 +1740,7 @@
         assert $5 same_as 'git revert '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -1364,6 +1760,13 @@
     echo >> ' file5 containing space '
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git restore '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 9
         assert $1 same_as '--ansi'
@@ -1377,6 +1780,7 @@
         assert $9 same_as 'git restore '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -1406,6 +1810,13 @@
     echo >> ' file5 containing space '
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git restore --source=HEAD '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -1416,6 +1827,7 @@
         assert $6 same_as 'git restore --source=HEAD '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -1447,6 +1859,13 @@
 
     cd directory1
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git restore --source=HEAD '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -1457,6 +1876,7 @@
         assert $6 same_as 'git restore --source=HEAD '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -1486,6 +1906,13 @@
     echo >> ' file5 containing space '
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git restore --source HEAD '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -1496,6 +1923,7 @@
         assert $6 same_as 'git restore --source HEAD '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -1527,6 +1955,13 @@
 
     cd directory1
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git restore --source HEAD '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -1537,6 +1972,7 @@
         assert $6 same_as 'git restore --source HEAD '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -1566,6 +2002,13 @@
     echo >> ' file5 containing space '
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git restore -s HEAD '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -1576,6 +2019,7 @@
         assert $6 same_as 'git restore -s HEAD '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -1607,6 +2051,13 @@
 
     cd directory1
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git restore -s HEAD '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -1617,6 +2068,7 @@
         assert $6 same_as 'git restore -s HEAD '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -1646,6 +2098,13 @@
     echo >> ' file5 containing space '
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git restore -sHEAD '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -1656,6 +2115,7 @@
         assert $6 same_as 'git restore -sHEAD '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -1687,6 +2147,13 @@
 
     cd directory1
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git restore -sHEAD '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -1697,6 +2164,7 @@
         assert $6 same_as 'git restore -sHEAD '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -1726,6 +2194,13 @@
     echo >> ' file5 containing space '
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git restore -qs HEAD '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -1736,6 +2211,7 @@
         assert $6 same_as 'git restore -qs HEAD '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -1767,6 +2243,13 @@
 
     cd directory1
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git restore -qs HEAD '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -1777,6 +2260,7 @@
         assert $6 same_as 'git restore -qs HEAD '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -1806,6 +2290,13 @@
     echo >> ' file5 containing space '
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git restore -qsHEAD '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -1816,6 +2307,7 @@
         assert $6 same_as 'git restore -qsHEAD '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -1847,6 +2339,13 @@
 
     cd directory1
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git restore -qsHEAD '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -1857,6 +2356,7 @@
         assert $6 same_as 'git restore -qsHEAD '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -1887,6 +2387,13 @@
     echo >> directory2/$'file6\ncontaining\nnewlines'
     run git add file1 ' file3 containing space ' $'directory2/file4\ncontaining\nnewlines'
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git restore --staged '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 9
         assert $1 same_as '--ansi'
@@ -1900,6 +2407,7 @@
         assert $9 same_as 'git restore --staged '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -1929,6 +2437,13 @@
     echo >> directory2/$'file6\ncontaining\nnewlines'
     run git add file1 ' file3 containing space ' $'directory2/file4\ncontaining\nnewlines'
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git restore -S '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 9
         assert $1 same_as '--ansi'
@@ -1942,6 +2457,7 @@
         assert $9 same_as 'git restore -S '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -1971,6 +2487,13 @@
     echo >> directory2/$'file6\ncontaining\nnewlines'
     run git add file1 ' file3 containing space ' $'directory2/file4\ncontaining\nnewlines'
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git restore -qSq '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 9
         assert $1 same_as '--ansi'
@@ -1984,6 +2507,7 @@
         assert $9 same_as 'git restore -qSq '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -2006,6 +2530,13 @@
 }
 
 @test 'Testing completion: git restore --source=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git restore '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -2014,6 +2545,7 @@
         assert $4 same_as 'git restore --source='
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -2027,6 +2559,13 @@
 }
 
 @test 'Testing completion: git restore --source **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git restore --source '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -2035,6 +2574,7 @@
         assert $4 same_as 'git restore --source '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -2048,6 +2588,13 @@
 }
 
 @test 'Testing completion: git restore -s **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git restore -s '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -2056,6 +2603,7 @@
         assert $4 same_as 'git restore -s '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -2069,6 +2617,13 @@
 }
 
 @test 'Testing completion: git restore -s**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git restore '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -2077,6 +2632,7 @@
         assert $4 same_as 'git restore -s'
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -2090,6 +2646,13 @@
 }
 
 @test 'Testing completion: git commit --fixup=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -2098,6 +2661,7 @@
         assert $4 same_as 'git commit --fixup='
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -2111,6 +2675,13 @@
 }
 
 @test 'Testing completion: git commit --reedit-message=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -2119,6 +2690,7 @@
         assert $4 same_as 'git commit --reedit-message='
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -2132,6 +2704,13 @@
 }
 
 @test 'Testing completion: git commit --reuse-message=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -2140,6 +2719,7 @@
         assert $4 same_as 'git commit --reuse-message='
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -2153,6 +2733,13 @@
 }
 
 @test 'Testing completion: git commit --squash=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -2161,6 +2748,7 @@
         assert $4 same_as 'git commit --squash='
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -2174,6 +2762,13 @@
 }
 
 @test 'Testing completion: git commit -c **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit -c '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -2182,6 +2777,7 @@
         assert $4 same_as 'git commit -c '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -2195,6 +2791,13 @@
 }
 
 @test 'Testing completion: git commit -c**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -2203,6 +2806,7 @@
         assert $4 same_as 'git commit -c'
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -2216,6 +2820,13 @@
 }
 
 @test 'Testing completion: git commit -qc **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit -qc '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -2224,6 +2835,7 @@
         assert $4 same_as 'git commit -qc '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -2237,6 +2849,13 @@
 }
 
 @test 'Testing completion: git commit -qc**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -2245,6 +2864,7 @@
         assert $4 same_as 'git commit -qc'
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -2258,6 +2878,13 @@
 }
 
 @test 'Testing completion: git commit -C **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit -C '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -2266,6 +2893,7 @@
         assert $4 same_as 'git commit -C '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -2279,6 +2907,13 @@
 }
 
 @test 'Testing completion: git commit -C**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -2287,6 +2922,7 @@
         assert $4 same_as 'git commit -C'
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -2300,6 +2936,13 @@
 }
 
 @test 'Testing completion: git commit -qC **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit -qC '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -2308,6 +2951,7 @@
         assert $4 same_as 'git commit -qC '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -2321,6 +2965,13 @@
 }
 
 @test 'Testing completion: git commit -qC**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -2329,6 +2980,7 @@
         assert $4 same_as 'git commit -qC'
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -2342,6 +2994,13 @@
 }
 
 @test 'Testing completion: git commit --fixup **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit --fixup '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -2350,6 +3009,7 @@
         assert $4 same_as 'git commit --fixup '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -2363,6 +3023,13 @@
 }
 
 @test 'Testing completion: git commit --reedit-message **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit --reedit-message '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -2371,6 +3038,7 @@
         assert $4 same_as 'git commit --reedit-message '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -2384,6 +3052,13 @@
 }
 
 @test 'Testing completion: git commit --reuse-message **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit --reuse-message '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -2392,6 +3067,7 @@
         assert $4 same_as 'git commit --reuse-message '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -2405,6 +3081,13 @@
 }
 
 @test 'Testing completion: git commit --squash **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit --squash '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -2413,6 +3096,7 @@
         assert $4 same_as 'git commit --squash '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -2428,6 +3112,13 @@
 @test 'Testing completion: git commit --message=**' {
     run git checkout another-branch
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -2436,6 +3127,7 @@
         assert $4 same_as 'git commit --message='
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 2
         assert ${lines[1]} same_as "${fg[yellow]}6088ecf$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}3e209a3$reset_color  1st commit"
@@ -2448,6 +3140,13 @@
 @test 'Testing completion: git commit -m **' {
     run git checkout another-branch
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit -m '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -2456,6 +3155,7 @@
         assert $4 same_as 'git commit -m '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 2
         assert ${lines[1]} same_as "${fg[yellow]}6088ecf$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}3e209a3$reset_color  1st commit"
@@ -2468,6 +3168,13 @@
 @test 'Testing completion: git commit -m**' {
     run git checkout another-branch
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -2476,6 +3183,7 @@
         assert $4 same_as 'git commit -m'
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 2
         assert ${lines[1]} same_as "${fg[yellow]}6088ecf$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}3e209a3$reset_color  1st commit"
@@ -2488,6 +3196,13 @@
 @test 'Testing completion: git commit -qm **' {
     run git checkout another-branch
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit -qm '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -2496,6 +3211,7 @@
         assert $4 same_as 'git commit -qm '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 2
         assert ${lines[1]} same_as "${fg[yellow]}6088ecf$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}3e209a3$reset_color  1st commit"
@@ -2508,6 +3224,13 @@
 @test 'Testing completion: git commit -qm**' {
     run git checkout another-branch
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -2516,6 +3239,7 @@
         assert $4 same_as 'git commit -qm'
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 2
         assert ${lines[1]} same_as "${fg[yellow]}6088ecf$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}3e209a3$reset_color  1st commit"
@@ -2528,6 +3252,13 @@
 @test 'Testing completion: git commit --message **' {
     run git checkout another-branch
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit --message '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -2536,6 +3267,7 @@
         assert $4 same_as 'git commit --message '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 2
         assert ${lines[1]} same_as "${fg[yellow]}6088ecf$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}3e209a3$reset_color  1st commit"
@@ -2546,6 +3278,13 @@
 }
 
 @test 'Testing completion: git commit --author=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -2553,10 +3292,18 @@
     prefix=--author=
     _fzf_complete_git 'git commit '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git commit --date=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -2564,10 +3311,18 @@
     prefix=--date=
     _fzf_complete_git 'git commit '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git commit --author **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit --author '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -2575,10 +3330,18 @@
     prefix=
     _fzf_complete_git 'git commit --author '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git commit --date **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit --date '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -2586,10 +3349,18 @@
     prefix=
     _fzf_complete_git 'git commit --date '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git commit --file=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -2606,9 +3377,18 @@
 
     prefix=--file=
     _fzf_complete_git 'git commit '
+
+    assert __fzf_extract_command mock_times 1
 }
 
 @test 'Testing completion: git commit --template=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -2625,9 +3405,18 @@
 
     prefix=--template=
     _fzf_complete_git 'git commit '
+
+    assert __fzf_extract_command mock_times 1
 }
 
 @test 'Testing completion: git commit --pathspec-from-file=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -2644,9 +3433,18 @@
 
     prefix=--pathspec-from-file=
     _fzf_complete_git 'git commit '
+
+    assert __fzf_extract_command mock_times 1
 }
 
 @test 'Testing completion: git commit -F **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit -F '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -2663,9 +3461,18 @@
 
     prefix=
     _fzf_complete_git 'git commit -F '
+
+    assert __fzf_extract_command mock_times 1
 }
 
 @test 'Testing completion: git commit -F**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -2682,9 +3489,18 @@
 
     prefix=-F
     _fzf_complete_git 'git commit '
+
+    assert __fzf_extract_command mock_times 1
 }
 
 @test 'Testing completion: git commit -qF **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit -qF '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -2701,9 +3517,18 @@
 
     prefix=
     _fzf_complete_git 'git commit -qF '
+
+    assert __fzf_extract_command mock_times 1
 }
 
 @test 'Testing completion: git commit -qF**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -2720,9 +3545,18 @@
 
     prefix=-qF
     _fzf_complete_git 'git commit '
+
+    assert __fzf_extract_command mock_times 1
 }
 
 @test 'Testing completion: git commit -t **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit -t '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -2739,9 +3573,18 @@
 
     prefix=
     _fzf_complete_git 'git commit -t '
+
+    assert __fzf_extract_command mock_times 1
 }
 
 @test 'Testing completion: git commit -t**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -2758,9 +3601,18 @@
 
     prefix=-t
     _fzf_complete_git 'git commit '
+
+    assert __fzf_extract_command mock_times 1
 }
 
 @test 'Testing completion: git commit -qt **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit -qt '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -2777,9 +3629,18 @@
 
     prefix=
     _fzf_complete_git 'git commit -qt '
+
+    assert __fzf_extract_command mock_times 1
 }
 
 @test 'Testing completion: git commit -qt**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -2796,9 +3657,18 @@
 
     prefix=-qt
     _fzf_complete_git 'git commit '
+
+    assert __fzf_extract_command mock_times 1
 }
 
 @test 'Testing completion: git commit --file **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit --file '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -2815,9 +3685,18 @@
 
     prefix=
     _fzf_complete_git 'git commit --file '
+
+    assert __fzf_extract_command mock_times 1
 }
 
 @test 'Testing completion: git commit --template **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit --template '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -2834,9 +3713,18 @@
 
     prefix=
     _fzf_complete_git 'git commit --template '
+
+    assert __fzf_extract_command mock_times 1
 }
 
 @test 'Testing completion: git commit --pathspec-from-file **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit --pathspec-from-file '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -2853,9 +3741,18 @@
 
     prefix=
     _fzf_complete_git 'git commit --pathspec-from-file '
+
+    assert __fzf_extract_command mock_times 1
 }
 
 @test 'Testing completion: git commit --cleanup=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -2864,6 +3761,7 @@
         assert $4 same_as 'git commit --cleanup='
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as strip
         assert ${lines[2]} same_as whitespace
@@ -2877,6 +3775,13 @@
 }
 
 @test 'Testing completion: git commit --cleanup **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit --cleanup '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -2885,6 +3790,7 @@
         assert $4 same_as 'git commit --cleanup '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as strip
         assert ${lines[2]} same_as whitespace
@@ -2898,6 +3804,13 @@
 }
 
 @test 'Testing completion: git commit -u**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -2906,6 +3819,7 @@
         assert $4 same_as 'git commit -u'
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as no
         assert ${lines[2]} same_as normal
@@ -2917,6 +3831,13 @@
 }
 
 @test 'Testing completion: git commit -qu**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -2925,6 +3846,7 @@
         assert $4 same_as 'git commit -qu'
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as no
         assert ${lines[2]} same_as normal
@@ -2936,6 +3858,13 @@
 }
 
 @test 'Testing completion: git commit --untracked-files=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -2944,6 +3873,7 @@
         assert $4 same_as 'git commit --untracked-files='
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as no
         assert ${lines[2]} same_as normal
@@ -2961,6 +3891,13 @@
     echo >> ' file5 containing space '
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 9
         assert $1 same_as '--ansi'
@@ -2974,6 +3911,7 @@
         assert $9 same_as 'git commit '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -3009,6 +3947,13 @@
 
     cd directory2/directory3
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 9
         assert $1 same_as '--ansi'
@@ -3022,6 +3967,7 @@
         assert $9 same_as 'git commit '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -3051,6 +3997,13 @@
     echo >> ' file5 containing space '
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit -- '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 9
         assert $1 same_as '--ansi'
@@ -3064,6 +4017,7 @@
         assert $9 same_as 'git commit -- '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -3099,6 +4053,13 @@
 
     cd directory2/directory3
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit -- '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 9
         assert $1 same_as '--ansi'
@@ -3112,6 +4073,7 @@
         assert $9 same_as 'git commit -- '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -3141,6 +4103,13 @@
     echo >> ' file5 containing space '
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git add '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 9
         assert $1 same_as '--ansi'
@@ -3154,6 +4123,7 @@
         assert $9 same_as 'git add '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
 
         actual1=(${(0)lines[1]})
@@ -3199,6 +4169,13 @@
 
     cd directory2/directory3
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git add '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 9
         assert $1 same_as '--ansi'
@@ -3212,6 +4189,7 @@
         assert $9 same_as 'git add '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 7
 
         actual1=(${(0)lines[1]})
@@ -3256,6 +4234,13 @@
 }
 
 @test 'Testing completion: git fetch --recurse-submodules=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git fetch '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -3264,6 +4249,7 @@
         assert $4 same_as 'git fetch --recurse-submodules='
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as yes
         assert ${lines[2]} same_as on-demand
@@ -3275,6 +4261,13 @@
 }
 
 @test 'Testing completion: git fetch --recurse-submodules-default=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git fetch '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -3283,6 +4276,7 @@
         assert $4 same_as 'git fetch --recurse-submodules-default='
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 2
         assert ${lines[1]} same_as yes
         assert ${lines[2]} same_as on-demand
@@ -3293,6 +4287,13 @@
 }
 
 @test 'Testing completion: git fetch --recurse-submodules-default **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git fetch --recurse-submodules-default '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -3301,6 +4302,7 @@
         assert $4 same_as 'git fetch --recurse-submodules-default '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 2
         assert ${lines[1]} same_as yes
         assert ${lines[2]} same_as on-demand
@@ -3311,6 +4313,13 @@
 }
 
 @test 'Testing completion: git fetch --shallow-exclude=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git fetch '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -3319,6 +4328,7 @@
         assert $4 same_as 'git fetch --shallow-exclude='
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -3332,6 +4342,13 @@
 }
 
 @test 'Testing completion: git fetch --shallow-exclude **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git fetch --shallow-exclude '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -3340,6 +4357,7 @@
         assert $4 same_as 'git fetch --shallow-exclude '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -3353,6 +4371,13 @@
 }
 
 @test 'Testing completion: git fetch --negotiation-tip=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git fetch '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -3361,6 +4386,7 @@
         assert $4 same_as 'git fetch --negotiation-tip='
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -3374,6 +4400,13 @@
 }
 
 @test 'Testing completion: git fetch --negotiation-tip **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git fetch --negotiation-tip '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -3382,6 +4415,7 @@
         assert $4 same_as 'git fetch --negotiation-tip '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -3395,6 +4429,13 @@
 }
 
 @test 'Testing completion: git fetch -j**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git fetch '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -3402,10 +4443,18 @@
     prefix=-j
     _fzf_complete_git 'git fetch '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git fetch -j **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git fetch -o '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -3413,10 +4462,18 @@
     prefix=
     _fzf_complete_git 'git fetch -o '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git fetch --jobs=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git fetch --jobs '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -3424,10 +4481,18 @@
     prefix=
     _fzf_complete_git 'git fetch --jobs '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git fetch --jobs **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git fetch --jobs '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -3435,10 +4500,18 @@
     prefix=
     _fzf_complete_git 'git fetch --jobs '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git fetch -o **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git fetch -o '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -3446,10 +4519,18 @@
     prefix=
     _fzf_complete_git 'git fetch -o '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git fetch -o**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git fetch '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -3457,10 +4538,18 @@
     prefix=-o
     _fzf_complete_git 'git fetch '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git fetch -qo **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git fetch -qo '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -3468,10 +4557,18 @@
     prefix=
     _fzf_complete_git 'git fetch -qo '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git fetch -qo**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git fetch '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -3479,10 +4576,18 @@
     prefix=-qo
     _fzf_complete_git 'git fetch '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git fetch --depth=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git fetch '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -3490,10 +4595,18 @@
     prefix=--depth=
     _fzf_complete_git 'git fetch '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git fetch --depth **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git fetch --depth '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -3501,10 +4614,18 @@
     prefix=
     _fzf_complete_git 'git fetch --depth '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git fetch --deepen=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git fetch '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -3512,10 +4633,18 @@
     prefix=--deepen=
     _fzf_complete_git 'git fetch '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git fetch --deepen **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git fetch --deepen '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -3523,10 +4652,18 @@
     prefix=
     _fzf_complete_git 'git fetch --deepen '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git fetch --server-option=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git fetch '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -3534,10 +4671,18 @@
     prefix=--server-option=
     _fzf_complete_git 'git fetch '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git fetch --server-option **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git fetch --server-option '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -3545,10 +4690,18 @@
     prefix=
     _fzf_complete_git 'git fetch --server-option '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git fetch --shallow-since=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git fetch '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -3556,10 +4709,18 @@
     prefix=--shallow-since=
     _fzf_complete_git 'git fetch '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git fetch --shallow-since **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git fetch --shallow-since '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -3567,10 +4728,18 @@
     prefix=
     _fzf_complete_git 'git fetch --shallow-since '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git fetch --submodule-prefix=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git fetch '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -3578,10 +4747,18 @@
     prefix=--submodule-prefix
     _fzf_complete_git 'git fetch '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git fetch --submodule-prefix **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git fetch --submodule-prefix '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -3589,10 +4766,18 @@
     prefix=
     _fzf_complete_git 'git fetch --submodule-prefix '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git fetch --upload-pack=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git fetch '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -3600,10 +4785,18 @@
     prefix=--upload-pack
     _fzf_complete_git 'git fetch '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git fetch --upload-pack **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git fetch --upload-pack '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -3611,6 +4804,7 @@
     prefix=
     _fzf_complete_git 'git fetch --upload-pack '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
@@ -3622,6 +4816,13 @@
     run git config remotes.group1 'origin upstream'
     run git config remotes.group2 'origin upstream example'
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git fetch '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -3631,6 +4832,7 @@
         assert $5 same_as 'git fetch '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}example $reset_color  example (fetch)"
         assert ${lines[2]} same_as "${fg[yellow]}origin  $reset_color  git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
@@ -3646,6 +4848,13 @@
 @test 'Testing completion: git fetch origin **' {
     run git remote add origin ${DIR%/*}/remote.git
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git fetch origin '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -3655,6 +4864,7 @@
         assert $5 same_as 'git fetch origin '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color"
@@ -3674,6 +4884,13 @@
     run git config remotes.group1 'origin upstream'
     run git config remotes.group2 'origin upstream example'
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git fetch --multiple origin '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -3683,6 +4900,7 @@
         assert $5 same_as 'git fetch --multiple origin '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}example $reset_color  example (fetch)"
         assert ${lines[2]} same_as "${fg[yellow]}origin  $reset_color  git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
@@ -3696,6 +4914,13 @@
 }
 
 @test 'Testing completion: git pull --recurse-submodules=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -3704,6 +4929,7 @@
         assert $4 same_as 'git pull --recurse-submodules='
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as yes
         assert ${lines[2]} same_as on-demand
@@ -3715,6 +4941,13 @@
 }
 
 @test 'Testing completion: git pull --cleanup=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -3723,6 +4956,7 @@
         assert $4 same_as 'git pull --cleanup='
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as strip
         assert ${lines[2]} same_as whitespace
@@ -3736,6 +4970,13 @@
 }
 
 @test 'Testing completion: git pull --cleanup **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull --cleanup '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -3744,6 +4985,7 @@
         assert $4 same_as 'git pull --cleanup '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as strip
         assert ${lines[2]} same_as whitespace
@@ -3757,6 +4999,13 @@
 }
 
 @test 'Testing completion: git pull -s **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull -s '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -3765,6 +5014,7 @@
         assert $4 same_as 'git pull -s '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as octopus
         assert ${lines[2]} same_as ours
@@ -3778,6 +5028,13 @@
 }
 
 @test 'Testing completion: git pull -s**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -3786,6 +5043,7 @@
         assert $4 same_as 'git pull -s'
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as octopus
         assert ${lines[2]} same_as ours
@@ -3799,6 +5057,13 @@
 }
 
 @test 'Testing completion: git pull -qs **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull -qs '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -3807,6 +5072,7 @@
         assert $4 same_as 'git pull -qs '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as octopus
         assert ${lines[2]} same_as ours
@@ -3820,6 +5086,13 @@
 }
 
 @test 'Testing completion: git pull -qs**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -3828,6 +5101,7 @@
         assert $4 same_as 'git pull -qs'
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as octopus
         assert ${lines[2]} same_as ours
@@ -3841,6 +5115,13 @@
 }
 
 @test 'Testing completion: git pull --strategy=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -3849,6 +5130,7 @@
         assert $4 same_as 'git pull --strategy='
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as octopus
         assert ${lines[2]} same_as ours
@@ -3862,6 +5144,13 @@
 }
 
 @test 'Testing completion: git pull --strategy **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull --strategy '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -3870,6 +5159,7 @@
         assert $4 same_as 'git pull --strategy '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as octopus
         assert ${lines[2]} same_as ours
@@ -3883,6 +5173,13 @@
 }
 
 @test 'Testing completion: git pull -X **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull -X '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -3891,6 +5188,7 @@
         assert $4 same_as 'git pull -X '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 19
         assert ${lines[1]} same_as diff-algorithm=histogram
         assert ${lines[2]} same_as diff-algorithm=minimal
@@ -3918,6 +5216,13 @@
 }
 
 @test 'Testing completion: git pull -X**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -3926,6 +5231,7 @@
         assert $4 same_as 'git pull -X'
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 19
         assert ${lines[1]} same_as diff-algorithm=histogram
         assert ${lines[2]} same_as diff-algorithm=minimal
@@ -3953,6 +5259,13 @@
 }
 
 @test 'Testing completion: git pull -qX **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull -qX '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -3961,6 +5274,7 @@
         assert $4 same_as 'git pull -qX '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 19
         assert ${lines[1]} same_as diff-algorithm=histogram
         assert ${lines[2]} same_as diff-algorithm=minimal
@@ -3988,6 +5302,13 @@
 }
 
 @test 'Testing completion: git pull -qX**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -3996,6 +5317,7 @@
         assert $4 same_as 'git pull -qX'
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 19
         assert ${lines[1]} same_as diff-algorithm=histogram
         assert ${lines[2]} same_as diff-algorithm=minimal
@@ -4023,6 +5345,13 @@
 }
 
 @test 'Testing completion: git pull --strategy-option=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -4031,6 +5360,7 @@
         assert $4 same_as 'git pull --strategy-option='
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 19
         assert ${lines[1]} same_as diff-algorithm=histogram
         assert ${lines[2]} same_as diff-algorithm=minimal
@@ -4058,6 +5388,13 @@
 }
 
 @test 'Testing completion: git pull --strategy-option **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull --strategy-option '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -4066,6 +5403,7 @@
         assert $4 same_as 'git pull --strategy-option '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 19
         assert ${lines[1]} same_as diff-algorithm=histogram
         assert ${lines[2]} same_as diff-algorithm=minimal
@@ -4093,6 +5431,13 @@
 }
 
 @test 'Testing completion: git pull --rebase=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -4101,6 +5446,7 @@
         assert $4 same_as 'git pull --rebase='
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as false
         assert ${lines[2]} same_as interactive
@@ -4114,6 +5460,13 @@
 }
 
 @test 'Testing completion: git pull --shallow-exclude=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -4122,6 +5475,7 @@
         assert $4 same_as 'git pull --shallow-exclude='
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -4135,6 +5489,13 @@
 }
 
 @test 'Testing completion: git pull --shallow-exclude **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull --shallow-exclude '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -4143,6 +5504,7 @@
         assert $4 same_as 'git pull --shallow-exclude '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -4156,6 +5518,13 @@
 }
 
 @test 'Testing completion: git pull --negotiation-tip=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -4164,6 +5533,7 @@
         assert $4 same_as 'git pull --negotiation-tip='
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -4177,6 +5547,13 @@
 }
 
 @test 'Testing completion: git pull --negotiation-tip **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull --negotiation-tip '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -4185,6 +5562,7 @@
         assert $4 same_as 'git pull --negotiation-tip '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -4198,6 +5576,13 @@
 }
 
 @test 'Testing completion: git pull -o **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull -o '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -4205,10 +5590,18 @@
     prefix=
     _fzf_complete_git 'git pull -o '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git pull -o**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -4216,10 +5609,18 @@
     prefix=-o
     _fzf_complete_git 'git pull '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git pull -qo **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull -qo '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -4227,10 +5628,18 @@
     prefix=
     _fzf_complete_git 'git pull -qo '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git pull -qo**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -4238,10 +5647,18 @@
     prefix=-qo
     _fzf_complete_git 'git pull '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git pull --date=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -4249,10 +5666,18 @@
     prefix=--date=
     _fzf_complete_git 'git pull '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git pull --date **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull --date '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -4260,10 +5685,18 @@
     prefix=
     _fzf_complete_git 'git pull --date '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git pull --depth=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -4271,10 +5704,18 @@
     prefix=--depth=
     _fzf_complete_git 'git pull '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git pull --depth **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull --depth '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -4282,10 +5723,18 @@
     prefix=
     _fzf_complete_git 'git pull --depth '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git pull --deepen=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -4293,10 +5742,18 @@
     prefix=--deepen=
     _fzf_complete_git 'git pull '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git pull --deepen **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull --deepen '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -4304,10 +5761,18 @@
     prefix=
     _fzf_complete_git 'git pull --deepen '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git pull --log=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -4315,10 +5780,18 @@
     prefix=--log=
     _fzf_complete_git 'git pull '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git pull --server-option=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -4326,10 +5799,18 @@
     prefix=--server-option=
     _fzf_complete_git 'git pull '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git pull --server-option **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull --server-option '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -4337,10 +5818,18 @@
     prefix=
     _fzf_complete_git 'git pull --server-option '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git pull --shallow-since=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -4348,10 +5837,18 @@
     prefix=--shallow-since=
     _fzf_complete_git 'git pull '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git pull --shallow-since **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull --shallow-since '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -4359,6 +5856,7 @@
     prefix=
     _fzf_complete_git 'git pull --shallow-since '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
@@ -4366,6 +5864,13 @@
     run git remote add origin git@github.com:chitoku-k/fzf-zsh-completions
     run git remote add upstream git@example.com:example/fzf-zsh-completions
     run git remote add example example
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull '
+
+        echo 'git'
+    }
 
     _fzf_complete() {
         assert $# equals 4
@@ -4375,6 +5880,7 @@
         assert $4 same_as 'git pull '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}example $reset_color  example (fetch)"
         assert ${lines[2]} same_as "${fg[yellow]}origin  $reset_color  git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
@@ -4388,6 +5894,13 @@
 @test 'Testing completion: git pull origin **' {
     run git remote add origin ${DIR%/*}/remote.git
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull origin '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -4397,6 +5910,7 @@
         assert $5 same_as 'git pull origin '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color"
@@ -4414,6 +5928,13 @@
     run git remote add upstream git@example.com:example/fzf-zsh-completions
     run git remote add example example
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull --cleanup strip --rebase '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -4422,6 +5943,7 @@
         assert $4 same_as 'git pull --cleanup strip --rebase '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}example $reset_color  example (fetch)"
         assert ${lines[2]} same_as "${fg[yellow]}origin  $reset_color  git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
@@ -4435,6 +5957,13 @@
 @test 'Testing completion: git pull origin --cleanup strip --quiet **' {
     run git remote add origin ${DIR%/*}/remote.git
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull origin --cleanup strip --quiet '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -4444,6 +5973,7 @@
         assert $5 same_as 'git pull origin --cleanup strip --quiet '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color"
@@ -4461,6 +5991,13 @@
     run git remote add upstream git@example.com:example/fzf-zsh-completions
     run git remote add example example
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull -- '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -4469,6 +6006,7 @@
         assert $4 same_as 'git pull -- '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}example $reset_color  example (fetch)"
         assert ${lines[2]} same_as "${fg[yellow]}origin  $reset_color  git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
@@ -4482,6 +6020,13 @@
 @test 'Testing completion: git pull -- origin **' {
     run git remote add origin ${DIR%/*}/remote.git
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git pull -- origin '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -4491,6 +6036,7 @@
         assert $5 same_as 'git pull -- origin '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color"
@@ -4504,6 +6050,13 @@
 }
 
 @test 'Testing completion: git push --signed=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git push '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -4512,6 +6065,7 @@
         assert $4 same_as 'git push --signed='
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as false
         assert ${lines[2]} same_as if-asked
@@ -4523,6 +6077,13 @@
 }
 
 @test 'Testing completion: git push --push-option=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git push '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -4530,10 +6091,18 @@
     prefix=--push-option=
     _fzf_complete_git 'git push '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git push --push-option **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git push --push-option '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -4541,10 +6110,18 @@
     prefix=
     _fzf_complete_git 'git push --push-option '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git push -o**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git push '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -4552,10 +6129,18 @@
     prefix=-o
     _fzf_complete_git 'git push '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git push -o **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git push -o '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -4563,10 +6148,18 @@
     prefix=
     _fzf_complete_git 'git push -o '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git push --exec=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git push '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -4574,10 +6167,18 @@
     prefix=--exec=
     _fzf_complete_git 'git push '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git push --exec **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git push --exec '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -4585,10 +6186,18 @@
     prefix=
     _fzf_complete_git 'git push --exec '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git push --receive-pack=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git push '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -4596,10 +6205,18 @@
     prefix=--receive-pack=
     _fzf_complete_git 'git push '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git push --receive-pack **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git push --receive-pack '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -4607,10 +6224,18 @@
     prefix=
     _fzf_complete_git 'git push --receive-pack '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion: git push --force-with-lease=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git push '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -4619,6 +6244,7 @@
         assert $4 same_as 'git push --force-with-lease='
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -4632,6 +6258,13 @@
 }
 
 @test 'Testing completion: git push --force-with-lease=master:**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git push '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -4640,6 +6273,7 @@
         assert $4 same_as 'git push --force-with-lease=master:'
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -4657,6 +6291,13 @@
     run git remote add upstream git@example.com:example/fzf-zsh-completions
     run git remote add example example
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git push '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -4665,6 +6306,7 @@
         assert $4 same_as 'git push --repo='
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}example $reset_color  example (fetch)"
         assert ${lines[2]} same_as "${fg[yellow]}origin  $reset_color  git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
@@ -4680,6 +6322,13 @@
     run git remote add upstream git@example.com:example/fzf-zsh-completions
     run git remote add example example
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git push --repo '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -4688,6 +6337,7 @@
         assert $4 same_as 'git push --repo '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}example $reset_color  example (fetch)"
         assert ${lines[2]} same_as "${fg[yellow]}origin  $reset_color  git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
@@ -4699,6 +6349,13 @@
 }
 
 @test 'Testing completion: git push --recurse-submodules=**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git push '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -4707,6 +6364,7 @@
         assert $4 same_as 'git push --recurse-submodules='
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 4
         assert ${lines[1]} same_as check
         assert ${lines[2]} same_as no
@@ -4719,6 +6377,13 @@
 }
 
 @test 'Testing completion: git push --recurse-submodules **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git push --recurse-submodules '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -4727,6 +6392,7 @@
         assert $4 same_as 'git push --recurse-submodules '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 4
         assert ${lines[1]} same_as check
         assert ${lines[2]} same_as no
@@ -4743,6 +6409,13 @@
     run git remote add upstream git@example.com:example/fzf-zsh-completions
     run git remote add example example
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git push '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -4751,6 +6424,7 @@
         assert $4 same_as 'git push '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
         assert ${lines[1]} same_as "${fg[yellow]}example $reset_color  example (fetch)"
         assert ${lines[2]} same_as "${fg[yellow]}origin  $reset_color  git@github.com:chitoku-k/fzf-zsh-completions (fetch)"
@@ -4762,6 +6436,13 @@
 }
 
 @test 'Testing completion: git push origin **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git push origin '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -4771,6 +6452,7 @@
         assert $5 same_as 'git push origin '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -4786,6 +6468,13 @@
 @test 'Testing completion: git push origin master:**' {
     run git remote add origin ${DIR%/*}/remote.git
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git push origin '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -4794,6 +6483,7 @@
         assert $4 same_as 'git push origin master:'
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color"
@@ -4815,6 +6505,13 @@
     run touch file_outside_tree_object
     run git add file_outside_tree_object
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git rm '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -4825,6 +6522,7 @@
         assert $6 same_as 'git rm '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -4859,6 +6557,13 @@
 
     cd directory2
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git rm '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -4869,6 +6574,7 @@
         assert $6 same_as 'git rm '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -4893,6 +6599,13 @@
 }
 
 @test 'Testing completion: git show **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git show '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -4902,6 +6615,7 @@
         assert $5 same_as 'git show '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -4915,6 +6629,13 @@
 }
 
 @test 'Testing completion: git show HEAD **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git show HEAD '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -4924,6 +6645,7 @@
         assert $5 same_as 'git show HEAD '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -4937,6 +6659,13 @@
 }
 
 @test 'Testing completion: git show -- **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git show -- '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -4947,6 +6676,7 @@
         assert $6 same_as 'git show -- '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 1
 
         actual1=(${(0)lines[1]})
@@ -4960,6 +6690,13 @@
 }
 
 @test 'Testing completion: git show another-branch -- **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git show another-branch -- '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -4970,6 +6707,7 @@
         assert $6 same_as 'git show another-branch -- '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -4991,6 +6729,13 @@
 }
 
 @test 'Testing completion: git show another-branch:**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git show '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -5000,6 +6745,7 @@
         assert $5 same_as 'git show another-branch:'
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -5025,6 +6771,13 @@
 @test 'Testing completion in subdirectory: git show another-branch:**' {
     cd directory1
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git show '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 5
         assert $1 same_as '--ansi'
@@ -5034,6 +6787,7 @@
         assert $5 same_as 'git show another-branch:'
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -5057,6 +6811,13 @@
 }
 
 @test 'Testing completion: git show another-branch:file1 master another-branch v1:file1 -- **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git show another-branch:file1 master another-branch v1:file1 -- '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 6
         assert $1 same_as '--ansi'
@@ -5067,6 +6828,7 @@
         assert $6 same_as 'git show another-branch:file1 master another-branch v1:file1 -- '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -5093,6 +6855,13 @@
     run git notes add -m 'Note1'
     run git notes --ref=note add -m 'Note2'
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git show '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -5101,6 +6870,7 @@
         assert $4 same_as 'git show --show-notes='
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 2
 
         assert ${lines[1]} same_as "${fg[yellow]}notes/commits$reset_color  Notes added by 'git notes add'"
@@ -5115,6 +6885,13 @@
     run git notes add -m 'Note1'
     run git notes --ref=note add -m 'Note2'
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git show '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -5123,6 +6900,7 @@
         assert $4 same_as 'git show --notes='
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 2
 
         assert ${lines[1]} same_as "${fg[yellow]}notes/commits$reset_color  Notes added by 'git notes add'"
@@ -5137,6 +6915,13 @@
     run git notes add -m 'Note1'
     run git notes --ref=note add -m 'Note2'
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git "" show '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -5145,6 +6930,8 @@
         assert $# equals 2
         assert $1 same_as '--notes='
         assert $2 same_as 'git "" show '
+
+        assert __fzf_extract_command mock_times 1
     }
 
     prefix=--notes=
@@ -5154,6 +6941,13 @@
 @test 'Testing completion (alias): git commit --squash **' {
     run git config alias.squash 'commit --squash'
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git squash '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -5162,6 +6956,7 @@
         assert $4 same_as 'git squash '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -5178,6 +6973,13 @@
     run git config alias.amend 'commit --amend --message'
     run git checkout another-branch
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git amend '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -5186,6 +6988,7 @@
         assert $4 same_as 'git amend '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 2
         assert ${lines[1]} same_as "${fg[yellow]}6088ecf$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}3e209a3$reset_color  1st commit"
@@ -5198,6 +7001,13 @@
 @test 'Testing completion (alias): git commit --date **' {
     run git config alias.commit-date 'commit --date'
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit-date '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -5205,11 +7015,19 @@
     prefix=
     _fzf_complete_git 'git commit-date '
 
+    assert __fzf_extract_command mock_times 1
     assert $? equals 0
 }
 
 @test 'Testing completion (alias): git commit --pathspec-from-file **' {
     run git config alias.commit-spec 'commit --pathspec-from-file'
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit-spec '
+
+        echo 'git'
+    }
 
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
@@ -5227,10 +7045,19 @@
 
     prefix=
     _fzf_complete_git 'git commit-spec '
+
+    assert __fzf_extract_command mock_times 1
 }
 
 @test 'Testing completion (alias): git commit --cleanup **' {
     run git config alias.commit-cleanup 'commit --cleanup'
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit-cleanup '
+
+        echo 'git'
+    }
 
     _fzf_complete() {
         assert $# equals 4
@@ -5240,6 +7067,7 @@
         assert $4 same_as 'git commit-cleanup '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as strip
         assert ${lines[2]} same_as whitespace
@@ -5256,6 +7084,13 @@
     run git checkout another-branch
     run git config alias.commit-all '"" commit -a'
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit-all '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -5264,6 +7099,8 @@
         assert $# equals 2
         assert $1 same_as ''
         assert $2 same_as 'git commit-all '
+
+        assert __fzf_extract_command mock_times 1
     }
 
     prefix=
@@ -5279,6 +7116,13 @@
     echo >> ' file5 containing space '
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit-all '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 9
         assert $1 same_as '--ansi'
@@ -5292,6 +7136,7 @@
         assert $9 same_as 'git commit-all '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
 
         actual1=(${(0)lines[1]})
@@ -5318,6 +7163,13 @@
     run git config alias.foo bar
     run git config alias.bar 'commit --squash'
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git foo '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -5326,6 +7178,7 @@
         assert $4 same_as 'git foo '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -5343,6 +7196,13 @@
     run git config alias.bar baz
     run git config alias.baz foo
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git foo '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         fail '_fzf_complete should not be invoked'
     }
@@ -5351,6 +7211,8 @@
         assert $# equals 2
         assert $1 same_as ''
         assert $2 same_as 'git foo '
+
+        assert __fzf_extract_command mock_times 1
     }
 
     prefix=
@@ -5360,6 +7222,13 @@
 @test 'Testing completion (alias and expansion)' {
     run git config alias.squash 'commit --squash'
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '"git"  "squash" '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -5368,6 +7237,7 @@
         assert $4 same_as '"git"  "squash" '
 
         run cat
+        assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 5
         assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
         assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
@@ -5387,7 +7257,16 @@
     echo >> ' file5 containing space '
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git checkout -- '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
+        assert __fzf_extract_command mock_times 1
+
         fzf_options=($@) run preview ' M  file3 containing space '
         assert $output is_not_empty
 
@@ -5412,7 +7291,16 @@
     echo >> ' file5 containing space '
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git commit -- '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
+        assert __fzf_extract_command mock_times 1
+
         fzf_options=($@) run preview ' M  file3 containing space '
         assert $output is_not_empty
 
@@ -5437,7 +7325,16 @@
     echo >> ' file5 containing space '
     echo >> directory2/$'file6\ncontaining\nnewlines'
 
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git add '
+
+        echo 'git'
+    }
+
     _fzf_complete() {
+        assert __fzf_extract_command mock_times 1
+
         fzf_options=($@) run preview ' M  file3 containing space '
         assert $output is_not_empty
 
