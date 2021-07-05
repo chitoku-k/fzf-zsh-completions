@@ -17,9 +17,9 @@ _fzf_complete_systemctl-units() {
     local fzf_options=$1
     shift
 
-    local arguments=$(_fzf_complete_trim_env $@)
+    local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env $@)"}[@]}")
     local systemctl_options=(--full --no-legend --no-pager)
-    systemctl_options+=($(_fzf_complete_parse_option '' '--user --system' '' $arguments)) || :
+    systemctl_options+=($(_fzf_complete_parse_option '' '--user --system' '' "${${(q)arguments[@]}}")) || :
 
     _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)${_fzf_complete_preview_systemctl_status/\$SYSTEMCTL_OPTIONS/$systemctl_options}}} ${(Q)${(Z+n+)FZF_DEFAULT_OPTS}} -- $@ < \
         <({
