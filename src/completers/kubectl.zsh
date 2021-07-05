@@ -101,18 +101,17 @@ _fzf_complete_kubectl() {
     )
     local kubectl_options_argument_optional=()
 
-
     for inherit_option in ${kubectl_inherited_options_argument_required[@]} ${kubectl_inherited_options[@]}; do
         if [[ $inherit_option = --* ]]; then
             for arg in "$@" "$RBUFFER"; do
                 if inherit_values=$(_fzf_complete_parse_option_arguments '' "$inherit_option" "${(F)kubectl_options_argument_required}" "$arg"); then
-                    kubectl_arguments+=($inherit_values)
+                    kubectl_arguments+=("${(Q)${(z)inherit_values}[@]}")
                 fi
             done
         else
             for arg in "$@" "$RBUFFER"; do
                 if inherit_values=$(_fzf_complete_parse_option_arguments "$inherit_option" '' "${(F)kubectl_options_argument_required}" "$arg"); then
-                    kubectl_arguments+=($inherit_values)
+                    kubectl_arguments+=("${(Q)${(z)inherit_values}[@]}")
                 fi
             done
         fi
@@ -173,16 +172,16 @@ _fzf_complete_kubectl() {
 
         if [[ -z $completing_option ]]; then
             if [[ -z $resource ]]; then
-                _fzf_complete_kubectl-resources '' $@
+                _fzf_complete_kubectl-resources '' "$@"
                 return
             fi
 
             if [[ -z $name ]]; then
-                _fzf_complete_kubectl-resource-names '' $@
+                _fzf_complete_kubectl-resource-names '' "$@"
                 return
             fi
 
-            _fzf_complete_kubectl-annotations '--multi' $@
+            _fzf_complete_kubectl-annotations '--multi' "$@"
             return
         fi
     fi
@@ -217,15 +216,15 @@ _fzf_complete_kubectl() {
 
         if [[ -z $completing_option ]] && [[ ${#subcommands[@]} = 2 ]]; then
             if [[ -z $resource ]]; then
-                _fzf_complete_kubectl-resources '' $@
+                _fzf_complete_kubectl-resources '' "$@"
                 return
             fi
 
             if [[ -z $name ]]; then
                 if [[ ${subcommands[2]} = 'edit-last-applied' ]]; then
-                    _fzf_complete_kubectl-resource-names '' $@
+                    _fzf_complete_kubectl-resource-names '' "$@"
                 elif [[ ${subcommands[2]} = 'view-last-applied' ]]; then
-                    _fzf_complete_kubectl-resource-names '--multi' $@
+                    _fzf_complete_kubectl-resource-names '--multi' "$@"
                 fi
             fi
             return
@@ -275,11 +274,11 @@ _fzf_complete_kubectl() {
 
         if [[ -z $completing_option ]]; then
             if [[ -z $resource ]]; then
-                _fzf_complete_kubectl-resources '' $@
+                _fzf_complete_kubectl-resources '' "$@"
                 return
             fi
 
-            _fzf_complete_kubectl-resource-names '' $@
+            _fzf_complete_kubectl-resource-names '' "$@"
             return
         fi
     fi
@@ -305,7 +304,7 @@ _fzf_complete_kubectl() {
         fi
 
         if [[ -z $completing_option ]]; then
-            _fzf_complete_kubectl-resource-names '' $@
+            _fzf_complete_kubectl-resource-names '' "$@"
             return
         fi
     fi
@@ -406,13 +405,13 @@ _fzf_complete_kubectl() {
                 prefix=${prefix##*/}
                 prefix_option=${prefix_option##*/}cronjob/
                 resource=cronjob
-                _fzf_complete_kubectl-resource-names '' $@
+                _fzf_complete_kubectl-resource-names '' "$@"
                 return
             fi
         fi
 
         if [[ -z $completing_option ]]; then
-            _fzf_complete_constants '' "${(F)set_subcommands}" $@
+            _fzf_complete_constants '' "${(F)set_subcommands}" "$@"
             return
         fi
     fi
@@ -455,11 +454,11 @@ _fzf_complete_kubectl() {
 
         if [[ -z $completing_option ]]; then
             if [[ -z $resource ]]; then
-                _fzf_complete_kubectl-resources '' $@
+                _fzf_complete_kubectl-resources '' "$@"
                 return
             fi
 
-            _fzf_complete_kubectl-resource-names '--multi' $@
+            _fzf_complete_kubectl-resource-names '--multi' "$@"
             return
         fi
 
@@ -470,7 +469,7 @@ _fzf_complete_kubectl() {
                 prefix=${prefix#$label_columns}
             fi
 
-            _fzf_complete_kubectl-label-columns '--multi' $@
+            _fzf_complete_kubectl-label-columns '--multi' "$@"
             return
         fi
     fi
@@ -499,12 +498,12 @@ _fzf_complete_kubectl() {
         fi
 
         if [[ -z $completing_option ]]; then
-            _fzf_complete_kubectl-resource-names '' $@
+            _fzf_complete_kubectl-resource-names '' "$@"
             return
         fi
 
         if [[ $completing_option =~ '^(-c|--container)$' ]]; then
-            _fzf_complete_kubectl-containers '' $@
+            _fzf_complete_kubectl-containers '' "$@"
             return
         fi
     fi
@@ -522,7 +521,7 @@ _fzf_complete_kubectl() {
         fi
 
         if [[ -z $completing_option ]]; then
-            _fzf_complete_kubectl-resources '' $@
+            _fzf_complete_kubectl-resources '' "$@"
             return
         fi
     fi
@@ -555,16 +554,16 @@ _fzf_complete_kubectl() {
 
         if [[ -z $completing_option ]]; then
             if [[ -z $resource ]]; then
-                _fzf_complete_kubectl-resources '' $@
+                _fzf_complete_kubectl-resources '' "$@"
                 return
             fi
 
             if [[ -z $name ]]; then
-                _fzf_complete_kubectl-resource-names '' $@
+                _fzf_complete_kubectl-resource-names '' "$@"
                 return
             fi
 
-            _fzf_complete_kubectl-labels '--multi' $@
+            _fzf_complete_kubectl-labels '--multi' "$@"
             return
         fi
     fi
@@ -598,12 +597,12 @@ _fzf_complete_kubectl() {
         fi
 
         if [[ -z $completing_option ]]; then
-            _fzf_complete_kubectl-resource-names '' $@
+            _fzf_complete_kubectl-resource-names '' "$@"
             return
         fi
 
         if [[ $completing_option =~ '^(-c|--container)$' ]]; then
-            _fzf_complete_kubectl-containers '' $@
+            _fzf_complete_kubectl-containers '' "$@"
             return
         fi
     fi
@@ -630,13 +629,13 @@ _fzf_complete_kubectl() {
 
         if [[ -z $completing_option ]]; then
             if [[ -z $name ]]; then
-                _fzf_complete_kubectl-resource-names '' $@
+                _fzf_complete_kubectl-resource-names '' "$@"
                 return
             fi
 
             prefix_option=${prefix/:*/:}
             prefix=${prefix#$prefix_option}
-            _fzf_complete_kubectl-ports '--multi' $@
+            _fzf_complete_kubectl-ports '--multi' "$@"
             return
         fi
     fi
@@ -654,16 +653,16 @@ _fzf_complete_kubectl() {
         if [[ -z $completing_option ]]; then
             if [[ ${#subcommands[@]} != 2 ]]; then
                 local rollout_subcommands=(history pause restart resume status undo)
-                _fzf_complete_constants '' "${(F)rollout_subcommands}" $@
+                _fzf_complete_constants '' "${(F)rollout_subcommands}" "$@"
                 return
             fi
 
             if [[ -z $resource ]]; then
-                _fzf_complete_kubectl-resources '' $@
+                _fzf_complete_kubectl-resources '' "$@"
                 return
             fi
 
-            _fzf_complete_kubectl-resource-names '--multi' $@
+            _fzf_complete_kubectl-resource-names '--multi' "$@"
             return
         fi
     fi
@@ -707,22 +706,22 @@ _fzf_complete_kubectl() {
         if [[ -z $completing_option ]]; then
             if [[ ${#subcommands[@]} != 2 ]]; then
                 local set_subcommands=(env image resources selector serviceaccount subject)
-                _fzf_complete_constants '' "${(F)set_subcommands}" $@
+                _fzf_complete_constants '' "${(F)set_subcommands}" "$@"
                 return
             fi
 
             if [[ -z $resource ]]; then
-                _fzf_complete_kubectl-resources '' $@
+                _fzf_complete_kubectl-resources '' "$@"
                 return
             fi
 
             if [[ -z $name ]]; then
-                _fzf_complete_kubectl-resource-names '' $@
+                _fzf_complete_kubectl-resource-names '' "$@"
                 return
             fi
 
             if [[ ${subcommands[2]} = 'image' ]]; then
-                _fzf_complete_kubectl-containers '--multi' $@
+                _fzf_complete_kubectl-containers '--multi' "$@"
                 return
             fi
             return
@@ -752,16 +751,16 @@ _fzf_complete_kubectl() {
         if [[ -z $completing_option ]]; then
             if [[ -z $resource ]]; then
                 local taint_resources=(nodes)
-                _fzf_complete_constants '' "${(F)taint_resources}" $@
+                _fzf_complete_constants '' "${(F)taint_resources}" "$@"
                 return
             fi
 
             if [[ -z $name ]]; then
-                _fzf_complete_kubectl-resource-names '' $@
+                _fzf_complete_kubectl-resource-names '' "$@"
                 return
             fi
 
-            _fzf_complete_kubectl-taints '--multi' $@
+            _fzf_complete_kubectl-taints '--multi' "$@"
             return
         fi
     fi
@@ -785,12 +784,12 @@ _fzf_complete_kubectl() {
         if [[ -z $completing_option ]]; then
             if [[ -z $resource ]]; then
                 local top_resources=(nodes pods)
-                _fzf_complete_constants '' "${(F)top_resources}" $@
+                _fzf_complete_constants '' "${(F)top_resources}" "$@"
                 return
             fi
 
             if [[ -z $name ]]; then
-                _fzf_complete_kubectl-resource-names '' $@
+                _fzf_complete_kubectl-resource-names '' "$@"
                 return
             fi
             return
@@ -839,11 +838,15 @@ _fzf_complete_kubectl() {
     fi
 
     if [[ $completing_option =~ '^(-n|--namespace)$' ]]; then
-        kubectl_arguments=${kubectl_arguments:#\'-l*}
-        kubectl_arguments=${kubectl_arguments:#\'--selector*}
+        kubectl_arguments[${kubectl_arguments[(i)-l]},${kubectl_arguments[(i)-l]}+1]=()
+        kubectl_arguments[${kubectl_arguments[(i)--selector]},${kubectl_arguments[(i)--selector]}+1]=()
+        kubectl_arguments=("${(@)kubectl_arguments:#-l*}")
+        kubectl_arguments=("${(@)kubectl_arguments:#--selector*}")
+        kubectl_arguments=("${(@)kubectl_arguments:#-n}")
+        kubectl_arguments=("${(@)kubectl_arguments:#--namespace=}")
 
         resource=namespaces
-        _fzf_complete_kubectl-resource-names '' $@
+        _fzf_complete_kubectl-resource-names '' "$@"
         return
     fi
 
@@ -864,17 +867,17 @@ _fzf_complete_kubectl() {
             local selector=${prefix%=*}=
             prefix_option=$prefix_option$selector
             prefix=${prefix#$selector}
-            _fzf_complete_kubectl-selectors '' $@
+            _fzf_complete_kubectl-selectors '' "$@"
             return
         fi
 
-        _fzf_complete_kubectl-selectors '--multi' $@
+        _fzf_complete_kubectl-selectors '--multi' "$@"
         return
     fi
 
     if [[ $completing_option =~ '^(-f|--filename)$' ]]; then
         if [[ $last_argument =~ '(-[^-]*f|--filename)$' ]]; then
-            __fzf_generic_path_completion "$prefix" $@ _fzf_compgen_path '' '' ' '
+            __fzf_generic_path_completion "$prefix" "$@" _fzf_compgen_path '' '' ' '
             return
         fi
 
@@ -882,15 +885,15 @@ _fzf_complete_kubectl() {
         return
     fi
 
-    _fzf_path_completion "$prefix" $@
+    _fzf_path_completion "$prefix" "$@"
 }
 
 _fzf_complete_kubectl-resources() {
     local fzf_options=$1
     shift
 
-    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@ < <(
-        kubectl api-resources --cached --verbs=get ${(Q)${(z)kubectl_arguments}} |
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@" < <(
+        kubectl api-resources --cached --verbs=get "${kubectl_arguments[@]}" |
         _fzf_complete_colorize $fg[yellow]
     )
 }
@@ -924,7 +927,7 @@ _fzf_complete_kubectl-resource-names() {
     fi
 
     _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
-        local result=$(kubectl get "$resource" -o wide ${(Q)${(z)kubectl_arguments}} 2> /dev/null)
+        local result=$(kubectl get "$resource" -o wide "${kubectl_arguments[@]}" 2> /dev/null)
         if [[ $result = NAMESPACE\ * ]]; then
             _fzf_complete_colorize $fg[green] $fg[yellow] | awk '{ print SUBSEP $0 }'
         else
@@ -962,8 +965,8 @@ _fzf_complete_kubectl-containers() {
 
     _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <({
         echo NAME IMAGE
-        kubectl get "$resource" "$name" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{range ..initContainers[*]}{.name} {.image}{"\n"}{end}' 2> /dev/null
-        kubectl get "$resource" "$name" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{range ..containers[*]}{.name} {.image}{"\n"}{end}' 2> /dev/null
+        kubectl get "$resource" "$name" "${kubectl_arguments[@]}" -o jsonpath='{range ..initContainers[*]}{.name} {.image}{"\n"}{end}' 2> /dev/null
+        kubectl get "$resource" "$name" "${kubectl_arguments[@]}" -o jsonpath='{range ..containers[*]}{.name} {.image}{"\n"}{end}' 2> /dev/null
     } | _fzf_complete_tabularize $fg[yellow])
 }
 
@@ -981,7 +984,7 @@ _fzf_complete_kubectl-ports() {
     shift
 
     _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
-        kubectl get "$resource" "$name" ${(Q)${(z)kubectl_arguments}} -o jsonpath='PORT PROTOCOL NAME{"\n"}{range ..ports[*]}{.targetPort} {.containerPort} {.protocol} {.name}{"\n"}{end}' 2> /dev/null |
+        kubectl get "$resource" "$name" "${kubectl_arguments[@]}" -o jsonpath='PORT PROTOCOL NAME{"\n"}{range ..ports[*]}{.targetPort} {.containerPort} {.protocol} {.name}{"\n"}{end}' 2> /dev/null |
         awk '{ print $1, $2, $3 }' |
         _fzf_complete_tabularize $fg[yellow] $reset_color
     )
@@ -996,7 +999,7 @@ _fzf_complete_kubectl-annotations() {
     shift
 
     _fzf_complete --ansi --read0 --print0 --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <({
-        kubectl get "$resource" "$name" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{.metadata.annotations}' | jq -jr 'to_entries | map("\(.key)=\(.value)") | join("\u0000")'
+        kubectl get "$resource" "$name" "${kubectl_arguments[@]}" -o jsonpath='{.metadata.annotations}' | jq -jr 'to_entries | map("\(.key)=\(.value)") | join("\u0000")'
     } 2> /dev/null)
 }
 
@@ -1021,7 +1024,7 @@ _fzf_complete_kubectl-labels() {
     _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
         _fzf_complete_tabularize $fg[yellow] < <({
             echo KEY VALUE
-            kubectl get "$resource" "$name" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{.metadata.labels}' |
+            kubectl get "$resource" "$name" "${kubectl_arguments[@]}" -o jsonpath='{.metadata.labels}' |
                 jq -r 'to_entries[] | "\(.key) \(.value)"'
         } 2> /dev/null)
     )
@@ -1063,7 +1066,7 @@ _fzf_complete_kubectl-selectors() {
                 echo KEY VALUE
             fi
 
-            kubectl get "${resource:-all}" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{.items[*].metadata.labels}' |
+            kubectl get "${resource:-all}" "${kubectl_arguments[@]}" -o jsonpath='{.items[*].metadata.labels}' |
                 if [[ $prefix_option = *! ]]; then
                     jq --slurp -r 'map(to_entries[]) | group_by(.key) | map("\(first | .key) \(map(.value) | unique | join(", "))")[]'
                 elif [[ $prefix_option = *= ]] && [[ -n $selector ]]; then
@@ -1101,7 +1104,7 @@ _fzf_complete_kubectl-label-columns() {
     _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
         _fzf_complete_tabularize $fg[yellow] < <({
             echo KEY VALUES
-            kubectl get "$resource" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{.items[*].metadata.labels}' |
+            kubectl get "$resource" "${kubectl_arguments[@]}" -o jsonpath='{.items[*].metadata.labels}' |
                 jq --slurp -r 'map(to_entries[]) | group_by(.key) | map("\(first | .key) \(map(.value) | unique | join(", "))")[]'
         } 2> /dev/null)
     )
@@ -1118,7 +1121,7 @@ _fzf_complete_kubectl-taints() {
     _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- $@$prefix_option < <(
         _fzf_complete_tabularize $fg[yellow] $reset_color < <(
             echo KEY VALUE EFFECT
-            kubectl get "$resource" "$name" ${(Q)${(z)kubectl_arguments}} -o jsonpath='{range .spec.taints[*]}{.key} {.value} {.effect}{"\n"}{end}' 2> /dev/null
+            kubectl get "$resource" "$name" "${kubectl_arguments[@]}" -o jsonpath='{range .spec.taints[*]}{.key} {.value} {.effect}{"\n"}{end}' 2> /dev/null
         )
     )
 }
