@@ -1,16 +1,20 @@
+typeset -g mock_dir=${funcsourcetrace[1]:P:h:h}/_support/mock
+
 mock() {
     local target=$1
     shift
 
-    echo 0 > ${target}_mock_times
+    local mock_timesfile=$mock_dir/${target}_mock_times
+    echo 0 > $mock_timesfile
 
     $target() {
         local target=${funcstack[1]}
-        local mock_times=$(($(cat -- ${target}_mock_times) + 1))
-        local mock_failfile=${target}_mock_${mock_times}_fail
-        echo $mock_times > ${target}_mock_times
+        local mock_timesfile=$mock_dir/${target}_mock_times
+        local mock_times=$(($(cat -- $mock_timesfile) + 1))
+        local mock_failfile=$mock_dir/${target}_mock_${mock_times}_fail
+        echo $mock_times > $mock_timesfile
 
-        if ${target}_mock_$mock_times $@ &> $mock_failfile; then
+        if ${target}_mock_$mock_times "$@" &> $mock_failfile; then
             cat -- $mock_failfile
             rm -- $mock_failfile
         fi
@@ -25,14 +29,17 @@ unmock() {
         unfunction $target
     fi
 
+    local mock_timesfile=$mock_dir/${target}_mock_times
+    local mock_failfile=$mock_dir/${mock}_fail
+
     local i
-    local len=$(cat -- ${target}_mock_times)
+    local len=$(cat -- $mock_timesfile)
     for (( i = 1; i <= len; i++ )); do
         local mock=${target}_mock_$i
-        if [[ -e ${mock}_fail ]]; then
-            echo "$mock: $(cat -- ${mock}_fail)"
+        if [[ -e $mock_failfile ]]; then
+            echo "$mock: $(cat -- $mock_failfile)"
         fi
     done
 
-    rm -f -- ${target}_mock_times ${target}_mock_*_fail(N)
+    rm -f -- $mock_timesfile $mock_dir/${target}_mock_*_fail(N)
 }
