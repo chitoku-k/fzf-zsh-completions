@@ -1,6 +1,7 @@
 #!/usr/bin/env zsh
 
 _fzf_complete_make() {
+    setopt local_options no_aliases
     _fzf_complete_make-target '' "$@"
 }
 
