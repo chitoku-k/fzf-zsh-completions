@@ -4,6 +4,7 @@ autoload -U colors
 colors
 
 _fzf_complete_kubectl() {
+    setopt local_options no_aliases
     local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$@")"}[@]}")
     local kubectl_arguments=()
     local last_argument=${arguments[-1]}

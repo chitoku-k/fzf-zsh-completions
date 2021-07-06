@@ -1,6 +1,7 @@
 #!/usr/bin/env zsh
 
 _fzf_complete_yarn() {
+    setopt local_options no_aliases
     local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$@")"}[@]}")
     local subcommand=${arguments[2]}
 

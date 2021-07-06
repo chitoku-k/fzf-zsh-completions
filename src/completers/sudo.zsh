@@ -1,6 +1,7 @@
 #!/usr/bin/env zsh
 
 _fzf_complete_sudo() {
+    setopt local_options no_aliases
     local args=("${(Q)${(z)@}[@]}")
     local subcommand=${args:1:1}
 

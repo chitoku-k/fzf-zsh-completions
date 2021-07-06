@@ -14,6 +14,7 @@ _fzf_complete_systemctl() {
 }
 
 _fzf_complete_systemctl-units() {
+    setopt local_options no_aliases
     local fzf_options=$1
     shift
 

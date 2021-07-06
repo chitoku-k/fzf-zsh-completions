@@ -57,7 +57,7 @@ PREVIEW_OPTIONS
 )
 
 _fzf_complete_git() {
-    setopt local_options extended_glob
+    setopt local_options extended_glob no_aliases
     local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$@")"}[@]}")
     local resolved_commands=()
 
