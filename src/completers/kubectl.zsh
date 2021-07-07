@@ -1106,7 +1106,7 @@ _fzf_complete_kubectl-field-selectors() {
         selector=${selector%,}
         kubectl_arguments+=(--field-selector=$selector)
     elif [[ $selector = *= ]]; then
-        kubectl_arguments+=(--field-selector=${${selector%,*}%*=})
+        kubectl_arguments+=(--field-selector=${${selector%,*}%%*=})
         selector=${${${selector##*,}%%=*}%%!}
     fi
 

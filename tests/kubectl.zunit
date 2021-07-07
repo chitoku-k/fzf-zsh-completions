@@ -10718,6 +10718,377 @@
     _fzf_complete_kubectl 'kubectl get pods '
 }
 
+@test 'Testing completion: kubectl get pods --field-selector=metadata.name**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '--all-namespaces'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={.items[*]}'
+
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"test-0000000000-00000","namespace":"default"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.1","podIPs":[{"ip":"10.0.0.1"},{"ip":"fd00::1"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"etcd-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.2","podIPs":[{"ip":"10.0.0.2"},{"ip":"fd00::2"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-apiserver-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.3","podIPs":[{"ip":"10.0.0.3"},{"ip":"fd00::3"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-controller-manager-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.4","podIPs":[{"ip":"10.0.0.4"},{"ip":"fd00::4"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-proxy-00000","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.5","podIPs":[{"ip":"10.0.0.5"},{"ip":"fd00::5"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-scheduler-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.6","podIPs":[{"ip":"10.0.0.6"},{"ip":"fd00::6"}]}}'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl get pods '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl get pods --field-selector='
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 28
+        assert ${lines[1]} same_as "${fg[yellow]}KEY                     $reset_color  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}metadata.name           $reset_color  etcd-minikube"
+        assert ${lines[3]} same_as "${fg[yellow]}metadata.name           $reset_color  kube-apiserver-minikube"
+        assert ${lines[4]} same_as "${fg[yellow]}metadata.name           $reset_color  kube-controller-manager-minikube"
+        assert ${lines[5]} same_as "${fg[yellow]}metadata.name           $reset_color  kube-proxy-00000"
+        assert ${lines[6]} same_as "${fg[yellow]}metadata.name           $reset_color  kube-scheduler-minikube"
+        assert ${lines[7]} same_as "${fg[yellow]}metadata.name           $reset_color  test-0000000000-00000"
+        assert ${lines[8]} same_as "${fg[yellow]}metadata.namespace      $reset_color  default"
+        assert ${lines[9]} same_as "${fg[yellow]}metadata.namespace      $reset_color  kube-system"
+        assert ${lines[10]} same_as "${fg[yellow]}spec.host               $reset_color  "
+        assert ${lines[11]} same_as "${fg[yellow]}spec.nodeName           $reset_color  minikube"
+        assert ${lines[12]} same_as "${fg[yellow]}spec.restartPolicy      $reset_color  Always"
+        assert ${lines[13]} same_as "${fg[yellow]}spec.schedulerName      $reset_color  default-scheduler"
+        assert ${lines[14]} same_as "${fg[yellow]}spec.serviceAccountName $reset_color  default"
+        assert ${lines[15]} same_as "${fg[yellow]}status.nominatedNodeName$reset_color  "
+        assert ${lines[16]} same_as "${fg[yellow]}status.phase            $reset_color  Running"
+        assert ${lines[17]} same_as "${fg[yellow]}status.podIP            $reset_color  10.0.0.1"
+        assert ${lines[18]} same_as "${fg[yellow]}status.podIP            $reset_color  10.0.0.2"
+        assert ${lines[19]} same_as "${fg[yellow]}status.podIP            $reset_color  10.0.0.3"
+        assert ${lines[20]} same_as "${fg[yellow]}status.podIP            $reset_color  10.0.0.4"
+        assert ${lines[21]} same_as "${fg[yellow]}status.podIP            $reset_color  10.0.0.5"
+        assert ${lines[22]} same_as "${fg[yellow]}status.podIP            $reset_color  10.0.0.6"
+        assert ${lines[23]} same_as "${fg[yellow]}status.podIPs           $reset_color  10.0.0.1\\\\\\,fd00::1"
+        assert ${lines[24]} same_as "${fg[yellow]}status.podIPs           $reset_color  10.0.0.2\\\\\\,fd00::2"
+        assert ${lines[25]} same_as "${fg[yellow]}status.podIPs           $reset_color  10.0.0.3\\\\\\,fd00::3"
+        assert ${lines[26]} same_as "${fg[yellow]}status.podIPs           $reset_color  10.0.0.4\\\\\\,fd00::4"
+        assert ${lines[27]} same_as "${fg[yellow]}status.podIPs           $reset_color  10.0.0.5\\\\\\,fd00::5"
+        assert ${lines[28]} same_as "${fg[yellow]}status.podIPs           $reset_color  10.0.0.6\\\\\\,fd00::6"
+    }
+
+    prefix=--field-selector=metadata.name
+    _fzf_complete_kubectl 'kubectl get pods '
+}
+
+@test 'Testing completion: kubectl get pods --field-selector=metadata.name=**' {
+    kubectl_mock_1() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '--all-namespaces'
+        assert $4 same_as '--field-selector='
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath={.items[*]}'
+
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"test-0000000000-00000","namespace":"default"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.1","podIPs":[{"ip":"10.0.0.1"},{"ip":"fd00::1"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"etcd-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.2","podIPs":[{"ip":"10.0.0.2"},{"ip":"fd00::2"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-apiserver-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.3","podIPs":[{"ip":"10.0.0.3"},{"ip":"fd00::3"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-controller-manager-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.4","podIPs":[{"ip":"10.0.0.4"},{"ip":"fd00::4"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-proxy-00000","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.5","podIPs":[{"ip":"10.0.0.5"},{"ip":"fd00::5"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-scheduler-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.6","podIPs":[{"ip":"10.0.0.6"},{"ip":"fd00::6"}]}}'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl get pods '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl get pods --field-selector=metadata.name='
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}KEY          $reset_color  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}metadata.name$reset_color  etcd-minikube"
+        assert ${lines[3]} same_as "${fg[yellow]}metadata.name$reset_color  kube-apiserver-minikube"
+        assert ${lines[4]} same_as "${fg[yellow]}metadata.name$reset_color  kube-controller-manager-minikube"
+        assert ${lines[5]} same_as "${fg[yellow]}metadata.name$reset_color  kube-proxy-00000"
+        assert ${lines[6]} same_as "${fg[yellow]}metadata.name$reset_color  kube-scheduler-minikube"
+        assert ${lines[7]} same_as "${fg[yellow]}metadata.name$reset_color  test-0000000000-00000"
+    }
+
+    prefix=--field-selector=metadata.name=
+    _fzf_complete_kubectl 'kubectl get pods '
+}
+
+@test 'Testing completion: kubectl get pods --field-selector=metadata.name=etcd**' {
+    kubectl_mock_1() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '--all-namespaces'
+        assert $4 same_as '--field-selector='
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath={.items[*]}'
+
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"test-0000000000-00000","namespace":"default"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.1","podIPs":[{"ip":"10.0.0.1"},{"ip":"fd00::1"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"etcd-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.2","podIPs":[{"ip":"10.0.0.2"},{"ip":"fd00::2"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-apiserver-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.3","podIPs":[{"ip":"10.0.0.3"},{"ip":"fd00::3"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-controller-manager-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.4","podIPs":[{"ip":"10.0.0.4"},{"ip":"fd00::4"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-proxy-00000","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.5","podIPs":[{"ip":"10.0.0.5"},{"ip":"fd00::5"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-scheduler-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.6","podIPs":[{"ip":"10.0.0.6"},{"ip":"fd00::6"}]}}'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl get pods '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl get pods --field-selector=metadata.name='
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}KEY          $reset_color  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}metadata.name$reset_color  etcd-minikube"
+        assert ${lines[3]} same_as "${fg[yellow]}metadata.name$reset_color  kube-apiserver-minikube"
+        assert ${lines[4]} same_as "${fg[yellow]}metadata.name$reset_color  kube-controller-manager-minikube"
+        assert ${lines[5]} same_as "${fg[yellow]}metadata.name$reset_color  kube-proxy-00000"
+        assert ${lines[6]} same_as "${fg[yellow]}metadata.name$reset_color  kube-scheduler-minikube"
+        assert ${lines[7]} same_as "${fg[yellow]}metadata.name$reset_color  test-0000000000-00000"
+    }
+
+    prefix=--field-selector=metadata.name=etcd
+    _fzf_complete_kubectl 'kubectl get pods '
+}
+
+@test 'Testing completion: kubectl get pods --field-selector=metadata.name==**' {
+    kubectl_mock_1() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '--all-namespaces'
+        assert $4 same_as '--field-selector='
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath={.items[*]}'
+
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"test-0000000000-00000","namespace":"default"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.1","podIPs":[{"ip":"10.0.0.1"},{"ip":"fd00::1"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"etcd-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.2","podIPs":[{"ip":"10.0.0.2"},{"ip":"fd00::2"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-apiserver-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.3","podIPs":[{"ip":"10.0.0.3"},{"ip":"fd00::3"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-controller-manager-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.4","podIPs":[{"ip":"10.0.0.4"},{"ip":"fd00::4"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-proxy-00000","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.5","podIPs":[{"ip":"10.0.0.5"},{"ip":"fd00::5"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-scheduler-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.6","podIPs":[{"ip":"10.0.0.6"},{"ip":"fd00::6"}]}}'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl get pods '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl get pods --field-selector=metadata.name=='
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}KEY          $reset_color  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}metadata.name$reset_color  etcd-minikube"
+        assert ${lines[3]} same_as "${fg[yellow]}metadata.name$reset_color  kube-apiserver-minikube"
+        assert ${lines[4]} same_as "${fg[yellow]}metadata.name$reset_color  kube-controller-manager-minikube"
+        assert ${lines[5]} same_as "${fg[yellow]}metadata.name$reset_color  kube-proxy-00000"
+        assert ${lines[6]} same_as "${fg[yellow]}metadata.name$reset_color  kube-scheduler-minikube"
+        assert ${lines[7]} same_as "${fg[yellow]}metadata.name$reset_color  test-0000000000-00000"
+    }
+
+    prefix=--field-selector=metadata.name==
+    _fzf_complete_kubectl 'kubectl get pods '
+}
+
+@test 'Testing completion: kubectl get pods --field-selector=metadata.name==etcd**' {
+    kubectl_mock_1() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '--all-namespaces'
+        assert $4 same_as '--field-selector='
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath={.items[*]}'
+
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"test-0000000000-00000","namespace":"default"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.1","podIPs":[{"ip":"10.0.0.1"},{"ip":"fd00::1"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"etcd-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.2","podIPs":[{"ip":"10.0.0.2"},{"ip":"fd00::2"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-apiserver-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.3","podIPs":[{"ip":"10.0.0.3"},{"ip":"fd00::3"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-controller-manager-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.4","podIPs":[{"ip":"10.0.0.4"},{"ip":"fd00::4"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-proxy-00000","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.5","podIPs":[{"ip":"10.0.0.5"},{"ip":"fd00::5"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-scheduler-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.6","podIPs":[{"ip":"10.0.0.6"},{"ip":"fd00::6"}]}}'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl get pods '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl get pods --field-selector=metadata.name=='
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}KEY          $reset_color  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}metadata.name$reset_color  etcd-minikube"
+        assert ${lines[3]} same_as "${fg[yellow]}metadata.name$reset_color  kube-apiserver-minikube"
+        assert ${lines[4]} same_as "${fg[yellow]}metadata.name$reset_color  kube-controller-manager-minikube"
+        assert ${lines[5]} same_as "${fg[yellow]}metadata.name$reset_color  kube-proxy-00000"
+        assert ${lines[6]} same_as "${fg[yellow]}metadata.name$reset_color  kube-scheduler-minikube"
+        assert ${lines[7]} same_as "${fg[yellow]}metadata.name$reset_color  test-0000000000-00000"
+    }
+
+    prefix=--field-selector=metadata.name==etcd
+    _fzf_complete_kubectl 'kubectl get pods '
+}
+
+@test 'Testing completion: kubectl get pods --field-selector=metadata.name!=**' {
+    kubectl_mock_1() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '--all-namespaces'
+        assert $4 same_as '--field-selector='
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath={.items[*]}'
+
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"test-0000000000-00000","namespace":"default"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.1","podIPs":[{"ip":"10.0.0.1"},{"ip":"fd00::1"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"etcd-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.2","podIPs":[{"ip":"10.0.0.2"},{"ip":"fd00::2"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-apiserver-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.3","podIPs":[{"ip":"10.0.0.3"},{"ip":"fd00::3"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-controller-manager-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.4","podIPs":[{"ip":"10.0.0.4"},{"ip":"fd00::4"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-proxy-00000","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.5","podIPs":[{"ip":"10.0.0.5"},{"ip":"fd00::5"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-scheduler-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.6","podIPs":[{"ip":"10.0.0.6"},{"ip":"fd00::6"}]}}'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl get pods '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl get pods --field-selector=metadata.name!='
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}KEY          $reset_color  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}metadata.name$reset_color  etcd-minikube"
+        assert ${lines[3]} same_as "${fg[yellow]}metadata.name$reset_color  kube-apiserver-minikube"
+        assert ${lines[4]} same_as "${fg[yellow]}metadata.name$reset_color  kube-controller-manager-minikube"
+        assert ${lines[5]} same_as "${fg[yellow]}metadata.name$reset_color  kube-proxy-00000"
+        assert ${lines[6]} same_as "${fg[yellow]}metadata.name$reset_color  kube-scheduler-minikube"
+        assert ${lines[7]} same_as "${fg[yellow]}metadata.name$reset_color  test-0000000000-00000"
+    }
+
+    prefix=--field-selector=metadata.name!=
+    _fzf_complete_kubectl 'kubectl get pods '
+}
+
+@test 'Testing completion: kubectl get pods --field-selector=metadata.name!=etcd**' {
+    kubectl_mock_1() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '--all-namespaces'
+        assert $4 same_as '--field-selector='
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath={.items[*]}'
+
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"test-0000000000-00000","namespace":"default"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.1","podIPs":[{"ip":"10.0.0.1"},{"ip":"fd00::1"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"etcd-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.2","podIPs":[{"ip":"10.0.0.2"},{"ip":"fd00::2"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-apiserver-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.3","podIPs":[{"ip":"10.0.0.3"},{"ip":"fd00::3"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-controller-manager-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.4","podIPs":[{"ip":"10.0.0.4"},{"ip":"fd00::4"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-proxy-00000","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.5","podIPs":[{"ip":"10.0.0.5"},{"ip":"fd00::5"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-scheduler-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.6","podIPs":[{"ip":"10.0.0.6"},{"ip":"fd00::6"}]}}'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl get pods '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl get pods --field-selector=metadata.name!='
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}KEY          $reset_color  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}metadata.name$reset_color  etcd-minikube"
+        assert ${lines[3]} same_as "${fg[yellow]}metadata.name$reset_color  kube-apiserver-minikube"
+        assert ${lines[4]} same_as "${fg[yellow]}metadata.name$reset_color  kube-controller-manager-minikube"
+        assert ${lines[5]} same_as "${fg[yellow]}metadata.name$reset_color  kube-proxy-00000"
+        assert ${lines[6]} same_as "${fg[yellow]}metadata.name$reset_color  kube-scheduler-minikube"
+        assert ${lines[7]} same_as "${fg[yellow]}metadata.name$reset_color  test-0000000000-00000"
+    }
+
+    prefix=--field-selector=metadata.name!=etcd
+    _fzf_complete_kubectl 'kubectl get pods '
+}
+
 @test 'Testing completion: kubectl get pods --field-selector=metadata.namespace=kube-system,**' {
     kubectl_mock_1() {
         assert $# equals 6
@@ -11356,7 +11727,378 @@
     _fzf_complete_kubectl 'kubectl get pods --field-selector '
 }
 
-@test 'Testing completion: kubectl get pods --field-selector=metadata.namespace=kube-system,**' {
+@test 'Testing completion: kubectl get pods --field-selector metadata.name**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '--all-namespaces'
+        assert $4 same_as '-o'
+        assert $5 same_as 'jsonpath={.items[*]}'
+
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"test-0000000000-00000","namespace":"default"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.1","podIPs":[{"ip":"10.0.0.1"},{"ip":"fd00::1"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"etcd-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.2","podIPs":[{"ip":"10.0.0.2"},{"ip":"fd00::2"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-apiserver-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.3","podIPs":[{"ip":"10.0.0.3"},{"ip":"fd00::3"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-controller-manager-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.4","podIPs":[{"ip":"10.0.0.4"},{"ip":"fd00::4"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-proxy-00000","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.5","podIPs":[{"ip":"10.0.0.5"},{"ip":"fd00::5"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-scheduler-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.6","podIPs":[{"ip":"10.0.0.6"},{"ip":"fd00::6"}]}}'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl get pods --field-selector '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl get pods --field-selector '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 28
+        assert ${lines[1]} same_as "${fg[yellow]}KEY                     $reset_color  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}metadata.name           $reset_color  etcd-minikube"
+        assert ${lines[3]} same_as "${fg[yellow]}metadata.name           $reset_color  kube-apiserver-minikube"
+        assert ${lines[4]} same_as "${fg[yellow]}metadata.name           $reset_color  kube-controller-manager-minikube"
+        assert ${lines[5]} same_as "${fg[yellow]}metadata.name           $reset_color  kube-proxy-00000"
+        assert ${lines[6]} same_as "${fg[yellow]}metadata.name           $reset_color  kube-scheduler-minikube"
+        assert ${lines[7]} same_as "${fg[yellow]}metadata.name           $reset_color  test-0000000000-00000"
+        assert ${lines[8]} same_as "${fg[yellow]}metadata.namespace      $reset_color  default"
+        assert ${lines[9]} same_as "${fg[yellow]}metadata.namespace      $reset_color  kube-system"
+        assert ${lines[10]} same_as "${fg[yellow]}spec.host               $reset_color  "
+        assert ${lines[11]} same_as "${fg[yellow]}spec.nodeName           $reset_color  minikube"
+        assert ${lines[12]} same_as "${fg[yellow]}spec.restartPolicy      $reset_color  Always"
+        assert ${lines[13]} same_as "${fg[yellow]}spec.schedulerName      $reset_color  default-scheduler"
+        assert ${lines[14]} same_as "${fg[yellow]}spec.serviceAccountName $reset_color  default"
+        assert ${lines[15]} same_as "${fg[yellow]}status.nominatedNodeName$reset_color  "
+        assert ${lines[16]} same_as "${fg[yellow]}status.phase            $reset_color  Running"
+        assert ${lines[17]} same_as "${fg[yellow]}status.podIP            $reset_color  10.0.0.1"
+        assert ${lines[18]} same_as "${fg[yellow]}status.podIP            $reset_color  10.0.0.2"
+        assert ${lines[19]} same_as "${fg[yellow]}status.podIP            $reset_color  10.0.0.3"
+        assert ${lines[20]} same_as "${fg[yellow]}status.podIP            $reset_color  10.0.0.4"
+        assert ${lines[21]} same_as "${fg[yellow]}status.podIP            $reset_color  10.0.0.5"
+        assert ${lines[22]} same_as "${fg[yellow]}status.podIP            $reset_color  10.0.0.6"
+        assert ${lines[23]} same_as "${fg[yellow]}status.podIPs           $reset_color  10.0.0.1\\\\\\,fd00::1"
+        assert ${lines[24]} same_as "${fg[yellow]}status.podIPs           $reset_color  10.0.0.2\\\\\\,fd00::2"
+        assert ${lines[25]} same_as "${fg[yellow]}status.podIPs           $reset_color  10.0.0.3\\\\\\,fd00::3"
+        assert ${lines[26]} same_as "${fg[yellow]}status.podIPs           $reset_color  10.0.0.4\\\\\\,fd00::4"
+        assert ${lines[27]} same_as "${fg[yellow]}status.podIPs           $reset_color  10.0.0.5\\\\\\,fd00::5"
+        assert ${lines[28]} same_as "${fg[yellow]}status.podIPs           $reset_color  10.0.0.6\\\\\\,fd00::6"
+    }
+
+    prefix=metadata.name
+    _fzf_complete_kubectl 'kubectl get pods --field-selector '
+}
+
+@test 'Testing completion: kubectl get pods --field-selector metadata.name=**' {
+    kubectl_mock_1() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '--all-namespaces'
+        assert $4 same_as '--field-selector='
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath={.items[*]}'
+
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"test-0000000000-00000","namespace":"default"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.1","podIPs":[{"ip":"10.0.0.1"},{"ip":"fd00::1"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"etcd-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.2","podIPs":[{"ip":"10.0.0.2"},{"ip":"fd00::2"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-apiserver-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.3","podIPs":[{"ip":"10.0.0.3"},{"ip":"fd00::3"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-controller-manager-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.4","podIPs":[{"ip":"10.0.0.4"},{"ip":"fd00::4"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-proxy-00000","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.5","podIPs":[{"ip":"10.0.0.5"},{"ip":"fd00::5"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-scheduler-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.6","podIPs":[{"ip":"10.0.0.6"},{"ip":"fd00::6"}]}}'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl get pods --field-selector '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl get pods --field-selector metadata.name='
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}KEY          $reset_color  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}metadata.name$reset_color  etcd-minikube"
+        assert ${lines[3]} same_as "${fg[yellow]}metadata.name$reset_color  kube-apiserver-minikube"
+        assert ${lines[4]} same_as "${fg[yellow]}metadata.name$reset_color  kube-controller-manager-minikube"
+        assert ${lines[5]} same_as "${fg[yellow]}metadata.name$reset_color  kube-proxy-00000"
+        assert ${lines[6]} same_as "${fg[yellow]}metadata.name$reset_color  kube-scheduler-minikube"
+        assert ${lines[7]} same_as "${fg[yellow]}metadata.name$reset_color  test-0000000000-00000"
+    }
+
+    prefix=metadata.name=
+    _fzf_complete_kubectl 'kubectl get pods --field-selector '
+}
+
+@test 'Testing completion: kubectl get pods --field-selector metadata.name=etcd**' {
+    kubectl_mock_1() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '--all-namespaces'
+        assert $4 same_as '--field-selector='
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath={.items[*]}'
+
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"test-0000000000-00000","namespace":"default"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.1","podIPs":[{"ip":"10.0.0.1"},{"ip":"fd00::1"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"etcd-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.2","podIPs":[{"ip":"10.0.0.2"},{"ip":"fd00::2"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-apiserver-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.3","podIPs":[{"ip":"10.0.0.3"},{"ip":"fd00::3"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-controller-manager-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.4","podIPs":[{"ip":"10.0.0.4"},{"ip":"fd00::4"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-proxy-00000","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.5","podIPs":[{"ip":"10.0.0.5"},{"ip":"fd00::5"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-scheduler-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.6","podIPs":[{"ip":"10.0.0.6"},{"ip":"fd00::6"}]}}'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl get pods --field-selector '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl get pods --field-selector metadata.name='
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}KEY          $reset_color  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}metadata.name$reset_color  etcd-minikube"
+        assert ${lines[3]} same_as "${fg[yellow]}metadata.name$reset_color  kube-apiserver-minikube"
+        assert ${lines[4]} same_as "${fg[yellow]}metadata.name$reset_color  kube-controller-manager-minikube"
+        assert ${lines[5]} same_as "${fg[yellow]}metadata.name$reset_color  kube-proxy-00000"
+        assert ${lines[6]} same_as "${fg[yellow]}metadata.name$reset_color  kube-scheduler-minikube"
+        assert ${lines[7]} same_as "${fg[yellow]}metadata.name$reset_color  test-0000000000-00000"
+    }
+
+    prefix=metadata.name=etcd
+    _fzf_complete_kubectl 'kubectl get pods --field-selector '
+}
+
+@test 'Testing completion: kubectl get pods --field-selector metadata.name==**' {
+    kubectl_mock_1() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '--all-namespaces'
+        assert $4 same_as '--field-selector='
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath={.items[*]}'
+
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"test-0000000000-00000","namespace":"default"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.1","podIPs":[{"ip":"10.0.0.1"},{"ip":"fd00::1"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"etcd-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.2","podIPs":[{"ip":"10.0.0.2"},{"ip":"fd00::2"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-apiserver-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.3","podIPs":[{"ip":"10.0.0.3"},{"ip":"fd00::3"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-controller-manager-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.4","podIPs":[{"ip":"10.0.0.4"},{"ip":"fd00::4"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-proxy-00000","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.5","podIPs":[{"ip":"10.0.0.5"},{"ip":"fd00::5"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-scheduler-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.6","podIPs":[{"ip":"10.0.0.6"},{"ip":"fd00::6"}]}}'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl get pods --field-selector '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl get pods --field-selector metadata.name=='
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}KEY          $reset_color  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}metadata.name$reset_color  etcd-minikube"
+        assert ${lines[3]} same_as "${fg[yellow]}metadata.name$reset_color  kube-apiserver-minikube"
+        assert ${lines[4]} same_as "${fg[yellow]}metadata.name$reset_color  kube-controller-manager-minikube"
+        assert ${lines[5]} same_as "${fg[yellow]}metadata.name$reset_color  kube-proxy-00000"
+        assert ${lines[6]} same_as "${fg[yellow]}metadata.name$reset_color  kube-scheduler-minikube"
+        assert ${lines[7]} same_as "${fg[yellow]}metadata.name$reset_color  test-0000000000-00000"
+    }
+
+    prefix=metadata.name==
+    _fzf_complete_kubectl 'kubectl get pods --field-selector '
+}
+
+@test 'Testing completion: kubectl get pods --field-selector metadata.name==etcd**' {
+    kubectl_mock_1() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '--all-namespaces'
+        assert $4 same_as '--field-selector='
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath={.items[*]}'
+
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"test-0000000000-00000","namespace":"default"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.1","podIPs":[{"ip":"10.0.0.1"},{"ip":"fd00::1"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"etcd-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.2","podIPs":[{"ip":"10.0.0.2"},{"ip":"fd00::2"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-apiserver-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.3","podIPs":[{"ip":"10.0.0.3"},{"ip":"fd00::3"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-controller-manager-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.4","podIPs":[{"ip":"10.0.0.4"},{"ip":"fd00::4"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-proxy-00000","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.5","podIPs":[{"ip":"10.0.0.5"},{"ip":"fd00::5"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-scheduler-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.6","podIPs":[{"ip":"10.0.0.6"},{"ip":"fd00::6"}]}}'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl get pods --field-selector '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl get pods --field-selector metadata.name=='
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}KEY          $reset_color  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}metadata.name$reset_color  etcd-minikube"
+        assert ${lines[3]} same_as "${fg[yellow]}metadata.name$reset_color  kube-apiserver-minikube"
+        assert ${lines[4]} same_as "${fg[yellow]}metadata.name$reset_color  kube-controller-manager-minikube"
+        assert ${lines[5]} same_as "${fg[yellow]}metadata.name$reset_color  kube-proxy-00000"
+        assert ${lines[6]} same_as "${fg[yellow]}metadata.name$reset_color  kube-scheduler-minikube"
+        assert ${lines[7]} same_as "${fg[yellow]}metadata.name$reset_color  test-0000000000-00000"
+    }
+
+    prefix=metadata.name==etcd
+    _fzf_complete_kubectl 'kubectl get pods --field-selector '
+}
+
+@test 'Testing completion: kubectl get pods --field-selector metadata.name!=**' {
+    kubectl_mock_1() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '--all-namespaces'
+        assert $4 same_as '--field-selector='
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath={.items[*]}'
+
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"test-0000000000-00000","namespace":"default"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.1","podIPs":[{"ip":"10.0.0.1"},{"ip":"fd00::1"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"etcd-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.2","podIPs":[{"ip":"10.0.0.2"},{"ip":"fd00::2"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-apiserver-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.3","podIPs":[{"ip":"10.0.0.3"},{"ip":"fd00::3"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-controller-manager-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.4","podIPs":[{"ip":"10.0.0.4"},{"ip":"fd00::4"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-proxy-00000","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.5","podIPs":[{"ip":"10.0.0.5"},{"ip":"fd00::5"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-scheduler-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.6","podIPs":[{"ip":"10.0.0.6"},{"ip":"fd00::6"}]}}'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl get pods --field-selector '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl get pods --field-selector metadata.name!='
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}KEY          $reset_color  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}metadata.name$reset_color  etcd-minikube"
+        assert ${lines[3]} same_as "${fg[yellow]}metadata.name$reset_color  kube-apiserver-minikube"
+        assert ${lines[4]} same_as "${fg[yellow]}metadata.name$reset_color  kube-controller-manager-minikube"
+        assert ${lines[5]} same_as "${fg[yellow]}metadata.name$reset_color  kube-proxy-00000"
+        assert ${lines[6]} same_as "${fg[yellow]}metadata.name$reset_color  kube-scheduler-minikube"
+        assert ${lines[7]} same_as "${fg[yellow]}metadata.name$reset_color  test-0000000000-00000"
+    }
+
+    prefix=metadata.name!=
+    _fzf_complete_kubectl 'kubectl get pods --field-selector '
+}
+
+@test 'Testing completion: kubectl get pods --field-selector metadata.name!=etcd**' {
+    kubectl_mock_1() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '--all-namespaces'
+        assert $4 same_as '--field-selector='
+        assert $5 same_as '-o'
+        assert $6 same_as 'jsonpath={.items[*]}'
+
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"test-0000000000-00000","namespace":"default"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.1","podIPs":[{"ip":"10.0.0.1"},{"ip":"fd00::1"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"etcd-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.2","podIPs":[{"ip":"10.0.0.2"},{"ip":"fd00::2"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-apiserver-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.3","podIPs":[{"ip":"10.0.0.3"},{"ip":"fd00::3"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-controller-manager-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.4","podIPs":[{"ip":"10.0.0.4"},{"ip":"fd00::4"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-proxy-00000","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.5","podIPs":[{"ip":"10.0.0.5"},{"ip":"fd00::5"}]}}'
+        echo -n '{"apiVersion":"v1","kind":"Pod","metadata":{"name":"kube-scheduler-minikube","namespace":"kube-system"},"spec":{"nodeName":"minikube","restartPolicy":"Always","schedulerName":"default-scheduler","serviceAccountName":"default"},"status":{"phase":"Running","podIP":"10.0.0.6","podIPs":[{"ip":"10.0.0.6"},{"ip":"fd00::6"}]}}'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl get pods --field-selector '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl get pods --field-selector metadata.name!='
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}KEY          $reset_color  VALUE"
+        assert ${lines[2]} same_as "${fg[yellow]}metadata.name$reset_color  etcd-minikube"
+        assert ${lines[3]} same_as "${fg[yellow]}metadata.name$reset_color  kube-apiserver-minikube"
+        assert ${lines[4]} same_as "${fg[yellow]}metadata.name$reset_color  kube-controller-manager-minikube"
+        assert ${lines[5]} same_as "${fg[yellow]}metadata.name$reset_color  kube-proxy-00000"
+        assert ${lines[6]} same_as "${fg[yellow]}metadata.name$reset_color  kube-scheduler-minikube"
+        assert ${lines[7]} same_as "${fg[yellow]}metadata.name$reset_color  test-0000000000-00000"
+    }
+
+    prefix=metadata.name!=etcd
+    _fzf_complete_kubectl 'kubectl get pods --field-selector '
+}
+
+@test 'Testing completion: kubectl get pods --field-selector metadata.namespace=kube-system,**' {
     kubectl_mock_1() {
         assert $# equals 6
         assert $1 same_as 'get'
