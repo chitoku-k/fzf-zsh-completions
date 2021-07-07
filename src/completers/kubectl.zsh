@@ -851,7 +851,12 @@ _fzf_complete_kubectl() {
         return
     fi
 
-    if [[ $completing_option =~ '^(-l|--labels|--selector)$' ]]; then
+    if [[ $completing_option =~ '^(-l|--labels|--selector|--field-selector)$' ]]; then
+        local selector_type='selectors'
+        if [[ $completing_option = '--field-selector' ]]; then
+            selector_type='field-selectors'
+        fi
+
         if [[ $prefix =~ ',[^,!=]*$' ]]; then
             local selector=${prefix%,*},
             prefix_option=$prefix_option$selector
@@ -868,11 +873,11 @@ _fzf_complete_kubectl() {
             local selector=${prefix%=*}=
             prefix_option=$prefix_option$selector
             prefix=${prefix#$selector}
-            _fzf_complete_kubectl-selectors '' "$@"
+            _fzf_complete_kubectl-$selector_type '' "$@"
             return
         fi
 
-        _fzf_complete_kubectl-selectors '--multi' "$@"
+        _fzf_complete_kubectl-$selector_type '--multi' "$@"
         return
     fi
 
@@ -1083,6 +1088,165 @@ _fzf_complete_kubectl-selectors_post() {
     if [[ $prefix_option = *! ]]; then
         awk '{ printf "%s%s", (NR > 1 ? ",\\!" : ""), $1 }'
     elif [[ $prefix_option = *= ]] && [[ -n $selector ]]; then
+        awk '{ printf "%s%s", (NR > 1 ? ",\\!" : ""), $2 }'
+    else
+        awk '{ printf "%s%s=%s", (NR > 1 ? "," : ""), $1, $2 }'
+    fi
+}
+
+_fzf_complete_kubectl-field-selectors() {
+    local fzf_options=$1
+    shift
+
+    if [[ -z $namespace ]]; then
+        kubectl_arguments+=(--all-namespaces)
+    fi
+
+    if [[ $selector = *, ]]; then
+        selector=${selector%,}
+        kubectl_arguments+=(--field-selector=$selector)
+    elif [[ $selector = *= ]]; then
+        kubectl_arguments+=(--field-selector=${${selector%,*}%*=})
+        selector=${${${selector##*,}%%=*}%%!}
+    fi
+
+    local labels
+    case ${resource:l} in
+        sts|statefulset|statefulsets| \
+        sts.apps|statefulset.apps|statefulsets.apps| \
+        cj|cronjob|cronjobs|job|jobs|jobtemplate|jobtemplates| \
+        cj.batch|cronjob.batch|cronjobs.batch|job.batch|jobs.batch|jobtemplate.batch|jobtemplates.batch)
+            labels=(
+                metadata.name
+                metadata.namespace
+                status.successful
+            )
+            ;;
+
+        csr|certificatesigningrequest|certificatesigningrequests| \
+        csr.certificates.k8s.io|certificatesigningrequest.certificates.k8s.io|certificatesigningrequests.certificates.k8s.io)
+            labels=(
+                metadata.name
+                spec.signerName
+            )
+            ;;
+
+        po|pod|pods)
+            labels=(
+                metadata.name
+                metadata.namespace
+                spec.host
+                spec.nodeName
+                spec.restartPolicy
+                spec.schedulerName
+                spec.serviceAccountName
+                status.nominatedNodeName
+                status.phase
+                status.podIP
+                status.podIPs
+            )
+            ;;
+
+        no|node|nodes)
+            labels=(
+                metadata.name
+                spec.unschedulable
+            )
+            ;;
+
+        rc|replicationcontroller|replicationcontrollers)
+            labels=(
+                metadata.name
+                metadata.namespace
+                status.replicas
+            )
+            ;;
+
+        ev|event|events)
+            labels=(
+                metadata.name
+                metadata.namespace
+                involvedObject.apiVersion
+                involvedObject.fieldPath
+                involvedObject.kind
+                involvedObject.name
+                involvedObject.namespace
+                involvedObject.resourceVersion
+                involvedObject.uid
+                reason
+                reportingComponent
+                source
+                type
+            )
+            ;;
+
+        ns|namespace|namespaces)
+            labels=(
+                metadata.name
+                status.phase
+            )
+            ;;
+
+        secret|secrets)
+            labels=(
+                metadata.name
+                metadata.namespace
+                type
+            )
+            ;;
+
+        event.events.k8s.io|events.events.k8s.io)
+            labels=(
+                metadata.name
+                metadata.namespace
+                reason
+                regarding.apiVersion
+                regarding.fieldPath
+                regarding.kind
+                regarding.name
+                regarding.namespace
+                regarding.resourceVersion
+                regarding.uid
+                reportingController
+                type
+            )
+            ;;
+    esac
+
+    if [[ $prefix_option = *= ]] && [[ -n $selector ]]; then
+        labels=($selector)
+    fi
+
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <(
+        _fzf_complete_tabularize $fg[yellow] < <({
+            echo KEY VALUE
+            kubectl get "${resource:-all}" "${kubectl_arguments[@]}" -o jsonpath='{.items[*]}' |
+                jq --slurp -r --arg labels "$labels" '
+                    [[($labels | split(" ")), .] | combinations] |
+                        map(
+                            . as [$selector, $obj] |
+                            "\($selector) \(
+                                $obj |
+                                getpath($selector | split(".")) // "" |
+
+                                # It looks like "status.podIPs" is currently not supported but tries to handle anyway
+                                # See: https://github.com/kubernetes/kubernetes/pull/94756
+                                if type == "array" then
+                                    map(.[]) | join("\\\\,")
+                                else
+                                    .
+                                end
+                            )"
+                        ) |
+                        sort |
+                        unique[]
+                '
+        } 2> /dev/null)
+    )
+}
+
+_fzf_complete_kubectl-field-selectors_post() {
+    if [[ $prefix_option = *= ]] && [[ -n $selector ]]; then
         awk '{ printf "%s%s", (NR > 1 ? ",\\!" : ""), $2 }'
     else
         awk '{ printf "%s%s=%s", (NR > 1 ? "," : ""), $1, $2 }'

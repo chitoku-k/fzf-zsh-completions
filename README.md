@@ -58,6 +58,7 @@ git rebase -i **<TAB>
 - kubectl
   - Annotations (annotate)
   - Containers (exec, logs, and set)
+  - Field selectors (get)
   - Files (apply)
   - Labels (annotate, apply, cordon, delete, describe, drain, diff, get, label, logs, run, scale, set, taint, top, uncordon, and wait)
   - Nodes (cordon, drain, and uncordon)
