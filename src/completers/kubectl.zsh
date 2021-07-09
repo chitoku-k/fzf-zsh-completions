@@ -6,6 +6,7 @@ colors
 _fzf_complete_kubectl() {
     setopt local_options no_aliases
     local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$@")"}[@]}")
+    local options_and_subcommand=()
     local kubectl_arguments=()
     local last_argument=${arguments[-1]}
     local prefix_option completing_option arg subcommands namespace resource name
@@ -100,7 +101,24 @@ _fzf_complete_kubectl() {
         --v
         --vmodule
     )
-    local kubectl_options_argument_optional=()
+    local kubectl_options_argument_optional=(
+        --add-dir-header
+        --alsologtostderr
+        --disable-root-cgroup-stats
+        --docker-only
+        --docker-tls
+        --enable-load-reader
+        --insecure-skip-tls-verify
+        --log-cadvisor-usage
+        --logtostderr
+        --match-server-version
+        --one-output
+        --skip-headers
+        --skip-log-headers
+        --storage-driver-secure
+        --version
+        --warnings-as-errors
+    )
 
     for inherit_option in ${kubectl_inherited_options_argument_required[@]} ${kubectl_inherited_options[@]}; do
         if [[ $inherit_option = --* ]]; then
@@ -118,31 +136,19 @@ _fzf_complete_kubectl() {
         fi
     done
 
-    subcommands=($(_fzf_complete_parse_argument 2 1 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :))
+    options_and_subcommand=("${(Q)${(z)"$(_fzf_complete_kubectl_parse_global_options_and_subcommand "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_optional}")"}[@]}")
+    subcommands=("${options_and_subcommand[-1]}")
+    arguments=(
+        "${arguments[1,1][@]}"
+        "${subcommands[1,1][@]}"
+        "${options_and_subcommand[1,-2][@]}"
+        "${arguments[${#options_and_subcommand}+2,-1][@]}"
+    )
+
     namespace=$(_fzf_complete_parse_option_arguments '-n' '--namespace' "${(F)kubectl_options_argument_required}" "$@$RBUFFER" || :)
 
     if [[ ${subcommands[1]} =~ '^(apply|create|rollout|set)$' ]]; then
         subcommands+=($(_fzf_complete_parse_argument 2 2 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :))
-        resource=$(_fzf_complete_parse_argument 2 3 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
-        name=$(_fzf_complete_parse_argument 2 4 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
-    else
-        resource=$(_fzf_complete_parse_argument 2 2 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
-        name=$(_fzf_complete_parse_argument 2 3 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
-    fi
-
-    if [[ $resource = */* ]]; then
-        name=${resource#*/}
-        resource=${resource%/*}
-    elif [[ -z $resource ]] && [[ $prefix != -* ]] && [[ $prefix = */* ]]; then
-        resource=${prefix%/*}
-        prefix_option=${prefix%/*}/
-        prefix=${prefix#$prefix_option}
-    elif [[ ${subcommands[1]} =~ '^(cordon|drain|uncordon)$' ]]; then
-        resource=nodes
-    elif [[ ${subcommands[1]} = 'run' ]]; then
-        resource=pods
-    elif [[ ${subcommands[1]} = 'scale' ]]; then
-        resource=deployments,replicaset,replicationcontrollers,statefulset
     fi
 
     if [[ ${subcommands[1]} = 'annotate' ]]; then
@@ -161,6 +167,18 @@ _fzf_complete_kubectl() {
             --selector
             --template
         )
+
+        resource=$(_fzf_complete_parse_argument 2 2 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+        name=$(_fzf_complete_parse_argument 2 3 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+
+        if [[ $resource = */* ]]; then
+            name=${resource#*/}
+            resource=${resource%/*}
+        elif [[ -z $resource ]] && [[ $prefix != -* ]] && [[ $prefix = */* ]]; then
+            resource=${prefix%/*}
+            prefix_option=${prefix%/*}/
+            prefix=${prefix#$prefix_option}
+        fi
 
         if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)kubectl_options_argument_required}" "${(F)kubectl_options_argument_optional}"); then
             if [[ $completing_option = --* ]]; then
@@ -205,6 +223,18 @@ _fzf_complete_kubectl() {
             --template
             --timeout
         )
+
+        resource=$(_fzf_complete_parse_argument 2 3 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+        name=$(_fzf_complete_parse_argument 2 4 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+
+        if [[ $resource = */* ]]; then
+            name=${resource#*/}
+            resource=${resource%/*}
+        elif [[ -z $resource ]] && [[ $prefix != -* ]] && [[ $prefix = */* ]]; then
+            resource=${prefix%/*}
+            prefix_option=${prefix%/*}/
+            prefix=${prefix#$prefix_option}
+        fi
 
         if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)kubectl_options_argument_required}" "${(F)kubectl_options_argument_optional}"); then
             if [[ $completing_option = --* ]]; then
@@ -264,6 +294,18 @@ _fzf_complete_kubectl() {
             --type
         )
 
+        resource=$(_fzf_complete_parse_argument 2 2 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+        name=$(_fzf_complete_parse_argument 2 3 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+
+        if [[ $resource = */* ]]; then
+            name=${resource#*/}
+            resource=${resource%/*}
+        elif [[ -z $resource ]] && [[ $prefix != -* ]] && [[ $prefix = */* ]]; then
+            resource=${prefix%/*}
+            prefix_option=${prefix%/*}/
+            prefix=${prefix#$prefix_option}
+        fi
+
         if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)kubectl_options_argument_required}" "${(F)kubectl_options_argument_optional}"); then
             if [[ $completing_option = --* ]]; then
                 prefix_option=$completing_option=
@@ -294,6 +336,20 @@ _fzf_complete_kubectl() {
             --skip-wait-for-delete-timeout
             --timeout
         )
+
+        resource=$(_fzf_complete_parse_argument 2 2 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+        name=$(_fzf_complete_parse_argument 2 3 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+
+        if [[ $resource = */* ]]; then
+            name=${resource#*/}
+            resource=${resource%/*}
+        elif [[ -z $resource ]] && [[ $prefix != -* ]] && [[ $prefix = */* ]]; then
+            resource=${prefix%/*}
+            prefix_option=${prefix%/*}/
+            prefix=${prefix#$prefix_option}
+        else
+            resource=nodes
+        fi
 
         if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)kubectl_options_argument_required}" "${(F)kubectl_options_argument_optional}"); then
             if [[ $completing_option = --* ]]; then
@@ -392,6 +448,18 @@ _fzf_complete_kubectl() {
             'serviceaccount'
         )
 
+        resource=$(_fzf_complete_parse_argument 2 3 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+        name=$(_fzf_complete_parse_argument 2 4 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+
+        if [[ $resource = */* ]]; then
+            name=${resource#*/}
+            resource=${resource%/*}
+        elif [[ -z $resource ]] && [[ $prefix != -* ]] && [[ $prefix = */* ]]; then
+            resource=${prefix%/*}
+            prefix_option=${prefix%/*}/
+            prefix=${prefix#$prefix_option}
+        fi
+
         if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)kubectl_options_argument_required}" "${(F)kubectl_options_argument_optional}"); then
             if [[ $completing_option = --* ]]; then
                 prefix_option=$completing_option=
@@ -444,6 +512,20 @@ _fzf_complete_kubectl() {
             --timeout
         )
 
+        resource=$(_fzf_complete_parse_argument 2 2 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+        name=$(_fzf_complete_parse_argument 2 3 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+
+        if [[ $resource = */* ]]; then
+            name=${resource#*/}
+            resource=${resource%/*}
+        elif [[ -z $resource ]] && [[ $prefix != -* ]] && [[ $prefix = */* ]]; then
+            resource=${prefix%/*}
+            prefix_option=${prefix%/*}/
+            prefix=${prefix#$prefix_option}
+        elif [[ ${subcommands[1]} = 'scale' ]]; then
+            resource=deployments,replicaset,replicationcontrollers,statefulset
+        fi
+
         if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)kubectl_options_argument_required}" "${(F)kubectl_options_argument_optional}"); then
             if [[ $completing_option = --* ]]; then
                 prefix_option=$completing_option=
@@ -484,6 +566,18 @@ _fzf_complete_kubectl() {
             --pod-running-timeout
         )
 
+        resource=$(_fzf_complete_parse_argument 2 2 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+        name=$(_fzf_complete_parse_argument 2 3 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+
+        if [[ $resource = */* ]]; then
+            name=${resource#*/}
+            resource=${resource%/*}
+        elif [[ -z $resource ]] && [[ $prefix != -* ]] && [[ $prefix = */* ]]; then
+            resource=${prefix%/*}
+            prefix_option=${prefix%/*}/
+            prefix=${prefix#$prefix_option}
+        fi
+
         if [[ -z $name ]] && [[ -z $prefix_option ]]; then
             name=$resource
             resource=pods
@@ -511,6 +605,18 @@ _fzf_complete_kubectl() {
 
     if [[ ${subcommands[1]} = 'explain' ]]; then
         kubectl_options_argument_required+=(--api-version)
+
+        resource=$(_fzf_complete_parse_argument 2 2 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+        name=$(_fzf_complete_parse_argument 2 3 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+
+        if [[ $resource = */* ]]; then
+            name=${resource#*/}
+            resource=${resource%/*}
+        elif [[ -z $resource ]] && [[ $prefix != -* ]] && [[ $prefix = */* ]]; then
+            resource=${prefix%/*}
+            prefix_option=${prefix%/*}/
+            prefix=${prefix#$prefix_option}
+        fi
 
         if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)kubectl_options_argument_required}" "${(F)kubectl_options_argument_optional}"); then
             if [[ $completing_option = --* ]]; then
@@ -543,6 +649,18 @@ _fzf_complete_kubectl() {
             --selector
             --template
         )
+
+        resource=$(_fzf_complete_parse_argument 2 2 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+        name=$(_fzf_complete_parse_argument 2 3 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+
+        if [[ $resource = */* ]]; then
+            name=${resource#*/}
+            resource=${resource%/*}
+        elif [[ -z $resource ]] && [[ $prefix != -* ]] && [[ $prefix = */* ]]; then
+            resource=${prefix%/*}
+            prefix_option=${prefix%/*}/
+            prefix=${prefix#$prefix_option}
+        fi
 
         if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)kubectl_options_argument_required}" "${(F)kubectl_options_argument_optional}"); then
             if [[ $completing_option = --* ]]; then
@@ -583,6 +701,18 @@ _fzf_complete_kubectl() {
             --tail
         )
 
+        resource=$(_fzf_complete_parse_argument 2 2 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+        name=$(_fzf_complete_parse_argument 2 3 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+
+        if [[ $resource = */* ]]; then
+            name=${resource#*/}
+            resource=${resource%/*}
+        elif [[ -z $resource ]] && [[ $prefix != -* ]] && [[ $prefix = */* ]]; then
+            resource=${prefix%/*}
+            prefix_option=${prefix%/*}/
+            prefix=${prefix#$prefix_option}
+        fi
+
         if [[ -z $name ]] && [[ -z $prefix_option ]]; then
             name=$resource
             resource=pods
@@ -614,6 +744,18 @@ _fzf_complete_kubectl() {
             --pod-running-timeout
         )
 
+        resource=$(_fzf_complete_parse_argument 2 2 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+        name=$(_fzf_complete_parse_argument 2 3 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+
+        if [[ $resource = */* ]]; then
+            name=${resource#*/}
+            resource=${resource%/*}
+        elif [[ -z $resource ]] && [[ $prefix != -* ]] && [[ $prefix = */* ]]; then
+            resource=${prefix%/*}
+            prefix_option=${prefix%/*}/
+            prefix=${prefix#$prefix_option}
+        fi
+
         if [[ -z $name ]] && [[ -z $prefix_option ]]; then
             name=$resource
             resource=pods
@@ -642,6 +784,18 @@ _fzf_complete_kubectl() {
     fi
 
     if [[ ${subcommands[1]} = 'rollout' ]]; then
+        resource=$(_fzf_complete_parse_argument 2 3 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+        name=$(_fzf_complete_parse_argument 2 4 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+
+        if [[ $resource = */* ]]; then
+            name=${resource#*/}
+            resource=${resource%/*}
+        elif [[ -z $resource ]] && [[ $prefix != -* ]] && [[ $prefix = */* ]]; then
+            resource=${prefix%/*}
+            prefix_option=${prefix%/*}/
+            prefix=${prefix#$prefix_option}
+        fi
+
         if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)kubectl_options_argument_required}" "${(F)kubectl_options_argument_optional}"); then
             if [[ $completing_option = --* ]]; then
                 prefix_option=$completing_option=
@@ -695,6 +849,18 @@ _fzf_complete_kubectl() {
             --template
         )
 
+        resource=$(_fzf_complete_parse_argument 2 3 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+        name=$(_fzf_complete_parse_argument 2 4 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+
+        if [[ $resource = */* ]]; then
+            name=${resource#*/}
+            resource=${resource%/*}
+        elif [[ -z $resource ]] && [[ $prefix != -* ]] && [[ $prefix = */* ]]; then
+            resource=${prefix%/*}
+            prefix_option=${prefix%/*}/
+            prefix=${prefix#$prefix_option}
+        fi
+
         if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)kubectl_options_argument_required}" "${(F)kubectl_options_argument_optional}"); then
             if [[ $completing_option = --* ]]; then
                 prefix_option=$completing_option=
@@ -740,6 +906,18 @@ _fzf_complete_kubectl() {
             --template
         )
 
+        resource=$(_fzf_complete_parse_argument 2 2 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+        name=$(_fzf_complete_parse_argument 2 3 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+
+        if [[ $resource = */* ]]; then
+            name=${resource#*/}
+            resource=${resource%/*}
+        elif [[ -z $resource ]] && [[ $prefix != -* ]] && [[ $prefix = */* ]]; then
+            resource=${prefix%/*}
+            prefix_option=${prefix%/*}/
+            prefix=${prefix#$prefix_option}
+        fi
+
         if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)kubectl_options_argument_required}" "${(F)kubectl_options_argument_optional}"); then
             if [[ $completing_option = --* ]]; then
                 prefix_option=$completing_option=
@@ -772,6 +950,18 @@ _fzf_complete_kubectl() {
             --selector
             --sort-by
         )
+
+        resource=$(_fzf_complete_parse_argument 2 2 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+        name=$(_fzf_complete_parse_argument 2 3 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+
+        if [[ $resource = */* ]]; then
+            name=${resource#*/}
+            resource=${resource%/*}
+        elif [[ -z $resource ]] && [[ $prefix != -* ]] && [[ $prefix = */* ]]; then
+            resource=${prefix%/*}
+            prefix_option=${prefix%/*}/
+            prefix=${prefix#$prefix_option}
+        fi
 
         if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)kubectl_options_argument_required}" "${(F)kubectl_options_argument_optional}"); then
             if [[ $completing_option = --* ]]; then
@@ -827,6 +1017,20 @@ _fzf_complete_kubectl() {
             --template
             --timeout
         )
+
+        resource=$(_fzf_complete_parse_argument 2 2 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+        name=$(_fzf_complete_parse_argument 2 3 "${${(q)arguments[@]}}" "${(F)kubectl_options_argument_required}" || :)
+
+        if [[ $resource = */* ]]; then
+            name=${resource#*/}
+            resource=${resource%/*}
+        elif [[ -z $resource ]] && [[ $prefix != -* ]] && [[ $prefix = */* ]]; then
+            resource=${prefix%/*}
+            prefix_option=${prefix%/*}/
+            prefix=${prefix#$prefix_option}
+        elif [[ ${subcommands[1]} = 'run' ]]; then
+            resource=pods
+        fi
 
         if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)kubectl_options_argument_required}" "${(F)kubectl_options_argument_optional}"); then
             if [[ $completing_option = --* ]]; then
@@ -1293,4 +1497,46 @@ _fzf_complete_kubectl-taints() {
 
 _fzf_complete_kubectl-taints_post() {
     awk '{ printf "%s%s=%s:%s", (NR > 1 ? "\n" : ""), $1, $2, $3 }'
+}
+
+_fzf_complete_kubectl_parse_global_options_and_subcommand() {
+    local start_index=2
+    local arguments=("${(Q)${(z)1}[@]}")
+    local options_argument_optional=(${(z)2})
+    shift 2
+
+    local i
+    local parsing_argument parsing_subcommand
+    local command_arguments=()
+    for i in {$start_index..${#arguments}}; do
+        if [[ -n $parsing_argument ]]; then
+            parsing_argument=
+            command_arguments+=("${arguments[$i]}")
+            continue
+        fi
+
+        if [[ ${arguments[$i]} = -[A-Za-z0-9] ]] || [[ ${arguments[$i]} = --[A-Za-z0-9-](#c1,) ]]; then
+            if [[ ${options_argument_optional[(r)$arguments[$i]]} = ${arguments[$i]} ]]; then
+                parsing_argument=
+            else
+                parsing_argument=1
+            fi
+            command_arguments+=("${arguments[$i]}")
+            continue
+        fi
+
+        if [[ ${arguments[$i]} = -(#c1,2)* ]]; then
+            parsing_argument=
+            command_arguments+=("${arguments[$i]}")
+            continue
+        fi
+
+        parsing_subcommand=1
+        command_arguments+=("${arguments[$i]}")
+        break
+    done
+
+    if [[ -n $parsing_subcommand ]]; then
+        echo ${(q)command_arguments}
+    fi
 }

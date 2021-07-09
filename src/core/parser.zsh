@@ -47,6 +47,10 @@ _fzf_complete_parse_completing_option() {
     current=$last_argument
 
     while [[ -n $current ]]; do
+        if [[ -n ${options_argument_required[(r)${current[1,2]}]} ]] && (( ${#current} > 2 )); then
+            break
+        fi
+
         if [[ -n ${options_argument_required[(r)$current]} ]]; then
             completing_option=$current
             completing_option_source=last_argument
