@@ -1252,7 +1252,7 @@ _fzf_complete_kubectl_parse_completing_option() {
 }
 
 _fzf_complete_kubectl_parse_kubectl_arguments() {
-    local arg inherit_values
+    local inherit_values
     local all_options=($kubectl_inherited_options_argument_required $kubectl_inherited_options)
     local shorts=(${all_options:#--*})
     local longs=(${all_options:#-[a-zA-Z0-9]})
