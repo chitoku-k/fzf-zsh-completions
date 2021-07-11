@@ -253,6 +253,214 @@
     _fzf_complete_kubectl 'kubectl '
 }
 
+@test 'Testing completion: kubectl --output=yaml get **' {
+    kubectl_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'api-resources'
+        assert $2 same_as '--cached'
+        assert $3 same_as '--verbs=get'
+
+        echo 'NAME         SHORTNAMES   APIGROUP                    NAMESPACED   KIND'
+        echo 'configmaps   cm                                       true         ConfigMap'
+        echo 'namespaces   ns                                       false        Namespace'
+        echo 'nodes        no                                       false        Node'
+        echo 'pods         po                                       true         Pod'
+        echo 'secrets                                               true         Secret'
+        echo 'services     svc                                      true         Service'
+        echo 'ingresses    ing          extensions                  true         Ingress'
+        echo 'roles                     rbac.authorization.k8s.io   true         Role'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl --output=yaml get '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl --output=yaml get '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 9
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
+        assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
+        assert ${lines[3]} same_as "${fg[yellow]}namespaces   ${reset_color}ns                                       false        Namespace"
+        assert ${lines[4]} same_as "${fg[yellow]}nodes        ${reset_color}no                                       false        Node"
+        assert ${lines[5]} same_as "${fg[yellow]}pods         ${reset_color}po                                       true         Pod"
+        assert ${lines[6]} same_as "${fg[yellow]}secrets      ${reset_color}                                         true         Secret"
+        assert ${lines[7]} same_as "${fg[yellow]}services     ${reset_color}svc                                      true         Service"
+        assert ${lines[8]} same_as "${fg[yellow]}ingresses    ${reset_color}ing          extensions                  true         Ingress"
+        assert ${lines[9]} same_as "${fg[yellow]}roles        ${reset_color}             rbac.authorization.k8s.io   true         Role"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl --output=yaml get '
+}
+
+@test 'Testing completion: kubectl --output yaml get **' {
+    kubectl_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'api-resources'
+        assert $2 same_as '--cached'
+        assert $3 same_as '--verbs=get'
+
+        echo 'NAME         SHORTNAMES   APIGROUP                    NAMESPACED   KIND'
+        echo 'configmaps   cm                                       true         ConfigMap'
+        echo 'namespaces   ns                                       false        Namespace'
+        echo 'nodes        no                                       false        Node'
+        echo 'pods         po                                       true         Pod'
+        echo 'secrets                                               true         Secret'
+        echo 'services     svc                                      true         Service'
+        echo 'ingresses    ing          extensions                  true         Ingress'
+        echo 'roles                     rbac.authorization.k8s.io   true         Role'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl --output yaml get '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl --output yaml get '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 9
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
+        assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
+        assert ${lines[3]} same_as "${fg[yellow]}namespaces   ${reset_color}ns                                       false        Namespace"
+        assert ${lines[4]} same_as "${fg[yellow]}nodes        ${reset_color}no                                       false        Node"
+        assert ${lines[5]} same_as "${fg[yellow]}pods         ${reset_color}po                                       true         Pod"
+        assert ${lines[6]} same_as "${fg[yellow]}secrets      ${reset_color}                                         true         Secret"
+        assert ${lines[7]} same_as "${fg[yellow]}services     ${reset_color}svc                                      true         Service"
+        assert ${lines[8]} same_as "${fg[yellow]}ingresses    ${reset_color}ing          extensions                  true         Ingress"
+        assert ${lines[9]} same_as "${fg[yellow]}roles        ${reset_color}             rbac.authorization.k8s.io   true         Role"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl --output yaml get '
+}
+
+@test 'Testing completion: kubectl -o yaml get **' {
+    kubectl_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'api-resources'
+        assert $2 same_as '--cached'
+        assert $3 same_as '--verbs=get'
+
+        echo 'NAME         SHORTNAMES   APIGROUP                    NAMESPACED   KIND'
+        echo 'configmaps   cm                                       true         ConfigMap'
+        echo 'namespaces   ns                                       false        Namespace'
+        echo 'nodes        no                                       false        Node'
+        echo 'pods         po                                       true         Pod'
+        echo 'secrets                                               true         Secret'
+        echo 'services     svc                                      true         Service'
+        echo 'ingresses    ing          extensions                  true         Ingress'
+        echo 'roles                     rbac.authorization.k8s.io   true         Role'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl -o yaml get '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl -o yaml get '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 9
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
+        assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
+        assert ${lines[3]} same_as "${fg[yellow]}namespaces   ${reset_color}ns                                       false        Namespace"
+        assert ${lines[4]} same_as "${fg[yellow]}nodes        ${reset_color}no                                       false        Node"
+        assert ${lines[5]} same_as "${fg[yellow]}pods         ${reset_color}po                                       true         Pod"
+        assert ${lines[6]} same_as "${fg[yellow]}secrets      ${reset_color}                                         true         Secret"
+        assert ${lines[7]} same_as "${fg[yellow]}services     ${reset_color}svc                                      true         Service"
+        assert ${lines[8]} same_as "${fg[yellow]}ingresses    ${reset_color}ing          extensions                  true         Ingress"
+        assert ${lines[9]} same_as "${fg[yellow]}roles        ${reset_color}             rbac.authorization.k8s.io   true         Role"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl -o yaml get '
+}
+
+@test 'Testing completion: kubectl -oyaml get **' {
+    kubectl_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'api-resources'
+        assert $2 same_as '--cached'
+        assert $3 same_as '--verbs=get'
+
+        echo 'NAME         SHORTNAMES   APIGROUP                    NAMESPACED   KIND'
+        echo 'configmaps   cm                                       true         ConfigMap'
+        echo 'namespaces   ns                                       false        Namespace'
+        echo 'nodes        no                                       false        Node'
+        echo 'pods         po                                       true         Pod'
+        echo 'secrets                                               true         Secret'
+        echo 'services     svc                                      true         Service'
+        echo 'ingresses    ing          extensions                  true         Ingress'
+        echo 'roles                     rbac.authorization.k8s.io   true         Role'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl -oyaml get '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl -oyaml get '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 9
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
+        assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
+        assert ${lines[3]} same_as "${fg[yellow]}namespaces   ${reset_color}ns                                       false        Namespace"
+        assert ${lines[4]} same_as "${fg[yellow]}nodes        ${reset_color}no                                       false        Node"
+        assert ${lines[5]} same_as "${fg[yellow]}pods         ${reset_color}po                                       true         Pod"
+        assert ${lines[6]} same_as "${fg[yellow]}secrets      ${reset_color}                                         true         Secret"
+        assert ${lines[7]} same_as "${fg[yellow]}services     ${reset_color}svc                                      true         Service"
+        assert ${lines[8]} same_as "${fg[yellow]}ingresses    ${reset_color}ing          extensions                  true         Ingress"
+        assert ${lines[9]} same_as "${fg[yellow]}roles        ${reset_color}             rbac.authorization.k8s.io   true         Role"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl -oyaml get '
+}
+
 @test 'Testing completion: kubectl diff --labels=**' {
     kubectl_mock_1() {
         assert $# equals 5
@@ -6921,6 +7129,214 @@
 
     prefix=
     _fzf_complete_kubectl 'kubectl get '
+}
+
+@test 'Testing completion: kubectl get --output=yaml **' {
+    kubectl_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'api-resources'
+        assert $2 same_as '--cached'
+        assert $3 same_as '--verbs=get'
+
+        echo 'NAME         SHORTNAMES   APIGROUP                    NAMESPACED   KIND'
+        echo 'configmaps   cm                                       true         ConfigMap'
+        echo 'namespaces   ns                                       false        Namespace'
+        echo 'nodes        no                                       false        Node'
+        echo 'pods         po                                       true         Pod'
+        echo 'secrets                                               true         Secret'
+        echo 'services     svc                                      true         Service'
+        echo 'ingresses    ing          extensions                  true         Ingress'
+        echo 'roles                     rbac.authorization.k8s.io   true         Role'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl get --output=yaml '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl get --output=yaml '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 9
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
+        assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
+        assert ${lines[3]} same_as "${fg[yellow]}namespaces   ${reset_color}ns                                       false        Namespace"
+        assert ${lines[4]} same_as "${fg[yellow]}nodes        ${reset_color}no                                       false        Node"
+        assert ${lines[5]} same_as "${fg[yellow]}pods         ${reset_color}po                                       true         Pod"
+        assert ${lines[6]} same_as "${fg[yellow]}secrets      ${reset_color}                                         true         Secret"
+        assert ${lines[7]} same_as "${fg[yellow]}services     ${reset_color}svc                                      true         Service"
+        assert ${lines[8]} same_as "${fg[yellow]}ingresses    ${reset_color}ing          extensions                  true         Ingress"
+        assert ${lines[9]} same_as "${fg[yellow]}roles        ${reset_color}             rbac.authorization.k8s.io   true         Role"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl get --output=yaml '
+}
+
+@test 'Testing completion: kubectl get --output yaml **' {
+    kubectl_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'api-resources'
+        assert $2 same_as '--cached'
+        assert $3 same_as '--verbs=get'
+
+        echo 'NAME         SHORTNAMES   APIGROUP                    NAMESPACED   KIND'
+        echo 'configmaps   cm                                       true         ConfigMap'
+        echo 'namespaces   ns                                       false        Namespace'
+        echo 'nodes        no                                       false        Node'
+        echo 'pods         po                                       true         Pod'
+        echo 'secrets                                               true         Secret'
+        echo 'services     svc                                      true         Service'
+        echo 'ingresses    ing          extensions                  true         Ingress'
+        echo 'roles                     rbac.authorization.k8s.io   true         Role'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl get --output yaml '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl get --output yaml '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 9
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
+        assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
+        assert ${lines[3]} same_as "${fg[yellow]}namespaces   ${reset_color}ns                                       false        Namespace"
+        assert ${lines[4]} same_as "${fg[yellow]}nodes        ${reset_color}no                                       false        Node"
+        assert ${lines[5]} same_as "${fg[yellow]}pods         ${reset_color}po                                       true         Pod"
+        assert ${lines[6]} same_as "${fg[yellow]}secrets      ${reset_color}                                         true         Secret"
+        assert ${lines[7]} same_as "${fg[yellow]}services     ${reset_color}svc                                      true         Service"
+        assert ${lines[8]} same_as "${fg[yellow]}ingresses    ${reset_color}ing          extensions                  true         Ingress"
+        assert ${lines[9]} same_as "${fg[yellow]}roles        ${reset_color}             rbac.authorization.k8s.io   true         Role"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl get --output yaml '
+}
+
+@test 'Testing completion: kubectl get -o yaml **' {
+    kubectl_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'api-resources'
+        assert $2 same_as '--cached'
+        assert $3 same_as '--verbs=get'
+
+        echo 'NAME         SHORTNAMES   APIGROUP                    NAMESPACED   KIND'
+        echo 'configmaps   cm                                       true         ConfigMap'
+        echo 'namespaces   ns                                       false        Namespace'
+        echo 'nodes        no                                       false        Node'
+        echo 'pods         po                                       true         Pod'
+        echo 'secrets                                               true         Secret'
+        echo 'services     svc                                      true         Service'
+        echo 'ingresses    ing          extensions                  true         Ingress'
+        echo 'roles                     rbac.authorization.k8s.io   true         Role'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl get -o yaml '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl get -o yaml '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 9
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
+        assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
+        assert ${lines[3]} same_as "${fg[yellow]}namespaces   ${reset_color}ns                                       false        Namespace"
+        assert ${lines[4]} same_as "${fg[yellow]}nodes        ${reset_color}no                                       false        Node"
+        assert ${lines[5]} same_as "${fg[yellow]}pods         ${reset_color}po                                       true         Pod"
+        assert ${lines[6]} same_as "${fg[yellow]}secrets      ${reset_color}                                         true         Secret"
+        assert ${lines[7]} same_as "${fg[yellow]}services     ${reset_color}svc                                      true         Service"
+        assert ${lines[8]} same_as "${fg[yellow]}ingresses    ${reset_color}ing          extensions                  true         Ingress"
+        assert ${lines[9]} same_as "${fg[yellow]}roles        ${reset_color}             rbac.authorization.k8s.io   true         Role"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl get -o yaml '
+}
+
+@test 'Testing completion: kubectl get -oyaml **' {
+    kubectl_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'api-resources'
+        assert $2 same_as '--cached'
+        assert $3 same_as '--verbs=get'
+
+        echo 'NAME         SHORTNAMES   APIGROUP                    NAMESPACED   KIND'
+        echo 'configmaps   cm                                       true         ConfigMap'
+        echo 'namespaces   ns                                       false        Namespace'
+        echo 'nodes        no                                       false        Node'
+        echo 'pods         po                                       true         Pod'
+        echo 'secrets                                               true         Secret'
+        echo 'services     svc                                      true         Service'
+        echo 'ingresses    ing          extensions                  true         Ingress'
+        echo 'roles                     rbac.authorization.k8s.io   true         Role'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl get -oyaml '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl get -oyaml '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 9
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIGROUP                    NAMESPACED   KIND"
+        assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm                                       true         ConfigMap"
+        assert ${lines[3]} same_as "${fg[yellow]}namespaces   ${reset_color}ns                                       false        Namespace"
+        assert ${lines[4]} same_as "${fg[yellow]}nodes        ${reset_color}no                                       false        Node"
+        assert ${lines[5]} same_as "${fg[yellow]}pods         ${reset_color}po                                       true         Pod"
+        assert ${lines[6]} same_as "${fg[yellow]}secrets      ${reset_color}                                         true         Secret"
+        assert ${lines[7]} same_as "${fg[yellow]}services     ${reset_color}svc                                      true         Service"
+        assert ${lines[8]} same_as "${fg[yellow]}ingresses    ${reset_color}ing          extensions                  true         Ingress"
+        assert ${lines[9]} same_as "${fg[yellow]}roles        ${reset_color}             rbac.authorization.k8s.io   true         Role"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl get -oyaml '
 }
 
 @test 'Testing completion: kubectl get pods **' {

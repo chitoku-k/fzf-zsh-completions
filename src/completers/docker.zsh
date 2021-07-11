@@ -49,7 +49,7 @@ _fzf_complete_docker() {
 
     if [[ $subcommand = 'inspect' ]]; then
         local inspect_type
-        inspect_type=($(_fzf_complete_parse_option_arguments '' '--type' '' $arguments || :))
+        inspect_type=($(_fzf_complete_parse_option_arguments '' '--type' '--type' "${arguments[@]}" || :))
         inspect_type=${${${(Q)inspect_type}[-1]}#--type=}
 
         case $inspect_type in

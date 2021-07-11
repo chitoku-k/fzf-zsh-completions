@@ -7,7 +7,7 @@ _fzf_complete_yarn() {
 
     if [[ $subcommand = 'workspace' ]]; then
         local workspace
-        if ! workspace=$(_fzf_complete_parse_argument 3 1 "$arguments" '') && [[ -z $workspace ]]; then
+        if ! workspace=$(_fzf_complete_parse_argument 3 1 '' "${arguments[@]}") && [[ -z $workspace ]]; then
             _fzf_complete_yarn-workspace '' "$@"
             return
         fi
