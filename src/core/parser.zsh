@@ -83,10 +83,10 @@ _fzf_complete_parse_completing_option() {
 _fzf_complete_parse_argument() {
     local start_index=$1
     local index=$2
-    local arguments=("${(Q)${(z)3}[@]}")
-    local options_argument_required=(${(z)4})
-    shift 4
+    local options_argument_required=(${(z)3})
+    shift 3
 
+    local arguments=("$@")
     if (( ${#arguments} < $start_index )); then
         return 1
     fi
@@ -115,24 +115,52 @@ _fzf_complete_parse_argument() {
 }
 
 _fzf_complete_parse_option() {
-    local result=()
     local shorts=(${(z)1})
     local longs=(${(z)2})
     local options_argument_required=(${(z)3})
     shift 3
 
-    local cmd=("${(Q)${(z)@}[@]}")
-    local cmd_shorts=(${(M)cmd:#-[^-]*})
+    local i j parsing_argument
+    local result=()
+    local start_index=2
+    local arguments=("$@")
 
-    local option_argument_required
-    for option_argument_required in $options_argument_required; do
-        cmd_shorts=(${cmd_shorts%%${option_argument_required#-}*})
+    for i in {$start_index..${#arguments}}; do
+        if [[ -n $parsing_argument ]]; then
+            parsing_argument=
+            continue
+        fi
+
+        if [[ ${arguments[$i]} = -- ]]; then
+            break
+        elif [[ ${arguments[$i]} = -[A-Za-z0-9]* ]]; then
+            for j in {$start_index..${#arguments[$i]}}; do
+                if [[ ${options_argument_required[(r)-${arguments[$i][$j]}]} = -${arguments[$i][$j]} ]]; then
+                    if [[ $j = ${#arguments[$i]} ]]; then
+                        parsing_argument=1
+                    else
+                        parsing_argument=
+                        break
+                    fi
+                elif [[ ${shorts[(r)-${arguments[$i][$j]}]} = -${arguments[$i][$j]} ]]; then
+                    if [[ $j = ${#arguments[$i]} ]]; then
+                        if (( ${#arguments} = $i )); then
+                            break
+                        fi
+                        parsing_argument=
+                    fi
+                    result+=(-${arguments[$i][$j]})
+                fi
+            done
+        elif [[ ${arguments[$i]} = --[A-Za-z0-9]* ]]; then
+            if [[ ${options_argument_required[(r)${arguments[$i]}]} = ${arguments[$i]} ]]; then
+                parsing_argument=1
+            elif [[ ${longs[(r)${arguments[$i]%%=*}]} = ${arguments[$i]%%=*} ]]; then
+                parsing_argument=
+                result+=(${arguments[$i]%%=*})
+            fi
+        fi
     done
-
-    cmd_shorts=(-${^${(ps::)cmd_shorts}})
-
-    result+=(${cmd_shorts:*shorts})
-    result+=(${cmd:*longs})
 
     if [[ -z $result ]]; then
         return 1
@@ -142,67 +170,68 @@ _fzf_complete_parse_option() {
 }
 
 _fzf_complete_parse_option_arguments() {
-    local result=()
-    local current idx indices preoptions
-    local short=${1#*-}
-    local long=${2#*--}
+    local shorts=(${(z)1})
+    local longs=(${(z)2})
     local options_argument_required=(${(z)3})
     shift 3
 
-    local cmd=("${(Q)${(z)@}[@]}")
-    while [[ $idx -le ${#cmd} ]]; do
-        indices=()
+    local i j parsing_argument
+    local result=()
+    local start_index=1
+    local arguments=("$@")
 
-        if [[ -n $short ]]; then
-            if [[ -n ${cmd[(rb:idx+1:)-[^-=]#$short?##]} ]]; then
-                current=${cmd[(ib:idx+1:)-[^-=]#$short?##]}
-                preoptions=(-${^${(ps::)${${cmd[current]%%$short*}#-}}})
-
-                if [[ -z ${options_argument_required:*preoptions} ]]; then
-                    indices+=($current)
-                    result[current]=${(qq)${cmd[current]/-[^-=$short]#$short/-$short}}
-                fi
-            fi
-
-            if [[ -n ${cmd[(rb:idx+1:)-[^-=]#$short]} ]]; then
-                current=${cmd[(ib:idx+1:)-[^-=]#$short]}
-
-                if [[ ${#cmd} != $current ]]; then
-                    indices+=($current)
-                    result[current]=${(qq)${cmd[current]}}
-                    result[current+1]=${(qq)${cmd[current+1]}}
-                fi
-            fi
+    for i in {$start_index..${#arguments}}; do
+        if [[ -n $parsing_argument ]]; then
+            parsing_argument=
+            continue
         fi
 
-        if [[ -n $long ]]; then
-            if [[ -n ${cmd[(rb:idx+1:)--$long=*]} ]]; then
-                current=${cmd[(ib:idx+1:)--$long=*]}
-                indices+=($current)
-                result[current]=${(qq)${cmd[current]}}
-            fi
-
-            if [[ -n ${cmd[(rb:idx+1:)--$long]} ]]; then
-                current=${cmd[(ib:idx+1:)--$long]}
-
-                if [[ ${#cmd} != $current ]]; then
-                    indices+=($current)
-                    result[current]=${(qq)${cmd[current]}}
-                    result[current+1]=${(qq)${cmd[current+1]}}
-                fi
-            fi
-        fi
-
-        if [[ -z $indices ]]; then
+        if [[ ${arguments[$i]} = -- ]]; then
             break
-        fi
+        elif [[ ${arguments[$i]} = -[A-Za-z0-9]* ]]; then
+            for j in {$start_index..${#arguments[$i]}}; do
+                if [[ ${options_argument_required[(r)-${arguments[$i][$j]}]} != -${arguments[$i][$j]} ]]; then
+                    continue
+                fi
 
-        idx=(${${(n)indices}[1]})
+                if [[ $j = ${#arguments[$i]} ]]; then
+                    parsing_argument=1
+
+                    if [[ ${shorts[(r)-${arguments[$i][$j]}]} = -${arguments[$i][$j]} ]] && (( ${#arguments} > $i )); then
+                        result+=(-${arguments[$i][$j]})
+                        result+=("${arguments[$i+1]}")
+                    fi
+                else
+                    parsing_argument=
+
+                    if [[ ${shorts[(r)-${arguments[$i][$j]}]} = -${arguments[$i][$j]} ]]; then
+                        result+=("-${arguments[$i][$j,-1]}")
+                    fi
+                    break
+                fi
+            done
+        elif [[ ${arguments[$i]} = --[A-Za-z0-9]* ]]; then
+            if [[ ${options_argument_required[(r)${arguments[$i]%%=*}]} != ${arguments[$i]%%=*} ]]; then
+                continue
+            fi
+
+            if [[ ${longs[(r)${arguments[$i]}]} = ${arguments[$i]} ]]; then
+                parsing_argument=1
+
+                if (( ${#arguments} > $i )); then
+                    result+=(${arguments[$i]})
+                    result+=("${arguments[$i+1]}")
+                fi
+            elif [[ ${longs[(r)${arguments[$i]%%=*}]} = ${arguments[$i]%%=*} ]]; then
+                parsing_argument=
+                result+=(${arguments[$i]})
+            fi
+        fi
     done
 
     if [[ -z $result ]]; then
         return 1
     fi
 
-    echo - $result
+    echo - ${(q)result}
 }

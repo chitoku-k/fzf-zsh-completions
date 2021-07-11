@@ -3,8 +3,8 @@
 _fzf_complete_env() {
     setopt local_options no_aliases
     local arguments=("${(Q)${(z)@}[@]}")
-    arguments=($(_fzf_complete_trim_env "${${(q)arguments[2,-1][@]}}"))
-    local cmd=${(Q)arguments[1]}
+    arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "${arguments[2,-1]}")"}[@]}")
+    local cmd=${arguments[1]}
 
     if (( $+functions[_fzf_complete_$cmd] )); then
         LBUFFER=${LBUFFER/env /}
