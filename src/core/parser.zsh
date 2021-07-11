@@ -133,7 +133,7 @@ _fzf_complete_parse_option() {
 
         if [[ ${arguments[$i]} = -- ]]; then
             break
-        elif [[ ${arguments[$i]} = -[A-Za-z0-9]* ]]; then
+        elif [[ ${arguments[$i]} = -[^-]* ]]; then
             for j in {$start_index..${#arguments[$i]}}; do
                 if [[ ${options_argument_required[(r)-${arguments[$i][$j]}]} = -${arguments[$i][$j]} ]]; then
                     if [[ $j = ${#arguments[$i]} ]]; then
@@ -152,7 +152,7 @@ _fzf_complete_parse_option() {
                     result+=(-${arguments[$i][$j]})
                 fi
             done
-        elif [[ ${arguments[$i]} = --[A-Za-z0-9]* ]]; then
+        elif [[ ${arguments[$i]} = --[^-]* ]]; then
             if [[ ${options_argument_required[(r)${arguments[$i]}]} = ${arguments[$i]} ]]; then
                 parsing_argument=1
             elif [[ ${longs[(r)${arguments[$i]%%=*}]} = ${arguments[$i]%%=*} ]]; then
