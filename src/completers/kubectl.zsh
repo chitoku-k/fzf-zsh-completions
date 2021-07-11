@@ -820,7 +820,7 @@ _fzf_complete_kubectl-resources() {
     local fzf_options=$1
     shift
 
-    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@" < <(
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <(
         kubectl api-resources --cached --verbs=get "${kubectl_arguments[@]}" |
         _fzf_complete_colorize $fg[yellow]
     )
@@ -1233,10 +1233,15 @@ _fzf_complete_kubectl_parse_resource_and_name() {
     if [[ $resource = */* ]]; then
         name=${resource#*/}
         resource=${resource%/*}
-    elif [[ -z $resource ]] && [[ $prefix != -* ]] && [[ $prefix = */* ]]; then
-        resource=${prefix%/*}
-        prefix_option=${prefix%/*}/
-        prefix=${prefix#$prefix_option}
+    elif [[ -z $resource ]] && [[ $prefix != -* ]]; then
+        if [[ $prefix = *,* ]]; then
+            prefix_option=${prefix%,*},
+            prefix=${prefix#$prefix_option}
+        elif [[ $prefix = */* ]]; then
+            resource=${prefix%/*}
+            prefix_option=${prefix%/*}/
+            prefix=${prefix#$prefix_option}
+        fi
     fi
 }
 
