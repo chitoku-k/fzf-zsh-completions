@@ -429,7 +429,7 @@ _fzf_complete_kubectl() {
         fi
 
         if [[ ${subcommands[1]} = get ]] && [[ $completing_option = (-L|--label-columns) ]]; then
-            if [[ $prefix =~ ',[^,]*$' ]]; then
+            if [[ $prefix = *,[^,]# ]]; then
                 local label_columns=${prefix%,*},
                 prefix_option=$prefix_option$label_columns
                 prefix=${prefix#$label_columns}
@@ -779,19 +779,19 @@ _fzf_complete_kubectl() {
             selector_type='field-selectors'
         fi
 
-        if [[ $prefix =~ ',[^,!=]*$' ]]; then
+        if [[ $prefix = *,[^,!=]# ]]; then
             local selector=${prefix%,*},
             prefix_option=$prefix_option$selector
             prefix=${prefix#$selector}
         fi
 
-        if [[ $prefix =~ '![^,!=]*$' ]]; then
+        if [[ $prefix = *![^,!=]# ]]; then
             local selector=${prefix%!*}!
             prefix_option=$prefix_option$selector
             prefix=${prefix#$selector}
         fi
 
-        if [[ $prefix =~ '=[^,!=]*$' ]]; then
+        if [[ $prefix = *=[^,!=]# ]]; then
             local selector=${prefix%=*}=
             prefix_option=$prefix_option$selector
             prefix=${prefix#$selector}
@@ -804,7 +804,7 @@ _fzf_complete_kubectl() {
     fi
 
     if [[ $completing_option = (-f|--filename) ]]; then
-        if [[ $last_argument =~ '(-[^-]*f|--filename)$' ]]; then
+        if [[ $last_argument = (-[^-]#f|--filename) ]]; then
             __fzf_generic_path_completion "$prefix" "$@" _fzf_compgen_path '' '' ' '
             return
         fi
