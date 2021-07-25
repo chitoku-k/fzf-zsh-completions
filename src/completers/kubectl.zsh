@@ -128,11 +128,11 @@ _fzf_complete_kubectl() {
         "${arguments[${#options_and_subcommand}+2,-1][@]}"
     )
 
-    if [[ ${subcommands[1]} =~ '^(apply|create|rollout|set)$' ]]; then
+    if [[ ${subcommands[1]} = (apply|create|rollout|set) ]]; then
         subcommands+=($(_fzf_complete_parse_argument 2 2 "${(F)kubectl_options_argument_required}" "${arguments[@]}" || :))
     fi
 
-    if [[ ${subcommands[1]} = 'annotate' ]]; then
+    if [[ ${subcommands[1]} = annotate ]]; then
         kubectl_options_argument_required+=(
             --dry-run
             -f
@@ -169,7 +169,7 @@ _fzf_complete_kubectl() {
         fi
     fi
 
-    if [[ ${subcommands[1]} = 'apply' ]]; then
+    if [[ ${subcommands[1]} = apply ]]; then
         kubectl_options_argument_required+=(
             --cascade
             --dry-run
@@ -199,9 +199,9 @@ _fzf_complete_kubectl() {
             fi
 
             if [[ -z $name ]]; then
-                if [[ ${subcommands[2]} = 'edit-last-applied' ]]; then
+                if [[ ${subcommands[2]} = edit-last-applied ]]; then
                     _fzf_complete_kubectl-resource-names '' "$@"
-                elif [[ ${subcommands[2]} = 'view-last-applied' ]]; then
+                elif [[ ${subcommands[2]} = view-last-applied ]]; then
                     _fzf_complete_kubectl-resource-names '--multi' "$@"
                 fi
             fi
@@ -209,7 +209,7 @@ _fzf_complete_kubectl() {
         fi
     fi
 
-    if [[ ${subcommands[1]} =~ '^(autoscale|edit|expose|patch)$' ]]; then
+    if [[ ${subcommands[1]} = (autoscale|edit|expose|patch) ]]; then
         kubectl_options_argument_required+=(
             --cluster-ip
             --container-port
@@ -256,7 +256,7 @@ _fzf_complete_kubectl() {
         fi
     fi
 
-    if [[ ${subcommands[1]} =~ '^(cordon|drain|uncordon)$' ]]; then
+    if [[ ${subcommands[1]} = (cordon|drain|uncordon) ]]; then
         kubectl_options_argument_required+=(
             --dry-run
             --grace-period
@@ -281,7 +281,7 @@ _fzf_complete_kubectl() {
         fi
     fi
 
-    if [[ ${subcommands[1]} =~ 'create' ]]; then
+    if [[ ${subcommands[1]} = create ]]; then
         kubectl_options_argument_required+=(
             --aggregation-rule
             --annotation
@@ -367,8 +367,8 @@ _fzf_complete_kubectl() {
         _fzf_complete_kubectl_parse_completing_option
         _fzf_complete_kubectl_parse_kubectl_arguments
 
-        if [[ ${subcommands[2]} = 'job' ]]; then
-            if [[ $completing_option = '--from' ]]; then
+        if [[ ${subcommands[2]} = job ]]; then
+            if [[ $completing_option = --from ]]; then
                 prefix=${prefix##*/}
                 prefix_option=${prefix_option##*/}cronjob/
                 resource=cronjob
@@ -383,7 +383,7 @@ _fzf_complete_kubectl() {
         fi
     fi
 
-    if [[ ${subcommands[1]} =~ '^(delete|describe|get|scale|wait)$' ]]; then
+    if [[ ${subcommands[1]} = (delete|describe|get|scale|wait) ]]; then
         kubectl_options_argument_required+=(
             --cascade
             --chunk-size
@@ -414,7 +414,7 @@ _fzf_complete_kubectl() {
         _fzf_complete_kubectl_parse_completing_option
         _fzf_complete_kubectl_parse_kubectl_arguments
 
-        if [[ -z $resource ]] && [[ ${subcommands[1]} = 'scale' ]]; then
+        if [[ -z $resource ]] && [[ ${subcommands[1]} = scale ]]; then
             resource=deployments,replicaset,replicationcontrollers,statefulset
         fi
 
@@ -428,7 +428,7 @@ _fzf_complete_kubectl() {
             return
         fi
 
-        if [[ ${subcommands[1]} = 'get' ]] && [[ $completing_option =~ '^(-L|--label-columns)$' ]]; then
+        if [[ ${subcommands[1]} = get ]] && [[ $completing_option = (-L|--label-columns) ]]; then
             if [[ $prefix =~ ',[^,]*$' ]]; then
                 local label_columns=${prefix%,*},
                 prefix_option=$prefix_option$label_columns
@@ -440,7 +440,7 @@ _fzf_complete_kubectl() {
         fi
     fi
 
-    if [[ ${subcommands[1]} = 'exec' ]]; then
+    if [[ ${subcommands[1]} = exec ]]; then
         kubectl_options_argument_required+=(
             -c
             --container
@@ -464,13 +464,13 @@ _fzf_complete_kubectl() {
             return
         fi
 
-        if [[ $completing_option =~ '^(-c|--container)$' ]]; then
+        if [[ $completing_option = (-c|--container) ]]; then
             _fzf_complete_kubectl-containers '' "$@"
             return
         fi
     fi
 
-    if [[ ${subcommands[1]} = 'explain' ]]; then
+    if [[ ${subcommands[1]} = explain ]]; then
         kubectl_options_argument_required+=(--api-version)
 
         _fzf_complete_kubectl_parse_resource_and_name 2
@@ -483,7 +483,7 @@ _fzf_complete_kubectl() {
         fi
     fi
 
-    if [[ ${subcommands[1]} = 'label' ]]; then
+    if [[ ${subcommands[1]} = label ]]; then
         kubectl_options_argument_required+=(
             --dry-run
             -f
@@ -520,7 +520,7 @@ _fzf_complete_kubectl() {
         fi
     fi
 
-    if [[ ${subcommands[1]} = 'logs' ]]; then
+    if [[ ${subcommands[1]} = logs ]]; then
         kubectl_options_argument_required+=(
             -c
             --container
@@ -549,13 +549,13 @@ _fzf_complete_kubectl() {
             return
         fi
 
-        if [[ $completing_option =~ '^(-c|--container)$' ]]; then
+        if [[ $completing_option = (-c|--container) ]]; then
             _fzf_complete_kubectl-containers '' "$@"
             return
         fi
     fi
 
-    if [[ ${subcommands[1]} = 'port-forward' ]]; then
+    if [[ ${subcommands[1]} = port-forward ]]; then
         kubectl_options_argument_required+=(
             --address
             --pod-running-timeout
@@ -584,7 +584,7 @@ _fzf_complete_kubectl() {
         fi
     fi
 
-    if [[ ${subcommands[1]} = 'rollout' ]]; then
+    if [[ ${subcommands[1]} = rollout ]]; then
         _fzf_complete_kubectl_parse_resource_and_name 3
         _fzf_complete_kubectl_parse_completing_option
         _fzf_complete_kubectl_parse_kubectl_arguments
@@ -606,7 +606,7 @@ _fzf_complete_kubectl() {
         fi
     fi
 
-    if [[ ${subcommands[1]} = 'set' ]]; then
+    if [[ ${subcommands[1]} = set ]]; then
         kubectl_options_argument_required+=(
             -c
             --containers
@@ -654,7 +654,7 @@ _fzf_complete_kubectl() {
                 return
             fi
 
-            if [[ ${subcommands[2]} = 'image' ]]; then
+            if [[ ${subcommands[2]} = image ]]; then
                 _fzf_complete_kubectl-containers '--multi' "$@"
                 return
             fi
@@ -662,7 +662,7 @@ _fzf_complete_kubectl() {
         fi
     fi
 
-    if [[ ${subcommands[1]} = 'taint' ]]; then
+    if [[ ${subcommands[1]} = taint ]]; then
         kubectl_options_argument_required+=(
             --dry-run
             --field-manager
@@ -694,7 +694,7 @@ _fzf_complete_kubectl() {
         fi
     fi
 
-    if [[ ${subcommands[1]} = 'top' ]]; then
+    if [[ ${subcommands[1]} = top ]]; then
         kubectl_options_argument_required+=(
             -l
             --selector
@@ -720,7 +720,7 @@ _fzf_complete_kubectl() {
         fi
     fi
 
-    if [[ ${subcommands[1]} =~ '^(diff|run)?$' ]]; then
+    if [[ ${subcommands[1]} = (diff|run|) ]]; then
         kubectl_options_argument_required+=(
             --annotations
             --cascade
@@ -755,12 +755,12 @@ _fzf_complete_kubectl() {
         _fzf_complete_kubectl_parse_completing_option
         _fzf_complete_kubectl_parse_kubectl_arguments
 
-        if [[ -z $resource ]] && [[ ${subcommands[1]} = 'run' ]]; then
+        if [[ -z $resource ]] && [[ ${subcommands[1]} = run ]]; then
             resource=pods
         fi
     fi
 
-    if [[ $completing_option =~ '^(-n|--namespace)$' ]]; then
+    if [[ $completing_option = (-n|--namespace) ]]; then
         kubectl_arguments[${kubectl_arguments[(i)-l]},${kubectl_arguments[(i)-l]}+1]=()
         kubectl_arguments[${kubectl_arguments[(i)--selector]},${kubectl_arguments[(i)--selector]}+1]=()
         kubectl_arguments=("${(@)kubectl_arguments:#-l*}")
@@ -773,9 +773,9 @@ _fzf_complete_kubectl() {
         return
     fi
 
-    if [[ $completing_option =~ '^(-l|--labels|--selector|--field-selector)$' ]]; then
+    if [[ $completing_option = (-l|--labels|--selector|--field-selector) ]]; then
         local selector_type='selectors'
-        if [[ $completing_option = '--field-selector' ]]; then
+        if [[ $completing_option = --field-selector ]]; then
             selector_type='field-selectors'
         fi
 
@@ -803,7 +803,7 @@ _fzf_complete_kubectl() {
         return
     fi
 
-    if [[ $completing_option =~ '^(-f|--filename)$' ]]; then
+    if [[ $completing_option = (-f|--filename) ]]; then
         if [[ $last_argument =~ '(-[^-]*f|--filename)$' ]]; then
             __fzf_generic_path_completion "$prefix" "$@" _fzf_compgen_path '' '' ' '
             return
@@ -899,7 +899,7 @@ _fzf_complete_kubectl-containers() {
 }
 
 _fzf_complete_kubectl-containers_post() {
-    if [[ ${subcommands[1]} = 'set' ]] && [[ ${subcommands[2]} = 'image' ]]; then
+    if [[ ${subcommands[1]} = set ]] && [[ ${subcommands[2]} = image ]]; then
         awk '{ printf "%s=%s", $1, $2 }'
         return
     fi
@@ -980,9 +980,9 @@ _fzf_complete_kubectl-selectors() {
         selector=${${${selector##*,}%%=*}%%!}
     fi
 
-    if [[ ${subcommands[1]} = 'taint' ]]; then
+    if [[ ${subcommands[1]} = taint ]]; then
         resource=nodes
-    elif [[ ${subcommands[1]} = 'top' ]] && [[ -z $resource ]]; then
+    elif [[ ${subcommands[1]} = top ]] && [[ -z $resource ]]; then
         return
     fi
 

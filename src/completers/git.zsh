@@ -79,14 +79,14 @@ _fzf_complete_git() {
     local subcommand=${arguments[2]}
     local last_argument=${arguments[-1]}
 
-    if [[ $subcommand =~ '(diff|log|rebase|switch)' ]]; then
+    if [[ $subcommand = (diff|log|rebase|switch) ]]; then
         if [[ ${arguments[(r)--]} = -- ]]; then
-            if [[ $subcommand =~ 'diff' ]]; then
+            if [[ $subcommand = diff ]]; then
                 _fzf_complete_git-status-files 'unstaged' '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" "$@"
                 return
             fi
 
-            if [[ $subcommand = 'log' ]]; then
+            if [[ $subcommand = log ]]; then
                 _fzf_complete_git-files_index '' '--multi' "$@"
                 return
             fi
@@ -96,12 +96,12 @@ _fzf_complete_git() {
         return
     fi
 
-    if [[ $subcommand =~ '(branch|merge|revert)' ]]; then
+    if [[ $subcommand = (branch|merge|revert) ]]; then
         _fzf_complete_git-commits '--multi' "$@"
         return
     fi
 
-    if [[ $subcommand = 'checkout' ]]; then
+    if [[ $subcommand = checkout ]]; then
         local prefix_option completing_option
         local git_options_argument_required=(-b -B --orphan --conflict --pathspec-from-file)
         local git_options_argument_optional=()
@@ -148,7 +148,7 @@ _fzf_complete_git() {
         return
     fi
 
-    if [[ $subcommand = 'cherry-pick' ]]; then
+    if [[ $subcommand = cherry-pick ]]; then
         local prefix_option completing_option
         local git_options_argument_required=(--cleanup --strategy --strategy-option --strategy-option=diff-algorithm -X)
         local git_options_argument_optional=(--gpg-sign -S)
@@ -209,7 +209,7 @@ _fzf_complete_git() {
         return
     fi
 
-    if [[ $subcommand = 'restore' ]]; then
+    if [[ $subcommand = restore ]]; then
         local prefix_option completing_option
         local git_options_argument_required=(--source -s)
         local git_options_argument_optional=()
@@ -246,7 +246,7 @@ _fzf_complete_git() {
         return
     fi
 
-    if [[ $subcommand = 'reset' ]]; then
+    if [[ $subcommand = reset ]]; then
         local prefix_option completing_option
         local git_options_argument_required=(--pathspec-from-file)
         local git_options_argument_optional=()
@@ -285,7 +285,7 @@ _fzf_complete_git() {
         return
     fi
 
-    if [[ $subcommand = 'commit' ]]; then
+    if [[ $subcommand = commit ]]; then
         if [[ -n ${arguments[(r)--]} ]] || [[ $last_argument != -* && $prefix != -* ]]; then
             _fzf_complete_git-status-files 'unstaged' '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" "$@"
             return
@@ -338,12 +338,12 @@ _fzf_complete_git() {
         return
     fi
 
-    if [[ $subcommand = 'add' ]]; then
+    if [[ $subcommand = add ]]; then
         _fzf_complete_git-status-files 'unstaged' '--untracked-files=all' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" "$@"
         return
     fi
 
-    if [[ $subcommand = 'fetch' ]]; then
+    if [[ $subcommand = fetch ]]; then
         local prefix_option completing_option
         local git_options_argument_required=(--depth --deepen -j --jobs --negotiation-tip -o --recurse-submodules-default --refmap --server-option --shallow-exclude --shallow-since --submodule-prefix --upload-pack)
         local git_options_argument_optional=(--recurse-submodules -S)
@@ -397,7 +397,7 @@ _fzf_complete_git() {
         return
     fi
 
-    if [[ $subcommand = 'pull' ]]; then
+    if [[ $subcommand = pull ]]; then
         local prefix_option completing_option
         local git_options_argument_required=(--cleanup --date --depth --deepen --negotiation-tip -o -s --server-option --shallow-exclude --shallow-since --strategy --strategy-option --strategy-option=diff-algorithm --upload-pack -X)
         local git_options_argument_optional=(--gpg-sign --log --rebase --recurse-submodules -S)
@@ -485,7 +485,7 @@ _fzf_complete_git() {
         return
     fi
 
-    if [[ $subcommand = 'push' ]]; then
+    if [[ $subcommand = push ]]; then
         local prefix_option completing_option
         local git_options_argument_required=(--exec -o --push-option --receive-pack --recurse-submodules --repo)
         local git_options_argument_optional=(--force-with-lease --signed)
@@ -545,12 +545,12 @@ _fzf_complete_git() {
         return
     fi
 
-    if [[ $subcommand = 'rm' ]]; then
+    if [[ $subcommand = rm ]]; then
         _fzf_complete_git-files_tree '' '--multi' "$@"
         return
     fi
 
-    if [[ $subcommand = 'show' ]]; then
+    if [[ $subcommand = show ]]; then
         local prefix_option completing_option
         local git_options_argument_required=(
             -l
@@ -710,7 +710,7 @@ _fzf_complete_git-commits_post() {
         return
     fi
 
-    if [[ $subcommand = 'push' ]] && [[ -z $prefix_ref ]]; then
+    if [[ $subcommand = push ]] && [[ -z $prefix_ref ]]; then
         echo -n $input
         return
     fi
@@ -848,7 +848,7 @@ _fzf_complete_git-status-files() {
         local cdup=$(git rev-parse --show-cdup 2> /dev/null)
 
         for filename in ${(0)files}; do
-            if [[ $previous_status != 'R' ]]; then
+            if [[ $previous_status != R ]]; then
                 awk \
                     -v RS='' \
                     -v state=$state \
@@ -881,7 +881,7 @@ _fzf_complete_git-repositories() {
     local fzf_options=$1
     shift
 
-    if [[ $subcommand = 'fetch' ]]; then
+    if [[ $subcommand = fetch ]]; then
         local groups=$(git config --get-regexp '^remotes\.' 2> /dev/null)
         groups=${(Q)${(F)${${(q)${(f)groups}}#remotes.}}}
     fi

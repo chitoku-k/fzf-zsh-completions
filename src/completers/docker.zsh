@@ -8,37 +8,37 @@ _fzf_complete_docker() {
     local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$@")"}[@]}")
     local subcommand=${arguments[2]}
 
-    if [[ $subcommand =~ ^(create|history|run)$ ]]; then
+    if [[ $subcommand = (create|history|run) ]]; then
         _fzf_complete_docker-images '' "$@"
         return
     fi
 
-    if [[ $subcommand = 'push' ]]; then
+    if [[ $subcommand = push ]]; then
         _fzf_complete_docker-images-repository '' "$@"
         return
     fi
 
-    if [[ $subcommand =~ ^(rmi|save|tag)$ ]]; then
+    if [[ $subcommand = (rmi|save|tag) ]]; then
         _fzf_complete_docker-images '--multi' "$@"
         return
     fi
 
-    if [[ $subcommand =~ ^(attach|exec|top)$ ]]; then
+    if [[ $subcommand = (attach|exec|top) ]]; then
         _fzf_complete_docker-containers '' '' "$@"
         return
     fi
 
-    if [[ $subcommand =~ ^(kill|pause|stop|unpause)$ ]]; then
+    if [[ $subcommand = (kill|pause|stop|unpause) ]]; then
         _fzf_complete_docker-containers '' '--multi' "$@"
         return
     fi
 
-    if [[ $subcommand =~ ^(commit|diff|export|logs|port|rename)$ ]]; then
+    if [[ $subcommand = (commit|diff|export|logs|port|rename) ]]; then
         _fzf_complete_docker-containers '--all' '' "$@"
         return
     fi
 
-    if [[ $subcommand = 'cp' ]]; then
+    if [[ $subcommand = cp ]]; then
         if [[ $prefix = */* ]]; then
             _fzf_path_completion "$prefix" "$@"
         else
@@ -47,7 +47,7 @@ _fzf_complete_docker() {
         return
     fi
 
-    if [[ $subcommand = 'inspect' ]]; then
+    if [[ $subcommand = inspect ]]; then
         local inspect_type
         inspect_type=($(_fzf_complete_parse_option_arguments '' '--type' '--type' "${arguments[@]}" || :))
         inspect_type=${${${(Q)inspect_type}[-1]}#--type=}
@@ -80,7 +80,7 @@ _fzf_complete_docker() {
         return
     fi
 
-    if [[ $subcommand =~ ^(restart|rm|start|stats|update|wait)$ ]]; then
+    if [[ $subcommand = (restart|rm|start|stats|update|wait) ]]; then
         _fzf_complete_docker-containers '--all' '--multi' "$@"
         return
     fi
@@ -141,7 +141,7 @@ _fzf_complete_docker-containers_post() {
         return
     fi
 
-    if [[ $subcommand = 'cp' ]]; then
+    if [[ $subcommand = cp ]]; then
         echo -n $input:
     else
         echo $input

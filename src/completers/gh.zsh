@@ -10,7 +10,7 @@ _fzf_complete_gh() {
     local gh_subcommand=${arguments[3]}
     local last_argument=${arguments[-1]}
 
-    if [[ $gh_command = 'pr' ]]; then
+    if [[ $gh_command = pr ]]; then
         local prefix_option completing_option
         local gh_options_argument_required=(-R --repo)
         local gh_options_argument_optional=()
@@ -23,15 +23,15 @@ _fzf_complete_gh() {
                 ;;
 
             *)
-                if [[ $gh_subcommand =~ '(close|merge|ready)' ]]; then
+                if [[ $gh_subcommand = (close|merge|ready) ]]; then
                     _fzf_complete_gh-pr '' 'open' "$@"
                 fi
 
-                if [[ $gh_subcommand = 'reopen' ]]; then
+                if [[ $gh_subcommand = reopen ]]; then
                     _fzf_complete_gh-pr '' 'closed' "$@"
                 fi
 
-                if [[ $gh_subcommand =~ '(checkout|comment|diff|edit|review|view)' ]]; then
+                if [[ $gh_subcommand = (checkout|comment|diff|edit|review|view) ]]; then
                     _fzf_complete_gh-pr '' 'all' "$@"
                 fi
 
