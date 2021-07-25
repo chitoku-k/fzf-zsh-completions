@@ -5,7 +5,7 @@ _fzf_complete_npm() {
     local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$@")"}[@]}")
     local subcommand=${arguments[2]}
 
-    if [[ $subcommand = 'run' ]]; then
+    if [[ $subcommand = run ]]; then
         _fzf_complete_npm-run '' "$@"
         return
     fi

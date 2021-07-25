@@ -5,7 +5,7 @@ _fzf_complete_composer() {
     local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$@")"}[@]}")
     local subcommand=${arguments[2]}
 
-    if [[ ${#arguments} = 1 ]] || [[ $subcommand = 'run-script' ]]; then
+    if [[ ${#arguments} = 1 ]] || [[ $subcommand = run-script ]]; then
         _fzf_complete_composer-run-script '' "$@"
         return
     fi

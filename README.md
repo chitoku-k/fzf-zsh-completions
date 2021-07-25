@@ -71,39 +71,32 @@ git rebase -i **<TAB>
   - Tasks (terminate-task)
   - User-provided service instance’s credentials (update-user-provided-service)
 - composer
-  - Scripts (run-script)
+  - Scripts
 - gh
-  - Pull Requests (pr \*)
+  - Pull Requests
 - git
-  - Commit-ish (branch, checkout, cherry-pick, diff, log, merge, pull, rebase, reset, revert, show, and switch)
-  - Commit messaees (commit)
-  - Files (add, checkout, commit, diff, reset, restore, rm, and show)
-  - Remotes (pull)
+  - Commit-ish
+  - Commit messaees
+  - Files
+  - Remotes
 - kubectl
-  - Annotations (annotate)
-  - Containers (exec, logs, and set)
-  - Field selectors (get)
-  - Files (apply)
-  - Labels (annotate, apply, cordon, delete, describe, drain, diff, get, label, logs, run, scale, set, taint, top, uncordon, and wait)
-  - Nodes (cordon, drain, and uncordon)
-  - Ports (port-forward)
-  - Resources (annotate, apply, autoscale, create, delete, describe, edit, exec, explain, expose, get, label, logs, patch, port-forward, rollout, set, scale, taint, top, and wait)
-  - Taints (taint)
+  - Annotations/Labels/Field selectors
+  - Containers/Ports
+  - Files
+  - Resources
+  - Taints
 - make
   - Targets
 - npm
-  - Scripts (run)
+  - Scripts
 - systemctl
   - Services
 - yarn
-  - Scripts (run, workspace, and workspace \<workspace\>)
+  - Scripts
 - docker
-  - Containers (attach, commit, cp, diff, exec, export, inspect, kill, logs, pause, ports, rename, restart, rm, start, stats, stop, update, unpause, and wait)
-  - Files (cp)
-  - Images (create, history, inspect, rmi, run, save, and tag)
-  - Networks (inspect)
-  - Repositories (push)
-  - Volumes (inspect)
+  - Containers/Images/Networks/Volumes
+  - Files
+  - Repositories
 
 ## Testing
 
