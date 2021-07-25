@@ -132,7 +132,7 @@ _fzf_complete_cf() {
         fi
 
         if [[ $completing_option = -p ]]; then
-            if [[ $last_argument =~ '-[^-]*p$' ]]; then
+            if [[ $last_argument = -[^-]#p ]]; then
                 __fzf_generic_path_completion "$prefix" "$@" _fzf_compgen_path '' '' ' '
                 return
             fi
@@ -387,7 +387,7 @@ _fzf_complete_cf() {
         fi
 
         if [[ $completing_option = -p ]]; then
-            if [[ $last_argument =~ '-[^-]*p$' ]]; then
+            if [[ $last_argument = -[^-]#p ]]; then
                 __fzf_generic_path_completion "$prefix" "$@" _fzf_compgen_path '' '' ' '
                 return
             fi
@@ -501,7 +501,7 @@ _fzf_complete_cf() {
         fi
 
         if [[ $completing_option = -p ]]; then
-            if [[ $last_argument =~ '-[^-]*p$' ]]; then
+            if [[ $last_argument = -[^-]#p ]]; then
                 __fzf_generic_path_completion "$prefix" "$@" _fzf_compgen_path '' '' ' '
                 return
             fi
