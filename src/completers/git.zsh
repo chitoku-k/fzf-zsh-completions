@@ -385,7 +385,7 @@ _fzf_complete_git() {
 
             *)
                 local repository
-                if [[ $@ =~ '--multiple' ]] || ! repository=$(_fzf_complete_parse_argument 3 1 "${(F)git_options_argument_required}" "${arguments[@]}") && [[ -z $repository ]]; then
+                if _fzf_complete_parse_option '' '--multiple' '' "${arguments[@]}" > /dev/null || ! repository=$(_fzf_complete_parse_argument 3 1 "${(F)git_options_argument_required}" "${arguments[@]}"); then
                     _fzf_complete_git-repositories '--multi' "$@"
                     return
                 fi
