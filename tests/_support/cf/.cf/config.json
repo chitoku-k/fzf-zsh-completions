@@ -1,0 +1,33 @@
+{
+  "AccessToken": "bearer token",
+  "APIVersion": "3.74.0",
+  "AsyncTimeout": 0,
+  "AuthorizationEndpoint": "https://uaa.example.com",
+  "ColorEnabled": "",
+  "ConfigVersion": 4,
+  "DopplerEndPoint": "wss://doppler.example.com:443",
+  "Locale": "en_US",
+  "LogCacheEndPoint": "https://log-cache.example.com",
+  "MinCLIVersion": "6.23.0",
+  "MinRecommendedCLIVersion": "6.23.0",
+  "OrganizationFields": {
+    "GUID": "00000000-0000-0000-0000-000000000000",
+    "Name": "org-01"
+  },
+  "PluginRepos": [],
+  "RefreshToken": "token",
+  "RoutingAPIEndpoint": "https://api.example.com/routing",
+  "SpaceFields": {
+    "GUID": "00000000-0000-0000-0000-000000000000",
+    "Name": "space-01",
+    "AllowSSH": true
+  },
+  "SSHOAuthClient": "ssh-proxy",
+  "SSLDisabled": false,
+  "Target": "https://api.example.com",
+  "Trace": "",
+  "UaaEndpoint": "https://uaa.example.com",
+  "UAAGrantType": "",
+  "UAAOAuthClient": "cf",
+  "UAAOAuthClientSecret": ""
+}
