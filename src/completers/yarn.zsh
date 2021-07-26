@@ -23,7 +23,7 @@ _fzf_complete_yarn() {
         return
     fi
 
-    if [[ ${#arguments} = 1 ]] || [[ $subcommand = run ]]; then
+    if [[ ${#arguments} = 1 ]]; then
         _fzf_complete_npm_run "$@"
         return
     fi
