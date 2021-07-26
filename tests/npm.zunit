@@ -4,13 +4,14 @@
     load ../fzf-zsh-completions.plugin.zsh
     load _helpers/assertions.zsh
     load _helpers/mock.zsh
-
+    mock _fzf_complete_npm_unknown-subcommand
     mock __fzf_extract_command
 
     pushd tests/_support/npm
 }
 
 @teardown {
+    (unmock _fzf_complete_npm_unknown-subcommand)
     (unmock __fzf_extract_command)
 }
 
@@ -36,6 +37,29 @@
 
     prefix=
     _fzf_complete_npm 'npm '
+}
+
+@test 'Testing completion: npm unknown-subcommand **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'npm unknown-subcommand '
+
+        echo 'npm'
+    }
+
+    _fzf_complete_npm_unknown-subcommand_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'npm unknown-subcommand '
+    }
+
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_npm 'npm unknown-subcommand '
+
+    assert _fzf_complete_npm_unknown-subcommand mock_times 1
 }
 
 @test 'Testing completion: TEST1=value1 TEST2=value2 npm **' {

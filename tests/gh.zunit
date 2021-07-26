@@ -5,11 +5,13 @@
     load _helpers/mock.zsh
     load _helpers/assertions.zsh
     mock gh
+    mock _fzf_complete_gh_unknown-subcommand
     mock __fzf_extract_command
 }
 
 @teardown {
     (unmock gh)
+    (unmock _fzf_complete_gh_unknown-subcommand)
     (unmock __fzf_extract_command)
 }
 
@@ -59,6 +61,29 @@
 
     prefix=
     _fzf_complete_gh 'TEST1=value1 TEST2=value2 gh '
+}
+
+@test 'Testing completion: gh unknown-subcommand **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'gh unknown-subcommand '
+
+        echo 'gh'
+    }
+
+    _fzf_complete_gh_unknown-subcommand_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'gh unknown-subcommand '
+    }
+
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_gh 'gh unknown-subcommand '
+
+    assert _fzf_complete_gh_unknown-subcommand mock_times 1
 }
 
 @test 'Testing completion: gh pr **' {

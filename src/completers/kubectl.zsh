@@ -128,6 +128,10 @@ _fzf_complete_kubectl() {
         "${arguments[${#options_and_subcommand}+2,-1][@]}"
     )
 
+    if (( $+functions[_fzf_complete_kubectl_${subcommands[1]}] )) && _fzf_complete_kubectl_${subcommands[1]} "$@"; then
+        return
+    fi
+
     if [[ ${subcommands[1]} = (apply|create|rollout|set) ]]; then
         subcommands+=($(_fzf_complete_parse_argument 2 2 "${(F)kubectl_options_argument_required}" "${arguments[@]}" || :))
     fi

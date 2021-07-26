@@ -5,9 +5,13 @@ _fzf_complete_yarn() {
     local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$@")"}[@]}")
     local subcommand=${arguments[2]}
 
+    if (( $+functions[_fzf_complete_yarn_${subcommand}] )) && _fzf_complete_yarn_${subcommand} "$@"; then
+        return
+    fi
+
     if [[ $subcommand = workspace ]]; then
         local workspace
-        if ! workspace=$(_fzf_complete_parse_argument 3 1 '' "${arguments[@]}") && [[ -z $workspace ]]; then
+        if ! workspace=$(_fzf_complete_parse_argument 3 1 '' "${arguments[@]}"); then
             _fzf_complete_yarn-workspace '' "$@"
             return
         fi
@@ -15,12 +19,12 @@ _fzf_complete_yarn() {
         local npm_directory=$({
             yarn workspaces --json info | jq --arg workspace "$workspace" -r '.data | fromjson | .[$workspace].location'
         } 2> /dev/null)
-        _fzf_complete_npm-run '' "$@"
+        _fzf_complete_npm_run "$@"
         return
     fi
 
     if [[ ${#arguments} = 1 ]] || [[ $subcommand = run ]]; then
-        _fzf_complete_npm-run '' "$@"
+        _fzf_complete_npm_run "$@"
         return
     fi
 

@@ -8,6 +8,10 @@ _fzf_complete_docker() {
     local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$@")"}[@]}")
     local subcommand=${arguments[2]}
 
+    if (( $+functions[_fzf_complete_docker_${subcommand}] )) && _fzf_complete_docker_${subcommand} "$@"; then
+        return
+    fi
+
     if [[ $subcommand = (create|history|run) ]]; then
         _fzf_complete_docker-images '' "$@"
         return

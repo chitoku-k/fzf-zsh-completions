@@ -79,6 +79,10 @@ _fzf_complete_git() {
     local subcommand=${arguments[2]}
     local last_argument=${arguments[-1]}
 
+    if (( $+functions[_fzf_complete_git_${subcommand}] )) && _fzf_complete_git_${subcommand} "$@"; then
+        return
+    fi
+
     if [[ $subcommand = (diff|log|rebase|switch) ]]; then
         if [[ ${arguments[(r)--]} = -- ]]; then
             if [[ $subcommand = diff ]]; then

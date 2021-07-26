@@ -10,6 +10,10 @@ _fzf_complete_gh() {
     local gh_subcommand=${arguments[3]}
     local last_argument=${arguments[-1]}
 
+    if (( $+functions[_fzf_complete_gh_${gh_command}] )) && _fzf_complete_gh_${gh_command} "$@"; then
+        return
+    fi
+
     if [[ $gh_command = pr ]]; then
         local prefix_option completing_option
         local gh_options_argument_required=(-R --repo)

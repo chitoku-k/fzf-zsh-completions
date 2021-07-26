@@ -5,6 +5,7 @@
     load _helpers/mock.zsh
     load _helpers/assertions.zsh
     mock cf
+    mock _fzf_complete_cf_unknown-subcommand
     mock __fzf_extract_command
 
     CF_HOME=tests/_support/cf
@@ -12,6 +13,7 @@
 
 @teardown {
     (unmock cf)
+    (unmock _fzf_complete_cf_unknown-subcommand)
     (unmock __fzf_extract_command)
 }
 
@@ -37,6 +39,29 @@
 
     prefix=
     _fzf_complete_cf 'cf '
+}
+
+@test 'Testing completion: cf unknown-subcommand **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf unknown-subcommand '
+
+        echo 'cf'
+    }
+
+    _fzf_complete_cf_unknown-subcommand_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf unknown-subcommand '
+    }
+
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf unknown-subcommand '
+
+    assert _fzf_complete_cf_unknown-subcommand mock_times 1
 }
 
 @test 'Testing completion: cf app **' {

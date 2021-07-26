@@ -4,6 +4,7 @@
     load ../fzf-zsh-completions.plugin.zsh
     load _helpers/mock.zsh
     load _helpers/assertions.zsh
+    mock _fzf_complete_git_unknown-subcommand
     mock __fzf_extract_command
 
     pushd tests/_support/git
@@ -28,6 +29,7 @@
 }
 
 @teardown {
+    (unmock _fzf_complete_git_unknown-subcommand)
     (unmock __fzf_extract_command)
     pushd $DIR
 
@@ -85,6 +87,29 @@
 
     prefix=
     _fzf_complete_git 'TEST1=value1 TEST2=value2 git '
+}
+
+@test 'Testing completion: git unknown-subcommand **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git unknown-subcommand '
+
+        echo 'git'
+    }
+
+    _fzf_complete_git_unknown-subcommand_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git unknown-subcommand '
+    }
+
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_git 'git unknown-subcommand '
+
+    assert _fzf_complete_git_unknown-subcommand mock_times 1
 }
 
 @test 'Testing completion: git checkout **' {

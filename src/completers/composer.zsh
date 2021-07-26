@@ -5,24 +5,25 @@ _fzf_complete_composer() {
     local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$@")"}[@]}")
     local subcommand=${arguments[2]}
 
-    if [[ ${#arguments} = 1 ]] || [[ $subcommand = run-script ]]; then
-        _fzf_complete_composer-run-script '' "$@"
+    if (( $+functions[_fzf_complete_composer_${subcommand}] )) && _fzf_complete_composer_${subcommand} "$@"; then
+        return
+    fi
+
+    if [[ ${#arguments} = 1 ]]; then
+        _fzf_complete_composer_run-script "$@"
         return
     fi
 
     _fzf_path_completion "$prefix" "$@"
 }
 
-_fzf_complete_composer-run-script() {
-    local fzf_options=$1
-    shift
-
+_fzf_complete_composer_run-script() {
     local composer=./composer.json
     if [[ ! -f $composer ]]; then
         return
     fi
 
-    _fzf_complete --ansi --read0 --print0 --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- "$@" < <(php -r '
+    _fzf_complete --ansi --read0 --print0 --tiebreak=index -- "$@" < <(php -r '
         echo implode(
             "\0",
             array_keys(
@@ -33,7 +34,7 @@ _fzf_complete_composer-run-script() {
         );' < $composer 2> /dev/null)
 }
 
-_fzf_complete_composer-run-script_post() {
+_fzf_complete_composer_run-script_post() {
     local script
     local input=$(cat)
 
