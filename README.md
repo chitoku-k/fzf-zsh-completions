@@ -54,6 +54,10 @@ git rebase -i **<TAB>
   - Orgs/Spaces/...
 - composer
   - Scripts
+- docker
+  - Containers/Images/Networks/Volumes
+  - Files
+  - Repositories
 - gh
   - Pull Requests
 - git
@@ -75,10 +79,31 @@ git rebase -i **<TAB>
   - Services
 - yarn
   - Scripts
-- docker
-  - Containers/Images/Networks/Volumes
-  - Files
-  - Repositories
+
+## Extension
+
+In order to add/override completions for subcommands to the existing completion,
+define a function as in the following:
+
+```zsh
+# This function implements `kubectl view-serviceaccount-kubeconfig **`
+# Function name must be _fzf_complete_(command)_(subcommand)
+_fzf_complete_kubectl_view-serviceaccount-kubeconfig() {
+    # Call preprocessors
+    _fzf_complete_kubectl_parse_resource_and_name 2
+    _fzf_complete_kubectl_parse_completing_option
+    _fzf_complete_kubectl_parse_kubectl_arguments
+
+    # Return status code other than 0 to fall back to default
+    if [[ -n $completing_option ]]; then
+        return 1
+    fi
+
+    # Call any one of completion functions; see source code as to their usage
+    resource=serviceaccounts
+    _fzf_complete_kubectl-resource-names '' "$@"
+}
+```
 
 ## Testing
 
