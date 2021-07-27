@@ -19,6 +19,7 @@ _fzf_complete_kubectl() {
         --client-key
         --cluster
         --context
+        --field-selector
         -l
         --label-columns
         -L
