@@ -10,15 +10,52 @@ PREVIEW_OPTIONS
 )
 
 _fzf_complete_systemctl() {
+    setopt local_options no_aliases
+    local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$@")"}[@]}")
+
+    local systemctl_options_argument_required=(
+        --boot-loader-entry
+        --boot-loader-menu
+        --check-inhibitors
+        -H
+        --host
+        --job-mode
+        --kill-who
+        --legend
+        --lines
+        -M
+        --machine
+        --message
+        -n
+        -o
+        --output
+        -p
+        -P
+        --preset-mode
+        --property
+        --reboot-argument
+        --root
+        -s
+        --signal
+        --state
+        -t
+        --timestamp
+        --type
+        --what
+    )
+    local subcommand=$(_fzf_complete_parse_argument 2 1 "${(F)systemctl_options_argument_required}" "${arguments[@]}")
+
+    if (( $+functions[_fzf_complete_systemctl_${subcommand}] )) && _fzf_complete_systemctl_${subcommand} "$@"; then
+        return
+    fi
+
     _fzf_complete_systemctl-units '' "$@"
 }
 
 _fzf_complete_systemctl-units() {
-    setopt local_options no_aliases
     local fzf_options=$1
     shift
 
-    local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$@")"}[@]}")
     local systemctl_options=(--full --no-legend --no-pager)
     systemctl_options+=($(_fzf_complete_parse_option '' '--user --system' '' "${arguments[@]}")) || :
 

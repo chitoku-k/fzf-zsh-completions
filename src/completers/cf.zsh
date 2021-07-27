@@ -14,6 +14,10 @@ _fzf_complete_cf() {
     local cf_options_argument_required=()
     local subcommand=$(_fzf_complete_parse_argument 2 1 "${(F)cf_options_argument_required}" "${arguments[@]}")
 
+    if (( $+functions[_fzf_complete_cf_${subcommand}] )) && _fzf_complete_cf_${subcommand} "$@"; then
+        return
+    fi
+
     if [[ $subcommand = (app|d|delete|disable-ssh|e|enable-ssh|env|events|get-health-check|logs|rename|restage|restart|rg|rs|sp|ssh-enabled|st|start|stop|tasks|v3-delete|v3-droplets|v3-env|v3-get-health-check|v3-packages|v3-restart|v3-start|v3-stop) ]]; then
         resource=apps
         _fzf_complete_cf-resources '' "$@"

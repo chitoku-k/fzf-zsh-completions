@@ -6,6 +6,7 @@
     load _helpers/assertions.zsh
     mock systemctl
     mock xargs
+    mock _fzf_complete_systemctl_unknown-subcommand
     mock __fzf_extract_command
     FZF_DEFAULT_OPTS=--reverse
 
@@ -21,7 +22,57 @@
 @teardown {
     (unmock systemctl)
     (unmock xargs)
+    (unmock _fzf_complete_systemctl_status)
+    (unmock _fzf_complete_systemctl_unknown-subcommand)
     (unmock __fzf_extract_command)
+}
+
+@test 'Testing overridden completion: systemctl status **' {
+    mock _fzf_complete_systemctl_status
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'systemctl status '
+
+        echo 'systemctl'
+    }
+
+    _fzf_complete_systemctl_status_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'systemctl status '
+    }
+
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_systemctl 'systemctl status '
+
+    assert _fzf_complete_systemctl_status mock_times 1
+}
+
+@test 'Testing overridden completion: systemctl unknown-subcommand **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'systemctl unknown-subcommand '
+
+        echo 'systemctl'
+    }
+
+    _fzf_complete_systemctl_unknown-subcommand_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'systemctl unknown-subcommand '
+    }
+
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_systemctl 'systemctl unknown-subcommand '
+
+    assert _fzf_complete_systemctl_unknown-subcommand mock_times 1
 }
 
 @test 'Testing completion: systemctl status **' {

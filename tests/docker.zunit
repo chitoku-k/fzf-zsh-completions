@@ -5,12 +5,63 @@
     load _helpers/mock.zsh
     load _helpers/assertions.zsh
     mock docker
+    mock _fzf_complete_docker_unknown-subcommand
     mock __fzf_extract_command
 }
 
 @teardown {
     (unmock docker)
+    (unmock _fzf_complete_docker_create)
+    (unmock _fzf_complete_docker_unknown-subcommand)
     (unmock __fzf_extract_command)
+}
+
+@test 'Testing overridden completion: docker create **' {
+    mock _fzf_complete_docker_create
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker create '
+
+        echo 'docker'
+    }
+
+    _fzf_complete_docker_create_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker create '
+    }
+
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker create '
+
+    assert _fzf_complete_docker_create mock_times 1
+}
+
+@test 'Testing overridden completion: docker unknown-subcommand **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker unknown-subcommand '
+
+        echo 'docker'
+    }
+
+    _fzf_complete_docker_unknown-subcommand_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker unknown-subcommand '
+    }
+
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker unknown-subcommand '
+
+    assert _fzf_complete_docker_unknown-subcommand mock_times 1
 }
 
 @test 'Testing completion: docker **' {

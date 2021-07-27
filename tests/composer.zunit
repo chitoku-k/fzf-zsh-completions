@@ -4,6 +4,7 @@
     load ../fzf-zsh-completions.plugin.zsh
     load _helpers/assertions.zsh
     load _helpers/mock.zsh
+    mock _fzf_complete_composer_unknown-subcommand
     mock __fzf_extract_command
 
     pushd tests/_support/composer
@@ -11,6 +12,56 @@
 
 @teardown {
     (unmock __fzf_extract_command)
+    (unmock _fzf_complete_composer_run-script)
+    (unmock _fzf_complete_composer_unknown-subcommand)
+}
+
+@test 'Testing overridden completion: composer run-script **' {
+    mock _fzf_complete_composer_run-script
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'composer run-script '
+
+        echo 'composer'
+    }
+
+    _fzf_complete_composer_run-script_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'composer run-script '
+    }
+
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_composer 'composer run-script '
+
+    assert _fzf_complete_composer_run-script mock_times 1
+}
+
+@test 'Testing overridden completion: composer unknown-subcommand **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'composer unknown-subcommand '
+
+        echo 'composer'
+    }
+
+    _fzf_complete_composer_unknown-subcommand_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'composer unknown-subcommand '
+    }
+
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_composer 'composer unknown-subcommand '
+
+    assert _fzf_complete_composer_unknown-subcommand mock_times 1
 }
 
 @test 'Testing completion: composer **' {
