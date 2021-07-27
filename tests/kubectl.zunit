@@ -11,8 +11,57 @@
 
 @teardown {
     (unmock kubectl)
+    (unmock _fzf_complete_kubectl_diff)
     (unmock _fzf_complete_kubectl_unknown-subcommand)
     (unmock __fzf_extract_command)
+}
+
+@test 'Testing overridden completion: kubectl diff **' {
+    mock _fzf_complete_kubectl_diff
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl diff '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete_kubectl_diff_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl diff '
+    }
+
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl diff '
+
+    assert _fzf_complete_kubectl_diff mock_times 1
+}
+
+@test 'Testing overridden completion: kubectl unknown-subcommand **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl unknown-subcommand '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete_kubectl_unknown-subcommand_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl unknown-subcommand '
+    }
+
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl unknown-subcommand '
+
+    assert _fzf_complete_kubectl_unknown-subcommand mock_times 1
 }
 
 @test 'Testing completion: kubectl **' {
@@ -37,29 +86,6 @@
 
     prefix=
     _fzf_complete_kubectl 'kubectl '
-}
-
-@test 'Testing completion: kubectl unknown-subcommand **' {
-    __fzf_extract_command_mock_1() {
-        assert $# equals 1
-        assert $1 same_as 'kubectl unknown-subcommand '
-
-        echo 'kubectl'
-    }
-
-    _fzf_complete_kubectl_unknown-subcommand_mock_1() {
-        assert $# equals 1
-        assert $1 same_as 'kubectl unknown-subcommand '
-    }
-
-    _fzf_complete() {
-        fail '_fzf_complete should not be invoked'
-    }
-
-    prefix=
-    _fzf_complete_kubectl 'kubectl unknown-subcommand '
-
-    assert _fzf_complete_kubectl_unknown-subcommand mock_times 1
 }
 
 @test 'Testing completion: kubectl --namespace "" **' {

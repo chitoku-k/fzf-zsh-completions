@@ -13,8 +13,57 @@
 
 @teardown {
     (unmock cf)
+    (unmock _fzf_complete_cf_app)
     (unmock _fzf_complete_cf_unknown-subcommand)
     (unmock __fzf_extract_command)
+}
+
+@test 'Testing overridden completion: cf app **' {
+    mock _fzf_complete_cf_app
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf app '
+
+        echo 'cf'
+    }
+
+    _fzf_complete_cf_app_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf app '
+    }
+
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf app '
+
+    assert _fzf_complete_cf_app mock_times 1
+}
+
+@test 'Testing overridden completion: cf unknown-subcommand **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf unknown-subcommand '
+
+        echo 'cf'
+    }
+
+    _fzf_complete_cf_unknown-subcommand_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf unknown-subcommand '
+    }
+
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf unknown-subcommand '
+
+    assert _fzf_complete_cf_unknown-subcommand mock_times 1
 }
 
 @test 'Testing completion: cf **' {
@@ -39,29 +88,6 @@
 
     prefix=
     _fzf_complete_cf 'cf '
-}
-
-@test 'Testing completion: cf unknown-subcommand **' {
-    __fzf_extract_command_mock_1() {
-        assert $# equals 1
-        assert $1 same_as 'cf unknown-subcommand '
-
-        echo 'cf'
-    }
-
-    _fzf_complete_cf_unknown-subcommand_mock_1() {
-        assert $# equals 1
-        assert $1 same_as 'cf unknown-subcommand '
-    }
-
-    _fzf_complete() {
-        fail '_fzf_complete should not be invoked'
-    }
-
-    prefix=
-    _fzf_complete_cf 'cf unknown-subcommand '
-
-    assert _fzf_complete_cf_unknown-subcommand mock_times 1
 }
 
 @test 'Testing completion: cf app **' {

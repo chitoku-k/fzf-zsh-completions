@@ -11,8 +11,57 @@
 }
 
 @teardown {
+    (unmock _fzf_complete_yarn_run)
     (unmock _fzf_complete_yarn_unknown-subcommand)
     (unmock __fzf_extract_command)
+}
+
+@test 'Testing overridden completion: yarn run **' {
+    mock _fzf_complete_yarn_run
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'yarn run '
+
+        echo 'yarn'
+    }
+
+    _fzf_complete_yarn_run_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'yarn run '
+    }
+
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_yarn 'yarn run '
+
+    assert _fzf_complete_yarn_run mock_times 1
+}
+
+@test 'Testing overridden completion: yarn unknown-subcommand **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'yarn unknown-subcommand '
+
+        echo 'yarn'
+    }
+
+    _fzf_complete_yarn_unknown-subcommand_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'yarn unknown-subcommand '
+    }
+
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_yarn 'yarn unknown-subcommand '
+
+    assert _fzf_complete_yarn_unknown-subcommand mock_times 1
 }
 
 @test 'Testing completion: yarn **' {
@@ -117,29 +166,6 @@
 
     prefix=
     _fzf_complete_yarn 'TEST1=value1 TEST2=value2 yarn '
-}
-
-@test 'Testing completion: yarn unknown-subcommand **' {
-    __fzf_extract_command_mock_1() {
-        assert $# equals 1
-        assert $1 same_as 'yarn unknown-subcommand '
-
-        echo 'yarn'
-    }
-
-    _fzf_complete_yarn_unknown-subcommand_mock_1() {
-        assert $# equals 1
-        assert $1 same_as 'yarn unknown-subcommand '
-    }
-
-    _fzf_complete() {
-        fail '_fzf_complete should not be invoked'
-    }
-
-    prefix=
-    _fzf_complete_yarn 'yarn unknown-subcommand '
-
-    assert _fzf_complete_yarn_unknown-subcommand mock_times 1
 }
 
 @test 'Testing completion: yarn run **' {
