@@ -554,6 +554,67 @@ _fzf_complete_git() {
         return
     fi
 
+    if [[ $subcommand = stash ]]; then
+        local prefix_option completing_option
+        local git_options_argument_required=(
+            --pathspec-from-file
+            -m
+            --message
+        )
+
+        if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)git_options_argument_required}" ''); then
+            if [[ $completing_option = --* ]]; then
+                prefix_option=$completing_option=
+            else
+                prefix_option=${prefix%%${completing_option[-1]}*}${completing_option[-1]}
+            fi
+            prefix=${prefix#$prefix_option}
+        fi
+
+        local stash_subcommand=${arguments[${arguments[(i)$subcommand]} + 1]}
+        case $stash_subcommand in
+            show)
+                _fzf_complete_git-stashes '' "$@"
+                return
+                ;;
+
+            apply|drop|pop)
+                _fzf_complete_git-stashes '' "$@"
+                return
+                ;;
+
+            branch)
+                if _fzf_complete_parse_argument 4 1 "${(F)git_options_argument_required}" "${arguments[@]}" > /dev/null; then
+                    _fzf_complete_git-stashes '' "$@"
+                    return
+                fi
+                ;;
+
+            *)
+                if [[ $stash_subcommand = push ]] || [[ ${arguments[(r)--]} = -- ]]; then
+                    case $completing_option in
+                        -m|--message)
+                            return
+                            ;;
+
+                        --pathspec-from-file)
+                            return
+                            ;;
+                    esac
+
+                    local untracked_files
+                    if _fzf_complete_parse_option '-u' '--include-untracked' "${(F)git_options_argument_required}" "${arguments[@]}" > /dev/null; then
+                        untracked_files=all
+                    fi
+                    _fzf_complete_git-status-files 'unstaged' "--untracked-files=${untracked_files:-no}" "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" "$@"
+                    return
+                fi
+                ;;
+        esac
+
+        return
+    fi
+
     if [[ $subcommand = show ]]; then
         local prefix_option completing_option
         local git_options_argument_required=(
@@ -956,6 +1017,19 @@ _fzf_complete_git-show-files_post() {
     for filename in ${(0)input}; do
         echo ${${(q+)filename}//\\n/\\\\n}
     done
+}
+
+_fzf_complete_git-stashes() {
+    local fzf_options=$1
+    shift
+
+    _fzf_complete --ansi ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <(
+        git stash list --format='%h %gd %gs' | _fzf_complete_tabularize ${fg[yellow]}
+    )
+}
+
+_fzf_complete_git-stashes_post() {
+    awk '{ print $1 }'
 }
 
 _fzf_complete_git_resolve_alias() {
