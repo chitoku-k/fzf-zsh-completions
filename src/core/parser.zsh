@@ -143,12 +143,6 @@ _fzf_complete_parse_option() {
                         break
                     fi
                 elif [[ ${shorts[(r)-${arguments[$i][$j]}]} = -${arguments[$i][$j]} ]]; then
-                    if [[ $j = ${#arguments[$i]} ]]; then
-                        if (( ${#arguments} = $i )); then
-                            break
-                        fi
-                        parsing_argument=
-                    fi
                     result+=(-${arguments[$i][$j]})
                 fi
             done
