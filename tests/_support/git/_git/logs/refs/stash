@@ -1,0 +1,3 @@
+0000000000000000000000000000000000000000 6eed67cdd7fd33e479c5653b535404f2bd6ffc2a Alice <alice@example.com> 1627750377 +0900	WIP on master: 3e209a3 1st commit
+6eed67cdd7fd33e479c5653b535404f2bd6ffc2a 04819189e41e68b2c5fc8613e606bc8739f67188 Alice <alice@example.com> 1627750539 +0900	File changes on another-branch
+04819189e41e68b2c5fc8613e606bc8739f67188 372dd0b87fac561e3bf304cf3344a93e4fa11231 Alice <alice@example.com> 1627750603 +0900	On another-branch: Stash with message
