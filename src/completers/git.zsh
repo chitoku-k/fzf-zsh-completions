@@ -789,7 +789,7 @@ _fzf_complete_git-commits-not-in-head() {
     local fzf_options=$1
     shift
 
-    local rev_list_all=$(git rev-list --all --oneline 2> /dev/null)
+    local rev_list_all=$(git rev-list --branches --tags --remotes --oneline 2> /dev/null)
     rev_list_all=(${(q)${(f)rev_list_all}})
     local rev_list_head=$(git rev-list HEAD --oneline 2> /dev/null)
     rev_list_head=(${(q)${(f)rev_list_head}})
