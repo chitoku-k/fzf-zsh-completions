@@ -31,8 +31,11 @@ unmock() {
 
     local mock_timesfile=$mock_dir/${target}_mock_times
 
-    local i
-    local len=$(cat -- $mock_timesfile)
+    local i len
+    if [[ -e $mock_timesfile ]]; then
+        len=$(cat -- $mock_timesfile)
+    fi
+
     for (( i = 1; i <= len; i++ )); do
         local mock=${target}_mock_$i
         local mock_failfile=$mock_dir/${mock}_fail
