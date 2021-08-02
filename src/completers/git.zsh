@@ -1026,7 +1026,7 @@ _fzf_complete_git-stashes() {
     shift
 
     _fzf_complete --ansi ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <(
-        git stash list --format='%h %gd %gs' | _fzf_complete_tabularize ${fg[yellow]} $reset_color
+        git stash list --format='%h %gd %gs' | _fzf_complete_tabularize ${fg[yellow]} ${fg[green]}
     )
 }
 
