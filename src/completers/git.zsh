@@ -591,7 +591,7 @@ _fzf_complete_git() {
                 ;;
 
             *)
-                if [[ $stash_subcommand = push ]] || [[ ${arguments[(r)--]} = -- ]]; then
+                if [[ $stash_subcommand = push ]]; then
                     case $completing_option in
                         -m|--message)
                             return
@@ -601,7 +601,9 @@ _fzf_complete_git() {
                             return
                             ;;
                     esac
+                fi
 
+                if [[ $stash_subcommand = push ]] || [[ ${arguments[(r)--]} = -- ]]; then
                     local untracked_files
                     if _fzf_complete_parse_option '-u' '--include-untracked' "${(F)git_options_argument_required}" "${arguments[@]}" > /dev/null; then
                         untracked_files=all
@@ -1024,7 +1026,7 @@ _fzf_complete_git-stashes() {
     shift
 
     _fzf_complete --ansi ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <(
-        git stash list --format='%h %gd %gs' | _fzf_complete_tabularize ${fg[yellow]}
+        git stash list --format='%h %gd %gs' | _fzf_complete_tabularize ${fg[yellow]} $reset_color
     )
 }
 
