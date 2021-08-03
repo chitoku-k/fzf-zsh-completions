@@ -6968,9 +6968,9 @@
         run cat
         assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
-        assert ${lines[1]} same_as "${fg[yellow]}372dd0b$reset_color  ${fg[green]}stash@{0}$reset_color  On another-branch: Stash with message"
-        assert ${lines[2]} same_as "${fg[yellow]}0481918$reset_color  ${fg[green]}stash@{1}$reset_color  File changes on another-branch"
-        assert ${lines[3]} same_as "${fg[yellow]}6eed67c$reset_color  ${fg[green]}stash@{2}$reset_color  WIP on master: 3e209a3 1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}stash@{0}$reset_color  On another-branch: Stash with message"
+        assert ${lines[2]} same_as "${fg[yellow]}stash@{1}$reset_color  File changes on another-branch"
+        assert ${lines[3]} same_as "${fg[yellow]}stash@{2}$reset_color  WIP on master: 3e209a3 1st commit"
     }
 
     prefix=
@@ -6994,9 +6994,9 @@
         run cat
         assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
-        assert ${lines[1]} same_as "${fg[yellow]}372dd0b$reset_color  ${fg[green]}stash@{0}$reset_color  On another-branch: Stash with message"
-        assert ${lines[2]} same_as "${fg[yellow]}0481918$reset_color  ${fg[green]}stash@{1}$reset_color  File changes on another-branch"
-        assert ${lines[3]} same_as "${fg[yellow]}6eed67c$reset_color  ${fg[green]}stash@{2}$reset_color  WIP on master: 3e209a3 1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}stash@{0}$reset_color  On another-branch: Stash with message"
+        assert ${lines[2]} same_as "${fg[yellow]}stash@{1}$reset_color  File changes on another-branch"
+        assert ${lines[3]} same_as "${fg[yellow]}stash@{2}$reset_color  WIP on master: 3e209a3 1st commit"
     }
 
     prefix=
@@ -7020,9 +7020,9 @@
         run cat
         assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
-        assert ${lines[1]} same_as "${fg[yellow]}372dd0b$reset_color  ${fg[green]}stash@{0}$reset_color  On another-branch: Stash with message"
-        assert ${lines[2]} same_as "${fg[yellow]}0481918$reset_color  ${fg[green]}stash@{1}$reset_color  File changes on another-branch"
-        assert ${lines[3]} same_as "${fg[yellow]}6eed67c$reset_color  ${fg[green]}stash@{2}$reset_color  WIP on master: 3e209a3 1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}stash@{0}$reset_color  On another-branch: Stash with message"
+        assert ${lines[2]} same_as "${fg[yellow]}stash@{1}$reset_color  File changes on another-branch"
+        assert ${lines[3]} same_as "${fg[yellow]}stash@{2}$reset_color  WIP on master: 3e209a3 1st commit"
     }
 
     prefix=
@@ -7046,9 +7046,9 @@
         run cat
         assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
-        assert ${lines[1]} same_as "${fg[yellow]}372dd0b$reset_color  ${fg[green]}stash@{0}$reset_color  On another-branch: Stash with message"
-        assert ${lines[2]} same_as "${fg[yellow]}0481918$reset_color  ${fg[green]}stash@{1}$reset_color  File changes on another-branch"
-        assert ${lines[3]} same_as "${fg[yellow]}6eed67c$reset_color  ${fg[green]}stash@{2}$reset_color  WIP on master: 3e209a3 1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}stash@{0}$reset_color  On another-branch: Stash with message"
+        assert ${lines[2]} same_as "${fg[yellow]}stash@{1}$reset_color  File changes on another-branch"
+        assert ${lines[3]} same_as "${fg[yellow]}stash@{2}$reset_color  WIP on master: 3e209a3 1st commit"
     }
 
     prefix=
@@ -7091,9 +7091,9 @@
         run cat
         assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 3
-        assert ${lines[1]} same_as "${fg[yellow]}372dd0b$reset_color  ${fg[green]}stash@{0}$reset_color  On another-branch: Stash with message"
-        assert ${lines[2]} same_as "${fg[yellow]}0481918$reset_color  ${fg[green]}stash@{1}$reset_color  File changes on another-branch"
-        assert ${lines[3]} same_as "${fg[yellow]}6eed67c$reset_color  ${fg[green]}stash@{2}$reset_color  WIP on master: 3e209a3 1st commit"
+        assert ${lines[1]} same_as "${fg[yellow]}stash@{0}$reset_color  On another-branch: Stash with message"
+        assert ${lines[2]} same_as "${fg[yellow]}stash@{1}$reset_color  File changes on another-branch"
+        assert ${lines[3]} same_as "${fg[yellow]}stash@{2}$reset_color  WIP on master: 3e209a3 1st commit"
     }
 
     prefix=
