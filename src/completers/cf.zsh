@@ -37,7 +37,11 @@ _fzf_complete_cf() {
 
         local source_app
         if ! source_app=$(_fzf_complete_parse_argument 2 2 "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
-            resource=apps
+            if [[ $subcommand = add-network-policy ]]; then
+                resource=apps
+            else
+                resource=network-policies
+            fi
             _fzf_complete_cf-resources '' "$@"
             return
         fi
@@ -1143,7 +1147,9 @@ _fzf_complete_cf-resources() {
 }
 
 _fzf_complete_cf-resources_post() {
-    if [[ $resource = routes ]]; then
+    if [[ $resource = network-policies ]]; then
+        awk '{ print $1, "--destination-app=" $2, "--protocol=" $3, "--port=" $4 }'
+    elif [[ $resource = routes ]]; then
         awk '
             # space + domain + port + type
             # space + domain + port + type + apps

@@ -1637,15 +1637,13 @@
 @test 'Testing completion: cf remove-network-policy **' {
     cf_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'apps'
+        assert $1 same_as 'network-policies'
 
-        echo 'Getting apps in org org-01 / space space-01 as user-01...'
-        echo 'OK'
+        echo 'Listing network policies in org org-01 / space space-01 as user-01...'
         echo ''
-        echo 'name     requested state   instances   memory   disk   urls'
-        echo 'app-01   started           3/3         1G       1G     app-01.example.com'
-        echo 'app-02   started           2/2         512M     1G     app-02.example.com'
-        echo 'app-03   stopped           0/1         256M     1G     app-03.example.com'
+        echo 'source   destination   protocol   ports       destination space   destination org'
+        echo 'app-01   app-02        tcp        8080        space-01            org-01'
+        echo 'app-03   app-04        tcp        8090-8100   space-01            org-01'
     }
 
     __fzf_extract_command_mock_1() {
@@ -1666,11 +1664,10 @@
         run cat
         assert __fzf_extract_command mock_times 1
         assert cf mock_times 1
-        assert ${#lines} equals 4
-        assert ${lines[1]} same_as "${fg[yellow]}name     ${reset_color}requested state   instances   memory   disk   urls"
-        assert ${lines[2]} same_as "${fg[yellow]}app-01   ${reset_color}started           3/3         1G       1G     app-01.example.com"
-        assert ${lines[3]} same_as "${fg[yellow]}app-02   ${reset_color}started           2/2         512M     1G     app-02.example.com"
-        assert ${lines[4]} same_as "${fg[yellow]}app-03   ${reset_color}stopped           0/1         256M     1G     app-03.example.com"
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}source   ${reset_color}destination   protocol   ports       destination space   destination org"
+        assert ${lines[2]} same_as "${fg[yellow]}app-01   ${reset_color}app-02        tcp        8080        space-01            org-01"
+        assert ${lines[3]} same_as "${fg[yellow]}app-03   ${reset_color}app-04        tcp        8090-8100   space-01            org-01"
     }
 
     prefix=
@@ -12439,6 +12436,19 @@
     assert $state equals 0
     assert ${#lines} equals 1
     assert ${lines[1]} same_as '1'
+}
+
+@test 'Testing post: a network policy' {
+    input=(
+        'app-01   app-02        tcp        8080        space-01            org-01'
+    )
+
+    resource=network-policies
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'app-01 --destination-app=app-02 --protocol=tcp --port=8080'
 }
 
 @test 'Testing post: an HTTP route bound to an app' {
