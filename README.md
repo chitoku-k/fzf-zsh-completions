@@ -77,6 +77,8 @@ git rebase -i **<TAB>
   - Scripts
 - systemctl
   - Services
+- vault
+  - Paths
 - yarn
   - Scripts
 
