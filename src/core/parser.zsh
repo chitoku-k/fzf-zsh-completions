@@ -19,23 +19,19 @@ _fzf_complete_parse_completing_option() {
     local completing_option_source
 
     while [[ -n $current ]]; do
-        case $current in
-            -[A-Za-z]*)
-                if [[ -n ${options_argument_required[(r)${current:0:2}]} ]] || [[ -n ${options_argument_optional[(r)${current:0:2}]} ]]; then
-                    completing_option=${current:0:2}
-                    completing_option_source=prefix
-                    break
-                fi
-                ;;
+        if [[ $current = -[A-Za-z]* ]]; then
+            if [[ -n ${options_argument_required[(r)${current:0:2}]} ]] || [[ -n ${options_argument_optional[(r)${current:0:2}]} ]]; then
+                completing_option=${current:0:2}
+                completing_option_source=prefix
+                break
+            fi
+        fi
 
-            --*)
-                if [[ -n ${options_argument_required[(r)${current%%=*}]} ]] || [[ -n ${options_argument_optional[(r)${current%%=*}]} ]]; then
-                    completing_option=${current%%=*}
-                    completing_option_source=prefix
-                    break
-                fi
-                ;;
-        esac
+        if [[ -n ${options_argument_required[(r)${current%%=*}]} ]] || [[ -n ${options_argument_optional[(r)${current%%=*}]} ]]; then
+            completing_option=${current%%=*}
+            completing_option_source=prefix
+            break
+        fi
 
         if [[ $current != -[A-Za-z][A-Za-z]* ]]; then
             break
@@ -133,7 +129,18 @@ _fzf_complete_parse_option() {
 
         if [[ ${arguments[$i]} = -- ]]; then
             break
-        elif [[ ${arguments[$i]} = -[^-]* ]]; then
+        else
+            if [[ ${options_argument_required[(r)${arguments[$i]}]} = ${arguments[$i]} ]]; then
+                parsing_argument=1
+            elif [[ ${longs[(r)${arguments[$i]%%=*}]} = ${arguments[$i]%%=*} ]]; then
+                parsing_argument=
+                result+=(${arguments[$i]%%=*})
+            fi
+
+            if [[ ${arguments[$i]} != -[^-]* ]]; then
+                continue
+            fi
+
             for j in {$start_index..${#arguments[$i]}}; do
                 if [[ ${options_argument_required[(r)-${arguments[$i][$j]}]} = -${arguments[$i][$j]} ]]; then
                     if [[ $j = ${#arguments[$i]} ]]; then
@@ -146,13 +153,6 @@ _fzf_complete_parse_option() {
                     result+=(-${arguments[$i][$j]})
                 fi
             done
-        elif [[ ${arguments[$i]} = --[^-]* ]]; then
-            if [[ ${options_argument_required[(r)${arguments[$i]}]} = ${arguments[$i]} ]]; then
-                parsing_argument=1
-            elif [[ ${longs[(r)${arguments[$i]%%=*}]} = ${arguments[$i]%%=*} ]]; then
-                parsing_argument=
-                result+=(${arguments[$i]%%=*})
-            fi
         fi
     done
 
@@ -182,7 +182,29 @@ _fzf_complete_parse_option_arguments() {
 
         if [[ ${arguments[$i]} = -- ]]; then
             break
-        elif [[ ${arguments[$i]} = -[A-Za-z0-9]* ]]; then
+        else
+            if [[ ${arguments[$i]} = --[^-]* ]]; then
+                if [[ ${options_argument_required[(r)${arguments[$i]%%=*}]} != ${arguments[$i]%%=*} ]]; then
+                    continue
+                fi
+            fi
+
+            if [[ ${longs[(r)${arguments[$i]}]} = ${arguments[$i]} ]]; then
+                parsing_argument=1
+
+                if (( ${#arguments} > $i )); then
+                    result+=(${arguments[$i]})
+                    result+=("${arguments[$i+1]}")
+                fi
+            elif [[ ${longs[(r)${arguments[$i]%%=*}]} = ${arguments[$i]%%=*} ]]; then
+                parsing_argument=
+                result+=(${arguments[$i]})
+            fi
+
+            if [[ ${arguments[$i]} != -[A-Za-z0-9]* ]]; then
+                continue
+            fi
+
             for j in {$start_index..${#arguments[$i]}}; do
                 if [[ ${options_argument_required[(r)-${arguments[$i][$j]}]} != -${arguments[$i][$j]} ]]; then
                     continue
@@ -204,22 +226,6 @@ _fzf_complete_parse_option_arguments() {
                     break
                 fi
             done
-        elif [[ ${arguments[$i]} = --[A-Za-z0-9]* ]]; then
-            if [[ ${options_argument_required[(r)${arguments[$i]%%=*}]} != ${arguments[$i]%%=*} ]]; then
-                continue
-            fi
-
-            if [[ ${longs[(r)${arguments[$i]}]} = ${arguments[$i]} ]]; then
-                parsing_argument=1
-
-                if (( ${#arguments} > $i )); then
-                    result+=(${arguments[$i]})
-                    result+=("${arguments[$i+1]}")
-                fi
-            elif [[ ${longs[(r)${arguments[$i]%%=*}]} = ${arguments[$i]%%=*} ]]; then
-                parsing_argument=
-                result+=(${arguments[$i]})
-            fi
         fi
     done
 
