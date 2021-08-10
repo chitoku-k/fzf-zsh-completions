@@ -115,7 +115,7 @@ _fzf_complete_vault-paths() {
     local fzf_options=$1
     shift
 
-    prefix_option=${prefix%%/*}/
+    prefix_option=${prefix%/*}/
     prefix=${prefix##*/}
 
     _fzf_complete --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <(
