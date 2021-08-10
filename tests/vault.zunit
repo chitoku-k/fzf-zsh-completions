@@ -516,3 +516,43 @@
     prefix=secret/path
     _fzf_complete_vault 'vault kv get '
 }
+
+@test 'Testing completion: vault kv get secret/path01/**' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'vault kv get '
+
+        echo 'vault'
+    }
+
+    vault_mock_1() {
+        assert $# equals 4
+        assert $1 same_as 'kv'
+        assert $2 same_as 'list'
+        assert $3 same_as '--format=json'
+        assert $4 same_as 'secret/path01/'
+
+        echo '['
+        echo '  "item-01",'
+        echo '  "item-02"'
+        echo ']'
+    }
+
+    _fzf_complete() {
+        assert $# equals 3
+        assert $1 same_as '--tiebreak=index'
+        assert $2 same_as '--'
+        assert $3 same_as 'vault kv get secret/path01/'
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert vault mock_times 1
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as 'item-01'
+        assert ${lines[2]} same_as 'item-02'
+    }
+
+    VAULT_ADDR=https://example.com
+    prefix=secret/path01/
+    _fzf_complete_vault 'vault kv get '
+}
