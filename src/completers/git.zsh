@@ -117,36 +117,21 @@ _fzf_complete_git() {
 
         _fzf_complete_git_parse_completing_option
 
-        case $completing_option in
-            -b|-B)
+        if [[ -z $completing_option ]]; then
+            local treeish
+            if treeish=$(_fzf_complete_parse_argument 3 1 "${(F)git_options_argument_required}" "${arguments[1, ${arguments[(i)--]} - 1][@]}") || [[ -n $treeish ]]; then
+                _fzf_complete_git-files_index '' '--multi' "$@"
                 return
-                ;;
+            fi
 
-            --conflict)
+            if [[ -z ${arguments[(r)--]} ]]; then
+                _fzf_complete_git-commits '' "$@"
                 return
-                ;;
+            fi
 
-            --pathspec-from-file)
-                return
-                ;;
-
-            *)
-                local treeish
-                if treeish=$(_fzf_complete_parse_argument 3 1 "${(F)git_options_argument_required}" "${arguments[1, ${arguments[(i)--]} - 1][@]}") || [[ -n $treeish ]]; then
-                    _fzf_complete_git-files_index '' '--multi' "$@"
-                    return
-                fi
-
-                if [[ -z ${arguments[(r)--]} ]]; then
-                    _fzf_complete_git-commits '' "$@"
-                    return
-                fi
-
-                _fzf_complete_git-status-files 'unstaged' '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" "$@"
-                return
-                ;;
-        esac
-
+            _fzf_complete_git-status-files 'unstaged' '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" "$@"
+            return
+        fi
         return
     fi
 
@@ -156,13 +141,15 @@ _fzf_complete_git() {
 
         _fzf_complete_git_parse_completing_option
 
+        if [[ -z $completing_option ]]; then
+            _fzf_complete_git-commits-not-in-head '--multi' "$@"
+            return
+        fi
+
         case $completing_option in
             --cleanup)
                 local cleanup_modes=(strip whitespace verbatim scissors default)
                 _fzf_complete_constants '' "${(F)cleanup_modes}" "$@"
-                ;;
-
-            --gpg-sign|-S)
                 ;;
 
             --strategy)
@@ -194,12 +181,7 @@ _fzf_complete_git() {
                 )
                 prefix_option=${prefix_option/=*/=} prefix=${prefix#$prefix_option} _fzf_complete_constants '' "${(F)strategy_options}" "$@"
                 ;;
-
-            *)
-                _fzf_complete_git-commits-not-in-head '--multi' "$@"
-                ;;
         esac
-
         return
     fi
 
@@ -214,6 +196,11 @@ _fzf_complete_git() {
 
         _fzf_complete_git_parse_completing_option
 
+        if [[ -z $completing_option ]]; then
+            _fzf_complete_git-status-files 'unstaged' '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" "$@"
+            return
+        fi
+
         case $completing_option in
             -c|-C|--fixup|--reedit-message|--reuse-message|--squash)
                 _fzf_complete_git-commits '' "$@"
@@ -221,9 +208,6 @@ _fzf_complete_git() {
 
             -m|--message)
                 _fzf_complete_git-commit-messages '' "$@"
-                ;;
-
-            --author|--date)
                 ;;
 
             -F|-t|--file|--pathspec-from-file|--template)
@@ -239,12 +223,7 @@ _fzf_complete_git() {
                 local untracked_file_modes=(no normal all)
                 _fzf_complete_constants '' "${(F)untracked_file_modes}" "$@"
                 ;;
-
-            *)
-                _fzf_complete_git-status-files 'unstaged' '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" "$@"
-                ;;
         esac
-
         return
     fi
 
@@ -253,6 +232,17 @@ _fzf_complete_git() {
         local git_options_argument_optional=(--recurse-submodules -S)
 
         _fzf_complete_git_parse_completing_option
+
+        if [[ -z $completing_option ]]; then
+            local repository
+            if _fzf_complete_parse_option '' '--multiple' '' "${arguments[@]}" > /dev/null || ! repository=$(_fzf_complete_parse_argument 3 1 "${(F)git_options_argument_required}" "${arguments[@]}"); then
+                _fzf_complete_git-repositories '--multi' "$@"
+                return
+            fi
+
+            _fzf_complete_git-refs '--multi' "$@"
+            return
+        fi
 
         case $completing_option in
             --recurse-submodules)
@@ -276,21 +266,7 @@ _fzf_complete_git() {
             --negotiation-tip)
                 _fzf_complete_git-commits '' "$@"
                 ;;
-
-            --depth|--deepen|-j|--jobs|-o|--server-option|--shallow-since|--submodule-prefix|--upload-pack)
-                ;;
-
-            *)
-                local repository
-                if _fzf_complete_parse_option '' '--multiple' '' "${arguments[@]}" > /dev/null || ! repository=$(_fzf_complete_parse_argument 3 1 "${(F)git_options_argument_required}" "${arguments[@]}"); then
-                    _fzf_complete_git-repositories '--multi' "$@"
-                    return
-                fi
-
-                _fzf_complete_git-refs '--multi' "$@"
-                ;;
         esac
-
         return
     fi
 
@@ -299,6 +275,16 @@ _fzf_complete_git() {
         local git_options_argument_optional=(--gpg-sign --log --rebase --recurse-submodules -S)
 
         _fzf_complete_git_parse_completing_option
+
+        if [[ -z $completing_option ]]; then
+            local repository
+            if ! repository=$(_fzf_complete_parse_argument 3 1 "${(F)git_options_argument_required}" "${arguments[@]}") && [[ -z $repository ]]; then
+                _fzf_complete_git-repositories '' "$@"
+                return
+            fi
+            _fzf_complete_git-refs '--multi' "$@"
+            return
+        fi
 
         case $completing_option in
             --recurse-submodules)
@@ -353,24 +339,7 @@ _fzf_complete_git() {
             --negotiation-tip)
                 _fzf_complete_git-commits '' "$@"
                 ;;
-
-            --gpg-sign|-S)
-                ;;
-
-            --date|--depth|--deepen|--log|--server-option|--shallow-since|--upload-pack|-o)
-                ;;
-
-            *)
-                local repository
-                if ! repository=$(_fzf_complete_parse_argument 3 1 "${(F)git_options_argument_required}" "${arguments[@]}") && [[ -z $repository ]]; then
-                    _fzf_complete_git-repositories '' "$@"
-                    return
-                fi
-
-                _fzf_complete_git-refs '--multi' "$@"
-                ;;
         esac
-
         return
     fi
 
@@ -382,16 +351,26 @@ _fzf_complete_git() {
 
         local prefix_ref=${prefix%%[^:]#}
 
+        if [[ -z $completing_option ]]; then
+            local repository
+            if ! repository=$(_fzf_complete_parse_argument 3 1 "${(F)git_options_argument_required}" "${arguments[@]}") && [[ -z $repository ]]; then
+                _fzf_complete_git-repositories '' "$@"
+                return
+            fi
+
+            if [[ $prefix = *:* ]]; then
+                prefix=${prefix#*:} _fzf_complete_git-refs '' "$@"
+                return
+            fi
+
+            _fzf_complete_git-commits '--multi' "$@"
+            return
+        fi
+
         case $completing_option in
             --signed)
                 local signed=(false if-asked true)
                 _fzf_complete_constants '' "${(F)signed}" "$@"
-                ;;
-
-            -o|--push-option)
-                ;;
-
-            --exec|--receive-pack)
                 ;;
 
             --force-with-lease)
@@ -406,23 +385,7 @@ _fzf_complete_git() {
                 local recurse_submodules=(check no on-demand only)
                 _fzf_complete_constants '' "${(F)recurse_submodules}" "$@"
                 ;;
-
-            *)
-                local repository
-                if ! repository=$(_fzf_complete_parse_argument 3 1 "${(F)git_options_argument_required}" "${arguments[@]}") && [[ -z $repository ]]; then
-                    _fzf_complete_git-repositories '' "$@"
-                    return
-                fi
-
-                if [[ $prefix = *:* ]]; then
-                    prefix=${prefix#*:} _fzf_complete_git-refs '' "$@"
-                    return
-                fi
-
-                _fzf_complete_git-commits '--multi' "$@"
-                ;;
         esac
-
         return
     fi
 
@@ -432,28 +395,22 @@ _fzf_complete_git() {
 
         _fzf_complete_git_parse_completing_option
 
-        case $completing_option in
-            --pathspec-from-file)
-                ;;
+        if [[ -z $completing_option ]]; then
+            local treeish
+            if ! treeish=$(_fzf_complete_parse_argument 3 1 "${(F)git_options_argument_required}" "${arguments[1, ${arguments[(i)--]} - 1][@]}") &&
+                [[ -z ${arguments[(r)--]} ]]; then
 
-            *)
-                local treeish
-                if ! treeish=$(_fzf_complete_parse_argument 3 1 "${(F)git_options_argument_required}" "${arguments[1, ${arguments[(i)--]} - 1][@]}") &&
-                    [[ -z $treeish ]] &&
-                    [[ -z ${arguments[(r)--]} ]]; then
+                _fzf_complete_git-commits '' "$@"
+                return
+            fi
 
-                    _fzf_complete_git-commits '' "$@"
-                    return
-                fi
+            if _fzf_complete_parse_option '' '--soft --hard --merge --keep' '' "${arguments[@]}" > /dev/null; then
+                return
+            fi
 
-                if _fzf_complete_parse_option '' '--soft --hard --merge --keep' '' "${arguments[@]}" > /dev/null; then
-                    return
-                fi
-
-                _fzf_complete_git-files_tree_and_index '' '' '--multi' "$@"
-                ;;
-        esac
-
+            _fzf_complete_git-files_tree_and_index '' '' '--multi' "$@"
+            return
+        fi
         return
     fi
 
@@ -463,26 +420,26 @@ _fzf_complete_git() {
 
         _fzf_complete_git_parse_completing_option
 
+        if [[ -z $completing_option ]]; then
+            if [[ -n ${arguments[(r)--source(|(=*))]} ]] || [[ -n ${arguments[(r)-[^-]#s*]} ]]; then
+                _fzf_complete_git-files_index '' '--multi' "$@"
+                return
+            fi
+
+            if [[ -n ${arguments[(r)--staged]} ]] || [[ -n ${arguments[(r)-[^-]#S[[:alpha:]]#]} ]]; then
+                _fzf_complete_git-status-files 'staged' '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff_cached $FZF_DEFAULT_OPTS" "$@"
+                return
+            fi
+
+            _fzf_complete_git-status-files 'unstaged' '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" "$@"
+            return
+        fi
+
         case $completing_option in
             -s|--source)
                 _fzf_complete_git-commits '' "$@"
                 ;;
-
-            *)
-                if [[ -n ${arguments[(r)--source(|(=*))]} ]] || [[ -n ${arguments[(r)-[^-]#s*]} ]]; then
-                    _fzf_complete_git-files_index '' '--multi' "$@"
-                    return
-                fi
-
-                if [[ -n ${arguments[(r)--staged]} ]] || [[ -n ${arguments[(r)-[^-]#S[[:alpha:]]#]} ]]; then
-                    _fzf_complete_git-status-files 'staged' '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff_cached $FZF_DEFAULT_OPTS" "$@"
-                    return
-                fi
-
-                _fzf_complete_git-status-files 'unstaged' '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" "$@"
-                ;;
         esac
-
         return
     fi
 
@@ -542,83 +499,32 @@ _fzf_complete_git() {
 
         _fzf_complete_git_parse_completing_option
 
-        local prefix_ref=${prefix%%[^:]#}
+        if [[ -z $completing_option ]]; then
+            local treeish
+            local prefix_ref=${prefix%%[^:]#}
+
+            if [[ $prefix = *:* ]]; then
+                treeish=${prefix%:*}
+                prefix=${prefix#*:} _fzf_complete_git-files_index '' '' "$@"
+                return
+            fi
+
+            if [[ -n ${arguments[(r)--]} ]]; then
+                local args=($(_fzf_complete_parse_argument 3 0 "${(F)git_options_argument_required}" "${arguments[1, ${arguments[(i)--]} - 1][@]}"))
+                treeish=${args:#*:*}
+                _fzf_complete_git-show-files '--multi' "$@"
+                return
+            fi
+
+            _fzf_complete_git-commits '--multi' "$@"
+            return
+        fi
 
         case $completing_option in
-            --abbrev|--anchored|--break-rewrites|--dst-prefix|--encoding|--expand-tabs|--find-copies|--find-object|--find-renames|--format|--inter-hunk-context|--line-prefix|--output|--output-indicator-context|--output-indicator-new|--output-indicator-old|--src-prefix|--stat|--submodule|--unified|--word-diff-regex)
-                return
-                ;;
-
             --notes|--show-notes)
                 _fzf_complete_git-notes '' "$@"
-                return
-                ;;
-
-            --diff-algorithm)
-                return
-                ;;
-
-            --dirstat|-X)
-                return
-                ;;
-
-            --color)
-                return
-                ;;
-
-            --color-moved)
-                return
-                ;;
-
-            --color-moved-ws)
-                return
-                ;;
-
-            --word-diff)
-                return
-                ;;
-
-            --ws-error-highlight)
-                return
-                ;;
-
-            --diff-filter)
-                return
-                ;;
-
-            -O)
-                return
-                ;;
-
-            --relative)
-                return
-                ;;
-
-            --ignore-submodules)
-                return
-                ;;
-
-            *)
-                local treeish
-
-                if [[ $prefix = *:* ]]; then
-                    treeish=${prefix%:*}
-                    prefix=${prefix#*:} _fzf_complete_git-files_index '' '' "$@"
-                    return
-                fi
-
-                if [[ -n ${arguments[(r)--]} ]]; then
-                    local args=($(_fzf_complete_parse_argument 3 0 "${(F)git_options_argument_required}" "${arguments[1, ${arguments[(i)--]} - 1][@]}"))
-                    treeish=${args:#*:*}
-                    _fzf_complete_git-show-files '--multi' "$@"
-                    return
-                fi
-
-                _fzf_complete_git-commits '--multi' "$@"
-                return
                 ;;
         esac
-
         return
     fi
 
@@ -636,12 +542,10 @@ _fzf_complete_git() {
         case $stash_subcommand in
             show)
                 _fzf_complete_git-stashes '' "$@"
-                return
                 ;;
 
             apply|drop|pop)
                 _fzf_complete_git-stashes '' "$@"
-                return
                 ;;
 
             branch)
@@ -652,16 +556,8 @@ _fzf_complete_git() {
                 ;;
 
             *)
-                if [[ $stash_subcommand = push ]]; then
-                    case $completing_option in
-                        -m|--message)
-                            return
-                            ;;
-
-                        --pathspec-from-file)
-                            return
-                            ;;
-                    esac
+                if [[ $stash_subcommand = push ]] && [[ -n $completing_option ]]; then
+                    return
                 fi
 
                 if [[ $stash_subcommand = push ]] || [[ ${arguments[(r)--]} = -- ]]; then
@@ -674,7 +570,6 @@ _fzf_complete_git() {
                 fi
                 ;;
         esac
-
         return
     fi
 
