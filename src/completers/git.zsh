@@ -58,6 +58,7 @@ PREVIEW_OPTIONS
 
 _fzf_complete_git() {
     setopt local_options extended_glob no_aliases
+    local prefix_option completing_option
     local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$@")"}[@]}")
     local resolved_commands=()
 
@@ -111,18 +112,10 @@ _fzf_complete_git() {
     fi
 
     if [[ $subcommand = checkout ]]; then
-        local prefix_option completing_option
         local git_options_argument_required=(-b -B --orphan --conflict --pathspec-from-file)
         local git_options_argument_optional=()
 
-        if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)git_options_argument_required}" "${(F)git_options_argument_optional}"); then
-            if [[ $completing_option = --* ]]; then
-                prefix_option=$completing_option=
-            else
-                prefix_option=${prefix%%${completing_option[-1]}*}${completing_option[-1]}
-            fi
-            prefix=${prefix#$prefix_option}
-        fi
+        _fzf_complete_git_parse_completing_option
 
         case $completing_option in
             -b|-B)
@@ -158,18 +151,10 @@ _fzf_complete_git() {
     fi
 
     if [[ $subcommand = cherry-pick ]]; then
-        local prefix_option completing_option
         local git_options_argument_required=(--cleanup --strategy --strategy-option --strategy-option=diff-algorithm -X)
         local git_options_argument_optional=(--gpg-sign -S)
 
-        if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)git_options_argument_required}" "${(F)git_options_argument_optional}"); then
-            if [[ $completing_option = --* ]]; then
-                prefix_option=$completing_option=
-            else
-                prefix_option=${prefix%%${completing_option[-1]}*}${completing_option[-1]}
-            fi
-            prefix=${prefix#$prefix_option}
-        fi
+        _fzf_complete_git_parse_completing_option
 
         case $completing_option in
             --cleanup)
@@ -224,18 +209,10 @@ _fzf_complete_git() {
             return
         fi
 
-        local prefix_option completing_option
         local git_options_argument_required=(-c -C --fixup --reedit-message --reuse-message --squash -m --message --author --date -F -t --file --pathspec-from-file --template --cleanup)
         local git_options_argument_optional=(-u --untracked-files)
 
-        if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)git_options_argument_required}" "${(F)git_options_argument_optional}"); then
-            if [[ $completing_option = --* ]]; then
-                prefix_option=$completing_option=
-            else
-                prefix_option=${prefix%%${completing_option[-1]}*}${completing_option[-1]}
-            fi
-            prefix=${prefix#$prefix_option}
-        fi
+        _fzf_complete_git_parse_completing_option
 
         case $completing_option in
             -c|-C|--fixup|--reedit-message|--reuse-message|--squash)
@@ -272,18 +249,10 @@ _fzf_complete_git() {
     fi
 
     if [[ $subcommand = fetch ]]; then
-        local prefix_option completing_option
         local git_options_argument_required=(--depth --deepen -j --jobs --negotiation-tip -o --recurse-submodules-default --refmap --server-option --shallow-exclude --shallow-since --submodule-prefix --upload-pack)
         local git_options_argument_optional=(--recurse-submodules -S)
 
-        if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)git_options_argument_required}" "${(F)git_options_argument_optional}"); then
-            if [[ $completing_option = --* ]]; then
-                prefix_option=$completing_option=
-            else
-                prefix_option=${prefix%%${completing_option[-1]}*}${completing_option[-1]}
-            fi
-            prefix=${prefix#$prefix_option}
-        fi
+        _fzf_complete_git_parse_completing_option
 
         case $completing_option in
             --recurse-submodules)
@@ -326,18 +295,10 @@ _fzf_complete_git() {
     fi
 
     if [[ $subcommand = pull ]]; then
-        local prefix_option completing_option
         local git_options_argument_required=(--cleanup --date --depth --deepen --negotiation-tip -o -s --server-option --shallow-exclude --shallow-since --strategy --strategy-option --strategy-option=diff-algorithm --upload-pack -X)
         local git_options_argument_optional=(--gpg-sign --log --rebase --recurse-submodules -S)
 
-        if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)git_options_argument_required}" "${(F)git_options_argument_optional}"); then
-            if [[ $completing_option = --* ]]; then
-                prefix_option=$completing_option=
-            else
-                prefix_option=${prefix%%${completing_option[-1]}*}${completing_option[-1]}
-            fi
-            prefix=${prefix#$prefix_option}
-        fi
+        _fzf_complete_git_parse_completing_option
 
         case $completing_option in
             --recurse-submodules)
@@ -414,18 +375,10 @@ _fzf_complete_git() {
     fi
 
     if [[ $subcommand = push ]]; then
-        local prefix_option completing_option
         local git_options_argument_required=(--exec -o --push-option --receive-pack --recurse-submodules --repo)
         local git_options_argument_optional=(--force-with-lease --signed)
 
-        if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)git_options_argument_required}" "${(F)git_options_argument_optional}"); then
-            if [[ $completing_option = --* ]]; then
-                prefix_option=$completing_option=
-            else
-                prefix_option=${prefix%%${completing_option[-1]}*}${completing_option[-1]}
-            fi
-            prefix=${prefix#$prefix_option}
-        fi
+        _fzf_complete_git_parse_completing_option
 
         local prefix_ref=${prefix%%[^:]#}
 
@@ -474,18 +427,10 @@ _fzf_complete_git() {
     fi
 
     if [[ $subcommand = reset ]]; then
-        local prefix_option completing_option
         local git_options_argument_required=(--pathspec-from-file)
         local git_options_argument_optional=()
 
-        if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)git_options_argument_required}" "${(F)git_options_argument_optional}"); then
-            if [[ $completing_option = --* ]]; then
-                prefix_option=$completing_option=
-            else
-                prefix_option=${prefix%%${completing_option[-1]}*}${completing_option[-1]}
-            fi
-            prefix=${prefix#$prefix_option}
-        fi
+        _fzf_complete_git_parse_completing_option
 
         case $completing_option in
             --pathspec-from-file)
@@ -513,18 +458,10 @@ _fzf_complete_git() {
     fi
 
     if [[ $subcommand = restore ]]; then
-        local prefix_option completing_option
         local git_options_argument_required=(--source -s)
         local git_options_argument_optional=()
 
-        if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)git_options_argument_required}" "${(F)git_options_argument_optional}"); then
-            if [[ $completing_option = --* ]]; then
-                prefix_option=$completing_option=
-            else
-                prefix_option=${prefix%%${completing_option[-1]}*}${completing_option[-1]}
-            fi
-            prefix=${prefix#$prefix_option}
-        fi
+        _fzf_complete_git_parse_completing_option
 
         case $completing_option in
             -s|--source)
@@ -555,7 +492,6 @@ _fzf_complete_git() {
     fi
 
     if [[ $subcommand = show ]]; then
-        local prefix_option completing_option
         local git_options_argument_required=(
             -l
             -G
@@ -604,14 +540,7 @@ _fzf_complete_git() {
             --word-diff
         )
 
-        if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)git_options_argument_required}" "${(F)git_options_argument_optional}"); then
-            if [[ $completing_option = --* ]]; then
-                prefix_option=$completing_option=
-            else
-                prefix_option=${prefix%%${completing_option[-1]}*}${completing_option[-1]}
-            fi
-            prefix=${prefix#$prefix_option}
-        fi
+        _fzf_complete_git_parse_completing_option
 
         local prefix_ref=${prefix%%[^:]#}
 
@@ -694,21 +623,14 @@ _fzf_complete_git() {
     fi
 
     if [[ $subcommand = stash ]]; then
-        local prefix_option completing_option
         local git_options_argument_required=(
             --pathspec-from-file
             -m
             --message
         )
+        local git_options_argument_optional=()
 
-        if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)git_options_argument_required}" ''); then
-            if [[ $completing_option = --* ]]; then
-                prefix_option=$completing_option=
-            else
-                prefix_option=${prefix%%${completing_option[-1]}*}${completing_option[-1]}
-            fi
-            prefix=${prefix#$prefix_option}
-        fi
+        _fzf_complete_git_parse_completing_option
 
         local stash_subcommand=${arguments[${arguments[(i)$subcommand]} + 1]}
         case $stash_subcommand in
@@ -1045,4 +967,15 @@ _fzf_complete_git_resolve_alias() {
     done
 
     echo $git_alias_resolved
+}
+
+_fzf_complete_git_parse_completing_option() {
+    if completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)git_options_argument_required}" "${(F)git_options_argument_optional}"); then
+        if [[ $completing_option = --* ]]; then
+            prefix_option=$completing_option=
+        else
+            prefix_option=${prefix%%${completing_option[-1]}*}${completing_option[-1]}
+        fi
+        prefix=${prefix#$prefix_option}
+    fi
 }
