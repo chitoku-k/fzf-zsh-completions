@@ -423,7 +423,7 @@ _fzf_complete_git() {
         if [[ -z $completing_option ]]; then
             local restore_source=()
             if restore_source=($(_fzf_complete_parse_option_arguments '-s' '--source' "${(F)git_options_argument_required}" "${arguments[@]}")); then
-                treeish=${restore_source[-1]#(-s|--source=)} _fzf_complete_git-files_index '' '--multi' "$@"
+                treeish=${restore_source[-1]#(-s|--source=)} _fzf_complete_git-files_tree_and_index '' '' '--multi' "$@"
                 return
             fi
 

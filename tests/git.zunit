@@ -1855,6 +1855,9 @@
 }
 
 @test 'Testing completion: git restore --source=another-branch **' {
+    echo >> newfile
+    run git add newfile
+
     __fzf_extract_command_mock_1() {
         assert $# equals 1
         assert $1 same_as 'git restore --source=another-branch '
@@ -1886,9 +1889,10 @@
         assert ${actual2[1]} same_as 'containing'
 
         actual3=(${(0)lines[3]})
-        assert ${#actual3} equals 2
+        assert ${#actual3} equals 3
         assert ${actual3[1]} same_as 'newlines'
         assert ${actual3[2]} same_as 'file1'
+        assert ${actual3[3]} same_as 'newfile'
     }
 
     prefix=
@@ -1896,6 +1900,9 @@
 }
 
 @test 'Testing completion in subdirectory: git restore --source=another-branch **' {
+    echo >> newfile
+    run git add newfile
+
     cd directory1
 
     __fzf_extract_command_mock_1() {
@@ -1920,18 +1927,19 @@
 
         actual1=(${(0)lines[1]})
         assert ${#actual1} equals 3
-        assert ${actual1[1]} same_as ' file3 containing space '
-        assert ${actual1[2]} same_as 'directory1/file2'
-        assert ${actual1[3]} same_as 'directory2/file4'
+        assert ${actual1[1]} same_as '../ file3 containing space '
+        assert ${actual1[2]} same_as '../directory1/file2'
+        assert ${actual1[3]} same_as '../directory2/file4'
 
         actual2=(${(0)lines[2]})
         assert ${#actual2} equals 1
         assert ${actual2[1]} same_as 'containing'
 
         actual3=(${(0)lines[3]})
-        assert ${#actual3} equals 2
+        assert ${#actual3} equals 3
         assert ${actual3[1]} same_as 'newlines'
-        assert ${actual3[2]} same_as 'file1'
+        assert ${actual3[2]} same_as '../file1'
+        assert ${actual3[3]} same_as '../newfile'
     }
 
     prefix=
@@ -1939,6 +1947,9 @@
 }
 
 @test 'Testing completion: git restore --source another-branch **' {
+    echo >> newfile
+    run git add newfile
+
     __fzf_extract_command_mock_1() {
         assert $# equals 1
         assert $1 same_as 'git restore --source another-branch '
@@ -1970,9 +1981,10 @@
         assert ${actual2[1]} same_as 'containing'
 
         actual3=(${(0)lines[3]})
-        assert ${#actual3} equals 2
+        assert ${#actual3} equals 3
         assert ${actual3[1]} same_as 'newlines'
         assert ${actual3[2]} same_as 'file1'
+        assert ${actual3[3]} same_as 'newfile'
     }
 
     prefix=
@@ -1980,6 +1992,9 @@
 }
 
 @test 'Testing completion in subdirectory: git restore --source another-branch **' {
+    echo >> newfile
+    run git add newfile
+
     cd directory1
 
     __fzf_extract_command_mock_1() {
@@ -2004,18 +2019,19 @@
 
         actual1=(${(0)lines[1]})
         assert ${#actual1} equals 3
-        assert ${actual1[1]} same_as ' file3 containing space '
-        assert ${actual1[2]} same_as 'directory1/file2'
-        assert ${actual1[3]} same_as 'directory2/file4'
+        assert ${actual1[1]} same_as '../ file3 containing space '
+        assert ${actual1[2]} same_as '../directory1/file2'
+        assert ${actual1[3]} same_as '../directory2/file4'
 
         actual2=(${(0)lines[2]})
         assert ${#actual2} equals 1
         assert ${actual2[1]} same_as 'containing'
 
         actual3=(${(0)lines[3]})
-        assert ${#actual3} equals 2
+        assert ${#actual3} equals 3
         assert ${actual3[1]} same_as 'newlines'
-        assert ${actual3[2]} same_as 'file1'
+        assert ${actual3[2]} same_as '../file1'
+        assert ${actual3[3]} same_as '../newfile'
     }
 
     prefix=
@@ -2023,6 +2039,9 @@
 }
 
 @test 'Testing completion: git restore -s another-branch **' {
+    echo >> newfile
+    run git add newfile
+
     __fzf_extract_command_mock_1() {
         assert $# equals 1
         assert $1 same_as 'git restore -s another-branch '
@@ -2054,9 +2073,10 @@
         assert ${actual2[1]} same_as 'containing'
 
         actual3=(${(0)lines[3]})
-        assert ${#actual3} equals 2
+        assert ${#actual3} equals 3
         assert ${actual3[1]} same_as 'newlines'
         assert ${actual3[2]} same_as 'file1'
+        assert ${actual3[3]} same_as 'newfile'
     }
 
     prefix=
@@ -2064,6 +2084,9 @@
 }
 
 @test 'Testing completion in subdirectory: git restore -s another-branch **' {
+    echo >> newfile
+    run git add newfile
+
     cd directory1
 
     __fzf_extract_command_mock_1() {
@@ -2088,18 +2111,19 @@
 
         actual1=(${(0)lines[1]})
         assert ${#actual1} equals 3
-        assert ${actual1[1]} same_as ' file3 containing space '
-        assert ${actual1[2]} same_as 'directory1/file2'
-        assert ${actual1[3]} same_as 'directory2/file4'
+        assert ${actual1[1]} same_as '../ file3 containing space '
+        assert ${actual1[2]} same_as '../directory1/file2'
+        assert ${actual1[3]} same_as '../directory2/file4'
 
         actual2=(${(0)lines[2]})
         assert ${#actual2} equals 1
         assert ${actual2[1]} same_as 'containing'
 
         actual3=(${(0)lines[3]})
-        assert ${#actual3} equals 2
+        assert ${#actual3} equals 3
         assert ${actual3[1]} same_as 'newlines'
-        assert ${actual3[2]} same_as 'file1'
+        assert ${actual3[2]} same_as '../file1'
+        assert ${actual3[3]} same_as '../newfile'
     }
 
     prefix=
@@ -2107,6 +2131,9 @@
 }
 
 @test 'Testing completion: git restore -sanother-branch **' {
+    echo >> newfile
+    run git add newfile
+
     __fzf_extract_command_mock_1() {
         assert $# equals 1
         assert $1 same_as 'git restore -sanother-branch '
@@ -2138,9 +2165,10 @@
         assert ${actual2[1]} same_as 'containing'
 
         actual3=(${(0)lines[3]})
-        assert ${#actual3} equals 2
+        assert ${#actual3} equals 3
         assert ${actual3[1]} same_as 'newlines'
         assert ${actual3[2]} same_as 'file1'
+        assert ${actual3[3]} same_as 'newfile'
     }
 
     prefix=
@@ -2148,6 +2176,9 @@
 }
 
 @test 'Testing completion in subdirectory: git restore -sanother-branch **' {
+    echo >> newfile
+    run git add newfile
+
     cd directory1
 
     __fzf_extract_command_mock_1() {
@@ -2172,18 +2203,19 @@
 
         actual1=(${(0)lines[1]})
         assert ${#actual1} equals 3
-        assert ${actual1[1]} same_as ' file3 containing space '
-        assert ${actual1[2]} same_as 'directory1/file2'
-        assert ${actual1[3]} same_as 'directory2/file4'
+        assert ${actual1[1]} same_as '../ file3 containing space '
+        assert ${actual1[2]} same_as '../directory1/file2'
+        assert ${actual1[3]} same_as '../directory2/file4'
 
         actual2=(${(0)lines[2]})
         assert ${#actual2} equals 1
         assert ${actual2[1]} same_as 'containing'
 
         actual3=(${(0)lines[3]})
-        assert ${#actual3} equals 2
+        assert ${#actual3} equals 3
         assert ${actual3[1]} same_as 'newlines'
-        assert ${actual3[2]} same_as 'file1'
+        assert ${actual3[2]} same_as '../file1'
+        assert ${actual3[3]} same_as '../newfile'
     }
 
     prefix=
@@ -2191,6 +2223,9 @@
 }
 
 @test 'Testing completion: git restore -qs another-branch **' {
+    echo >> newfile
+    run git add newfile
+
     __fzf_extract_command_mock_1() {
         assert $# equals 1
         assert $1 same_as 'git restore -qs another-branch '
@@ -2222,9 +2257,10 @@
         assert ${actual2[1]} same_as 'containing'
 
         actual3=(${(0)lines[3]})
-        assert ${#actual3} equals 2
+        assert ${#actual3} equals 3
         assert ${actual3[1]} same_as 'newlines'
         assert ${actual3[2]} same_as 'file1'
+        assert ${actual3[3]} same_as 'newfile'
     }
 
     prefix=
@@ -2232,6 +2268,9 @@
 }
 
 @test 'Testing completion in subdirectory: git restore -qs another-branch **' {
+    echo >> newfile
+    run git add newfile
+
     cd directory1
 
     __fzf_extract_command_mock_1() {
@@ -2256,18 +2295,19 @@
 
         actual1=(${(0)lines[1]})
         assert ${#actual1} equals 3
-        assert ${actual1[1]} same_as ' file3 containing space '
-        assert ${actual1[2]} same_as 'directory1/file2'
-        assert ${actual1[3]} same_as 'directory2/file4'
+        assert ${actual1[1]} same_as '../ file3 containing space '
+        assert ${actual1[2]} same_as '../directory1/file2'
+        assert ${actual1[3]} same_as '../directory2/file4'
 
         actual2=(${(0)lines[2]})
         assert ${#actual2} equals 1
         assert ${actual2[1]} same_as 'containing'
 
         actual3=(${(0)lines[3]})
-        assert ${#actual3} equals 2
+        assert ${#actual3} equals 3
         assert ${actual3[1]} same_as 'newlines'
-        assert ${actual3[2]} same_as 'file1'
+        assert ${actual3[2]} same_as '../file1'
+        assert ${actual3[3]} same_as '../newfile'
     }
 
     prefix=
@@ -2275,6 +2315,9 @@
 }
 
 @test 'Testing completion: git restore -qsanother-branch **' {
+    echo >> newfile
+    run git add newfile
+
     __fzf_extract_command_mock_1() {
         assert $# equals 1
         assert $1 same_as 'git restore -qsanother-branch '
@@ -2306,9 +2349,10 @@
         assert ${actual2[1]} same_as 'containing'
 
         actual3=(${(0)lines[3]})
-        assert ${#actual3} equals 2
+        assert ${#actual3} equals 3
         assert ${actual3[1]} same_as 'newlines'
         assert ${actual3[2]} same_as 'file1'
+        assert ${actual3[3]} same_as 'newfile'
     }
 
     prefix=
@@ -2316,6 +2360,9 @@
 }
 
 @test 'Testing completion in subdirectory: git restore -qsanother-branch **' {
+    echo >> newfile
+    run git add newfile
+
     cd directory1
 
     __fzf_extract_command_mock_1() {
@@ -2340,18 +2387,19 @@
 
         actual1=(${(0)lines[1]})
         assert ${#actual1} equals 3
-        assert ${actual1[1]} same_as ' file3 containing space '
-        assert ${actual1[2]} same_as 'directory1/file2'
-        assert ${actual1[3]} same_as 'directory2/file4'
+        assert ${actual1[1]} same_as '../ file3 containing space '
+        assert ${actual1[2]} same_as '../directory1/file2'
+        assert ${actual1[3]} same_as '../directory2/file4'
 
         actual2=(${(0)lines[2]})
         assert ${#actual2} equals 1
         assert ${actual2[1]} same_as 'containing'
 
         actual3=(${(0)lines[3]})
-        assert ${#actual3} equals 2
+        assert ${#actual3} equals 3
         assert ${actual3[1]} same_as 'newlines'
-        assert ${actual3[2]} same_as 'file1'
+        assert ${actual3[2]} same_as '../file1'
+        assert ${actual3[3]} same_as '../newfile'
     }
 
     prefix=
