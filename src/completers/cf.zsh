@@ -1116,6 +1116,16 @@ _fzf_complete_cf() {
         fi
 
         if [[ -n $service_instance ]] && [[ $completing_option = -p ]]; then
+            if [[ $prefix = */* ]] && [[ $prefix != *{* ]]; then
+                if [[ $last_argument = -[^-]#p ]]; then
+                    __fzf_generic_path_completion "$prefix" "$@" _fzf_compgen_path '' '' ' '
+                    return
+                fi
+
+                __fzf_generic_path_completion "${prefix#$prefix_option}" "$@$prefix_option" _fzf_compgen_path '' '' ' '
+                return
+            fi
+
             _fzf_complete_cf-user-provided-service-instance-credentials '--multi' "$service_instance" "$@"
             return
         fi
