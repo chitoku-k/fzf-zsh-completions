@@ -1854,16 +1854,13 @@
     _fzf_complete_git 'git restore '
 }
 
-@test 'Testing completion: git restore --source=HEAD **' {
-    run git checkout another-branch
-    echo >> ' file3 containing space '
-    echo >> directory2/$'file4\ncontaining\nnewlines'
-    echo >> ' file5 containing space '
-    echo >> directory2/$'file6\ncontaining\nnewlines'
+@test 'Testing completion: git restore --source=another-branch **' {
+    echo >> newfile
+    run git add newfile
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'git restore --source=HEAD '
+        assert $1 same_as 'git restore --source=another-branch '
 
         echo 'git'
     }
@@ -1875,7 +1872,7 @@
         assert $3 same_as '--print0'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'git restore --source=HEAD '
+        assert $6 same_as 'git restore --source=another-branch '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -1892,27 +1889,25 @@
         assert ${actual2[1]} same_as 'containing'
 
         actual3=(${(0)lines[3]})
-        assert ${#actual3} equals 2
+        assert ${#actual3} equals 3
         assert ${actual3[1]} same_as 'newlines'
         assert ${actual3[2]} same_as 'file1'
+        assert ${actual3[3]} same_as 'newfile'
     }
 
     prefix=
-    _fzf_complete_git 'git restore --source=HEAD '
+    _fzf_complete_git 'git restore --source=another-branch '
 }
 
-@test 'Testing completion in subdirectory: git restore --source=HEAD **' {
-    run git checkout another-branch
-    echo >> ' file3 containing space '
-    echo >> directory2/$'file4\ncontaining\nnewlines'
-    echo >> ' file5 containing space '
-    echo >> directory2/$'file6\ncontaining\nnewlines'
+@test 'Testing completion in subdirectory: git restore --source=another-branch **' {
+    echo >> newfile
+    run git add newfile
 
     cd directory1
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'git restore --source=HEAD '
+        assert $1 same_as 'git restore --source=another-branch '
 
         echo 'git'
     }
@@ -1924,7 +1919,7 @@
         assert $3 same_as '--print0'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'git restore --source=HEAD '
+        assert $6 same_as 'git restore --source=another-branch '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -1932,34 +1927,32 @@
 
         actual1=(${(0)lines[1]})
         assert ${#actual1} equals 3
-        assert ${actual1[1]} same_as ' file3 containing space '
-        assert ${actual1[2]} same_as 'directory1/file2'
-        assert ${actual1[3]} same_as 'directory2/file4'
+        assert ${actual1[1]} same_as '../ file3 containing space '
+        assert ${actual1[2]} same_as '../directory1/file2'
+        assert ${actual1[3]} same_as '../directory2/file4'
 
         actual2=(${(0)lines[2]})
         assert ${#actual2} equals 1
         assert ${actual2[1]} same_as 'containing'
 
         actual3=(${(0)lines[3]})
-        assert ${#actual3} equals 2
+        assert ${#actual3} equals 3
         assert ${actual3[1]} same_as 'newlines'
-        assert ${actual3[2]} same_as 'file1'
+        assert ${actual3[2]} same_as '../file1'
+        assert ${actual3[3]} same_as '../newfile'
     }
 
     prefix=
-    _fzf_complete_git 'git restore --source=HEAD '
+    _fzf_complete_git 'git restore --source=another-branch '
 }
 
-@test 'Testing completion: git restore --source HEAD **' {
-    run git checkout another-branch
-    echo >> ' file3 containing space '
-    echo >> directory2/$'file4\ncontaining\nnewlines'
-    echo >> ' file5 containing space '
-    echo >> directory2/$'file6\ncontaining\nnewlines'
+@test 'Testing completion: git restore --source another-branch **' {
+    echo >> newfile
+    run git add newfile
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'git restore --source HEAD '
+        assert $1 same_as 'git restore --source another-branch '
 
         echo 'git'
     }
@@ -1971,7 +1964,7 @@
         assert $3 same_as '--print0'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'git restore --source HEAD '
+        assert $6 same_as 'git restore --source another-branch '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -1988,27 +1981,25 @@
         assert ${actual2[1]} same_as 'containing'
 
         actual3=(${(0)lines[3]})
-        assert ${#actual3} equals 2
+        assert ${#actual3} equals 3
         assert ${actual3[1]} same_as 'newlines'
         assert ${actual3[2]} same_as 'file1'
+        assert ${actual3[3]} same_as 'newfile'
     }
 
     prefix=
-    _fzf_complete_git 'git restore --source HEAD '
+    _fzf_complete_git 'git restore --source another-branch '
 }
 
-@test 'Testing completion in subdirectory: git restore --source HEAD **' {
-    run git checkout another-branch
-    echo >> ' file3 containing space '
-    echo >> directory2/$'file4\ncontaining\nnewlines'
-    echo >> ' file5 containing space '
-    echo >> directory2/$'file6\ncontaining\nnewlines'
+@test 'Testing completion in subdirectory: git restore --source another-branch **' {
+    echo >> newfile
+    run git add newfile
 
     cd directory1
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'git restore --source HEAD '
+        assert $1 same_as 'git restore --source another-branch '
 
         echo 'git'
     }
@@ -2020,7 +2011,7 @@
         assert $3 same_as '--print0'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'git restore --source HEAD '
+        assert $6 same_as 'git restore --source another-branch '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -2028,34 +2019,32 @@
 
         actual1=(${(0)lines[1]})
         assert ${#actual1} equals 3
-        assert ${actual1[1]} same_as ' file3 containing space '
-        assert ${actual1[2]} same_as 'directory1/file2'
-        assert ${actual1[3]} same_as 'directory2/file4'
+        assert ${actual1[1]} same_as '../ file3 containing space '
+        assert ${actual1[2]} same_as '../directory1/file2'
+        assert ${actual1[3]} same_as '../directory2/file4'
 
         actual2=(${(0)lines[2]})
         assert ${#actual2} equals 1
         assert ${actual2[1]} same_as 'containing'
 
         actual3=(${(0)lines[3]})
-        assert ${#actual3} equals 2
+        assert ${#actual3} equals 3
         assert ${actual3[1]} same_as 'newlines'
-        assert ${actual3[2]} same_as 'file1'
+        assert ${actual3[2]} same_as '../file1'
+        assert ${actual3[3]} same_as '../newfile'
     }
 
     prefix=
-    _fzf_complete_git 'git restore --source HEAD '
+    _fzf_complete_git 'git restore --source another-branch '
 }
 
-@test 'Testing completion: git restore -s HEAD **' {
-    run git checkout another-branch
-    echo >> ' file3 containing space '
-    echo >> directory2/$'file4\ncontaining\nnewlines'
-    echo >> ' file5 containing space '
-    echo >> directory2/$'file6\ncontaining\nnewlines'
+@test 'Testing completion: git restore -s another-branch **' {
+    echo >> newfile
+    run git add newfile
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'git restore -s HEAD '
+        assert $1 same_as 'git restore -s another-branch '
 
         echo 'git'
     }
@@ -2067,7 +2056,7 @@
         assert $3 same_as '--print0'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'git restore -s HEAD '
+        assert $6 same_as 'git restore -s another-branch '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -2084,27 +2073,25 @@
         assert ${actual2[1]} same_as 'containing'
 
         actual3=(${(0)lines[3]})
-        assert ${#actual3} equals 2
+        assert ${#actual3} equals 3
         assert ${actual3[1]} same_as 'newlines'
         assert ${actual3[2]} same_as 'file1'
+        assert ${actual3[3]} same_as 'newfile'
     }
 
     prefix=
-    _fzf_complete_git 'git restore -s HEAD '
+    _fzf_complete_git 'git restore -s another-branch '
 }
 
-@test 'Testing completion in subdirectory: git restore -s HEAD **' {
-    run git checkout another-branch
-    echo >> ' file3 containing space '
-    echo >> directory2/$'file4\ncontaining\nnewlines'
-    echo >> ' file5 containing space '
-    echo >> directory2/$'file6\ncontaining\nnewlines'
+@test 'Testing completion in subdirectory: git restore -s another-branch **' {
+    echo >> newfile
+    run git add newfile
 
     cd directory1
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'git restore -s HEAD '
+        assert $1 same_as 'git restore -s another-branch '
 
         echo 'git'
     }
@@ -2116,7 +2103,7 @@
         assert $3 same_as '--print0'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'git restore -s HEAD '
+        assert $6 same_as 'git restore -s another-branch '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -2124,34 +2111,32 @@
 
         actual1=(${(0)lines[1]})
         assert ${#actual1} equals 3
-        assert ${actual1[1]} same_as ' file3 containing space '
-        assert ${actual1[2]} same_as 'directory1/file2'
-        assert ${actual1[3]} same_as 'directory2/file4'
+        assert ${actual1[1]} same_as '../ file3 containing space '
+        assert ${actual1[2]} same_as '../directory1/file2'
+        assert ${actual1[3]} same_as '../directory2/file4'
 
         actual2=(${(0)lines[2]})
         assert ${#actual2} equals 1
         assert ${actual2[1]} same_as 'containing'
 
         actual3=(${(0)lines[3]})
-        assert ${#actual3} equals 2
+        assert ${#actual3} equals 3
         assert ${actual3[1]} same_as 'newlines'
-        assert ${actual3[2]} same_as 'file1'
+        assert ${actual3[2]} same_as '../file1'
+        assert ${actual3[3]} same_as '../newfile'
     }
 
     prefix=
-    _fzf_complete_git 'git restore -s HEAD '
+    _fzf_complete_git 'git restore -s another-branch '
 }
 
-@test 'Testing completion: git restore -sHEAD **' {
-    run git checkout another-branch
-    echo >> ' file3 containing space '
-    echo >> directory2/$'file4\ncontaining\nnewlines'
-    echo >> ' file5 containing space '
-    echo >> directory2/$'file6\ncontaining\nnewlines'
+@test 'Testing completion: git restore -sanother-branch **' {
+    echo >> newfile
+    run git add newfile
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'git restore -sHEAD '
+        assert $1 same_as 'git restore -sanother-branch '
 
         echo 'git'
     }
@@ -2163,7 +2148,7 @@
         assert $3 same_as '--print0'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'git restore -sHEAD '
+        assert $6 same_as 'git restore -sanother-branch '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -2180,27 +2165,25 @@
         assert ${actual2[1]} same_as 'containing'
 
         actual3=(${(0)lines[3]})
-        assert ${#actual3} equals 2
+        assert ${#actual3} equals 3
         assert ${actual3[1]} same_as 'newlines'
         assert ${actual3[2]} same_as 'file1'
+        assert ${actual3[3]} same_as 'newfile'
     }
 
     prefix=
-    _fzf_complete_git 'git restore -sHEAD '
+    _fzf_complete_git 'git restore -sanother-branch '
 }
 
-@test 'Testing completion in subdirectory: git restore -sHEAD **' {
-    run git checkout another-branch
-    echo >> ' file3 containing space '
-    echo >> directory2/$'file4\ncontaining\nnewlines'
-    echo >> ' file5 containing space '
-    echo >> directory2/$'file6\ncontaining\nnewlines'
+@test 'Testing completion in subdirectory: git restore -sanother-branch **' {
+    echo >> newfile
+    run git add newfile
 
     cd directory1
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'git restore -sHEAD '
+        assert $1 same_as 'git restore -sanother-branch '
 
         echo 'git'
     }
@@ -2212,7 +2195,7 @@
         assert $3 same_as '--print0'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'git restore -sHEAD '
+        assert $6 same_as 'git restore -sanother-branch '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -2220,34 +2203,32 @@
 
         actual1=(${(0)lines[1]})
         assert ${#actual1} equals 3
-        assert ${actual1[1]} same_as ' file3 containing space '
-        assert ${actual1[2]} same_as 'directory1/file2'
-        assert ${actual1[3]} same_as 'directory2/file4'
+        assert ${actual1[1]} same_as '../ file3 containing space '
+        assert ${actual1[2]} same_as '../directory1/file2'
+        assert ${actual1[3]} same_as '../directory2/file4'
 
         actual2=(${(0)lines[2]})
         assert ${#actual2} equals 1
         assert ${actual2[1]} same_as 'containing'
 
         actual3=(${(0)lines[3]})
-        assert ${#actual3} equals 2
+        assert ${#actual3} equals 3
         assert ${actual3[1]} same_as 'newlines'
-        assert ${actual3[2]} same_as 'file1'
+        assert ${actual3[2]} same_as '../file1'
+        assert ${actual3[3]} same_as '../newfile'
     }
 
     prefix=
-    _fzf_complete_git 'git restore -sHEAD '
+    _fzf_complete_git 'git restore -sanother-branch '
 }
 
-@test 'Testing completion: git restore -qs HEAD **' {
-    run git checkout another-branch
-    echo >> ' file3 containing space '
-    echo >> directory2/$'file4\ncontaining\nnewlines'
-    echo >> ' file5 containing space '
-    echo >> directory2/$'file6\ncontaining\nnewlines'
+@test 'Testing completion: git restore -qs another-branch **' {
+    echo >> newfile
+    run git add newfile
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'git restore -qs HEAD '
+        assert $1 same_as 'git restore -qs another-branch '
 
         echo 'git'
     }
@@ -2259,7 +2240,7 @@
         assert $3 same_as '--print0'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'git restore -qs HEAD '
+        assert $6 same_as 'git restore -qs another-branch '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -2276,27 +2257,25 @@
         assert ${actual2[1]} same_as 'containing'
 
         actual3=(${(0)lines[3]})
-        assert ${#actual3} equals 2
+        assert ${#actual3} equals 3
         assert ${actual3[1]} same_as 'newlines'
         assert ${actual3[2]} same_as 'file1'
+        assert ${actual3[3]} same_as 'newfile'
     }
 
     prefix=
-    _fzf_complete_git 'git restore -qs HEAD '
+    _fzf_complete_git 'git restore -qs another-branch '
 }
 
-@test 'Testing completion in subdirectory: git restore -qs HEAD **' {
-    run git checkout another-branch
-    echo >> ' file3 containing space '
-    echo >> directory2/$'file4\ncontaining\nnewlines'
-    echo >> ' file5 containing space '
-    echo >> directory2/$'file6\ncontaining\nnewlines'
+@test 'Testing completion in subdirectory: git restore -qs another-branch **' {
+    echo >> newfile
+    run git add newfile
 
     cd directory1
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'git restore -qs HEAD '
+        assert $1 same_as 'git restore -qs another-branch '
 
         echo 'git'
     }
@@ -2308,7 +2287,7 @@
         assert $3 same_as '--print0'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'git restore -qs HEAD '
+        assert $6 same_as 'git restore -qs another-branch '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -2316,34 +2295,32 @@
 
         actual1=(${(0)lines[1]})
         assert ${#actual1} equals 3
-        assert ${actual1[1]} same_as ' file3 containing space '
-        assert ${actual1[2]} same_as 'directory1/file2'
-        assert ${actual1[3]} same_as 'directory2/file4'
+        assert ${actual1[1]} same_as '../ file3 containing space '
+        assert ${actual1[2]} same_as '../directory1/file2'
+        assert ${actual1[3]} same_as '../directory2/file4'
 
         actual2=(${(0)lines[2]})
         assert ${#actual2} equals 1
         assert ${actual2[1]} same_as 'containing'
 
         actual3=(${(0)lines[3]})
-        assert ${#actual3} equals 2
+        assert ${#actual3} equals 3
         assert ${actual3[1]} same_as 'newlines'
-        assert ${actual3[2]} same_as 'file1'
+        assert ${actual3[2]} same_as '../file1'
+        assert ${actual3[3]} same_as '../newfile'
     }
 
     prefix=
-    _fzf_complete_git 'git restore -qs HEAD '
+    _fzf_complete_git 'git restore -qs another-branch '
 }
 
-@test 'Testing completion: git restore -qsHEAD **' {
-    run git checkout another-branch
-    echo >> ' file3 containing space '
-    echo >> directory2/$'file4\ncontaining\nnewlines'
-    echo >> ' file5 containing space '
-    echo >> directory2/$'file6\ncontaining\nnewlines'
+@test 'Testing completion: git restore -qsanother-branch **' {
+    echo >> newfile
+    run git add newfile
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'git restore -qsHEAD '
+        assert $1 same_as 'git restore -qsanother-branch '
 
         echo 'git'
     }
@@ -2355,7 +2332,7 @@
         assert $3 same_as '--print0'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'git restore -qsHEAD '
+        assert $6 same_as 'git restore -qsanother-branch '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -2372,27 +2349,25 @@
         assert ${actual2[1]} same_as 'containing'
 
         actual3=(${(0)lines[3]})
-        assert ${#actual3} equals 2
+        assert ${#actual3} equals 3
         assert ${actual3[1]} same_as 'newlines'
         assert ${actual3[2]} same_as 'file1'
+        assert ${actual3[3]} same_as 'newfile'
     }
 
     prefix=
-    _fzf_complete_git 'git restore -qsHEAD '
+    _fzf_complete_git 'git restore -qsanother-branch '
 }
 
-@test 'Testing completion in subdirectory: git restore -qsHEAD **' {
-    run git checkout another-branch
-    echo >> ' file3 containing space '
-    echo >> directory2/$'file4\ncontaining\nnewlines'
-    echo >> ' file5 containing space '
-    echo >> directory2/$'file6\ncontaining\nnewlines'
+@test 'Testing completion in subdirectory: git restore -qsanother-branch **' {
+    echo >> newfile
+    run git add newfile
 
     cd directory1
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'git restore -qsHEAD '
+        assert $1 same_as 'git restore -qsanother-branch '
 
         echo 'git'
     }
@@ -2404,7 +2379,7 @@
         assert $3 same_as '--print0'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'git restore -qsHEAD '
+        assert $6 same_as 'git restore -qsanother-branch '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -2412,22 +2387,23 @@
 
         actual1=(${(0)lines[1]})
         assert ${#actual1} equals 3
-        assert ${actual1[1]} same_as ' file3 containing space '
-        assert ${actual1[2]} same_as 'directory1/file2'
-        assert ${actual1[3]} same_as 'directory2/file4'
+        assert ${actual1[1]} same_as '../ file3 containing space '
+        assert ${actual1[2]} same_as '../directory1/file2'
+        assert ${actual1[3]} same_as '../directory2/file4'
 
         actual2=(${(0)lines[2]})
         assert ${#actual2} equals 1
         assert ${actual2[1]} same_as 'containing'
 
         actual3=(${(0)lines[3]})
-        assert ${#actual3} equals 2
+        assert ${#actual3} equals 3
         assert ${actual3[1]} same_as 'newlines'
-        assert ${actual3[2]} same_as 'file1'
+        assert ${actual3[2]} same_as '../file1'
+        assert ${actual3[3]} same_as '../newfile'
     }
 
     prefix=
-    _fzf_complete_git 'git restore -qsHEAD '
+    _fzf_complete_git 'git restore -qsanother-branch '
 }
 
 @test 'Testing completion: git restore --staged **' {
