@@ -850,6 +850,36 @@ _fzf_complete_cf() {
         fi
     fi
 
+    if [[ $subcommand = (t|target) ]]; then
+        cf_options_argument_required+=(
+            -o
+            -s
+        )
+
+        _fzf_complete_cf_parse_completing_option
+
+        if [[ $completing_option = -o ]]; then
+            resource=orgs
+            _fzf_complete_cf-resources '' "$@"
+            return
+        fi
+
+        if [[ $completing_option = -s ]]; then
+            local org_name org_names org_guid
+
+            if org_names=($(_fzf_complete_parse_option_arguments '-o' '' "${(F)cf_options_argument_required}" "${arguments[@]}")); then
+                org_name=${org_names[-1]#-o}
+                _fzf_complete_cf-spaces '' '' "$org_name" "$@"
+                return
+            fi
+
+            if org_guid=$(_fzf_complete_cf-target-org); then
+                _fzf_complete_cf-spaces '' "$org_guid" '' "$@"
+                return
+            fi
+        fi
+    fi
+
     if [[ $subcommand = uninstall-plugin ]]; then
         resource=plugins
         _fzf_complete_cf-resources '' "$@"
@@ -1338,6 +1368,29 @@ _fzf_complete_cf-service-plans-by-service-instance_post() {
     awk '{ print $1 }'
 }
 
+_fzf_complete_cf-spaces() {
+    local fzf_options=$1
+    local org_guid=$2
+    local org_name=$3
+    shift 3
+
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <(
+        if [[ -z $org_guid ]]; then
+            org_guid=$(cf org --guid "$org_name" 2> /dev/null)
+        fi
+
+        {
+            echo name
+            _fzf_complete_cf-curl-resources "/v2/organizations/$org_guid/spaces?results-per-page=100" 2> /dev/null |
+                jq --slurp -r 'map(.resources)[] | map(.entity.name) | sort[]' 2> /dev/null
+        } | _fzf_complete_tabularize $fg[yellow]
+    )
+}
+
+_fzf_complete_cf-spaces_post() {
+    awk '{ print $1 }'
+}
+
 _fzf_complete_cf-user-provided-service-instance-credentials() {
     local fzf_options=$1
     local service_instance=$2
@@ -1371,6 +1424,20 @@ _fzf_complete_cf-user-provided-service-instance-credentials_post() {
     fi
 
     jq --slurp -c 'reduce .[] as $item ({}; . * $item) | @json' <<< "$input"
+}
+
+_fzf_complete_cf-curl-resources() {
+    local response
+    local url=$1
+    shift
+
+    while [[ -n $url ]]; do
+        if ! response=$(cf curl "${cf_arguments[@]}" "$@" "$url"); then
+            return
+        fi
+        echo - "$response"
+        url=$(jq -r '.next_url // ""' <<< "$response")
+    done
 }
 
 _fzf_complete_cf-target-org() {

@@ -9721,6 +9721,1530 @@
     _fzf_complete_cf 'cf space-users '
 }
 
+@test 'Testing completion: cf t -o **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'orgs'
+
+        echo 'Getting orgs as user-01...'
+        echo ''
+        echo 'name'
+        echo 'org-01'
+        echo 'org-02'
+        echo 'org-03'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf t -o '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf t -o '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 1
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}name${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}org-01${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}org-02${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}org-03${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf t -o '
+}
+
+@test 'Testing completion: cf t -o org-01 -s **' {
+    cf_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'org'
+        assert $2 same_as '--guid'
+        assert $3 same_as 'org-01'
+
+        echo '00000000-0000-0000-0000-000000000000'
+    }
+
+    cf_mock_2() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100'
+
+        echo '{
+           "total_results": 4,
+           "total_pages": 2,
+           "prev_url": null,
+           "next_url": "/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=2",
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "00000000-0000-0000-0000-000000000000",
+                    "url": "/v2/spaces/00000000-0000-0000-0000-000000000000",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-01",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/developers",
+                    "managers_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/managers",
+                    "auditors_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/auditors",
+                    "apps_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/apps",
+                    "routes_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/routes",
+                    "domains_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/domains",
+                    "service_instances_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/service_instances",
+                    "app_events_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/app_events",
+                    "events_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/events",
+                    "security_groups_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/staging_security_groups"
+                 }
+              },
+              {
+                 "metadata": {
+                    "guid": "11111111-1111-1111-1111-111111111111",
+                    "url": "/v2/spaces/11111111-1111-1111-1111-111111111111",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-02",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/developers",
+                    "managers_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/managers",
+                    "auditors_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/auditors",
+                    "apps_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/apps",
+                    "routes_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/routes",
+                    "domains_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/domains",
+                    "service_instances_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/service_instances",
+                    "app_events_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/app_events",
+                    "events_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/events",
+                    "security_groups_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/staging_security_groups"
+                 }
+              }
+           ]
+        }'
+    }
+
+    cf_mock_3() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=2'
+
+        echo '{
+           "total_results": 4,
+           "total_pages": 2,
+           "prev_url": "/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=1",
+           "next_url": null,
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "22222222-2222-2222-2222-222222222222",
+                    "url": "/v2/spaces/22222222-2222-2222-2222-222222222222",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-03",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/developers",
+                    "managers_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/managers",
+                    "auditors_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/auditors",
+                    "apps_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/apps",
+                    "routes_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/routes",
+                    "domains_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/domains",
+                    "service_instances_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/service_instances",
+                    "app_events_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/app_events",
+                    "events_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/events",
+                    "security_groups_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/staging_security_groups"
+                 }
+              },
+              {
+                 "metadata": {
+                    "guid": "33333333-3333-3333-3333-333333333333",
+                    "url": "/v2/spaces/33333333-3333-3333-3333-333333333333",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-04",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/developers",
+                    "managers_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/managers",
+                    "auditors_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/auditors",
+                    "apps_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/apps",
+                    "routes_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/routes",
+                    "domains_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/domains",
+                    "service_instances_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/service_instances",
+                    "app_events_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/app_events",
+                    "events_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/events",
+                    "security_groups_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/staging_security_groups"
+                 }
+              }
+           ]
+        }'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf t -o org-01 -s '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf t -o org-01 -s '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 3
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "${fg[yellow]}name    ${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}space-01${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}space-02${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}space-03${reset_color}"
+        assert ${lines[5]} same_as "${fg[yellow]}space-04${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf t -o org-01 -s '
+}
+
+@test 'Testing completion: cf t -s **' {
+    cf_mock_1() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100'
+
+        echo '{
+           "total_results": 4,
+           "total_pages": 2,
+           "prev_url": null,
+           "next_url": "/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=2",
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "00000000-0000-0000-0000-000000000000",
+                    "url": "/v2/spaces/00000000-0000-0000-0000-000000000000",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-01",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/developers",
+                    "managers_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/managers",
+                    "auditors_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/auditors",
+                    "apps_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/apps",
+                    "routes_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/routes",
+                    "domains_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/domains",
+                    "service_instances_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/service_instances",
+                    "app_events_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/app_events",
+                    "events_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/events",
+                    "security_groups_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/staging_security_groups"
+                 }
+              },
+              {
+                 "metadata": {
+                    "guid": "11111111-1111-1111-1111-111111111111",
+                    "url": "/v2/spaces/11111111-1111-1111-1111-111111111111",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-02",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/developers",
+                    "managers_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/managers",
+                    "auditors_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/auditors",
+                    "apps_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/apps",
+                    "routes_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/routes",
+                    "domains_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/domains",
+                    "service_instances_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/service_instances",
+                    "app_events_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/app_events",
+                    "events_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/events",
+                    "security_groups_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/staging_security_groups"
+                 }
+              }
+           ]
+        }'
+    }
+
+    cf_mock_2() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=2'
+
+        echo '{
+           "total_results": 4,
+           "total_pages": 2,
+           "prev_url": "/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=1",
+           "next_url": null,
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "22222222-2222-2222-2222-222222222222",
+                    "url": "/v2/spaces/22222222-2222-2222-2222-222222222222",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-03",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/developers",
+                    "managers_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/managers",
+                    "auditors_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/auditors",
+                    "apps_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/apps",
+                    "routes_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/routes",
+                    "domains_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/domains",
+                    "service_instances_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/service_instances",
+                    "app_events_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/app_events",
+                    "events_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/events",
+                    "security_groups_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/staging_security_groups"
+                 }
+              },
+              {
+                 "metadata": {
+                    "guid": "33333333-3333-3333-3333-333333333333",
+                    "url": "/v2/spaces/33333333-3333-3333-3333-333333333333",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-04",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/developers",
+                    "managers_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/managers",
+                    "auditors_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/auditors",
+                    "apps_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/apps",
+                    "routes_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/routes",
+                    "domains_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/domains",
+                    "service_instances_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/service_instances",
+                    "app_events_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/app_events",
+                    "events_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/events",
+                    "security_groups_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/staging_security_groups"
+                 }
+              }
+           ]
+        }'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf t -s '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf t -s '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "${fg[yellow]}name    ${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}space-01${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}space-02${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}space-03${reset_color}"
+        assert ${lines[5]} same_as "${fg[yellow]}space-04${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf t -s '
+}
+
+@test 'Testing completion: cf t -o**' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'orgs'
+
+        echo 'Getting orgs as user-01...'
+        echo ''
+        echo 'name'
+        echo 'org-01'
+        echo 'org-02'
+        echo 'org-03'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf t '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf t -o'
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 1
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}name${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}org-01${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}org-02${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}org-03${reset_color}"
+    }
+
+    prefix=-o
+    _fzf_complete_cf 'cf t '
+}
+
+@test 'Testing completion: cf t -oorg-01 -s**' {
+    cf_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'org'
+        assert $2 same_as '--guid'
+        assert $3 same_as 'org-01'
+
+        echo '00000000-0000-0000-0000-000000000000'
+    }
+
+    cf_mock_2() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100'
+
+        echo '{
+           "total_results": 4,
+           "total_pages": 2,
+           "prev_url": null,
+           "next_url": "/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=2",
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "00000000-0000-0000-0000-000000000000",
+                    "url": "/v2/spaces/00000000-0000-0000-0000-000000000000",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-01",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/developers",
+                    "managers_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/managers",
+                    "auditors_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/auditors",
+                    "apps_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/apps",
+                    "routes_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/routes",
+                    "domains_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/domains",
+                    "service_instances_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/service_instances",
+                    "app_events_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/app_events",
+                    "events_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/events",
+                    "security_groups_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/staging_security_groups"
+                 }
+              },
+              {
+                 "metadata": {
+                    "guid": "11111111-1111-1111-1111-111111111111",
+                    "url": "/v2/spaces/11111111-1111-1111-1111-111111111111",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-02",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/developers",
+                    "managers_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/managers",
+                    "auditors_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/auditors",
+                    "apps_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/apps",
+                    "routes_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/routes",
+                    "domains_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/domains",
+                    "service_instances_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/service_instances",
+                    "app_events_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/app_events",
+                    "events_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/events",
+                    "security_groups_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/staging_security_groups"
+                 }
+              }
+           ]
+        }'
+    }
+
+    cf_mock_3() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=2'
+
+        echo '{
+           "total_results": 4,
+           "total_pages": 2,
+           "prev_url": "/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=1",
+           "next_url": null,
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "22222222-2222-2222-2222-222222222222",
+                    "url": "/v2/spaces/22222222-2222-2222-2222-222222222222",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-03",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/developers",
+                    "managers_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/managers",
+                    "auditors_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/auditors",
+                    "apps_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/apps",
+                    "routes_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/routes",
+                    "domains_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/domains",
+                    "service_instances_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/service_instances",
+                    "app_events_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/app_events",
+                    "events_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/events",
+                    "security_groups_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/staging_security_groups"
+                 }
+              },
+              {
+                 "metadata": {
+                    "guid": "33333333-3333-3333-3333-333333333333",
+                    "url": "/v2/spaces/33333333-3333-3333-3333-333333333333",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-04",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/developers",
+                    "managers_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/managers",
+                    "auditors_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/auditors",
+                    "apps_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/apps",
+                    "routes_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/routes",
+                    "domains_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/domains",
+                    "service_instances_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/service_instances",
+                    "app_events_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/app_events",
+                    "events_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/events",
+                    "security_groups_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/staging_security_groups"
+                 }
+              }
+           ]
+        }'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf t -oorg-01 '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf t -oorg-01 -s'
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 3
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "${fg[yellow]}name    ${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}space-01${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}space-02${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}space-03${reset_color}"
+        assert ${lines[5]} same_as "${fg[yellow]}space-04${reset_color}"
+    }
+
+    prefix=-s
+    _fzf_complete_cf 'cf t -oorg-01 '
+}
+
+@test 'Testing completion: cf t -s**' {
+    cf_mock_1() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100'
+
+        echo '{
+           "total_results": 4,
+           "total_pages": 2,
+           "prev_url": null,
+           "next_url": "/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=2",
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "00000000-0000-0000-0000-000000000000",
+                    "url": "/v2/spaces/00000000-0000-0000-0000-000000000000",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-01",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/developers",
+                    "managers_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/managers",
+                    "auditors_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/auditors",
+                    "apps_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/apps",
+                    "routes_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/routes",
+                    "domains_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/domains",
+                    "service_instances_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/service_instances",
+                    "app_events_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/app_events",
+                    "events_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/events",
+                    "security_groups_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/staging_security_groups"
+                 }
+              },
+              {
+                 "metadata": {
+                    "guid": "11111111-1111-1111-1111-111111111111",
+                    "url": "/v2/spaces/11111111-1111-1111-1111-111111111111",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-02",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/developers",
+                    "managers_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/managers",
+                    "auditors_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/auditors",
+                    "apps_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/apps",
+                    "routes_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/routes",
+                    "domains_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/domains",
+                    "service_instances_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/service_instances",
+                    "app_events_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/app_events",
+                    "events_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/events",
+                    "security_groups_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/staging_security_groups"
+                 }
+              }
+           ]
+        }'
+    }
+
+    cf_mock_2() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=2'
+
+        echo '{
+           "total_results": 4,
+           "total_pages": 2,
+           "prev_url": "/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=1",
+           "next_url": null,
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "22222222-2222-2222-2222-222222222222",
+                    "url": "/v2/spaces/22222222-2222-2222-2222-222222222222",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-03",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/developers",
+                    "managers_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/managers",
+                    "auditors_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/auditors",
+                    "apps_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/apps",
+                    "routes_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/routes",
+                    "domains_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/domains",
+                    "service_instances_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/service_instances",
+                    "app_events_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/app_events",
+                    "events_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/events",
+                    "security_groups_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/staging_security_groups"
+                 }
+              },
+              {
+                 "metadata": {
+                    "guid": "33333333-3333-3333-3333-333333333333",
+                    "url": "/v2/spaces/33333333-3333-3333-3333-333333333333",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-04",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/developers",
+                    "managers_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/managers",
+                    "auditors_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/auditors",
+                    "apps_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/apps",
+                    "routes_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/routes",
+                    "domains_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/domains",
+                    "service_instances_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/service_instances",
+                    "app_events_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/app_events",
+                    "events_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/events",
+                    "security_groups_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/staging_security_groups"
+                 }
+              }
+           ]
+        }'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf t '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf t -s'
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "${fg[yellow]}name    ${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}space-01${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}space-02${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}space-03${reset_color}"
+        assert ${lines[5]} same_as "${fg[yellow]}space-04${reset_color}"
+    }
+
+    prefix=-s
+    _fzf_complete_cf 'cf t '
+}
+
+@test 'Testing completion: cf target -o **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'orgs'
+
+        echo 'Getting orgs as user-01...'
+        echo ''
+        echo 'name'
+        echo 'org-01'
+        echo 'org-02'
+        echo 'org-03'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf target -o '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf target -o '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 1
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}name${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}org-01${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}org-02${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}org-03${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf target -o '
+}
+
+@test 'Testing completion: cf target -o org-01 -s **' {
+    cf_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'org'
+        assert $2 same_as '--guid'
+        assert $3 same_as 'org-01'
+
+        echo '00000000-0000-0000-0000-000000000000'
+    }
+
+    cf_mock_2() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100'
+
+        echo '{
+           "total_results": 4,
+           "total_pages": 2,
+           "prev_url": null,
+           "next_url": "/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=2",
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "00000000-0000-0000-0000-000000000000",
+                    "url": "/v2/spaces/00000000-0000-0000-0000-000000000000",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-01",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/developers",
+                    "managers_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/managers",
+                    "auditors_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/auditors",
+                    "apps_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/apps",
+                    "routes_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/routes",
+                    "domains_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/domains",
+                    "service_instances_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/service_instances",
+                    "app_events_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/app_events",
+                    "events_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/events",
+                    "security_groups_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/staging_security_groups"
+                 }
+              },
+              {
+                 "metadata": {
+                    "guid": "11111111-1111-1111-1111-111111111111",
+                    "url": "/v2/spaces/11111111-1111-1111-1111-111111111111",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-02",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/developers",
+                    "managers_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/managers",
+                    "auditors_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/auditors",
+                    "apps_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/apps",
+                    "routes_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/routes",
+                    "domains_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/domains",
+                    "service_instances_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/service_instances",
+                    "app_events_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/app_events",
+                    "events_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/events",
+                    "security_groups_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/staging_security_groups"
+                 }
+              }
+           ]
+        }'
+    }
+
+    cf_mock_3() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=2'
+
+        echo '{
+           "total_results": 4,
+           "total_pages": 2,
+           "prev_url": "/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=1",
+           "next_url": null,
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "22222222-2222-2222-2222-222222222222",
+                    "url": "/v2/spaces/22222222-2222-2222-2222-222222222222",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-03",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/developers",
+                    "managers_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/managers",
+                    "auditors_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/auditors",
+                    "apps_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/apps",
+                    "routes_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/routes",
+                    "domains_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/domains",
+                    "service_instances_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/service_instances",
+                    "app_events_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/app_events",
+                    "events_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/events",
+                    "security_groups_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/staging_security_groups"
+                 }
+              },
+              {
+                 "metadata": {
+                    "guid": "33333333-3333-3333-3333-333333333333",
+                    "url": "/v2/spaces/33333333-3333-3333-3333-333333333333",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-04",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/developers",
+                    "managers_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/managers",
+                    "auditors_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/auditors",
+                    "apps_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/apps",
+                    "routes_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/routes",
+                    "domains_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/domains",
+                    "service_instances_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/service_instances",
+                    "app_events_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/app_events",
+                    "events_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/events",
+                    "security_groups_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/staging_security_groups"
+                 }
+              }
+           ]
+        }'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf target -o org-01 -s '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf target -o org-01 -s '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 3
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "${fg[yellow]}name    ${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}space-01${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}space-02${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}space-03${reset_color}"
+        assert ${lines[5]} same_as "${fg[yellow]}space-04${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf target -o org-01 -s '
+}
+
+@test 'Testing completion: cf target -s **' {
+    cf_mock_1() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100'
+
+        echo '{
+           "total_results": 4,
+           "total_pages": 2,
+           "prev_url": null,
+           "next_url": "/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=2",
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "00000000-0000-0000-0000-000000000000",
+                    "url": "/v2/spaces/00000000-0000-0000-0000-000000000000",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-01",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/developers",
+                    "managers_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/managers",
+                    "auditors_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/auditors",
+                    "apps_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/apps",
+                    "routes_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/routes",
+                    "domains_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/domains",
+                    "service_instances_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/service_instances",
+                    "app_events_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/app_events",
+                    "events_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/events",
+                    "security_groups_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/staging_security_groups"
+                 }
+              },
+              {
+                 "metadata": {
+                    "guid": "11111111-1111-1111-1111-111111111111",
+                    "url": "/v2/spaces/11111111-1111-1111-1111-111111111111",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-02",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/developers",
+                    "managers_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/managers",
+                    "auditors_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/auditors",
+                    "apps_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/apps",
+                    "routes_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/routes",
+                    "domains_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/domains",
+                    "service_instances_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/service_instances",
+                    "app_events_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/app_events",
+                    "events_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/events",
+                    "security_groups_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/staging_security_groups"
+                 }
+              }
+           ]
+        }'
+    }
+
+    cf_mock_2() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=2'
+
+        echo '{
+           "total_results": 4,
+           "total_pages": 2,
+           "prev_url": "/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=1",
+           "next_url": null,
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "22222222-2222-2222-2222-222222222222",
+                    "url": "/v2/spaces/22222222-2222-2222-2222-222222222222",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-03",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/developers",
+                    "managers_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/managers",
+                    "auditors_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/auditors",
+                    "apps_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/apps",
+                    "routes_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/routes",
+                    "domains_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/domains",
+                    "service_instances_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/service_instances",
+                    "app_events_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/app_events",
+                    "events_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/events",
+                    "security_groups_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/staging_security_groups"
+                 }
+              },
+              {
+                 "metadata": {
+                    "guid": "33333333-3333-3333-3333-333333333333",
+                    "url": "/v2/spaces/33333333-3333-3333-3333-333333333333",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-04",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/developers",
+                    "managers_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/managers",
+                    "auditors_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/auditors",
+                    "apps_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/apps",
+                    "routes_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/routes",
+                    "domains_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/domains",
+                    "service_instances_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/service_instances",
+                    "app_events_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/app_events",
+                    "events_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/events",
+                    "security_groups_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/staging_security_groups"
+                 }
+              }
+           ]
+        }'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf target -s '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf target -s '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "${fg[yellow]}name    ${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}space-01${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}space-02${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}space-03${reset_color}"
+        assert ${lines[5]} same_as "${fg[yellow]}space-04${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf target -s '
+}
+
+@test 'Testing completion: cf target -o**' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'orgs'
+
+        echo 'Getting orgs as user-01...'
+        echo ''
+        echo 'name'
+        echo 'org-01'
+        echo 'org-02'
+        echo 'org-03'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf target '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf target -o'
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 1
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}name${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}org-01${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}org-02${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}org-03${reset_color}"
+    }
+
+    prefix=-o
+    _fzf_complete_cf 'cf target '
+}
+
+@test 'Testing completion: cf target -oorg-01 -s**' {
+    cf_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'org'
+        assert $2 same_as '--guid'
+        assert $3 same_as 'org-01'
+
+        echo '00000000-0000-0000-0000-000000000000'
+    }
+
+    cf_mock_2() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100'
+
+        echo '{
+           "total_results": 4,
+           "total_pages": 2,
+           "prev_url": null,
+           "next_url": "/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=2",
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "00000000-0000-0000-0000-000000000000",
+                    "url": "/v2/spaces/00000000-0000-0000-0000-000000000000",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-01",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/developers",
+                    "managers_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/managers",
+                    "auditors_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/auditors",
+                    "apps_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/apps",
+                    "routes_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/routes",
+                    "domains_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/domains",
+                    "service_instances_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/service_instances",
+                    "app_events_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/app_events",
+                    "events_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/events",
+                    "security_groups_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/staging_security_groups"
+                 }
+              },
+              {
+                 "metadata": {
+                    "guid": "11111111-1111-1111-1111-111111111111",
+                    "url": "/v2/spaces/11111111-1111-1111-1111-111111111111",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-02",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/developers",
+                    "managers_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/managers",
+                    "auditors_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/auditors",
+                    "apps_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/apps",
+                    "routes_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/routes",
+                    "domains_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/domains",
+                    "service_instances_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/service_instances",
+                    "app_events_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/app_events",
+                    "events_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/events",
+                    "security_groups_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/staging_security_groups"
+                 }
+              }
+           ]
+        }'
+    }
+
+    cf_mock_3() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=2'
+
+        echo '{
+           "total_results": 4,
+           "total_pages": 2,
+           "prev_url": "/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=1",
+           "next_url": null,
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "22222222-2222-2222-2222-222222222222",
+                    "url": "/v2/spaces/22222222-2222-2222-2222-222222222222",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-03",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/developers",
+                    "managers_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/managers",
+                    "auditors_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/auditors",
+                    "apps_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/apps",
+                    "routes_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/routes",
+                    "domains_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/domains",
+                    "service_instances_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/service_instances",
+                    "app_events_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/app_events",
+                    "events_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/events",
+                    "security_groups_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/staging_security_groups"
+                 }
+              },
+              {
+                 "metadata": {
+                    "guid": "33333333-3333-3333-3333-333333333333",
+                    "url": "/v2/spaces/33333333-3333-3333-3333-333333333333",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-04",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/developers",
+                    "managers_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/managers",
+                    "auditors_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/auditors",
+                    "apps_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/apps",
+                    "routes_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/routes",
+                    "domains_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/domains",
+                    "service_instances_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/service_instances",
+                    "app_events_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/app_events",
+                    "events_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/events",
+                    "security_groups_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/staging_security_groups"
+                 }
+              }
+           ]
+        }'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf target -oorg-01 '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf target -oorg-01 -s'
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 3
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "${fg[yellow]}name    ${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}space-01${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}space-02${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}space-03${reset_color}"
+        assert ${lines[5]} same_as "${fg[yellow]}space-04${reset_color}"
+    }
+
+    prefix=-s
+    _fzf_complete_cf 'cf target -oorg-01 '
+}
+
+@test 'Testing completion: cf target -s**' {
+    cf_mock_1() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100'
+
+        echo '{
+           "total_results": 4,
+           "total_pages": 2,
+           "prev_url": null,
+           "next_url": "/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=2",
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "00000000-0000-0000-0000-000000000000",
+                    "url": "/v2/spaces/00000000-0000-0000-0000-000000000000",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-01",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/developers",
+                    "managers_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/managers",
+                    "auditors_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/auditors",
+                    "apps_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/apps",
+                    "routes_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/routes",
+                    "domains_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/domains",
+                    "service_instances_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/service_instances",
+                    "app_events_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/app_events",
+                    "events_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/events",
+                    "security_groups_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/staging_security_groups"
+                 }
+              },
+              {
+                 "metadata": {
+                    "guid": "11111111-1111-1111-1111-111111111111",
+                    "url": "/v2/spaces/11111111-1111-1111-1111-111111111111",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-02",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/developers",
+                    "managers_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/managers",
+                    "auditors_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/auditors",
+                    "apps_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/apps",
+                    "routes_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/routes",
+                    "domains_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/domains",
+                    "service_instances_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/service_instances",
+                    "app_events_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/app_events",
+                    "events_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/events",
+                    "security_groups_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/staging_security_groups"
+                 }
+              }
+           ]
+        }'
+    }
+
+    cf_mock_2() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=2'
+
+        echo '{
+           "total_results": 4,
+           "total_pages": 2,
+           "prev_url": "/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=1",
+           "next_url": null,
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "22222222-2222-2222-2222-222222222222",
+                    "url": "/v2/spaces/22222222-2222-2222-2222-222222222222",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-03",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/developers",
+                    "managers_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/managers",
+                    "auditors_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/auditors",
+                    "apps_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/apps",
+                    "routes_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/routes",
+                    "domains_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/domains",
+                    "service_instances_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/service_instances",
+                    "app_events_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/app_events",
+                    "events_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/events",
+                    "security_groups_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/staging_security_groups"
+                 }
+              },
+              {
+                 "metadata": {
+                    "guid": "33333333-3333-3333-3333-333333333333",
+                    "url": "/v2/spaces/33333333-3333-3333-3333-333333333333",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-04",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/developers",
+                    "managers_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/managers",
+                    "auditors_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/auditors",
+                    "apps_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/apps",
+                    "routes_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/routes",
+                    "domains_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/domains",
+                    "service_instances_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/service_instances",
+                    "app_events_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/app_events",
+                    "events_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/events",
+                    "security_groups_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/33333333-3333-3333-3333-333333333333/staging_security_groups"
+                 }
+              }
+           ]
+        }'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf target '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf target -s'
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "${fg[yellow]}name    ${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}space-01${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}space-02${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}space-03${reset_color}"
+        assert ${lines[5]} same_as "${fg[yellow]}space-04${reset_color}"
+    }
+
+    prefix=-s
+    _fzf_complete_cf 'cf target '
+}
+
 @test 'Testing completion: cf uninstall-plugin **' {
     cf_mock_1() {
         assert $# equals 1
@@ -13065,7 +14589,19 @@
     assert ${lines[1]} same_as 'plan-01'
 }
 
-@test 'Testing post: credentials of a user-provided service instance ' {
+@test 'Testing post: space' {
+    input=(
+        'space-01       '
+    )
+
+    run _fzf_complete_cf-spaces_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'space-01'
+}
+
+@test 'Testing post: credentials of a user-provided service instance' {
     input=(
         '{"key-01":"value-01"}'
         '{"key-02":"value-02"}'
