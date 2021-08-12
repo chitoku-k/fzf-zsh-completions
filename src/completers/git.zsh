@@ -421,12 +421,12 @@ _fzf_complete_git() {
         _fzf_complete_git_parse_completing_option
 
         if [[ -z $completing_option ]]; then
-            if [[ -n ${arguments[(r)--source(|(=*))]} ]] || [[ -n ${arguments[(r)-[^-]#s*]} ]]; then
+            if _fzf_complete_parse_option_arguments '-s' '--source' "${(F)git_options_argument_required}" "${arguments[@]}" > /dev/null; then
                 _fzf_complete_git-files_index '' '--multi' "$@"
                 return
             fi
 
-            if [[ -n ${arguments[(r)--staged]} ]] || [[ -n ${arguments[(r)-[^-]#S[[:alpha:]]#]} ]]; then
+            if _fzf_complete_parse_option '-S' '--staged' "${(F)git_options_argument_required}" "${arguments[@]}" > /dev/null; then
                 _fzf_complete_git-status-files 'staged' '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff_cached $FZF_DEFAULT_OPTS" "$@"
                 return
             fi
