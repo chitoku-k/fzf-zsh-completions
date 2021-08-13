@@ -78,6 +78,17 @@ body:
       required: true
   - type: textarea
     attributes:
+      label: Aliases (if applicable)
+      description: '`alias` output'
+      placeholder: |
+        g='git'
+        gc='git commit'
+        k='kubectl'
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    attributes:
       label: Installed zsh plugins (if applicable)
       description: '`antigen list`, `zplug list`, and their equivalents’ output'
       placeholder: zsh-users/zsh-completions @ master
