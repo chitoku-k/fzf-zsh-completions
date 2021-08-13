@@ -97,7 +97,8 @@ body:
       required: true
   - type: textarea
     attributes:
-      label: What happened? Describe the command as it is despite any usage of alias.
+      label: What happened?
+      description: Describe the command as it is regardless of any usages of aliases.
     validations:
       required: true
   - type: textarea
