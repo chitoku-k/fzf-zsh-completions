@@ -167,7 +167,8 @@ _fzf_complete_parse_option_arguments() {
     local shorts=(${(z)1})
     local longs=(${(z)2})
     local options_argument_required=(${(z)3})
-    shift 3
+    local types=(${(z)4})
+    shift 4
 
     local i j parsing_argument
     local result=()
@@ -193,12 +194,23 @@ _fzf_complete_parse_option_arguments() {
                 parsing_argument=1
 
                 if (( ${#arguments} > $i )); then
-                    result+=(${arguments[$i]})
-                    result+=("${arguments[$i+1]}")
+                    if [[ ${types[(r)option]} = option ]]; then
+                        result+=(${arguments[$i]})
+                    fi
+                    if [[ ${types[(r)argument]} = argument ]]; then
+                        result+=("${arguments[$i+1]}")
+                    fi
                 fi
             elif [[ ${longs[(r)${arguments[$i]%%=*}]} = ${arguments[$i]%%=*} ]]; then
                 parsing_argument=
-                result+=(${arguments[$i]})
+
+                if [[ ${types[(r)option]} = option ]] && [[ ${types[(r)argument]} = argument ]]; then
+                    result+=(${arguments[$i]})
+                elif [[ ${types[(r)option]} = option ]]; then
+                    result+=(${arguments[$i]%%=*})
+                elif [[ ${types[(r)argument]} = argument ]]; then
+                    result+=(${arguments[$i]#*=})
+                fi
             fi
 
             if [[ ${arguments[$i]} != -[A-Za-z0-9]* ]]; then
@@ -214,14 +226,24 @@ _fzf_complete_parse_option_arguments() {
                     parsing_argument=1
 
                     if [[ ${shorts[(r)-${arguments[$i][$j]}]} = -${arguments[$i][$j]} ]] && (( ${#arguments} > $i )); then
-                        result+=(-${arguments[$i][$j]})
-                        result+=("${arguments[$i+1]}")
+                        if [[ ${types[(r)option]} = option ]]; then
+                            result+=(-${arguments[$i][$j]})
+                        fi
+                        if [[ ${types[(r)argument]} = argument ]]; then
+                            result+=("${arguments[$i+1]}")
+                        fi
                     fi
                 else
                     parsing_argument=
 
                     if [[ ${shorts[(r)-${arguments[$i][$j]}]} = -${arguments[$i][$j]} ]]; then
-                        result+=("-${arguments[$i][$j,-1]}")
+                        if [[ ${types[(r)option]} = option ]] && [[ ${types[(r)argument]} = argument ]]; then
+                            result+=("-${arguments[$i][$j,-1]}")
+                        elif [[ ${types[(r)option]} = option ]]; then
+                            result+=("-${arguments[$i][$j]}")
+                        elif [[ ${types[(r)argument]} = argument ]]; then
+                            result+=("${arguments[$i][$j+1,-1]}")
+                        fi
                     fi
                     break
                 fi

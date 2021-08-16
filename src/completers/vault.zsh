@@ -88,9 +88,7 @@ _fzf_complete_vault-mounts() {
 
     local url=$VAULT_ADDR
     if [[ -n ${vault_arguments[(r)-address*]} ]] || [[ -n ${vault_arguments[(r)--address*]} ]]; then
-        url=$(_fzf_complete_parse_option_arguments '' '-address --address' "${(F)vault_options_argument_required}" "${arguments[@]}")
-        url=${url#*=}
-        url=${url#* }
+        url=$(_fzf_complete_parse_option_arguments '' '-address --address' "${(F)vault_options_argument_required}" 'argument' "${arguments[@]}")
     fi
 
     _fzf_complete --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- "$@" < <(
@@ -144,11 +142,11 @@ _fzf_complete_vault_parse_vault_arguments() {
     local shorts=(${all_options:#--*})
     local longs=(${all_options:#-[a-zA-Z0-9]})
 
-    if inherit_values=$(_fzf_complete_parse_option_arguments "$shorts" "$longs" "${(F)vault_options_argument_required}" "${arguments[@]}"); then
+    if inherit_values=$(_fzf_complete_parse_option_arguments "$shorts" "$longs" "${(F)vault_options_argument_required}" 'option argument' "${arguments[@]}"); then
         vault_arguments+=("${(Q)${(z)inherit_values}[@]}")
     fi
 
-    if inherit_values=$(_fzf_complete_parse_option_arguments "$shorts" "$longs" "${(F)vault_options_argument_required}" "${(Q)${(z)RBUFFER}[@]}"); then
+    if inherit_values=$(_fzf_complete_parse_option_arguments "$shorts" "$longs" "${(F)vault_options_argument_required}" 'option argument' "${(Q)${(z)RBUFFER}[@]}"); then
         vault_arguments+=("${(Q)${(z)inherit_values}[@]}")
     fi
 }
