@@ -865,10 +865,9 @@ _fzf_complete_cf() {
         fi
 
         if [[ $completing_option = -s ]]; then
-            local org_name org_names org_guid
+            local org_name org_guid
 
-            if org_names=($(_fzf_complete_parse_option_arguments '-o' '' "${(F)cf_options_argument_required}" "${arguments[@]}")); then
-                org_name=${org_names[-1]#-o}
+            if org_name=$(_fzf_complete_parse_option_arguments '-o' '' "${(F)cf_options_argument_required}" 'argument' "${arguments[@]}"); then
                 _fzf_complete_cf-spaces '' '' "$org_name" "$@"
                 return
             fi
