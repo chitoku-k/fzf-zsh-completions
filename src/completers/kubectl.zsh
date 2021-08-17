@@ -1230,8 +1230,8 @@ _fzf_complete_kubectl_parse_resource_and_name() {
     resource=$(_fzf_complete_parse_argument 2 "$resource_index" "${(F)kubectl_options_argument_required}" "${arguments[@]}" || :)
     name=$(_fzf_complete_parse_argument 2 "$name_index" "${(F)kubectl_options_argument_required}" "${arguments[@]}" || :)
 
-    if ! namespace=$(_fzf_complete_parse_option_arguments '-n' '--namespace' "${(F)kubectl_options_argument_required}" "${(Q)${(z)RBUFFER}[@]}") && \
-        ! namespace=$(_fzf_complete_parse_option_arguments '-n' '--namespace' "${(F)kubectl_options_argument_required}" "${arguments[@]}"); then
+    if ! namespace=$(_fzf_complete_parse_option_arguments '-n' '--namespace' "${(F)kubectl_options_argument_required}" 'option argument' "${(Q)${(z)RBUFFER}[@]}") && \
+        ! namespace=$(_fzf_complete_parse_option_arguments '-n' '--namespace' "${(F)kubectl_options_argument_required}" 'option argument' "${arguments[@]}"); then
         unset namespace
     fi
 
@@ -1267,11 +1267,11 @@ _fzf_complete_kubectl_parse_kubectl_arguments() {
     local shorts=(${all_options:#--*})
     local longs=(${all_options:#-[a-zA-Z0-9]})
 
-    if inherit_values=$(_fzf_complete_parse_option_arguments "$shorts" "$longs" "${(F)kubectl_options_argument_required}" "${arguments[@]}"); then
+    if inherit_values=$(_fzf_complete_parse_option_arguments "$shorts" "$longs" "${(F)kubectl_options_argument_required}" 'option argument' "${arguments[@]}"); then
         kubectl_arguments+=("${(Q)${(z)inherit_values}[@]}")
     fi
 
-    if inherit_values=$(_fzf_complete_parse_option_arguments "$shorts" "$longs" "${(F)kubectl_options_argument_required}" "${(Q)${(z)RBUFFER}[@]}"); then
+    if inherit_values=$(_fzf_complete_parse_option_arguments "$shorts" "$longs" "${(F)kubectl_options_argument_required}" 'option argument' "${(Q)${(z)RBUFFER}[@]}"); then
         kubectl_arguments+=("${(Q)${(z)inherit_values}[@]}")
     fi
 }
