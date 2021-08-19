@@ -865,17 +865,16 @@ _fzf_complete_cf() {
         fi
 
         if [[ $completing_option = -s ]]; then
-            local org_name org_guid
+            local org_name
 
             if org_name=$(_fzf_complete_parse_option_arguments '-o' '' "${(F)cf_options_argument_required}" 'argument' "${arguments[@]}"); then
-                _fzf_complete_cf-spaces '' '' "$org_name" "$@"
+                _fzf_complete_cf-spaces-by-org '' "$org_name" "$@"
                 return
             fi
 
-            if org_guid=$(_fzf_complete_cf-target-org); then
-                _fzf_complete_cf-spaces '' "$org_guid" '' "$@"
-                return
-            fi
+            resource=spaces
+            _fzf_complete_cf-resources '' "$@"
+            return
         fi
     fi
 
@@ -1367,16 +1366,13 @@ _fzf_complete_cf-service-plans-by-service-instance_post() {
     awk '{ print $1 }'
 }
 
-_fzf_complete_cf-spaces() {
+_fzf_complete_cf-spaces-by-org() {
     local fzf_options=$1
-    local org_guid=$2
-    local org_name=$3
-    shift 3
+    local org_name=$2
+    shift 2
 
     _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <(
-        if [[ -z $org_guid ]]; then
-            org_guid=$(cf org --guid "$org_name" 2> /dev/null)
-        fi
+        local org_guid=$(cf org --guid "$org_name" 2> /dev/null)
 
         {
             echo name
@@ -1386,7 +1382,7 @@ _fzf_complete_cf-spaces() {
     )
 }
 
-_fzf_complete_cf-spaces_post() {
+_fzf_complete_cf-spaces-by-org_post() {
     awk '{ print $1 }'
 }
 
