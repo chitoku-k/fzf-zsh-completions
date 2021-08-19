@@ -826,7 +826,7 @@ _fzf_complete_kubectl-resources() {
     shift
 
     _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <(
-        kubectl api-resources --cached --verbs=get "${kubectl_arguments[@]}" |
+        kubectl api-resources --cached --verbs=get "${kubectl_arguments[@]}" 2> /dev/null |
         _fzf_complete_colorize $fg[yellow]
     )
 }
