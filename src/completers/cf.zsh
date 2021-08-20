@@ -1327,7 +1327,7 @@ _fzf_complete_cf-apps-by-org-space() {
                 return
             fi
 
-            spaces=$(cf curl "${cf_arguments[@]}" "/v2/spaces?organization_guid=$org_guid&name=$space_name" 2> /dev/null)
+            spaces=$(cf curl "${cf_arguments[@]}" "/v2/spaces?q=organization_guid:$org_guid&q=name:$space_name" 2> /dev/null)
             if [[ -z $spaces ]]; then
                 return
             fi

@@ -1479,7 +1479,7 @@
     cf_mock_2() {
         assert $# equals 2
         assert $1 same_as 'curl'
-        assert $2 same_as '/v2/spaces?organization_guid=00000000-0000-0000-0000-000000000000&name=space-01'
+        assert $2 same_as '/v2/spaces?q=organization_guid:00000000-0000-0000-0000-000000000000&q=name:space-01'
 
         echo '{
            "total_results": 1,
@@ -2528,7 +2528,7 @@
     cf_mock_2() {
         assert $# equals 2
         assert $1 same_as 'curl'
-        assert $2 same_as '/v2/spaces?organization_guid=00000000-0000-0000-0000-000000000000&name=space-01'
+        assert $2 same_as '/v2/spaces?q=organization_guid:00000000-0000-0000-0000-000000000000&q=name:space-01'
 
         echo '{
            "total_results": 1,
