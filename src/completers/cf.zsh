@@ -1022,6 +1022,13 @@ _fzf_complete_cf() {
         fi
 
         if [[ $completing_option = -s ]]; then
+            local org_name
+
+            if org_name=$(_fzf_complete_parse_option_arguments '-o' '' "${(F)cf_options_argument_required}" 'argument' "${arguments[@]}"); then
+                _fzf_complete_cf-spaces-by-org '' "$org_name" "$@"
+                return
+            fi
+
             resource=spaces
             _fzf_complete_cf-resources '' "$@"
             return
