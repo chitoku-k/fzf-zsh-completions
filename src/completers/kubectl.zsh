@@ -9,7 +9,7 @@ _fzf_complete_kubectl() {
     local options_and_subcommand=()
     local kubectl_arguments=()
     local last_argument=${arguments[-1]}
-    local prefix_option completing_option subcommands namespace resource name
+    local prefix_option completing_option subcommands namespace resource resource_suffix name
 
     local kubectl_inherited_options_argument_required=(
         --as
@@ -540,18 +540,23 @@ _fzf_complete_kubectl() {
         )
 
         _fzf_complete_kubectl_parse_resource_and_name 2
-
-        if [[ -z $name ]] && [[ -z $prefix_option ]]; then
-            name=$resource
-            resource=pods
-        fi
-
         _fzf_complete_kubectl_parse_completing_option
         _fzf_complete_kubectl_parse_kubectl_arguments
 
         if [[ -z $completing_option ]]; then
+            if [[ -z $resource ]]; then
+                resource_suffix=/
+                _fzf_complete_kubectl-resources '' "$@"
+                return
+            fi
+
             _fzf_complete_kubectl-resource-names '' "$@"
             return
+        fi
+
+        if [[ -n $resource ]] && [[ -z $name ]]; then
+            name=$resource
+            resource=pods
         fi
 
         if [[ $completing_option = (-c|--container) ]]; then
@@ -832,7 +837,8 @@ _fzf_complete_kubectl-resources() {
 }
 
 _fzf_complete_kubectl-resources_post() {
-    awk '
+    awk \
+        -v resource_suffix=${resource_suffix:-$'\n'} '
         NF == 4 {
             name = $1
             group = "." $2
@@ -846,7 +852,7 @@ _fzf_complete_kubectl-resources_post() {
         }
         {
             gsub(/\/.*/, "", group)
-            print name group
+            printf "%s%s%s", name, group, resource_suffix
         }
     '
 }
