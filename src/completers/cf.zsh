@@ -1000,6 +1000,21 @@ _fzf_complete_cf() {
         fi
     fi
 
+    if [[ $subcommand = (delete-service-key|dsk|service-key) ]]; then
+        local service_instance
+        if ! service_instance=$(_fzf_complete_parse_argument 2 2 "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
+            resource=services
+            _fzf_complete_cf-resources '' "$@"
+            return
+        fi
+
+        local service_key
+        if ! service_key=$(_fzf_complete_parse_argument 2 3 "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
+            _fzf_complete_cf-service-keys-by-service-instance '' "$service_instance" "$@"
+            return
+        fi
+    fi
+
     if [[ $subcommand = (share-service|unshare-service) ]]; then
         cf_options_argument_required+=(
             -o
@@ -1391,6 +1406,22 @@ _fzf_complete_cf-envs() {
 }
 
 _fzf_complete_cf-envs_post() {
+    awk '{ print $1 }'
+}
+
+_fzf_complete_cf-service-keys-by-service-instance() {
+    local fzf_options=$1
+    local service_instance=$2
+    shift 2
+
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <(
+        cf "${cf_arguments[@]}" service-keys "$service_instance" 2> /dev/null |
+            awk 'NR > 1 && !/^$|^TIP:|^OK$/' |
+            _fzf_complete_colorize $fg[yellow]
+    )
+}
+
+_fzf_complete_cf-service-keys-by-service-instance_post() {
     awk '{ print $1 }'
 }
 
