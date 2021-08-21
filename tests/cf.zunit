@@ -14673,6 +14673,273 @@
     _fzf_complete_cf 'cf csk '
 }
 
+@test 'Testing completion: cf delete-service-key **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'services'
+
+        echo 'Getting services in org org-01 / space space-01 as user-01...'
+        echo ''
+        echo 'name                                service         plan      bound apps       last operation     broker              upgrade available'
+        echo 'service-instance-01                 service-01      plan-01   app-01           create succeeded   service-broker-01   '
+        echo 'service-instance-02                 service-01      plan-02                    create failed      service-broker-01   '
+        echo 'service-instance-03                 service-02      plan-01                    update succeeded   service-broker-02   '
+        echo 'user-provided-service-instance-01   user-provided             app-01, app-02                                          '
+        echo 'user-provided-service-instance-02   user-provided             app-03                                                  '
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf delete-service-key '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf delete-service-key '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 1
+        assert ${#lines} equals 6
+        assert ${lines[1]} same_as "${fg[yellow]}name                                ${reset_color}service         plan      bound apps       last operation     broker              upgrade available"
+        assert ${lines[2]} same_as "${fg[yellow]}service-instance-01                 ${reset_color}service-01      plan-01   app-01           create succeeded   service-broker-01   "
+        assert ${lines[3]} same_as "${fg[yellow]}service-instance-02                 ${reset_color}service-01      plan-02                    create failed      service-broker-01   "
+        assert ${lines[4]} same_as "${fg[yellow]}service-instance-03                 ${reset_color}service-02      plan-01                    update succeeded   service-broker-02   "
+        assert ${lines[5]} same_as "${fg[yellow]}user-provided-service-instance-01   ${reset_color}user-provided             app-01, app-02                                          "
+        assert ${lines[6]} same_as "${fg[yellow]}user-provided-service-instance-02   ${reset_color}user-provided             app-03                                                  "
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf delete-service-key '
+}
+
+@test 'Testing completion: cf delete-service-key service-instance-01 **' {
+    cf_mock_1() {
+        assert $# equals 2
+        assert $1 same_as 'service-keys'
+        assert $2 same_as 'service-instance-01'
+
+        echo 'Getting service keys for service instance service-instance-01 as user-01...'
+        echo ''
+        echo 'name'
+        echo 'key-01'
+        echo 'key-02'
+        echo 'key-03'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf delete-service-key service-instance-01 '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf delete-service-key service-instance-01 '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 1
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}name${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}key-01${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}key-02${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}key-03${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf delete-service-key service-instance-01 '
+}
+
+@test 'Testing completion: cf dsk **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'services'
+
+        echo 'Getting services in org org-01 / space space-01 as user-01...'
+        echo ''
+        echo 'name                                service         plan      bound apps       last operation     broker              upgrade available'
+        echo 'service-instance-01                 service-01      plan-01   app-01           create succeeded   service-broker-01   '
+        echo 'service-instance-02                 service-01      plan-02                    create failed      service-broker-01   '
+        echo 'service-instance-03                 service-02      plan-01                    update succeeded   service-broker-02   '
+        echo 'user-provided-service-instance-01   user-provided             app-01, app-02                                          '
+        echo 'user-provided-service-instance-02   user-provided             app-03                                                  '
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf dsk '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf dsk '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 1
+        assert ${#lines} equals 6
+        assert ${lines[1]} same_as "${fg[yellow]}name                                ${reset_color}service         plan      bound apps       last operation     broker              upgrade available"
+        assert ${lines[2]} same_as "${fg[yellow]}service-instance-01                 ${reset_color}service-01      plan-01   app-01           create succeeded   service-broker-01   "
+        assert ${lines[3]} same_as "${fg[yellow]}service-instance-02                 ${reset_color}service-01      plan-02                    create failed      service-broker-01   "
+        assert ${lines[4]} same_as "${fg[yellow]}service-instance-03                 ${reset_color}service-02      plan-01                    update succeeded   service-broker-02   "
+        assert ${lines[5]} same_as "${fg[yellow]}user-provided-service-instance-01   ${reset_color}user-provided             app-01, app-02                                          "
+        assert ${lines[6]} same_as "${fg[yellow]}user-provided-service-instance-02   ${reset_color}user-provided             app-03                                                  "
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf dsk '
+}
+
+@test 'Testing completion: cf dsk service-instance-01 **' {
+    cf_mock_1() {
+        assert $# equals 2
+        assert $1 same_as 'service-keys'
+        assert $2 same_as 'service-instance-01'
+
+        echo 'Getting service keys for service instance service-instance-01 as user-01...'
+        echo ''
+        echo 'name'
+        echo 'key-01'
+        echo 'key-02'
+        echo 'key-03'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf dsk service-instance-01 '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf dsk service-instance-01 '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 1
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}name${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}key-01${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}key-02${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}key-03${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf dsk service-instance-01 '
+}
+
+@test 'Testing completion: cf service-key **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'services'
+
+        echo 'Getting services in org org-01 / space space-01 as user-01...'
+        echo ''
+        echo 'name                                service         plan      bound apps       last operation     broker              upgrade available'
+        echo 'service-instance-01                 service-01      plan-01   app-01           create succeeded   service-broker-01   '
+        echo 'service-instance-02                 service-01      plan-02                    create failed      service-broker-01   '
+        echo 'service-instance-03                 service-02      plan-01                    update succeeded   service-broker-02   '
+        echo 'user-provided-service-instance-01   user-provided             app-01, app-02                                          '
+        echo 'user-provided-service-instance-02   user-provided             app-03                                                  '
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf service-key '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf service-key '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 1
+        assert ${#lines} equals 6
+        assert ${lines[1]} same_as "${fg[yellow]}name                                ${reset_color}service         plan      bound apps       last operation     broker              upgrade available"
+        assert ${lines[2]} same_as "${fg[yellow]}service-instance-01                 ${reset_color}service-01      plan-01   app-01           create succeeded   service-broker-01   "
+        assert ${lines[3]} same_as "${fg[yellow]}service-instance-02                 ${reset_color}service-01      plan-02                    create failed      service-broker-01   "
+        assert ${lines[4]} same_as "${fg[yellow]}service-instance-03                 ${reset_color}service-02      plan-01                    update succeeded   service-broker-02   "
+        assert ${lines[5]} same_as "${fg[yellow]}user-provided-service-instance-01   ${reset_color}user-provided             app-01, app-02                                          "
+        assert ${lines[6]} same_as "${fg[yellow]}user-provided-service-instance-02   ${reset_color}user-provided             app-03                                                  "
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf service-key '
+}
+
+@test 'Testing completion: cf service-key service-instance-01 **' {
+    cf_mock_1() {
+        assert $# equals 2
+        assert $1 same_as 'service-keys'
+        assert $2 same_as 'service-instance-01'
+
+        echo 'Getting service keys for service instance service-instance-01 as user-01...'
+        echo ''
+        echo 'name'
+        echo 'key-01'
+        echo 'key-02'
+        echo 'key-03'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf service-key service-instance-01 '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf service-key service-instance-01 '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 1
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}name${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}key-01${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}key-02${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}key-03${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf service-key service-instance-01 '
+}
+
 @test 'Testing completion: cf share-service **' {
     cf_mock_1() {
         assert $# equals 1
