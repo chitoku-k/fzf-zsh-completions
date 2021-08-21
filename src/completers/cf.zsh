@@ -6,7 +6,6 @@ colors
 _fzf_complete_cf() {
     setopt local_options no_aliases
     local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$@")"}[@]}")
-    local options_and_subcommand=()
     local cf_arguments=()
     local last_argument=${arguments[-1]}
     local prefix_option completing_option resource resource_column=1
@@ -47,6 +46,14 @@ _fzf_complete_cf() {
         fi
 
         if [[ $completing_option = --destination-app ]]; then
+            local org_name=$(_fzf_complete_parse_option_arguments '-o' '' "${(F)cf_options_argument_required}" 'argument' "${arguments[@]}")
+            local space_name=$(_fzf_complete_parse_option_arguments '-s' '' "${(F)cf_options_argument_required}" 'argument' "${arguments[@]}")
+
+            if [[ -n $space_name ]]; then
+                _fzf_complete_cf-apps-by-org-space '' "$org_name" "$space_name" "$@"
+                return
+            fi
+
             resource=apps
             _fzf_complete_cf-resources '' "$@"
             return
@@ -59,6 +66,13 @@ _fzf_complete_cf() {
         fi
 
         if [[ $completing_option = -s ]]; then
+            local org_name
+
+            if org_name=$(_fzf_complete_parse_option_arguments '-o' '' "${(F)cf_options_argument_required}" 'argument' "${arguments[@]}"); then
+                _fzf_complete_cf-spaces-by-org '' "$org_name" "$@"
+                return
+            fi
+
             resource=spaces
             _fzf_complete_cf-resources '' "$@"
             return
@@ -107,6 +121,14 @@ _fzf_complete_cf() {
 
         local target_app
         if ! target_app=$(_fzf_complete_parse_argument 2 3 "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
+            local org_name=$(_fzf_complete_parse_option_arguments '-o' '' "${(F)cf_options_argument_required}" 'argument' "${arguments[@]}")
+            local space_name=$(_fzf_complete_parse_option_arguments '-s' '' "${(F)cf_options_argument_required}" 'argument' "${arguments[@]}")
+
+            if [[ -n $space_name ]]; then
+                _fzf_complete_cf-apps-by-org-space '' "$org_name" "$space_name" "$@"
+                return
+            fi
+
             resource=apps
             _fzf_complete_cf-resources '' "$@"
             return
@@ -119,6 +141,13 @@ _fzf_complete_cf() {
         fi
 
         if [[ $completing_option = -s ]]; then
+            local org_name
+
+            if org_name=$(_fzf_complete_parse_option_arguments '-o' '' "${(F)cf_options_argument_required}" 'argument' "${arguments[@]}"); then
+                _fzf_complete_cf-spaces-by-org '' "$org_name" "$@"
+                return
+            fi
+
             resource=spaces
             _fzf_complete_cf-resources '' "$@"
             return
@@ -812,8 +841,7 @@ _fzf_complete_cf() {
 
         local space
         if ! space=$(_fzf_complete_parse_argument 2 4 "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
-            resource=spaces
-            _fzf_complete_cf-resources '' "$@"
+            _fzf_complete_cf-spaces-by-org '' "$org" "$@"
             return
         fi
     fi
@@ -844,6 +872,33 @@ _fzf_complete_cf() {
 
         local space
         if ! space=$(_fzf_complete_parse_argument 2 3 "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
+            _fzf_complete_cf-spaces-by-org '' "$org" "$@"
+            return
+        fi
+    fi
+
+    if [[ $subcommand = (t|target) ]]; then
+        cf_options_argument_required+=(
+            -o
+            -s
+        )
+
+        _fzf_complete_cf_parse_completing_option
+
+        if [[ $completing_option = -o ]]; then
+            resource=orgs
+            _fzf_complete_cf-resources '' "$@"
+            return
+        fi
+
+        if [[ $completing_option = -s ]]; then
+            local org_name
+
+            if org_name=$(_fzf_complete_parse_option_arguments '-o' '' "${(F)cf_options_argument_required}" 'argument' "${arguments[@]}"); then
+                _fzf_complete_cf-spaces-by-org '' "$org_name" "$@"
+                return
+            fi
+
             resource=spaces
             _fzf_complete_cf-resources '' "$@"
             return
@@ -967,6 +1022,13 @@ _fzf_complete_cf() {
         fi
 
         if [[ $completing_option = -s ]]; then
+            local org_name
+
+            if org_name=$(_fzf_complete_parse_option_arguments '-o' '' "${(F)cf_options_argument_required}" 'argument' "${arguments[@]}"); then
+                _fzf_complete_cf-spaces-by-org '' "$org_name" "$@"
+                return
+            fi
+
             resource=spaces
             _fzf_complete_cf-resources '' "$@"
             return
@@ -1268,6 +1330,47 @@ _fzf_complete_cf-app-instances_post() {
     }'
 }
 
+_fzf_complete_cf-apps-by-org-space() {
+    local fzf_options=$1
+    local org_name=$2
+    local space_name=$3
+    shift 3
+
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <(
+        local org_guid space_guid spaces
+
+        if [[ -z $org_name ]]; then
+            space_guid=$(cf space --guid "$space_name" 2> /dev/null)
+        else
+            org_guid=$(cf org --guid "$org_name" 2> /dev/null)
+            if [[ -z $org_guid ]]; then
+                return
+            fi
+
+            spaces=$(cf curl "${cf_arguments[@]}" "/v2/spaces?q=organization_guid:$org_guid&q=name:$space_name" 2> /dev/null)
+            if [[ -z $spaces ]]; then
+                return
+            fi
+
+            space_guid=$(jq -r '.resources[] | .metadata.guid' <<< "$spaces" 2> /dev/null)
+        fi
+
+        if [[ -z $space_guid ]]; then
+            return
+        fi
+
+        {
+            echo name
+            _fzf_complete_cf-curl-resources "/v2/spaces/$space_guid/apps?results-per-page=100" 2> /dev/null |
+                jq --slurp -r 'map(.resources)[] | map(.entity.name) | sort[]' 2> /dev/null
+        } | _fzf_complete_tabularize $fg[yellow]
+    )
+}
+
+_fzf_complete_cf-apps-by-org-space_post() {
+    awk '{ print $1 }'
+}
+
 _fzf_complete_cf-envs() {
     local fzf_options=$1
     local app=$2
@@ -1282,7 +1385,7 @@ _fzf_complete_cf-envs() {
         {
             echo name value
             cf curl "${cf_arguments[@]}" /v2/apps/$app_guid/env 2> /dev/null |
-                jq -r '.environment_json | to_entries[] | "\(.key) \(.value)"'
+                jq -r '.environment_json | to_entries[] | "\(.key) \(.value)"' 2> /dev/null
         } | _fzf_complete_tabularize $fg[yellow]
     )
 }
@@ -1338,6 +1441,26 @@ _fzf_complete_cf-service-plans-by-service-instance_post() {
     awk '{ print $1 }'
 }
 
+_fzf_complete_cf-spaces-by-org() {
+    local fzf_options=$1
+    local org_name=$2
+    shift 2
+
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <(
+        local org_guid=$(cf org --guid "$org_name" 2> /dev/null)
+
+        {
+            echo name
+            _fzf_complete_cf-curl-resources "/v2/organizations/$org_guid/spaces?results-per-page=100" 2> /dev/null |
+                jq --slurp -r 'map(.resources)[] | map(.entity.name) | sort[]' 2> /dev/null
+        } | _fzf_complete_tabularize $fg[yellow]
+    )
+}
+
+_fzf_complete_cf-spaces-by-org_post() {
+    awk '{ print $1 }'
+}
+
 _fzf_complete_cf-user-provided-service-instance-credentials() {
     local fzf_options=$1
     local service_instance=$2
@@ -1370,7 +1493,21 @@ _fzf_complete_cf-user-provided-service-instance-credentials_post() {
         return
     fi
 
-    jq --slurp -c 'reduce .[] as $item ({}; . * $item) | @json' <<< "$input"
+    jq --slurp -c 'reduce .[] as $item ({}; . * $item) | @json' <<< "$input" 2> /dev/null
+}
+
+_fzf_complete_cf-curl-resources() {
+    local response
+    local url=$1
+    shift
+
+    while [[ -n $url ]]; do
+        if ! response=$(cf curl "${cf_arguments[@]}" "$@" "$url" 2> /dev/null); then
+            return
+        fi
+        echo - "$response"
+        url=$(jq -r '.next_url // ""' <<< "$response" 2> /dev/null)
+    done
 }
 
 _fzf_complete_cf-target-org() {
@@ -1380,7 +1517,7 @@ _fzf_complete_cf-target-org() {
     fi
 
     local guid
-    if ! guid=$(jq -re '.OrganizationFields.GUID' "$configjson"); then
+    if ! guid=$(jq -re '.OrganizationFields.GUID' "$configjson" 2> /dev/null); then
         return 1
     fi
 
@@ -1394,7 +1531,7 @@ _fzf_complete_cf-target-space() {
     fi
 
     local guid
-    if ! guid=$(jq -re '.SpaceFields.GUID' "$configjson"); then
+    if ! guid=$(jq -re '.SpaceFields.GUID' "$configjson" 2> /dev/null); then
         return 1
     fi
 
