@@ -6,7 +6,6 @@ colors
 _fzf_complete_cf() {
     setopt local_options no_aliases
     local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$@")"}[@]}")
-    local options_and_subcommand=()
     local cf_arguments=()
     local last_argument=${arguments[-1]}
     local prefix_option completing_option resource resource_column=1
@@ -873,8 +872,7 @@ _fzf_complete_cf() {
 
         local space
         if ! space=$(_fzf_complete_parse_argument 2 3 "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
-            resource=spaces
-            _fzf_complete_cf-resources '' "$@"
+            _fzf_complete_cf-spaces-by-org '' "$org" "$@"
             return
         fi
     fi
