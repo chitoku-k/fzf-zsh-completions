@@ -133,7 +133,7 @@ _fzf_complete_kubectl() {
         return
     fi
 
-    if [[ ${subcommands[1]} = (apply|create|rollout|set) ]]; then
+    if [[ ${subcommands[1]} = (apply|config|create|rollout|set) ]]; then
         subcommands+=($(_fzf_complete_parse_argument 2 2 "${(F)kubectl_options_argument_required}" "${arguments[@]}" || :))
     fi
 
@@ -258,6 +258,51 @@ _fzf_complete_kubectl() {
 
             _fzf_complete_kubectl-resource-names '' "$@"
             return
+        fi
+    fi
+
+    if [[ ${subcommands[1]} = config ]]; then
+        if [[ ${subcommands[2]} = (delete-cluster|delete-context|delete-user|rename-context|set-cluster|set-context|use-context) ]] ; then
+            _fzf_complete_kubectl_parse_resource_and_name 2
+            _fzf_complete_kubectl_parse_completing_option
+            _fzf_complete_kubectl_parse_kubectl_arguments
+
+            if [[ -z $completing_option ]]; then
+                _fzf_complete_kubectl-configs '' "get-${subcommands[2]#*-}s" "$@"
+                return
+            fi
+        fi
+
+        if [[ ${subcommands[2]} = get-contexts ]]; then
+            kubectl_options_argument_required+=(
+                -o
+                --output
+            )
+
+            _fzf_complete_kubectl_parse_resource_and_name 2
+            _fzf_complete_kubectl_parse_completing_option
+            _fzf_complete_kubectl_parse_kubectl_arguments
+
+            if [[ -z $completing_option ]]; then
+                _fzf_complete_kubectl-configs '' 'get-contexts' "$@"
+                return
+            fi
+        fi
+
+        if [[ ${subcommands[2]} = set-credentials ]]; then
+            kubectl_options_argument_required+=(
+                --auth-provider
+                --auth-provider-arg
+                --exec-api-version
+                --exec-arg
+                --exec-command
+                --exec-env
+            )
+
+            if [[ -z $completing_option ]]; then
+                _fzf_complete_kubectl-configs '' 'get-users' "$@"
+                return
+            fi
         fi
     fi
 
