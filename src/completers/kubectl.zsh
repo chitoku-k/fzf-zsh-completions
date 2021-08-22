@@ -528,6 +528,15 @@ _fzf_complete_kubectl() {
         _fzf_complete_kubectl_parse_kubectl_arguments
 
         if [[ -z $completing_option ]]; then
+            if [[ $prefix = *.* ]]; then
+                resource=${prefix%.*}
+                prefix_option=$resource.
+                prefix=${prefix#$prefix_option}
+                _fzf_complete_kubectl-resource-fields '' "$@"
+                return
+            fi
+
+            resource_suffix=.
             _fzf_complete_kubectl-resources '' "$@"
             return
         fi
@@ -936,6 +945,48 @@ _fzf_complete_kubectl-resources_post() {
             printf "%s%s%s", name, group, resource_suffix
         }
     '
+}
+
+_fzf_complete_kubectl-resource-fields() {
+    local fzf_options=$1
+    shift
+
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <({
+        echo TYPE FIELD
+        kubectl explain --recursive "$resource" "${kubectl_arguments[@]}" 2> /dev/null | awk '
+            NF != 2 || !/<.+>$/ {
+                next
+            }
+            match($0, /^ +/) {
+                level = RLENGTH
+                gsub(/\s+|>/, "")
+                gsub(/</, " ")
+
+                if (min_width == 0 || min_width > level) {
+                    min_width = level
+                }
+                indentation = level / min_width
+            }
+            {
+                fields[indentation] = $0
+
+                internal_type = $0
+                gsub(/.* /, "", internal_type)
+                printf "%s ", internal_type
+
+                for (i = 1; i <= indentation; i++) {
+                    value = fields[i]
+                    gsub(/ .*/, "", value)
+                    printf "%s%s", (i > 1 ? "." : ""), value
+                }
+                printf "\n"
+            }
+        '
+    } | _fzf_complete_tabularize $fg[green] $fg[yellow])
+}
+
+_fzf_complete_kubectl-resource-fields_post() {
+    awk '{ printf "%s.", $2 }'
 }
 
 _fzf_complete_kubectl-resource-names() {
