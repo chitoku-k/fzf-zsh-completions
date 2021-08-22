@@ -933,17 +933,17 @@ _fzf_complete_kubectl-resources_post() {
             }
         }
         NF == 4 {
-            name = $1
             apiversion = $2
         }
         NF == 5 {
-            name = $1
             apiversion = $3
         }
         {
             if (resource_apiversion_option) {
+                name = $NF
                 printf "%s%s %s%s", resource_apiversion_option, apiversion, name, resource_suffix
             } else {
+                name = $1
                 gsub(/^[^\/]+$|\/.*$/, "", apiversion)
                 printf "%s%s%s%s", name, (apiversion ? "." : ""), apiversion, resource_suffix
             }

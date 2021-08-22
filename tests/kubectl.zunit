@@ -23482,6 +23482,62 @@
     assert ${lines[1]} same_as 'deployments.apps/'
 }
 
+@test 'Testing post: a suffixed resource type followed by API version without API group' {
+    resource_suffix=.
+    resource_apiversion_option=--api-version=
+    input=(
+        'podtemplates                v1           true         PodTemplate'
+    )
+
+    run _fzf_complete_kubectl-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as '--api-version=v1 PodTemplate.'
+}
+
+@test 'Testing post: a suffixed resource type followed by API version without API group (shortname)' {
+    resource_suffix=.
+    resource_apiversion_option=--api-version=
+    input=(
+        'pods           po           v1           true         Pod'
+    )
+
+    run _fzf_complete_kubectl-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as '--api-version=v1 Pod.'
+}
+
+@test 'Testing post: a suffixed resource type followed by API version with API group' {
+    resource_suffix=.
+    resource_apiversion_option=--api-version=
+    input=(
+        'jobs                        batch/v1     true         Job'
+    )
+
+    run _fzf_complete_kubectl-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as '--api-version=batch/v1 Job.'
+}
+
+@test 'Testing post: a suffixed resource type followed by API version with API group (shortname)' {
+    resource_suffix=.
+    resource_apiversion_option=--api-version=
+    input=(
+        'deployments    deploy       apps/v1      true         Deployment'
+    )
+
+    run _fzf_complete_kubectl-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as '--api-version=apps/v1 Deployment.'
+}
+
 @test 'Testing post: a resource field' {
     input=(
         'string             spec.containers.env.name'
