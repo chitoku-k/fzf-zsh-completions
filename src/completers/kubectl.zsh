@@ -9,7 +9,7 @@ _fzf_complete_kubectl() {
     local options_and_subcommand=()
     local kubectl_arguments=()
     local last_argument=${arguments[-1]}
-    local prefix_option completing_option subcommands namespace resource resource_suffix name
+    local prefix_option completing_option subcommands namespace resource resource_suffix resource_apiversion_option name
 
     local kubectl_inherited_options_argument_required=(
         --as
@@ -522,6 +522,7 @@ _fzf_complete_kubectl() {
 
     if [[ ${subcommands[1]} = explain ]]; then
         kubectl_options_argument_required+=(--api-version)
+        kubectl_inherited_options_argument_required+=(--api-version)
 
         _fzf_complete_kubectl_parse_resource_and_name 2
         _fzf_complete_kubectl_parse_completing_option
@@ -536,6 +537,7 @@ _fzf_complete_kubectl() {
                 return
             fi
 
+            resource_apiversion_option=--api-version=
             resource_suffix=.
             _fzf_complete_kubectl-resources '' "$@"
             return
@@ -923,6 +925,7 @@ _fzf_complete_kubectl-resources() {
 
 _fzf_complete_kubectl-resources_post() {
     awk \
+        -v resource_apiversion_option=$resource_apiversion_option \
         -v resource_suffix=$resource_suffix '
         BEGIN {
             if (resource_suffix == "") {
@@ -930,19 +933,20 @@ _fzf_complete_kubectl-resources_post() {
             }
         }
         NF == 4 {
-            name = $1
-            group = "." $2
+            apiversion = $2
         }
         NF == 5 {
-            name = $1
-            group = "." $3
-        }
-        group !~ /[\/]/ {
-            group = ""
+            apiversion = $3
         }
         {
-            gsub(/\/.*/, "", group)
-            printf "%s%s%s", name, group, resource_suffix
+            if (resource_apiversion_option) {
+                name = $NF
+                printf "%s%s %s%s", resource_apiversion_option, apiversion, name, resource_suffix
+            } else {
+                name = $1
+                gsub(/^[^\/]+$|\/.*$/, "", apiversion)
+                printf "%s%s%s%s", name, (apiversion ? "." : ""), apiversion, resource_suffix
+            }
         }
     '
 }
