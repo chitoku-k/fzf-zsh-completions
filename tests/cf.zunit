@@ -17602,7 +17602,7 @@
 
     assert $state equals 0
     assert ${#lines} equals 1
-    assert ${lines[1]} same_as 'app-01 --destination-app=app-02 --protocol=tcp --port=8080'
+    assert ${lines[1]} same_as 'app-01 --destination-app=app-02 --protocol=tcp --port=8080 -o org-01 -s space-01'
 }
 
 @test 'Testing post: an HTTP route bound to an app' {
