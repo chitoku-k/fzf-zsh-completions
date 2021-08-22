@@ -26,4 +26,4 @@ jobs:
           sudo apt-get install -y zsh
       - name: Run unit tests
         run: |
-          tests/test.zsh --tap --time-limit=${{ matrix.timeout }} tests/*.zunit
+          tests/test.zsh --tap --time-limit ${{ matrix.timeout }} tests/*.zunit

@@ -914,7 +914,12 @@ _fzf_complete_kubectl-resources() {
 
 _fzf_complete_kubectl-resources_post() {
     awk \
-        -v resource_suffix=${resource_suffix:-$'\n'} '
+        -v resource_suffix=$resource_suffix '
+        BEGIN {
+            if (resource_suffix == "") {
+                resource_suffix = "\n"
+            }
+        }
         NF == 4 {
             name = $1
             group = "." $2
