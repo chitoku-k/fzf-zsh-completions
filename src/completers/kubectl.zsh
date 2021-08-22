@@ -133,7 +133,7 @@ _fzf_complete_kubectl() {
         return
     fi
 
-    if [[ ${subcommands[1]} = (apply|create|rollout|set) ]]; then
+    if [[ ${subcommands[1]} = (apply|config|create|rollout|set) ]]; then
         subcommands+=($(_fzf_complete_parse_argument 2 2 "${(F)kubectl_options_argument_required}" "${arguments[@]}" || :))
     fi
 
@@ -258,6 +258,51 @@ _fzf_complete_kubectl() {
 
             _fzf_complete_kubectl-resource-names '' "$@"
             return
+        fi
+    fi
+
+    if [[ ${subcommands[1]} = config ]]; then
+        if [[ ${subcommands[2]} = (delete-cluster|delete-context|delete-user|rename-context|set-cluster|set-context|use-context) ]] ; then
+            _fzf_complete_kubectl_parse_resource_and_name 2
+            _fzf_complete_kubectl_parse_completing_option
+            _fzf_complete_kubectl_parse_kubectl_arguments
+
+            if [[ -z $completing_option ]]; then
+                _fzf_complete_kubectl-configs '' "get-${subcommands[2]#*-}s" "$@"
+                return
+            fi
+        fi
+
+        if [[ ${subcommands[2]} = get-contexts ]]; then
+            kubectl_options_argument_required+=(
+                -o
+                --output
+            )
+
+            _fzf_complete_kubectl_parse_resource_and_name 2
+            _fzf_complete_kubectl_parse_completing_option
+            _fzf_complete_kubectl_parse_kubectl_arguments
+
+            if [[ -z $completing_option ]]; then
+                _fzf_complete_kubectl-configs '' 'get-contexts' "$@"
+                return
+            fi
+        fi
+
+        if [[ ${subcommands[2]} = set-credentials ]]; then
+            kubectl_options_argument_required+=(
+                --auth-provider
+                --auth-provider-arg
+                --exec-api-version
+                --exec-arg
+                --exec-command
+                --exec-env
+            )
+
+            if [[ -z $completing_option ]]; then
+                _fzf_complete_kubectl-configs '' 'get-users' "$@"
+                return
+            fi
         fi
     fi
 
@@ -770,6 +815,11 @@ _fzf_complete_kubectl() {
         fi
     fi
 
+    if [[ $completing_option = (--cluster|--context|--user) ]]; then
+        _fzf_complete_kubectl-configs '' "get-${completing_option#--}s" "$@"
+        return
+    fi
+
     if [[ $completing_option = (-n|--namespace) ]]; then
         kubectl_arguments[${kubectl_arguments[(i)-l]},${kubectl_arguments[(i)-l]}+1]=()
         kubectl_arguments[${kubectl_arguments[(i)--selector]},${kubectl_arguments[(i)--selector]}+1]=()
@@ -824,6 +874,32 @@ _fzf_complete_kubectl() {
     fi
 
     _fzf_path_completion "$prefix" "$@"
+}
+
+_fzf_complete_kubectl-configs() {
+    local fzf_options=$1
+    local config_subcommand=$2
+    shift 2
+
+    _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <(
+        local result=$(kubectl config "$config_subcommand" "${kubectl_arguments[@]}" 2> /dev/null)
+        if [[ $result = CURRENT\ * ]]; then
+            _fzf_complete_colorize $fg[green] $fg[yellow]
+        else
+            _fzf_complete_colorize $fg[yellow]
+        fi <<< "$result"
+    )
+}
+
+_fzf_complete_kubectl-configs_post() {
+    awk '
+        NF == 1 || $1 != "*" {
+            print $1
+        }
+        $1 == "*" {
+            print $2
+        }
+    '
 }
 
 _fzf_complete_kubectl-resources() {

@@ -136,6 +136,240 @@
     _fzf_complete_kubectl 'kubectl -n "" '
 }
 
+@test 'Testing completion: kubectl --cluster=**' {
+    kubectl_mock_1() {
+        assert $# equals 2
+        assert $1 same_as 'config'
+        assert $2 same_as 'get-clusters'
+
+        echo 'NAME'
+        echo 'kubernetes'
+        echo 'minikube'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl --cluster='
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}NAME${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}kubernetes${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}minikube${reset_color}"
+    }
+
+    prefix=--cluster=
+    _fzf_complete_kubectl 'kubectl '
+}
+
+@test 'Testing completion: kubectl --cluster **' {
+    kubectl_mock_1() {
+        assert $# equals 2
+        assert $1 same_as 'config'
+        assert $2 same_as 'get-clusters'
+
+        echo 'NAME'
+        echo 'kubernetes'
+        echo 'minikube'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl --cluster '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl --cluster '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}NAME${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}kubernetes${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}minikube${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl --cluster '
+}
+
+@test 'Testing completion: kubectl --context=**' {
+    kubectl_mock_1() {
+        assert $# equals 2
+        assert $1 same_as 'config'
+        assert $2 same_as 'get-contexts'
+
+        echo 'CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPACE'
+        echo '          kubernetes-admin@kubernetes   kubernetes   kubernetes-admin   '
+        echo '*         minikube@minikube             minikube     minikube           '
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl --context='
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[green]}CURRENT   ${reset_color}${fg[yellow]}NAME                          ${reset_color}CLUSTER      AUTHINFO           NAMESPACE"
+        assert ${lines[2]} same_as "${fg[green]}          ${reset_color}${fg[yellow]}kubernetes-admin@kubernetes   ${reset_color}kubernetes   kubernetes-admin   "
+        assert ${lines[3]} same_as "${fg[green]}*         ${reset_color}${fg[yellow]}minikube@minikube             ${reset_color}minikube     minikube           "
+    }
+
+    prefix=--context=
+    _fzf_complete_kubectl 'kubectl '
+}
+
+@test 'Testing completion: kubectl --context **' {
+    kubectl_mock_1() {
+        assert $# equals 2
+        assert $1 same_as 'config'
+        assert $2 same_as 'get-contexts'
+
+        echo 'CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPACE'
+        echo '          kubernetes-admin@kubernetes   kubernetes   kubernetes-admin   '
+        echo '*         minikube@minikube             minikube     minikube           '
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl --context '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl --context '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[green]}CURRENT   ${reset_color}${fg[yellow]}NAME                          ${reset_color}CLUSTER      AUTHINFO           NAMESPACE"
+        assert ${lines[2]} same_as "${fg[green]}          ${reset_color}${fg[yellow]}kubernetes-admin@kubernetes   ${reset_color}kubernetes   kubernetes-admin   "
+        assert ${lines[3]} same_as "${fg[green]}*         ${reset_color}${fg[yellow]}minikube@minikube             ${reset_color}minikube     minikube           "
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl --context '
+}
+
+@test 'Testing completion: kubectl --user=**' {
+    kubectl_mock_1() {
+        assert $# equals 2
+        assert $1 same_as 'config'
+        assert $2 same_as 'get-users'
+
+        echo 'NAME'
+        echo 'kubernetes-admin'
+        echo 'minikube'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl --user='
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}NAME${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}kubernetes-admin${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}minikube${reset_color}"
+    }
+
+    prefix=--user=
+    _fzf_complete_kubectl 'kubectl '
+}
+
+@test 'Testing completion: kubectl --user **' {
+    kubectl_mock_1() {
+        assert $# equals 2
+        assert $1 same_as 'config'
+        assert $2 same_as 'get-users'
+
+        echo 'NAME'
+        echo 'kubernetes-admin'
+        echo 'minikube'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl --user '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl --user '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}NAME${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}kubernetes-admin${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}minikube${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl --user '
+}
+
 @test 'Testing completion: kubectl --namespace=**' {
     kubectl_mock_1() {
         assert $# equals 5
@@ -5116,6 +5350,357 @@
     RBUFFER=' --namespace ""'
     prefix=pods/
     _fzf_complete_kubectl 'kubectl patch '
+}
+
+@test 'Testing completion: kubectl config delete-cluster **' {
+    kubectl_mock_1() {
+        assert $# equals 2
+        assert $1 same_as 'config'
+        assert $2 same_as 'get-clusters'
+
+        echo 'NAME'
+        echo 'kubernetes'
+        echo 'minikube'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl config delete-cluster '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl config delete-cluster '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}NAME${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}kubernetes${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}minikube${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl config delete-cluster '
+}
+
+@test 'Testing completion: kubectl config delete-context **' {
+    kubectl_mock_1() {
+        assert $# equals 2
+        assert $1 same_as 'config'
+        assert $2 same_as 'get-contexts'
+
+        echo 'CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPACE'
+        echo '          kubernetes-admin@kubernetes   kubernetes   kubernetes-admin   '
+        echo '*         minikube@minikube             minikube     minikube           '
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl config delete-context '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl config delete-context '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[green]}CURRENT   ${reset_color}${fg[yellow]}NAME                          ${reset_color}CLUSTER      AUTHINFO           NAMESPACE"
+        assert ${lines[2]} same_as "${fg[green]}          ${reset_color}${fg[yellow]}kubernetes-admin@kubernetes   ${reset_color}kubernetes   kubernetes-admin   "
+        assert ${lines[3]} same_as "${fg[green]}*         ${reset_color}${fg[yellow]}minikube@minikube             ${reset_color}minikube     minikube           "
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl config delete-context '
+}
+
+@test 'Testing completion: kubectl config delete-user **' {
+    kubectl_mock_1() {
+        assert $# equals 2
+        assert $1 same_as 'config'
+        assert $2 same_as 'get-users'
+
+        echo 'NAME'
+        echo 'kubernetes-admin'
+        echo 'minikube'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl config delete-user '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl config delete-user '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}NAME${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}kubernetes-admin${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}minikube${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl config delete-user '
+}
+
+@test 'Testing completion: kubectl config rename-context **' {
+    kubectl_mock_1() {
+        assert $# equals 2
+        assert $1 same_as 'config'
+        assert $2 same_as 'get-contexts'
+
+        echo 'CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPACE'
+        echo '          kubernetes-admin@kubernetes   kubernetes   kubernetes-admin   '
+        echo '*         minikube@minikube             minikube     minikube           '
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl config rename-context '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl config rename-context '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[green]}CURRENT   ${reset_color}${fg[yellow]}NAME                          ${reset_color}CLUSTER      AUTHINFO           NAMESPACE"
+        assert ${lines[2]} same_as "${fg[green]}          ${reset_color}${fg[yellow]}kubernetes-admin@kubernetes   ${reset_color}kubernetes   kubernetes-admin   "
+        assert ${lines[3]} same_as "${fg[green]}*         ${reset_color}${fg[yellow]}minikube@minikube             ${reset_color}minikube     minikube           "
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl config rename-context '
+}
+
+@test 'Testing completion: kubectl config set-cluster **' {
+    kubectl_mock_1() {
+        assert $# equals 2
+        assert $1 same_as 'config'
+        assert $2 same_as 'get-clusters'
+
+        echo 'NAME'
+        echo 'kubernetes'
+        echo 'minikube'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl config set-cluster '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl config set-cluster '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}NAME${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}kubernetes${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}minikube${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl config set-cluster '
+}
+
+@test 'Testing completion: kubectl config set-context **' {
+    kubectl_mock_1() {
+        assert $# equals 2
+        assert $1 same_as 'config'
+        assert $2 same_as 'get-contexts'
+
+        echo 'CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPACE'
+        echo '          kubernetes-admin@kubernetes   kubernetes   kubernetes-admin   '
+        echo '*         minikube@minikube             minikube     minikube           '
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl config set-context '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl config set-context '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[green]}CURRENT   ${reset_color}${fg[yellow]}NAME                          ${reset_color}CLUSTER      AUTHINFO           NAMESPACE"
+        assert ${lines[2]} same_as "${fg[green]}          ${reset_color}${fg[yellow]}kubernetes-admin@kubernetes   ${reset_color}kubernetes   kubernetes-admin   "
+        assert ${lines[3]} same_as "${fg[green]}*         ${reset_color}${fg[yellow]}minikube@minikube             ${reset_color}minikube     minikube           "
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl config set-context '
+}
+
+@test 'Testing completion: kubectl config use-context **' {
+    kubectl_mock_1() {
+        assert $# equals 2
+        assert $1 same_as 'config'
+        assert $2 same_as 'get-contexts'
+
+        echo 'CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPACE'
+        echo '          kubernetes-admin@kubernetes   kubernetes   kubernetes-admin   '
+        echo '*         minikube@minikube             minikube     minikube           '
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl config use-context '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl config use-context '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[green]}CURRENT   ${reset_color}${fg[yellow]}NAME                          ${reset_color}CLUSTER      AUTHINFO           NAMESPACE"
+        assert ${lines[2]} same_as "${fg[green]}          ${reset_color}${fg[yellow]}kubernetes-admin@kubernetes   ${reset_color}kubernetes   kubernetes-admin   "
+        assert ${lines[3]} same_as "${fg[green]}*         ${reset_color}${fg[yellow]}minikube@minikube             ${reset_color}minikube     minikube           "
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl config use-context '
+}
+
+@test 'Testing completion: kubectl config get-contexts **' {
+    kubectl_mock_1() {
+        assert $# equals 2
+        assert $1 same_as 'config'
+        assert $2 same_as 'get-contexts'
+
+        echo 'CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPACE'
+        echo '          kubernetes-admin@kubernetes   kubernetes   kubernetes-admin   '
+        echo '*         minikube@minikube             minikube     minikube           '
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl config get-contexts '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl config get-contexts '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[green]}CURRENT   ${reset_color}${fg[yellow]}NAME                          ${reset_color}CLUSTER      AUTHINFO           NAMESPACE"
+        assert ${lines[2]} same_as "${fg[green]}          ${reset_color}${fg[yellow]}kubernetes-admin@kubernetes   ${reset_color}kubernetes   kubernetes-admin   "
+        assert ${lines[3]} same_as "${fg[green]}*         ${reset_color}${fg[yellow]}minikube@minikube             ${reset_color}minikube     minikube           "
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl config get-contexts '
+}
+
+@test 'Testing completion: kubectl config set-credentials **' {
+    kubectl_mock_1() {
+        assert $# equals 2
+        assert $1 same_as 'config'
+        assert $2 same_as 'get-users'
+
+        echo 'NAME'
+        echo 'kubernetes-admin'
+        echo 'minikube'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl config set-credentials '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl config set-credentials '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}NAME${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}kubernetes-admin${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}minikube${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl config set-credentials '
 }
 
 @test 'Testing completion: kubectl cordon **' {
