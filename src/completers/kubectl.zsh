@@ -959,7 +959,7 @@ _fzf_complete_kubectl-resource-fields() {
             }
             match($0, /^ +/) {
                 level = RLENGTH
-                gsub(/\s+|>/, "")
+                gsub(/[ \t]+|>/, "")
                 gsub(/</, " ")
 
                 if (min_width == 0 || min_width > level) {
