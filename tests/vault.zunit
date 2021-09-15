@@ -66,7 +66,7 @@
 @test 'Testing completion: TEST1=value1 TEST2=value2 vault kv get **' {
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'vault kv get '
+        assert $1 same_as 'TEST1=value1 TEST2=value2 vault kv get '
 
         echo 'vault'
     }
