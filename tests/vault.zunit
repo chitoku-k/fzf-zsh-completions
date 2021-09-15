@@ -63,6 +63,60 @@
     _fzf_complete_vault 'vault kv get '
 }
 
+@test 'Testing completion: TEST1=value1 TEST2=value2 vault kv get **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'vault kv get '
+
+        echo 'vault'
+    }
+
+    curl_mock_1() {
+        assert $# equals 4
+        assert $1 same_as '--silent'
+        assert $2 same_as '--header'
+        assert $3 same_as 'X-Vault-Token: s.000000000000000000000000'
+        assert $4 same_as 'https://example.com/v1/sys/internal/ui/mounts'
+
+        echo '{"request_id":"00000000-0000-0000-0000-000000000000","lease_id":"","renewable":false,"lease_duration":0,"data":{"auth":{"token/":{"accessor":"auth_token_00000000","config":{"default_lease_ttl":0,"force_no_cache":false,"max_lease_ttl":0,"token_type":"default-service"},"description":"token based credentials","external_entropy_access":false,"local":false,"options":null,"seal_wrap":false,"type":"token","uuid":"00000000-0000-0000-0000-000000000000"}},"secret":{"cubbyhole/":{"accessor":"cubbyhole_00000000","config":{"default_lease_ttl":0,"force_no_cache":false,"max_lease_ttl":0},"description":"per-token private secret storage","external_entropy_access":false,"local":true,"options":null,"seal_wrap":false,"type":"cubbyhole","uuid":"00000000-0000-0000-0000-000000000000"},"identity/":{"accessor":"identity_00000000","config":{"default_lease_ttl":0,"force_no_cache":false,"max_lease_ttl":0},"description":"identity store","external_entropy_access":false,"local":false,"options":null,"seal_wrap":false,"type":"identity","uuid":"00000000-0000-0000-0000-000000000000"},"secret/":{"accessor":"kv_00000000","config":{"default_lease_ttl":0,"force_no_cache":false,"max_lease_ttl":0},"description":"key/value secret storage","external_entropy_access":false,"local":false,"options":{"version":"2"},"seal_wrap":false,"type":"kv","uuid":"00000000-0000-0000-0000-000000000000"},"sys/":{"accessor":"system_00000000","config":{"default_lease_ttl":0,"force_no_cache":false,"max_lease_ttl":0,"passthrough_request_headers":["Accept"]},"description":"system endpoints used for control, policy and debugging","external_entropy_access":false,"local":false,"options":null,"seal_wrap":false,"type":"system","uuid":"00000000-0000-0000-0000-000000000000"}}},"wrap_info":null,"warnings":null,"auth":null}'
+    }
+
+    vault_mock_1() {
+        assert $# equals 2
+        assert $1 same_as 'print'
+        assert $2 same_as 'token'
+
+        echo 's.000000000000000000000000'
+    }
+
+    _fzf_complete() {
+        assert $# equals 3
+        assert $1 same_as '--tiebreak=index'
+        assert $2 same_as '--'
+        assert $3 same_as 'TEST1=value1 TEST2=value2 vault kv get '
+
+        assert $TEST1 same_as value1
+        assert $TEST2 same_as value2
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert curl mock_times 1
+        assert vault mock_times 1
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as 'cubbyhole/'
+        assert ${lines[2]} same_as 'identity/'
+        assert ${lines[3]} same_as 'secret/'
+        assert ${lines[4]} same_as 'sys/'
+    }
+
+    VAULT_ADDR=https://example.com
+    prefix=
+    _fzf_complete_vault 'TEST1=value1 TEST2=value2 vault kv get '
+
+    assert $TEST1 is_empty
+    assert $TEST2 is_empty
+}
+
 @test 'Testing completion: vault kv get -address=https://example.com **' {
     __fzf_extract_command_mock_1() {
         assert $# equals 1

@@ -133,6 +133,9 @@
         assert $5 same_as '--'
         assert $6 same_as 'TEST1=value1 TEST2=value2 yarn '
 
+        assert $TEST1 same_as value1
+        assert $TEST2 same_as value2
+
         run cat
         assert __fzf_extract_command mock_times 1
         assert ${#lines} equals 6
@@ -166,6 +169,9 @@
 
     prefix=
     _fzf_complete_yarn 'TEST1=value1 TEST2=value2 yarn '
+
+    assert $TEST1 is_empty
+    assert $TEST2 is_empty
 }
 
 @test 'Testing completion: yarn run **' {

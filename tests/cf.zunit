@@ -133,6 +133,55 @@
     _fzf_complete_cf 'cf app '
 }
 
+@test 'Testing completion: TEST1=value1 TEST2=value2 cf app **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'apps'
+
+        echo 'Getting apps in org org-01 / space space-01 as user-01...'
+        echo 'OK'
+        echo ''
+        echo 'name     requested state   instances   memory   disk   urls'
+        echo 'app-01   started           3/3         1G       1G     app-01.example.com'
+        echo 'app-02   started           2/2         512M     1G     app-02.example.com'
+        echo 'app-03   stopped           0/1         256M     1G     app-03.example.com'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'TEST1=value1 TEST2=value2 cf app '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'TEST1=value1 TEST2=value2 cf app '
+
+        assert $TEST1 same_as value1
+        assert $TEST2 same_as value2
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 1
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}name     ${reset_color}requested state   instances   memory   disk   urls"
+        assert ${lines[2]} same_as "${fg[yellow]}app-01   ${reset_color}started           3/3         1G       1G     app-01.example.com"
+        assert ${lines[3]} same_as "${fg[yellow]}app-02   ${reset_color}started           2/2         512M     1G     app-02.example.com"
+        assert ${lines[4]} same_as "${fg[yellow]}app-03   ${reset_color}stopped           0/1         256M     1G     app-03.example.com"
+    }
+
+    prefix=
+    _fzf_complete_cf 'TEST1=value1 TEST2=value2 cf app '
+
+    assert $TEST1 is_empty
+    assert $TEST2 is_empty
+}
+
 @test 'Testing completion: cf d **' {
     cf_mock_1() {
         assert $# equals 1

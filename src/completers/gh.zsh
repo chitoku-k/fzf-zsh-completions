@@ -10,6 +10,12 @@ _fzf_complete_gh() {
     local gh_subcommand=${arguments[3]}
     local last_argument=${arguments[-1]}
 
+    local original_arguments=("${(Q)${(z)@}[@]}")
+    local command_pos=${original_arguments[(i)$arguments[1]]}
+    if (( $command_pos > 1 )); then
+        local -x ${${(Q)${(z)@}}[1, $command_pos - 1]}
+    fi
+
     if (( $+functions[_fzf_complete_gh_${gh_command}] )) && _fzf_complete_gh_${gh_command} "$@"; then
         return
     fi

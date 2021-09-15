@@ -175,6 +175,51 @@
     _fzf_complete_kubectl 'kubectl '
 }
 
+@test 'Testing completion: TEST1=value1 TEST2=value2 kubectl --cluster=**' {
+    kubectl_mock_1() {
+        assert $# equals 2
+        assert $1 same_as 'config'
+        assert $2 same_as 'get-clusters'
+
+        echo 'NAME'
+        echo 'kubernetes'
+        echo 'minikube'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'TEST1=value1 TEST2=value2 kubectl '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'TEST1=value1 TEST2=value2 kubectl --cluster='
+
+        assert $TEST1 same_as value1
+        assert $TEST2 same_as value2
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}NAME${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}kubernetes${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}minikube${reset_color}"
+    }
+
+    prefix=--cluster=
+    _fzf_complete_kubectl 'TEST1=value1 TEST2=value2 kubectl '
+
+    assert $TEST1 is_empty
+    assert $TEST2 is_empty
+}
+
 @test 'Testing completion: kubectl --cluster **' {
     kubectl_mock_1() {
         assert $# equals 2

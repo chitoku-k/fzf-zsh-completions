@@ -62,6 +62,12 @@ _fzf_complete_git() {
     local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$@")"}[@]}")
     local resolved_commands=()
 
+    local original_arguments=("${(Q)${(z)@}[@]}")
+    local command_pos=${original_arguments[(i)$arguments[1]]}
+    if (( $command_pos > 1 )); then
+        local -x ${${(Q)${(z)@}}[1, $command_pos - 1]}
+    fi
+
     while true; do
         local resolved=$(_fzf_complete_git_resolve_alias "${arguments[@]}")
         if [[ -z $resolved ]]; then

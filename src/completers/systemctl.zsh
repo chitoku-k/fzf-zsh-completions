@@ -13,6 +13,12 @@ _fzf_complete_systemctl() {
     setopt local_options no_aliases
     local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$@")"}[@]}")
 
+    local original_arguments=("${(Q)${(z)@}[@]}")
+    local command_pos=${original_arguments[(i)$arguments[1]]}
+    if (( $command_pos > 1 )); then
+        local -x ${${(Q)${(z)@}}[1, $command_pos - 1]}
+    fi
+
     local systemctl_options_argument_required=(
         --boot-loader-entry
         --boot-loader-menu

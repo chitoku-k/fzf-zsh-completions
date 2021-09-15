@@ -10,6 +10,12 @@ _fzf_complete_cf() {
     local last_argument=${arguments[-1]}
     local prefix_option completing_option resource resource_column=1
 
+    local original_arguments=("${(Q)${(z)@}[@]}")
+    local command_pos=${original_arguments[(i)$arguments[1]]}
+    if (( $command_pos > 1 )); then
+        local -x ${${(Q)${(z)@}}[1, $command_pos - 1]}
+    fi
+
     local cf_options_argument_required=()
     local subcommand=$(_fzf_complete_parse_argument 2 1 "${(F)cf_options_argument_required}" "${arguments[@]}")
 

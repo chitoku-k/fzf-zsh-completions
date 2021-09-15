@@ -10,6 +10,12 @@ _fzf_complete_vault() {
     local last_argument=${arguments[-1]}
     local prefix_option completing_option
 
+    local original_arguments=("${(Q)${(z)@}[@]}")
+    local command_pos=${original_arguments[(i)$arguments[1]]}
+    if (( $command_pos > 1 )); then
+        local -x ${${(Q)${(z)@}}[1, $command_pos - 1]}
+    fi
+
     local vault_inherited_options_argument_required=(
         -address
         --address
