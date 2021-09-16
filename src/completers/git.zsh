@@ -64,8 +64,18 @@ _fzf_complete_git() {
 
     local original_arguments=("${(Q)${(z)@}[@]}")
     local command_pos=${original_arguments[(i)$arguments[1]]}
+
     if (( $command_pos > 1 )); then
-        local -x ${${(Q)${(z)@}}[1, $command_pos - 1]}
+        local v
+        for v in "${${(z)@}[1, $command_pos - 1][@]}"; do
+            local name=${v%=*}
+            local cmd=${v#*=}
+            if [[ ${cmd[1]} = '~' ]]; then
+                local -x "$name=$(zsh -c "echo $cmd")"
+            else
+                local -x "$name=${(e)cmd}"
+            fi
+        done
     fi
 
     while true; do
