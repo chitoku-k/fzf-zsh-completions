@@ -2,13 +2,12 @@
 
 _fzf_complete_npm() {
     setopt local_options no_aliases
-    local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$@")"}[@]}")
+    local command_pos=$(_fzf_complete_get_command_pos "$@")
+    local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$command_pos" "$@")"}[@]}")
     local subcommand=${arguments[2]}
 
-    local original_arguments=("${(Q)${(z)@}[@]}")
-    local command_pos=${original_arguments[(i)$arguments[1]]}
     if (( $command_pos > 1 )); then
-        local -x ${${(Q)${(z)@}}[1, $command_pos - 1]}
+        local -x "${${(z)"$(_fzf_complete_get_env "$command_pos" "$@")"}[@]}"
     fi
 
     if (( $+functions[_fzf_complete_npm_${subcommand}] )) && _fzf_complete_npm_${subcommand} "$@"; then

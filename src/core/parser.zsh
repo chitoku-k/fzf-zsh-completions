@@ -1,10 +1,23 @@
 #!/usr/bin/env zsh
 
-_fzf_complete_trim_env() {
+_fzf_complete_get_command_pos() {
     local arguments=("${(Q)${(z)@}[@]}")
     local cmd=$(__fzf_extract_command "$@")
-    local idx=${arguments[(i)$cmd]}
-    echo ${(q)arguments[$idx, -1]}
+    echo ${arguments[(i)$cmd]}
+}
+
+_fzf_complete_trim_env() {
+    local command_pos=$1
+    shift 1
+    local arguments=("${(Q)${(z)@}[@]}")
+    echo ${(q)arguments[$command_pos, -1]}
+}
+
+_fzf_complete_get_env() {
+    local command_pos=$1
+    shift 1
+    local arguments=("${${(z)@}[@]}")
+    echo ${arguments[1, $command_pos - 1]}
 }
 
 _fzf_complete_parse_completing_option() {

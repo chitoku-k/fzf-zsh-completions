@@ -59,23 +59,12 @@ PREVIEW_OPTIONS
 _fzf_complete_git() {
     setopt local_options extended_glob no_aliases
     local prefix_option completing_option
-    local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$@")"}[@]}")
+    local command_pos=$(_fzf_complete_get_command_pos "$@")
+    local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$command_pos" "$@")"}[@]}")
     local resolved_commands=()
 
-    local original_arguments=("${(Q)${(z)@}[@]}")
-    local command_pos=${original_arguments[(i)$arguments[1]]}
-
     if (( $command_pos > 1 )); then
-        local v
-        for v in "${${(z)@}[1, $command_pos - 1][@]}"; do
-            local name=${v%=*}
-            local cmd=${v#*=}
-            if [[ ${cmd[1]} = '~' ]]; then
-                local -x "$name=$(zsh -c "echo $cmd")"
-            else
-                local -x "$name=${(e)cmd}"
-            fi
-        done
+        local -x "${${(z)"$(_fzf_complete_get_env "$command_pos" "$@")"}[@]}"
     fi
 
     while true; do
