@@ -15,7 +15,7 @@ _fzf_complete_systemctl() {
     local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$command_pos" "$@")"}[@]}")
 
     if (( $command_pos > 1 )); then
-        local -x "${${(z)"$(_fzf_complete_get_env "$command_pos" "$@")"}[@]}"
+        local -x "${(e)${(z)"$(_fzf_complete_get_env "$command_pos" "$@")"}[@]}"
     fi
 
     local systemctl_options_argument_required=(

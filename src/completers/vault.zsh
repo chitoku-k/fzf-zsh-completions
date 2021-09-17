@@ -11,7 +11,7 @@ _fzf_complete_vault() {
     local prefix_option completing_option
 
     if (( $command_pos > 1 )); then
-        local -x "${${(z)"$(_fzf_complete_get_env "$command_pos" "$@")"}[@]}"
+        local -x "${(e)${(z)"$(_fzf_complete_get_env "$command_pos" "$@")"}[@]}"
     fi
 
     local vault_inherited_options_argument_required=(

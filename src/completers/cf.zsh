@@ -12,7 +12,7 @@ _fzf_complete_cf() {
     local prefix_option completing_option resource resource_column=1
 
     if (( $command_pos > 1 )); then
-        local -x "${${(z)"$(_fzf_complete_get_env "$command_pos" "$@")"}[@]}"
+        local -x "${(e)${(z)"$(_fzf_complete_get_env "$command_pos" "$@")"}[@]}"
     fi
 
     local cf_options_argument_required=()

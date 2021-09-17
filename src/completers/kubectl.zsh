@@ -13,7 +13,7 @@ _fzf_complete_kubectl() {
     local prefix_option completing_option subcommands namespace resource resource_suffix resource_apiversion_option name
 
     if (( $command_pos > 1 )); then
-        local -x "${${(z)"$(_fzf_complete_get_env "$command_pos" "$@")"}[@]}"
+        local -x "${(e)${(z)"$(_fzf_complete_get_env "$command_pos" "$@")"}[@]}"
     fi
 
     local kubectl_inherited_options_argument_required=(

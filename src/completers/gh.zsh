@@ -12,7 +12,7 @@ _fzf_complete_gh() {
     local last_argument=${arguments[-1]}
 
     if (( $command_pos > 1 )); then
-        local -x "${${(z)"$(_fzf_complete_get_env "$command_pos" "$@")"}[@]}"
+        local -x "${(e)${(z)"$(_fzf_complete_get_env "$command_pos" "$@")"}[@]}"
     fi
 
     if (( $+functions[_fzf_complete_gh_${gh_command}] )) && _fzf_complete_gh_${gh_command} "$@"; then
