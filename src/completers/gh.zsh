@@ -5,10 +5,15 @@ colors
 
 _fzf_complete_gh() {
     setopt local_options no_aliases
-    local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$@")"}[@]}")
+    local command_pos=$(_fzf_complete_get_command_pos "$@")
+    local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$command_pos" "$@")"}[@]}")
     local gh_command=${arguments[2]}
     local gh_subcommand=${arguments[3]}
     local last_argument=${arguments[-1]}
+
+    if (( $command_pos > 1 )); then
+        local -x "${(e)${(z)"$(_fzf_complete_get_env "$command_pos" "$@")"}[@]}"
+    fi
 
     if (( $+functions[_fzf_complete_gh_${gh_command}] )) && _fzf_complete_gh_${gh_command} "$@"; then
         return

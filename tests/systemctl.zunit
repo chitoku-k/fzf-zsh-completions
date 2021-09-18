@@ -209,6 +209,9 @@
         assert $7 same_as '--'
         assert $8  same_as 'TEST1=value1 TEST2=value2 systemctl status '
 
+        assert $TEST1 same_as value1
+        assert $TEST2 same_as value2
+
         run cat
         assert __fzf_extract_command mock_times 1
         assert systemctl mock_times 2
@@ -227,6 +230,9 @@
 
     prefix=
     _fzf_complete_systemctl 'TEST1=value1 TEST2=value2 systemctl status '
+
+    assert $TEST1 is_empty
+    assert $TEST2 is_empty
 }
 
 @test 'Testing completion: systemctl status --user **' {

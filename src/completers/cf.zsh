@@ -5,10 +5,15 @@ colors
 
 _fzf_complete_cf() {
     setopt local_options no_aliases
-    local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$@")"}[@]}")
+    local command_pos=$(_fzf_complete_get_command_pos "$@")
+    local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$command_pos" "$@")"}[@]}")
     local cf_arguments=()
     local last_argument=${arguments[-1]}
     local prefix_option completing_option resource resource_column=1
+
+    if (( $command_pos > 1 )); then
+        local -x "${(e)${(z)"$(_fzf_complete_get_env "$command_pos" "$@")"}[@]}"
+    fi
 
     local cf_options_argument_required=()
     local subcommand=$(_fzf_complete_parse_argument 2 1 "${(F)cf_options_argument_required}" "${arguments[@]}")

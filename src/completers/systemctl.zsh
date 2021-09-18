@@ -11,7 +11,12 @@ PREVIEW_OPTIONS
 
 _fzf_complete_systemctl() {
     setopt local_options no_aliases
-    local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$@")"}[@]}")
+    local command_pos=$(_fzf_complete_get_command_pos "$@")
+    local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$command_pos" "$@")"}[@]}")
+
+    if (( $command_pos > 1 )); then
+        local -x "${(e)${(z)"$(_fzf_complete_get_env "$command_pos" "$@")"}[@]}"
+    fi
 
     local systemctl_options_argument_required=(
         --boot-loader-entry
