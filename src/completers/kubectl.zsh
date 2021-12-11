@@ -956,7 +956,7 @@ _fzf_complete_kubectl-resources_post() {
             }
         }
         END {
-            if (resource_suffix == "") {
+            if (NR > 0 && resource_suffix == "") {
                 printf "\n"
             }
         }
