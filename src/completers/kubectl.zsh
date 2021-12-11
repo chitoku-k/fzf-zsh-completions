@@ -475,7 +475,11 @@ _fzf_complete_kubectl() {
 
         if [[ -z $completing_option ]]; then
             if [[ -z $resource ]]; then
-                _fzf_complete_kubectl-resources '' "$@"
+                if [[ ${subcommands[1]} = (delete|get) ]]; then
+                    _fzf_complete_kubectl-resources '--multi' "$@"
+                else
+                    _fzf_complete_kubectl-resources '' "$@"
+                fi
                 return
             fi
 
@@ -932,16 +936,14 @@ _fzf_complete_kubectl-resources_post() {
     awk \
         -v resource_apiversion_option=$resource_apiversion_option \
         -v resource_suffix=$resource_suffix '
-        BEGIN {
-            if (resource_suffix == "") {
-                resource_suffix = "\n"
-            }
-        }
         NF == 4 {
             apiversion = $2
         }
         NF == 5 {
             apiversion = $3
+        }
+        NR > 1 && resource_suffix == "" {
+            printf ","
         }
         {
             if (resource_apiversion_option) {
@@ -951,6 +953,11 @@ _fzf_complete_kubectl-resources_post() {
                 name = $1
                 gsub(/^[^\/]+$|\/.*$/, "", apiversion)
                 printf "%s%s%s%s", name, (apiversion ? "." : ""), apiversion, resource_suffix
+            }
+        }
+        END {
+            if (resource_suffix == "") {
+                printf "\n"
             }
         }
     '
