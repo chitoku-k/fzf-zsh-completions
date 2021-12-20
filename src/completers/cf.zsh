@@ -15,6 +15,9 @@ _fzf_complete_cf() {
         local -x "${(e)${(z)"$(_fzf_complete_get_env "$command_pos" "$@")"}[@]}"
     fi
 
+    local cf=${arguments[1]}
+    local cf_version=$("$cf" --version 2> /dev/null | awk '{ print int($3) }')
+
     local cf_options_argument_required=()
     local subcommand=$(_fzf_complete_parse_argument 2 1 "${(F)cf_options_argument_required}" "${arguments[@]}")
 
@@ -1225,7 +1228,7 @@ _fzf_complete_cf-resources() {
     fi
 
     _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <(
-        cf "$resource" "${cf_arguments[@]}" 2> /dev/null |
+        "$cf" "$resource" "${cf_arguments[@]}" 2> /dev/null |
             awk '
                 NR > 1 && !/^$|^TIP:|^OK$/
                 /^$/ && count++ { exit }
@@ -1337,7 +1340,7 @@ _fzf_complete_cf-app-instances() {
     shift 2
 
     _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <(
-        cf app "${cf_arguments[@]}" "$app" 2> /dev/null |
+        "$cf" app "${cf_arguments[@]}" "$app" 2> /dev/null |
             awk '/^#|^ +/ && !/^$|^TIP:/' |
             _fzf_complete_colorize $fg[yellow]
     )
@@ -1360,14 +1363,14 @@ _fzf_complete_cf-apps-by-org-space() {
         local org_guid space_guid spaces
 
         if [[ -z $org_name ]]; then
-            space_guid=$(cf space --guid "$space_name" 2> /dev/null)
+            space_guid=$("$cf" space --guid "$space_name" 2> /dev/null)
         else
-            org_guid=$(cf org --guid "$org_name" 2> /dev/null)
+            org_guid=$("$cf" org --guid "$org_name" 2> /dev/null)
             if [[ -z $org_guid ]]; then
                 return
             fi
 
-            spaces=$(cf curl "${cf_arguments[@]}" "/v2/spaces?q=organization_guid:$org_guid&q=name:$space_name" 2> /dev/null)
+            spaces=$("$cf" curl "${cf_arguments[@]}" "/v2/spaces?q=organization_guid:$org_guid&q=name:$space_name" 2> /dev/null)
             if [[ -z $spaces ]]; then
                 return
             fi
@@ -1397,14 +1400,14 @@ _fzf_complete_cf-envs() {
     shift 2
 
     _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <(
-        local app_guid=$(cf app "${cf_arguments[@]}" --guid "$app" 2> /dev/null)
+        local app_guid=$("$cf" app "${cf_arguments[@]}" --guid "$app" 2> /dev/null)
         if [[ -z $app_guid ]]; then
             return
         fi
 
         {
             echo name value
-            cf curl "${cf_arguments[@]}" /v2/apps/$app_guid/env 2> /dev/null |
+            "$cf" curl "${cf_arguments[@]}" /v2/apps/$app_guid/env 2> /dev/null |
                 jq -r '.environment_json | to_entries[] | "\(.key) \(.value)"' 2> /dev/null
         } | _fzf_complete_tabularize $fg[yellow]
     )
@@ -1420,7 +1423,7 @@ _fzf_complete_cf-service-keys-by-service-instance() {
     shift 2
 
     _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <(
-        cf "${cf_arguments[@]}" service-keys "$service_instance" 2> /dev/null |
+        "$cf" "${cf_arguments[@]}" service-keys "$service_instance" 2> /dev/null |
             awk 'NR > 1 && !/^$|^TIP:|^OK$/' |
             _fzf_complete_colorize $fg[yellow]
     )
@@ -1447,7 +1450,7 @@ _fzf_complete_cf-service-plans-by-service-instance() {
             service_params+=("q=space_guid:$space_guid")
         fi
 
-        local service_instances=$(cf curl "${cf_arguments[@]}" "/v2/service_instances?${(pj:&:)service_params}" 2> /dev/null)
+        local service_instances=$("$cf" curl "${cf_arguments[@]}" "/v2/service_instances?${(pj:&:)service_params}" 2> /dev/null)
         if [[ -z $service_instances ]]; then
             return
         fi
@@ -1457,7 +1460,7 @@ _fzf_complete_cf-service-plans-by-service-instance() {
             return
         fi
 
-        local service=$(cf curl "${cf_arguments[@]}" "$service_url" 2> /dev/null)
+        local service=$("$cf" curl "${cf_arguments[@]}" "$service_url" 2> /dev/null)
         if [[ -z $service ]]; then
             return
         fi
@@ -1467,7 +1470,7 @@ _fzf_complete_cf-service-plans-by-service-instance() {
             return
         fi
 
-        cf "${cf_arguments[@]}" marketplace -s "$service_name" 2> /dev/null |
+        "$cf" "${cf_arguments[@]}" marketplace -s "$service_name" 2> /dev/null |
             awk 'NR > 1 && !/^$|^TIP:|^OK$/' |
             _fzf_complete_colorize $fg[yellow]
     )
@@ -1483,7 +1486,7 @@ _fzf_complete_cf-spaces-by-org() {
     shift 2
 
     _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <(
-        local org_guid=$(cf org --guid "$org_name" 2> /dev/null)
+        local org_guid=$("$cf" org --guid "$org_name" 2> /dev/null)
 
         {
             echo name
@@ -1514,7 +1517,7 @@ _fzf_complete_cf-user-provided-service-instance-credentials() {
             service_params+=("q=space_guid:$space_guid")
         fi
 
-        local service_instances=$(cf curl "${cf_arguments[@]}" "/v2/user_provided_service_instances?${(pj:&:)service_params}" 2> /dev/null)
+        local service_instances=$("$cf" curl "${cf_arguments[@]}" "/v2/user_provided_service_instances?${(pj:&:)service_params}" 2> /dev/null)
         if [[ -z $service_instances ]]; then
             return
         fi
@@ -1538,7 +1541,7 @@ _fzf_complete_cf-curl-resources() {
     shift
 
     while [[ -n $url ]]; do
-        if ! response=$(cf curl "${cf_arguments[@]}" "$@" "$url" 2> /dev/null); then
+        if ! response=$("$cf" curl "${cf_arguments[@]}" "$@" "$url" 2> /dev/null); then
             return
         fi
         echo - "$response"
