@@ -25,7 +25,7 @@ _fzf_complete_cf() {
         return
     fi
 
-    if [[ $subcommand = (app|d|delete|disable-ssh|e|enable-ssh|env|events|get-health-check|logs|rename|restage|restart|rg|rs|sp|ssh-enabled|st|start|stop|tasks|v3-delete|v3-droplets|v3-env|v3-get-health-check|v3-packages|v3-restart|v3-start|v3-stop) ]]; then
+    if [[ $subcommand = (app|cancel-deployment|d|delete|disable-ssh|e|enable-ssh|env|events|get-health-check|logs|packages|rename|restage|restart|rg|rs|sp|ssh-enabled|st|start|stop|tasks|v3-delete|v3-droplets|v3-env|v3-get-health-check|v3-packages|v3-restart|v3-start|v3-stop) ]]; then
         resource=apps
         _fzf_complete_cf-resources '' "$@"
         return
@@ -33,12 +33,17 @@ _fzf_complete_cf() {
 
     if [[ $subcommand = (add-network-policy|remove-network-policy) ]]; then
         cf_options_argument_required+=(
-            --destination-app
             -o
             --port
             --protocol
             -s
         )
+
+        if [[ $cf_version = 6 ]]; then
+            cf_options_argument_required+=(
+                --destination-app
+            )
+        fi
 
         _fzf_complete_cf_parse_completing_option
 
@@ -49,20 +54,6 @@ _fzf_complete_cf() {
             else
                 resource=network-policies
             fi
-            _fzf_complete_cf-resources '' "$@"
-            return
-        fi
-
-        if [[ $completing_option = --destination-app ]]; then
-            local org_name=$(_fzf_complete_parse_option_arguments '-o' '' "${(F)cf_options_argument_required}" 'argument' "${arguments[@]}")
-            local space_name=$(_fzf_complete_parse_option_arguments '-s' '' "${(F)cf_options_argument_required}" 'argument' "${arguments[@]}")
-
-            if [[ -n $space_name ]]; then
-                _fzf_complete_cf-apps-by-org-space '' "$org_name" "$space_name" "$@"
-                return
-            fi
-
-            resource=apps
             _fzf_complete_cf-resources '' "$@"
             return
         fi
@@ -85,6 +76,29 @@ _fzf_complete_cf() {
             _fzf_complete_cf-resources '' "$@"
             return
         fi
+
+        if [[ $cf_version = 6 ]]; then
+            if [[ $completing_option != --destination-app ]]; then
+                return
+            fi
+        else
+            local destination_app
+            if destination_app=$(_fzf_complete_parse_argument 2 3 "${(F)cf_options_argument_required}" "${arguments[@]}") || [[ -n $completing_option ]]; then
+                return
+            fi
+        fi
+
+        local org_name=$(_fzf_complete_parse_option_arguments '-o' '' "${(F)cf_options_argument_required}" 'argument' "${arguments[@]}")
+        local space_name=$(_fzf_complete_parse_option_arguments '-s' '' "${(F)cf_options_argument_required}" 'argument' "${arguments[@]}")
+
+        if [[ -n $space_name ]]; then
+            _fzf_complete_cf-apps-by-org-space '' "$org_name" "$space_name" "$@"
+            return
+        fi
+
+        resource=apps
+        _fzf_complete_cf-resources '' "$@"
+        return
     fi
 
     if [[ $subcommand = (bind-service|bs|unbind-service|ub) ]]; then
@@ -118,6 +132,14 @@ _fzf_complete_cf() {
             -s
         )
 
+        if [[ $cf_version != 6 ]]; then
+            cf_options_argument_required+=(
+                --organization
+                --space
+                --strategy
+            )
+        fi
+
         _fzf_complete_cf_parse_completing_option
 
         local source_app
@@ -142,13 +164,13 @@ _fzf_complete_cf() {
             return
         fi
 
-        if [[ $completing_option = -o ]]; then
+        if [[ $completing_option = (-o|--organization) ]]; then
             resource=orgs
             _fzf_complete_cf-resources '' "$@"
             return
         fi
 
-        if [[ $completing_option = -s ]]; then
+        if [[ $completing_option = (-s|--space) ]]; then
             local org_name
 
             if org_name=$(_fzf_complete_parse_option_arguments '-o' '' "${(F)cf_options_argument_required}" 'argument' "${arguments[@]}"); then
@@ -215,6 +237,12 @@ _fzf_complete_cf() {
             --port
         )
 
+        if [[ $cf_version = 8 ]] && [[ $subcommand = map-route ]]; then
+            cf_options_argument_required+=(
+                --destination-protocol
+            )
+        fi
+
         _fzf_complete_cf_parse_completing_option
 
         local app
@@ -236,26 +264,46 @@ _fzf_complete_cf() {
         cf_options_argument_required+=(
             -b
             -c
-            -d
             --docker-image
             --docker-username
             --droplet
             -f
             --health-check-type
-            --hostname
             -i
             -k
             -m
-            -n
             -o
             -p
-            --route-path
             -s
             -t
             -u
-            --vars-file
             --var
+            --vars-file
         )
+
+        if [[ $cf_version = 6 ]]; then
+            cf_options_argument_required+=(
+                -d
+                --hostname
+                -n
+                --route-path
+            )
+        else
+            cf_options_argument_required+=(
+                --app-start-timeout
+                --buildpack
+                --disk
+                --endpoint
+                --instances
+                --manifest
+                --memory
+                --path
+                --stack
+                --start-command
+                --strategy
+                --task
+            )
+        fi
 
         _fzf_complete_cf_parse_completing_option
 
@@ -266,7 +314,7 @@ _fzf_complete_cf() {
             return
         fi
 
-        if [[ $completing_option = -b ]]; then
+        if [[ $completing_option = (-b|--buildpack) ]]; then
             resource=buildpacks
             _fzf_complete_cf-resources '' "$@"
             return
@@ -278,7 +326,7 @@ _fzf_complete_cf() {
             return
         fi
 
-        if [[ $completing_option = -s ]]; then
+        if [[ $completing_option = (-s|--stack) ]]; then
             resource=stacks
             _fzf_complete_cf-resources '' "$@"
             return
@@ -289,7 +337,7 @@ _fzf_complete_cf() {
     fi
 
     if [[ $subcommand = (restart-app-instance|v3-restart-app-instance) ]]; then
-        if [[ $subcommand = v3* ]]; then
+        if [[ $cf_version != 6 ]] || [[ $subcommand = v3* ]]; then
             cf_options_argument_required+=(
                 --process
             )
@@ -318,6 +366,14 @@ _fzf_complete_cf() {
             --name
         )
 
+        if [[ $cf_version != 6 ]]; then
+            cf_options_argument_required+=(
+                -c
+                --command
+                --process
+            )
+        fi
+
         _fzf_complete_cf_parse_completing_option
 
         local app
@@ -341,7 +397,7 @@ _fzf_complete_cf() {
     fi
 
     if [[ $subcommand = (scale|v3-scale) ]]; then
-        if [[ $subcommand = v3* ]]; then
+        if [[ $cf_version != 6 ]] || [[ $subcommand = v3* ]]; then
             cf_options_argument_required+=(
                 --process
             )
@@ -352,6 +408,12 @@ _fzf_complete_cf() {
             -k
             -m
         )
+
+        if [[ $cf_version = 8 ]]; then
+            cf_options_argument_required+=(
+                --instances
+            )
+        fi
 
         _fzf_complete_cf_parse_completing_option
 
@@ -364,7 +426,7 @@ _fzf_complete_cf() {
     fi
 
     if [[ $subcommand = (set-health-check|v3-set-health-check) ]]; then
-        if [[ $subcommand = v3* ]]; then
+        if [[ $cf_version != 6 ]] || [[ $subcommand = v3* ]]; then
             cf_options_argument_required+=(
                 --invocation-timeout
                 --process
@@ -386,7 +448,7 @@ _fzf_complete_cf() {
     fi
 
     if [[ $subcommand = (ssh|v3-ssh) ]]; then
-        if [[ $subcommand = v3* ]]; then
+        if [[ $cf_version != 6 ]] || [[ $subcommand = v3* ]]; then
             cf_options_argument_required+=(
                 --process
             )
@@ -415,7 +477,7 @@ _fzf_complete_cf() {
         fi
     fi
 
-    if [[ $subcommand = v3-create-package ]]; then
+    if [[ $subcommand = (create-package|v3-create-package) ]]; then
         cf_options_argument_required+=(
             --docker-image
             -o
@@ -442,10 +504,11 @@ _fzf_complete_cf() {
         fi
     fi
 
-    if [[ $subcommand = v3-set-droplet ]]; then
+    if [[ $subcommand = download-droplet ]]; then
         cf_options_argument_required+=(
-            -d
-            --droplet-guid
+            --droplet
+            -p
+            --path
         )
 
         _fzf_complete_cf_parse_completing_option
@@ -456,9 +519,37 @@ _fzf_complete_cf() {
             _fzf_complete_cf-resources '' "$@"
             return
         fi
+
+        if [[ $completing_option = -p ]]; then
+            if [[ $last_argument = -[^-]#p ]]; then
+                __fzf_generic_path_completion "$prefix" "$@" _fzf_compgen_path '' '' ' '
+                return
+            fi
+
+            __fzf_generic_path_completion "${prefix#$prefix_option}" "$@$prefix_option" _fzf_compgen_path '' '' ' '
+            return
+        fi
     fi
 
-    if [[ $subcommand = v3-stage ]]; then
+    if [[ $subcommand = (set-droplet|v3-set-droplet) ]]; then
+        if [[ $cf_version = 6 ]]; then
+            cf_options_argument_required+=(
+                -d
+                --droplet-guid
+            )
+
+            _fzf_complete_cf_parse_completing_option
+        fi
+
+        local app
+        if ! app=$(_fzf_complete_parse_argument 2 2 "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
+            resource=apps
+            _fzf_complete_cf-resources '' "$@"
+            return
+        fi
+    fi
+
+    if [[ $subcommand = (stage|stage-package|v3-stage) ]]; then
         cf_options_argument_required+=(
             --package-guid
         )
@@ -499,6 +590,12 @@ _fzf_complete_cf() {
             -s
         )
 
+        if [[ $cf_version != 6 ]]; then
+            cf_options_argument_required+=(
+                --stack
+            )
+        fi
+
         _fzf_complete_cf_parse_completing_option
 
         local buildpack
@@ -508,7 +605,7 @@ _fzf_complete_cf() {
             return
         fi
 
-        if [[ $completing_option = -s ]]; then
+        if [[ $completing_option = (-s|--stack) ]]; then
             resource=stacks
             _fzf_complete_cf-resources '' "$@"
             return
@@ -523,6 +620,15 @@ _fzf_complete_cf() {
             -s
         )
 
+        if [[ $cf_version != 6 ]]; then
+            cf_options_argument_required+=(
+                --path
+                --position
+                --rename
+                --stack
+            )
+        fi
+
         _fzf_complete_cf_parse_completing_option
 
         local buildpack
@@ -532,20 +638,20 @@ _fzf_complete_cf() {
             return
         fi
 
-        if [[ $completing_option = (--assign-stack|-s) ]]; then
+        if [[ $completing_option = (--assign-stack|-s|--stack) ]]; then
             resource=stacks
             _fzf_complete_cf-resources '' "$@"
             return
         fi
 
-        if [[ $completing_option = -i ]]; then
+        if [[ $completing_option = (-i|--position) ]]; then
             resource=buildpacks
             resource_column=2
             _fzf_complete_cf-resources '' "$@"
             return
         fi
 
-        if [[ $completing_option = -p ]]; then
+        if [[ $completing_option = (-p|--path) ]]; then
             if [[ $last_argument = -[^-]#p ]]; then
                 __fzf_generic_path_completion "$prefix" "$@" _fzf_compgen_path '' '' ' '
                 return
@@ -556,7 +662,7 @@ _fzf_complete_cf() {
         fi
     fi
 
-    if [[ $subcommand = (delete-domain|delete-shared-domain) ]]; then
+    if [[ $subcommand = (delete-domain|delete-private-domain|delete-shared-domain) ]]; then
         resource=domains
         _fzf_complete_cf-resources '' "$@"
         return
@@ -597,15 +703,28 @@ _fzf_complete_cf() {
             --path
         )
 
+        if [[ $cf_version != 6 ]]; then
+            cf_options_argument_required+=(
+                --hostname
+                -n
+                --port
+            )
+        fi
+
         _fzf_complete_cf_parse_completing_option
 
-        local host
-        if ! host=$(_fzf_complete_parse_argument 2 2 "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
-            return
+        local domain_index=2
+        if [[ $cf_version = 6 ]]; then
+            domain_index=3
+
+            local host
+            if ! host=$(_fzf_complete_parse_argument 2 2 "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
+                return
+            fi
         fi
 
         local domain
-        if ! domain=$(_fzf_complete_parse_argument 2 3 "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
+        if ! domain=$(_fzf_complete_parse_argument 2 "$domain_index" "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
             resource=domains
             _fzf_complete_cf-resources '' "$@"
             return
@@ -643,14 +762,31 @@ _fzf_complete_cf() {
     fi
 
     if [[ $subcommand = (m|marketplace) ]]; then
+        local service_offering=-e
+        if [[ $cf_version = 6 ]]; then
+            service_offering=-s
+        fi
+
         cf_options_argument_required+=(
-            -s
+            $service_offering
         )
+
+        if [[ $cf_version != 6 ]]; then
+            cf_options_argument_required+=(
+                -b
+            )
+        fi
 
         _fzf_complete_cf_parse_completing_option
 
-        if [[ $completing_option = -s ]]; then
+        if [[ $completing_option = $service_offering ]]; then
             resource=marketplace
+            _fzf_complete_cf-resources '' "$@"
+            return
+        fi
+
+        if [[ $completing_option = -b ]]; then
+            resource=service-brokers
             _fzf_complete_cf-resources '' "$@"
             return
         fi
@@ -681,7 +817,11 @@ _fzf_complete_cf() {
         local plan
         if [[ -n $service ]] && ! plan=$(_fzf_complete_parse_argument 2 3 "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
             resource=marketplace
-            cf_arguments+=(-s "$service")
+            if [[ $cf_version = 6 ]]; then
+                cf_arguments+=(-s "$service")
+            else
+                cf_arguments+=(-e "$service")
+            fi
 
             local service_broker
             if service_broker=$(_fzf_complete_parse_option_arguments '-b' '' "${(F)cf_options_argument_required}" 'argument' "${arguments[@]}"); then
@@ -723,7 +863,11 @@ _fzf_complete_cf() {
 
         if [[ -n $service ]] && [[ $completing_option = -p ]]; then
             resource=marketplace
-            cf_arguments+=(-s "$service")
+            if [[ $cf_version = 6 ]]; then
+                cf_arguments+=(-s "$service")
+            else
+                cf_arguments+=(-e "$service")
+            fi
 
             local service_broker
             if service_broker=$(_fzf_complete_parse_option_arguments '-b' '' "${(F)cf_options_argument_required}" 'argument' "${arguments[@]}"); then
@@ -738,8 +882,13 @@ _fzf_complete_cf() {
     if [[ $subcommand = purge-service-offering ]]; then
         cf_options_argument_required+=(
             -b
-            -p
         )
+
+        if [[ $cf_version = 6 ]]; then
+            cf_options_argument_required+=(
+                -p
+            )
+        fi
 
         _fzf_complete_cf_parse_completing_option
 
@@ -791,7 +940,7 @@ _fzf_complete_cf() {
         return
     fi
 
-    if [[ $subcommand = create-domain ]]; then
+    if [[ $subcommand = (create-domain|create-private-domain) ]]; then
         local org
         if ! org=$(_fzf_complete_parse_argument 2 2 "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
             resource=orgs
@@ -817,6 +966,14 @@ _fzf_complete_cf() {
     fi
 
     if [[ $subcommand = (set-org-role|unset-org-role) ]]; then
+        if [[ $cf_version != 6 ]]; then
+            cf_options_argument_required+=(
+                --origin
+            )
+
+            _fzf_complete_cf_parse_completing_option
+        fi
+
         local user
         if ! user=$(_fzf_complete_parse_argument 2 2 "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
             return
@@ -830,7 +987,7 @@ _fzf_complete_cf() {
         fi
     fi
 
-    if [[ $subcommand = set-quota ]]; then
+    if [[ $subcommand = (set-org-quota|set-quota) ]]; then
         local org
         if ! org=$(_fzf_complete_parse_argument 2 2 "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
             resource=orgs
@@ -840,13 +997,21 @@ _fzf_complete_cf() {
 
         local quota
         if ! quota=$(_fzf_complete_parse_argument 2 3 "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
-            resource=quotas
+            resource=org-quotas
             _fzf_complete_cf-resources '' "$@"
             return
         fi
     fi
 
     if [[ $subcommand = (set-space-role|unset-space-role) ]]; then
+        if [[ $cf_version != 6 ]]; then
+            cf_options_argument_required+=(
+                --origin
+            )
+
+            _fzf_complete_cf_parse_completing_option
+        fi
+
         local user
         if ! user=$(_fzf_complete_parse_argument 2 2 "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
             return
@@ -931,13 +1096,13 @@ _fzf_complete_cf() {
         return
     fi
 
-    if [[ $subcommand = (delete-quota|quota) ]]; then
-        resource=quotas
+    if [[ $subcommand = (delete-org-quota|delete-quota|org-quota|quota) ]]; then
+        resource=org-quotas
         _fzf_complete_cf-resources '' "$@"
         return
     fi
 
-    if [[ $subcommand = update-quota ]]; then
+    if [[ $subcommand = (update-org-quota|update-quota) ]]; then
         cf_options_argument_required+=(
             -a
             -i
@@ -952,7 +1117,7 @@ _fzf_complete_cf() {
 
         local quota
         if ! quota=$(_fzf_complete_parse_argument 2 2 "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
-            resource=quotas
+            resource=org-quotas
             _fzf_complete_cf-resources '' "$@"
             return
         fi
@@ -1135,15 +1300,20 @@ _fzf_complete_cf() {
 
         _fzf_complete_cf_parse_completing_option
 
-        local space
-        if ! space=$(_fzf_complete_parse_argument 2 2 "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
-            resource=spaces
-            _fzf_complete_cf-resources '' "$@"
-            return
+        local domain_index=2
+        if [[ $cf_version = 6 ]]; then
+            domain_index=3
+
+            local space
+            if ! space=$(_fzf_complete_parse_argument 2 2 "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
+                resource=spaces
+                _fzf_complete_cf-resources '' "$@"
+                return
+            fi
         fi
 
         local domain
-        if ! domain=$(_fzf_complete_parse_argument 2 3 "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
+        if ! domain=$(_fzf_complete_parse_argument 2 "$domain_index" "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
             resource=domains
             _fzf_complete_cf-resources '' "$@"
             return
@@ -1237,6 +1407,12 @@ _fzf_complete_cf-resources() {
 
     if [[ $resource != (running-security-groups|staging-security-groups) ]]; then
         fzf_options+=(--header-lines=1)
+    fi
+
+    if [[ $cf_version = 6 ]]; then
+        if [[ $resource = org-quotas ]]; then
+            resource=quotas
+        fi
     fi
 
     _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <(
@@ -1460,7 +1636,12 @@ _fzf_complete_cf-service-plans-by-service-instance() {
             return
         fi
 
-        "$cf" "${cf_arguments[@]}" marketplace -s "$service_name" 2> /dev/null |
+        local service_offering=-e
+        if [[ $cf_version = 6 ]]; then
+            service_offering=-s
+        fi
+
+        "$cf" "${cf_arguments[@]}" marketplace "$service_offering" "$service_name" 2> /dev/null |
             awk 'NR > 1 && !/^$|^TIP:|^OK$/' |
             _fzf_complete_colorize $fg[yellow]
     )
