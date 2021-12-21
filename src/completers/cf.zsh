@@ -1212,7 +1212,7 @@ _fzf_complete_cf() {
         fi
     fi
 
-    if [[ $subcommand = (delete-service|ds|purge-service-instance|rename-service|service|service-keys|sk) ]]; then
+    if [[ $subcommand = (delete-service|ds|purge-service-instance|rename-service|service|service-keys|sk|upgrade-service) ]]; then
         resource=services
         _fzf_complete_cf-resources '' "$@"
         return
