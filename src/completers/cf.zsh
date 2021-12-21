@@ -1448,42 +1448,42 @@ _fzf_complete_cf-resources_post() {
         fi
     elif [[ $resource = routes ]]; then
         awk '
-            # space + domain + port + type
-            # space + domain + port + type + apps
-            # space + domain + port + type + service
-            # space + domain + port + type + apps + service
+            # space + domain + port + type/protocol
+            # space + domain + port + type/protocol + apps
+            # space + domain + port + type/protocol + service
+            # space + domain + port + type/protocol + apps + service
             $3 ~ /^[0-9]+$/ {
                 print $2, "--port=" $3
             }
 
-            # space + host + domain
-            # space + host + domain + apps
-            # space + host + domain + service
-            # space + host + domain + apps + serivce
+            # space + host + domain + (protocol)
+            # space + host + domain + (protocol) + apps
+            # space + host + domain + (protocol) + service
+            # space + host + domain + (protocol) + apps + serivce
             NF >= 3 && $2 !~ /\./ && $3 !~ /^[0-9]+$/ && $4 !~ /\// {
                 print $3, "--hostname=" $2
             }
 
-            # space + host + domain + path
-            # space + host + domain + path + apps
-            # space + host + domain + path + service
-            # space + host + domain + path + apps + service
+            # space + host + domain + path + (protocol)
+            # space + host + domain + path + (protocol) + apps
+            # space + host + domain + path + (protocol) + service
+            # space + host + domain + path + (protocol) + apps + service
             NF >= 4 && $2 !~ /\./ && $3 !~ /^[0-9]+$/ && $4 ~ /\// {
                 print $3, "--hostname=" $2, "--path=" $4
             }
 
-            # space + domain + path
-            # space + domain + path + apps
-            # space + domain + path + service
-            # space + domain + path + apps + serivce
+            # space + domain + path + (protocol)
+            # space + domain + path + (protocol) + apps
+            # space + domain + path + (protocol) + service
+            # space + domain + path + (protocol) + apps + serivce
             NF >= 3 && $2 ~ /\./ && $3 ~ /\// {
                 print $2, "--path=" $3
             }
 
-            # space + domain
-            # space + domain + apps
-            # space + domain + service
-            # space + domain + apps + service
+            # space + domain + (protocol)
+            # space + domain + (protocol) + apps
+            # space + domain + (protocol) + service
+            # space + domain + (protocol) + apps + service
             NF >= 2 && $2 ~ /\./ && $3 !~ /\// && $3 !~ /^[0-9]+$/ {
                 print $2
             }
