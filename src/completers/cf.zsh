@@ -1441,7 +1441,11 @@ _fzf_complete_cf-resources_post() {
             awk '{ print $1 }'
         fi
     elif [[ $resource = network-policies ]]; then
-        awk '{ print $1, "--destination-app=" $2, "--protocol=" $3, "--port=" $4, "-o", $6, "-s", $5 }'
+        if [[ $cf_version = 6 ]]; then
+            awk '{ print $1, "--destination-app=" $2, "--protocol=" $3, "--port=" $4, "-o", $6, "-s", $5 }'
+        else
+            awk '{ print $1, $2, "--protocol=" $3, "--port=" $4, "-o", $6, "-s", $5 }'
+        fi
     elif [[ $resource = routes ]]; then
         awk '
             # space + domain + port + type

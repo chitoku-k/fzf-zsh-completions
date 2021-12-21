@@ -20440,6 +20440,7 @@
         'app-01   app-02        tcp        8080        space-01            org-01'
     )
 
+    cf_version=6
     resource=network-policies
     run _fzf_complete_cf-resources_post <<< ${(F)input}
 
