@@ -1254,67 +1254,35 @@ _fzf_complete_cf-resources_post() {
                 print $2, "--port=" $3
             }
 
-            # space + host + domain + path + apps + service
-            NF == 6 && $3 !~ /^[0-9]+$/ && $4 ~ /\// {
-                print $3, "--hostname=" $2, "--path=" $4
-            }
-
-            # space + host + domain + apps + serivce
-            NF == 5 && $2 !~ /\./ && $3 !~ /^[0-9]+$/ && $4 !~ /\// {
-                print $3, "--hostname=" $2
-            }
-
-            # space + host + domain + path + apps
-            # space + host + domain + path + service
-            NF == 5 && $2 !~ /\./ && $3 !~ /^[0-9]+$/ && $4 ~ /\// {
-                print $3, "--hostname=" $2, "--path=" $4
-            }
-
-            # space + domain + path + apps + serivce
-            NF == 5 && $2 ~ /\./ && $3 ~ /\// {
-                print $2, "--path=" $3
-            }
-
+            # space + host + domain
             # space + host + domain + apps
             # space + host + domain + service
-            NF == 4 && $2 !~ /\./ && $3 !~ /^[0-9]+$/ && $4 !~ /\// {
+            # space + host + domain + apps + serivce
+            NF >= 3 && $2 !~ /\./ && $3 !~ /^[0-9]+$/ && $4 !~ /\// {
                 print $3, "--hostname=" $2
             }
 
             # space + host + domain + path
-            NF == 4 && $2 !~ /\./ && $3 !~ /^[0-9]+$/ && $4 ~ /\// {
+            # space + host + domain + path + apps
+            # space + host + domain + path + service
+            # space + host + domain + path + apps + service
+            NF >= 4 && $2 !~ /\./ && $3 !~ /^[0-9]+$/ && $4 ~ /\// {
                 print $3, "--hostname=" $2, "--path=" $4
             }
 
-            # space + domain + apps + service
-            NF == 4 && $2 ~ /\./ && $3 !~ /^[0-9]+$/ && $3 !~ /\// {
-                print $2
-            }
-
+            # space + domain + path
             # space + domain + path + apps
             # space + domain + path + service
-            NF == 4 && $2 ~ /\./ && $3 ~ /\// {
+            # space + domain + path + apps + serivce
+            NF >= 3 && $2 ~ /\./ && $3 ~ /\// {
                 print $2, "--path=" $3
-            }
-
-            # space + host + domain
-            NF == 3 && $2 !~ /\./ {
-                print $3, "--hostname=" $2
-            }
-
-            # space + domain + path
-            NF == 3 && $2 ~ /\./ && $3 ~ /\// {
-                print $2, "--path=" $3
-            }
-
-            # space + domain + apps
-            # space + domain + service
-            NF == 3 && $2 ~ /\./ && $3 !~ /\// {
-                print $2
             }
 
             # space + domain
-            NF == 2 {
+            # space + domain + apps
+            # space + domain + service
+            # space + domain + apps + service
+            NF >= 2 && $2 ~ /\./ && $3 !~ /\// && $3 !~ /^[0-9]+$/ {
                 print $2
             }
         '
