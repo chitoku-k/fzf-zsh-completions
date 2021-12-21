@@ -537,7 +537,14 @@ _fzf_complete_cf() {
             return
         fi
 
-        if [[ $completing_option = -p ]]; then
+        if [[ -n $app ]] && [[ $completing_option = --droplet ]]; then
+            resource=droplets
+            cf_arguments+=("$app")
+            _fzf_complete_cf-resources '' "$@"
+            return
+        fi
+
+        if [[ $completing_option = (-p|--path) ]]; then
             if [[ $last_argument = -[^-]#p ]]; then
                 __fzf_generic_path_completion "$prefix" "$@" _fzf_compgen_path '' '' ' '
                 return
@@ -564,6 +571,23 @@ _fzf_complete_cf() {
             _fzf_complete_cf-resources '' "$@"
             return
         fi
+
+        if [[ $cf_version = 6 ]]; then
+            if [[ -n $app ]] && [[ $completing_option = (-d|--droplet-guid) ]]; then
+                resource=droplets
+                cf_arguments+=("$app")
+                _fzf_complete_cf-resources '' "$@"
+                return
+            fi
+        else
+            local droplet
+            if [[ -n $app ]] && ! droplet=$(_fzf_complete_parse_argument 2 3 "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
+                resource=droplets
+                cf_arguments+=("$app")
+                _fzf_complete_cf-resources '' "$@"
+                return
+            fi
+        fi
     fi
 
     if [[ $subcommand = (stage|stage-package|v3-stage) ]]; then
@@ -576,6 +600,13 @@ _fzf_complete_cf() {
         local app
         if ! app=$(_fzf_complete_parse_argument 2 2 "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
             resource=apps
+            _fzf_complete_cf-resources '' "$@"
+            return
+        fi
+
+        if [[ -n $app ]] && [[ $completing_option = --package-guid ]]; then
+            resource=packages
+            cf_arguments+=("$app")
             _fzf_complete_cf-resources '' "$@"
             return
         fi
@@ -1427,6 +1458,10 @@ _fzf_complete_cf-resources() {
     fi
 
     if [[ $cf_version = 6 ]]; then
+        if [[ $resource = (droplets|packages) ]]; then
+            resource=v3-$resource
+        fi
+
         if [[ $resource = org-quotas ]]; then
             resource=quotas
         fi
