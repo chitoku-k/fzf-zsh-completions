@@ -316,6 +316,7 @@ _fzf_complete_cf() {
 
         if [[ $completing_option = (-b|--buildpack) ]]; then
             resource=buildpacks
+            resource_column=2
             _fzf_complete_cf-resources '' "$@"
             return
         fi
@@ -627,7 +628,6 @@ _fzf_complete_cf() {
         local position
         if ! position=$(_fzf_complete_parse_argument 2 4 "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
             resource=buildpacks
-            resource_column=2
             _fzf_complete_cf-resources '' "$@"
             return
         fi
@@ -649,6 +649,7 @@ _fzf_complete_cf() {
         local buildpack
         if ! buildpack=$(_fzf_complete_parse_argument 2 2 "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
             resource=buildpacks
+            resource_column=2
             _fzf_complete_cf-resources '' "$@"
             return
         fi
@@ -682,6 +683,7 @@ _fzf_complete_cf() {
         local buildpack
         if ! buildpack=$(_fzf_complete_parse_argument 2 2 "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
             resource=buildpacks
+            resource_column=2
             _fzf_complete_cf-resources '' "$@"
             return
         fi
@@ -694,7 +696,6 @@ _fzf_complete_cf() {
 
         if [[ $completing_option = (-i|--position) ]]; then
             resource=buildpacks
-            resource_column=2
             _fzf_complete_cf-resources '' "$@"
             return
         fi
@@ -1482,7 +1483,21 @@ _fzf_complete_cf-resources() {
 }
 
 _fzf_complete_cf-resources_post() {
-    if [[ $resource = marketplace ]]; then
+    if [[ $resource = buildpacks ]]; then
+        if [[ $resource_column = 1 ]]; then
+            if [[ $cf_version != 6 ]]; then
+                awk '{ print $1 }'
+            else
+                awk '{ print $2 }'
+            fi
+        elif [[ $resource_column = 2 ]]; then
+            if [[ $cf_version != 6 ]]; then
+                awk '{ print $2, "--stack=" $3 }'
+            else
+                awk '{ print $1, "-s", $6 }'
+            fi
+        fi
+    elif [[ $resource = marketplace ]]; then
         if [[ -n ${cf_options_argument_required[(r)-b]} ]]; then
             if [[ -n $completing_option ]]; then
                 awk '{ print $1, "-b", $NF }'
@@ -1493,10 +1508,10 @@ _fzf_complete_cf-resources_post() {
             awk '{ print $1 }'
         fi
     elif [[ $resource = network-policies ]]; then
-        if [[ $cf_version = 6 ]]; then
-            awk '{ print $1, "--destination-app=" $2, "--protocol=" $3, "--port=" $4, "-o", $6, "-s", $5 }'
-        else
+        if [[ $cf_version != 6 ]]; then
             awk '{ print $1, $2, "--protocol=" $3, "--port=" $4, "-o", $6, "-s", $5 }'
+        else
+            awk '{ print $1, "--destination-app=" $2, "--protocol=" $3, "--port=" $4, "-o", $6, "-s", $5 }'
         fi
     elif [[ $resource = routes ]]; then
         awk '
