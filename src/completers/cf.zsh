@@ -802,7 +802,7 @@ _fzf_complete_cf() {
         fi
     fi
 
-    if [[ $subcommand = delete-route ]]; then
+    if [[ $subcommand = (delete-route|ro|route) ]]; then
         cf_options_argument_required+=(
             --hostname
             -n
