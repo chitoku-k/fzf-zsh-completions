@@ -377,6 +377,28 @@ _fzf_complete_cf() {
         fi
     fi
 
+    if [[ $subcommand = (revision|rollback) ]]; then
+        cf_options_argument_required+=(
+            --version
+        )
+
+        _fzf_complete_cf_parse_completing_option
+
+        local app
+        if ! app=$(_fzf_complete_parse_argument 2 2 "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
+            resource=apps
+            _fzf_complete_cf-resources '' "$@"
+            return
+        fi
+
+        if [[ -n $app ]] && [[ $completing_option = --version ]]; then
+            resource=revisions
+            cf_arguments+=("$app")
+            _fzf_complete_cf-resources '' "$@"
+            return
+        fi
+    fi
+
     if [[ $subcommand = (rt|run-task) ]]; then
         cf_options_argument_required+=(
             -k
