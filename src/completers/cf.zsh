@@ -682,6 +682,12 @@ _fzf_complete_cf() {
         if [[ -n $service ]] && ! plan=$(_fzf_complete_parse_argument 2 3 "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
             resource=marketplace
             cf_arguments+=(-s "$service")
+
+            local service_broker
+            if service_broker=$(_fzf_complete_parse_option_arguments '-b' '' "${(F)cf_options_argument_required}" 'argument' "${arguments[@]}"); then
+                cf_arguments+=(-b "$service_broker")
+            fi
+
             _fzf_complete_cf-resources '' "$@"
             return
         fi
@@ -718,6 +724,12 @@ _fzf_complete_cf() {
         if [[ -n $service ]] && [[ $completing_option = -p ]]; then
             resource=marketplace
             cf_arguments+=(-s "$service")
+
+            local service_broker
+            if service_broker=$(_fzf_complete_parse_option_arguments '-b' '' "${(F)cf_options_argument_required}" 'argument' "${arguments[@]}"); then
+                cf_arguments+=(-b "$service_broker")
+            fi
+
             _fzf_complete_cf-resources '' "$@"
             return
         fi
