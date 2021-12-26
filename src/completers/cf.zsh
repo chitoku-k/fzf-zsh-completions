@@ -229,6 +229,105 @@ _fzf_complete_cf() {
         fi
     fi
 
+    if [[ $subcommand = (labels|set-label|unset-label) ]]; then
+        local -A label_resource_commands=()
+
+        cf_options_argument_required+=(
+            -b
+            --broker
+            -e
+            --offering
+            -s
+            --stack
+        )
+
+        _fzf_complete_cf_parse_completing_option
+
+        if [[ $cf_version != 6 ]]; then
+            label_resource_commands+=(
+                app              apps
+                buildpack        buildpacks
+                domain           domains
+                org              orgs
+                route            routes
+                service-broker   service-brokers
+                service-offering marketplace
+                service-plan     marketplace
+                space            spaces
+                stack            stacks
+            )
+        fi
+
+        if [[ $cf_version = 8 ]]; then
+            label_resource_commands+=(
+                service-instance services
+            )
+        fi
+
+        local service_broker=$(_fzf_complete_parse_option_arguments '-b' '--broker' "${(F)cf_options_argument_required}" 'argument' "${arguments[@]}")
+        local service_offering=$(_fzf_complete_parse_option_arguments '-e' '--offering' "${(F)cf_options_argument_required}" 'argument' "${arguments[@]}")
+
+        if [[ $completing_option = (-b|--broker) ]]; then
+            resource=service-brokers
+            _fzf_complete_cf-resources '' "$@"
+            return
+        fi
+
+        if [[ $completing_option = (-e|--offering) ]]; then
+            resource=marketplace
+            if [[ -n $service_broker ]]; then
+                cf_arguments+=(-b "$service_broker")
+            fi
+            _fzf_complete_cf-resources '' "$@"
+            return
+        fi
+
+        if [[ $completing_option = (-s|--stack) ]]; then
+            resource=stacks
+            _fzf_complete_cf-resources '' "$@"
+            return
+        fi
+
+        local label_resource
+        if ! label_resource=$(_fzf_complete_parse_argument 2 2 "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
+            _fzf_complete_constants '' "${(F)${(ko)label_resource_commands[@]}}" "$@"
+            return
+        fi
+
+        local label_resource_name
+        if ! label_resource_name=$(_fzf_complete_parse_argument 2 3 "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
+            resource=${label_resource_commands[$label_resource]}
+            if [[ -z $resource ]]; then
+                return
+            fi
+
+            case $label_resource in
+                buildpack)
+                    resource_column=2
+                    ;;
+
+                route)
+                    resource_column=route-path
+                    ;;
+
+                service-plan)
+                    if [[ -n $service_broker ]]; then
+                        cf_arguments+=(-b "$service_broker")
+                    fi
+
+                    if [[ -n $service_offering ]]; then
+                        cf_arguments+=(-e "$service_offering")
+                    else
+                        return
+                    fi
+                    ;;
+            esac
+
+            _fzf_complete_cf-resources '' "$@"
+            return
+        fi
+    fi
+
     if [[ $subcommand = (map-route|unmap-route) ]]; then
         cf_options_argument_required+=(
             --hostname
@@ -1536,43 +1635,60 @@ _fzf_complete_cf-resources_post() {
             awk '{ print $1, "--destination-app=" $2, "--protocol=" $3, "--port=" $4, "-o", $6, "-s", $5 }'
         fi
     elif [[ $resource = routes ]]; then
-        awk '
-            # space + domain + port + type/protocol
-            # space + domain + port + type/protocol + apps
-            # space + domain + port + type/protocol + service
-            # space + domain + port + type/protocol + apps + service
+        awk \
+            -v resource_column=$resource_column '
+            # space + domain + port + type/protocol + (app-protocol)
+            # space + domain + port + type/protocol + (app-protocol) + apps
+            # space + domain + port + type/protocol + (app-protocol) + service
+            # space + domain + port + type/protocol + (app-protocol) + apps + service
             $3 ~ /^[0-9]+$/ {
-                print $2, "--port=" $3
+                if (resource_column == "route-path") {
+                    print $2 ":" $3
+                } else {
+                    print $2, "--port=" $3
+                }
             }
 
-            # space + host + domain + (protocol)
-            # space + host + domain + (protocol) + apps
-            # space + host + domain + (protocol) + service
-            # space + host + domain + (protocol) + apps + serivce
+            # space + host + domain + (protocol) + (app-protocol)
+            # space + host + domain + (protocol) + (app-protocol) + apps
+            # space + host + domain + (protocol) + (app-protocol) + service
+            # space + host + domain + (protocol) + (app-protocol) + apps + serivce
             NF >= 3 && $2 !~ /\./ && $3 !~ /^[0-9]+$/ && $4 !~ /\// {
-                print $3, "--hostname=" $2
+                if (resource_column == "route-path") {
+                    print $2 "." $3
+                } else {
+                    print $3, "--hostname=" $2
+                }
             }
 
-            # space + host + domain + path + (protocol)
-            # space + host + domain + path + (protocol) + apps
-            # space + host + domain + path + (protocol) + service
-            # space + host + domain + path + (protocol) + apps + service
+            # space + host + domain + path + (protocol) + (app-protocol)
+            # space + host + domain + path + (protocol) + (app-protocol) + apps
+            # space + host + domain + path + (protocol) + (app-protocol) + service
+            # space + host + domain + path + (protocol) + (app-protocol) + apps + service
             NF >= 4 && $2 !~ /\./ && $3 !~ /^[0-9]+$/ && $4 ~ /\// {
-                print $3, "--hostname=" $2, "--path=" $4
+                if (resource_column == "route-path") {
+                    print $2 "." $3 $4
+                } else {
+                    print $3, "--hostname=" $2, "--path=" $4
+                }
             }
 
-            # space + domain + path + (protocol)
-            # space + domain + path + (protocol) + apps
-            # space + domain + path + (protocol) + service
-            # space + domain + path + (protocol) + apps + serivce
+            # space + domain + path + (protocol) + (app-protocol)
+            # space + domain + path + (protocol) + (app-protocol) + apps
+            # space + domain + path + (protocol) + (app-protocol) + service
+            # space + domain + path + (protocol) + (app-protocol) + apps + serivce
             NF >= 3 && $2 ~ /\./ && $3 ~ /\// {
-                print $2, "--path=" $3
+                if (resource_column == "route-path") {
+                    print $2 $3
+                } else {
+                    print $2, "--path=" $3
+                }
             }
 
-            # space + domain + (protocol)
-            # space + domain + (protocol) + apps
-            # space + domain + (protocol) + service
-            # space + domain + (protocol) + apps + service
+            # space + domain + (protocol) + (app-protocol)
+            # space + domain + (protocol) + (app-protocol) + apps
+            # space + domain + (protocol) + (app-protocol) + service
+            # space + domain + (protocol) + (app-protocol) + apps + service
             NF >= 2 && $2 ~ /\./ && $3 !~ /\// && $3 !~ /^[0-9]+$/ {
                 print $2
             }
