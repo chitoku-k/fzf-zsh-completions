@@ -1254,7 +1254,17 @@ _fzf_complete_cf-resources() {
 }
 
 _fzf_complete_cf-resources_post() {
-    if [[ $resource = network-policies ]]; then
+    if [[ $resource = marketplace ]]; then
+        if [[ -n ${cf_options_argument_required[(r)-b]} ]]; then
+            if [[ -n $completing_option ]]; then
+                awk '{ print $1, "-b", $NF }'
+            else
+                awk '{ print "-b", $NF, $1 }'
+            fi
+        else
+            awk '{ print $1 }'
+        fi
+    elif [[ $resource = network-policies ]]; then
         awk '{ print $1, "--destination-app=" $2, "--protocol=" $3, "--port=" $4, "-o", $6, "-s", $5 }'
     elif [[ $resource = routes ]]; then
         awk '
