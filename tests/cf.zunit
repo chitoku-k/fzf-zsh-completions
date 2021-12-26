@@ -11496,6 +11496,110 @@
     _fzf_complete_cf 'cf create-service service-01 '
 }
 
+@test 'Testing completion: cf create-service -b service-broker-01 service-01 **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 6.53.0+8e2b70a4a.2020-10-01'
+    }
+
+    cf_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'marketplace'
+        assert $2 same_as '-s'
+        assert $3 same_as 'service-01'
+        assert $4 same_as '-b'
+        assert $5 same_as 'service-broker-01'
+
+        echo 'Getting service plan information for service service-01 as user-01...'
+        echo 'OK'
+        echo ''
+        echo 'service plan   description       free or paid'
+        echo 'plan-01        A plan 01         free'
+        echo 'plan-02        A plan 02         free'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf create-service -b service-broker-01 service-01 '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf create-service -b service-broker-01 service-01 '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}service ${reset_color}plan   description       free or paid"
+        assert ${lines[2]} same_as "${fg[yellow]}plan-01 ${reset_color}       A plan 01         free"
+        assert ${lines[3]} same_as "${fg[yellow]}plan-02 ${reset_color}       A plan 02         free"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf create-service -b service-broker-01 service-01 '
+}
+
+@test 'Testing completion: cf create-service -bservice-broker-01 service-01 **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 6.53.0+8e2b70a4a.2020-10-01'
+    }
+
+    cf_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'marketplace'
+        assert $2 same_as '-s'
+        assert $3 same_as 'service-01'
+        assert $4 same_as '-b'
+        assert $5 same_as 'service-broker-01'
+
+        echo 'Getting service plan information for service service-01 as user-01...'
+        echo 'OK'
+        echo ''
+        echo 'service plan   description       free or paid'
+        echo 'plan-01        A plan 01         free'
+        echo 'plan-02        A plan 02         free'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf create-service -bservice-broker-01 service-01 '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf create-service -bservice-broker-01 service-01 '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}service ${reset_color}plan   description       free or paid"
+        assert ${lines[2]} same_as "${fg[yellow]}plan-01 ${reset_color}       A plan 01         free"
+        assert ${lines[3]} same_as "${fg[yellow]}plan-02 ${reset_color}       A plan 02         free"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf create-service -bservice-broker-01 service-01 '
+}
+
 @test 'Testing completion: cf create-service -b **' {
     cf_mock_1() {
         assert $# equals 1
@@ -11688,6 +11792,110 @@
 
     prefix=
     _fzf_complete_cf 'cf cs service-01 '
+}
+
+@test 'Testing completion: cf cs -b service-broker-01 service-01 **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 6.53.0+8e2b70a4a.2020-10-01'
+    }
+
+    cf_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'marketplace'
+        assert $2 same_as '-s'
+        assert $3 same_as 'service-01'
+        assert $4 same_as '-b'
+        assert $5 same_as 'service-broker-01'
+
+        echo 'Getting service plan information for service service-01 as user-01...'
+        echo 'OK'
+        echo ''
+        echo 'service plan   description       free or paid'
+        echo 'plan-01        A plan 01         free'
+        echo 'plan-02        A plan 02         free'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf cs -b service-broker-01 service-01 '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf cs -b service-broker-01 service-01 '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}service ${reset_color}plan   description       free or paid"
+        assert ${lines[2]} same_as "${fg[yellow]}plan-01 ${reset_color}       A plan 01         free"
+        assert ${lines[3]} same_as "${fg[yellow]}plan-02 ${reset_color}       A plan 02         free"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf cs -b service-broker-01 service-01 '
+}
+
+@test 'Testing completion: cf cs -bservice-broker-01 service-01 **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 6.53.0+8e2b70a4a.2020-10-01'
+    }
+
+    cf_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'marketplace'
+        assert $2 same_as '-s'
+        assert $3 same_as 'service-01'
+        assert $4 same_as '-b'
+        assert $5 same_as 'service-broker-01'
+
+        echo 'Getting service plan information for service service-01 as user-01...'
+        echo 'OK'
+        echo ''
+        echo 'service plan   description       free or paid'
+        echo 'plan-01        A plan 01         free'
+        echo 'plan-02        A plan 02         free'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf cs -bservice-broker-01 service-01 '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf cs -bservice-broker-01 service-01 '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}service ${reset_color}plan   description       free or paid"
+        assert ${lines[2]} same_as "${fg[yellow]}plan-01 ${reset_color}       A plan 01         free"
+        assert ${lines[3]} same_as "${fg[yellow]}plan-02 ${reset_color}       A plan 02         free"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf cs -bservice-broker-01 service-01 '
 }
 
 @test 'Testing completion: cf cs -b **' {
@@ -12024,6 +12232,214 @@
 
     prefix=-o
     _fzf_complete_cf 'cf disable-service-access '
+}
+
+@test 'Testing completion: cf disable-service-access service-01 -b service-broker-01 -p **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 6.53.0+8e2b70a4a.2020-10-01'
+    }
+
+    cf_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'marketplace'
+        assert $2 same_as '-s'
+        assert $3 same_as 'service-01'
+        assert $4 same_as '-b'
+        assert $5 same_as 'service-broker-01'
+
+        echo 'Getting service plan information for service service-01 as user-01...'
+        echo 'OK'
+        echo ''
+        echo 'service plan   description       free or paid'
+        echo 'plan-01        A plan 01         free'
+        echo 'plan-02        A plan 02         free'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf disable-service-access service-01 -b service-broker-01 -p '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf disable-service-access service-01 -b service-broker-01 -p '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}service ${reset_color}plan   description       free or paid"
+        assert ${lines[2]} same_as "${fg[yellow]}plan-01 ${reset_color}       A plan 01         free"
+        assert ${lines[3]} same_as "${fg[yellow]}plan-02 ${reset_color}       A plan 02         free"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf disable-service-access service-01 -b service-broker-01 -p '
+}
+
+@test 'Testing completion: cf disable-service-access service-01 -b service-broker-01 -p**' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 6.53.0+8e2b70a4a.2020-10-01'
+    }
+
+    cf_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'marketplace'
+        assert $2 same_as '-s'
+        assert $3 same_as 'service-01'
+        assert $4 same_as '-b'
+        assert $5 same_as 'service-broker-01'
+
+        echo 'Getting service plan information for service service-01 as user-01...'
+        echo 'OK'
+        echo ''
+        echo 'service plan   description       free or paid'
+        echo 'plan-01        A plan 01         free'
+        echo 'plan-02        A plan 02         free'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf disable-service-access service-01 -b service-broker-01 '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf disable-service-access service-01 -b service-broker-01 -p'
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}service ${reset_color}plan   description       free or paid"
+        assert ${lines[2]} same_as "${fg[yellow]}plan-01 ${reset_color}       A plan 01         free"
+        assert ${lines[3]} same_as "${fg[yellow]}plan-02 ${reset_color}       A plan 02         free"
+    }
+
+    prefix=-p
+    _fzf_complete_cf 'cf disable-service-access service-01 -b service-broker-01 '
+}
+
+@test 'Testing completion: cf disable-service-access service-01 -bservice-broker-01 -p **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 6.53.0+8e2b70a4a.2020-10-01'
+    }
+
+    cf_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'marketplace'
+        assert $2 same_as '-s'
+        assert $3 same_as 'service-01'
+        assert $4 same_as '-b'
+        assert $5 same_as 'service-broker-01'
+
+        echo 'Getting service plan information for service service-01 as user-01...'
+        echo 'OK'
+        echo ''
+        echo 'service plan   description       free or paid'
+        echo 'plan-01        A plan 01         free'
+        echo 'plan-02        A plan 02         free'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf disable-service-access service-01 -bservice-broker-01 -p '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf disable-service-access service-01 -bservice-broker-01 -p '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}service ${reset_color}plan   description       free or paid"
+        assert ${lines[2]} same_as "${fg[yellow]}plan-01 ${reset_color}       A plan 01         free"
+        assert ${lines[3]} same_as "${fg[yellow]}plan-02 ${reset_color}       A plan 02         free"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf disable-service-access service-01 -bservice-broker-01 -p '
+}
+
+@test 'Testing completion: cf disable-service-access service-01 -bservice-broker-01 -p**' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 6.53.0+8e2b70a4a.2020-10-01'
+    }
+
+    cf_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'marketplace'
+        assert $2 same_as '-s'
+        assert $3 same_as 'service-01'
+        assert $4 same_as '-b'
+        assert $5 same_as 'service-broker-01'
+
+        echo 'Getting service plan information for service service-01 as user-01...'
+        echo 'OK'
+        echo ''
+        echo 'service plan   description       free or paid'
+        echo 'plan-01        A plan 01         free'
+        echo 'plan-02        A plan 02         free'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf disable-service-access service-01 -bservice-broker-01 '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf disable-service-access service-01 -bservice-broker-01 -p'
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}service ${reset_color}plan   description       free or paid"
+        assert ${lines[2]} same_as "${fg[yellow]}plan-01 ${reset_color}       A plan 01         free"
+        assert ${lines[3]} same_as "${fg[yellow]}plan-02 ${reset_color}       A plan 02         free"
+    }
+
+    prefix=-p
+    _fzf_complete_cf 'cf disable-service-access service-01 -bservice-broker-01 '
 }
 
 @test 'Testing completion: cf disable-service-access service-01 -p **' {
@@ -12366,6 +12782,214 @@
 
     prefix=-o
     _fzf_complete_cf 'cf enable-service-access '
+}
+
+@test 'Testing completion: cf enable-service-access service-01 -b service-broker-01 -p **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 6.53.0+8e2b70a4a.2020-10-01'
+    }
+
+    cf_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'marketplace'
+        assert $2 same_as '-s'
+        assert $3 same_as 'service-01'
+        assert $4 same_as '-b'
+        assert $5 same_as 'service-broker-01'
+
+        echo 'Getting service plan information for service service-01 as user-01...'
+        echo 'OK'
+        echo ''
+        echo 'service plan   description       free or paid'
+        echo 'plan-01        A plan 01         free'
+        echo 'plan-02        A plan 02         free'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf enable-service-access service-01 -b service-broker-01 -p '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf enable-service-access service-01 -b service-broker-01 -p '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}service ${reset_color}plan   description       free or paid"
+        assert ${lines[2]} same_as "${fg[yellow]}plan-01 ${reset_color}       A plan 01         free"
+        assert ${lines[3]} same_as "${fg[yellow]}plan-02 ${reset_color}       A plan 02         free"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf enable-service-access service-01 -b service-broker-01 -p '
+}
+
+@test 'Testing completion: cf enable-service-access service-01 -b service-broker-01 -p**' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 6.53.0+8e2b70a4a.2020-10-01'
+    }
+
+    cf_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'marketplace'
+        assert $2 same_as '-s'
+        assert $3 same_as 'service-01'
+        assert $4 same_as '-b'
+        assert $5 same_as 'service-broker-01'
+
+        echo 'Getting service plan information for service service-01 as user-01...'
+        echo 'OK'
+        echo ''
+        echo 'service plan   description       free or paid'
+        echo 'plan-01        A plan 01         free'
+        echo 'plan-02        A plan 02         free'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf enable-service-access service-01 -b service-broker-01 '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf enable-service-access service-01 -b service-broker-01 -p'
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}service ${reset_color}plan   description       free or paid"
+        assert ${lines[2]} same_as "${fg[yellow]}plan-01 ${reset_color}       A plan 01         free"
+        assert ${lines[3]} same_as "${fg[yellow]}plan-02 ${reset_color}       A plan 02         free"
+    }
+
+    prefix=-p
+    _fzf_complete_cf 'cf enable-service-access service-01 -b service-broker-01 '
+}
+
+@test 'Testing completion: cf enable-service-access service-01 -bservice-broker-01 -p **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 6.53.0+8e2b70a4a.2020-10-01'
+    }
+
+    cf_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'marketplace'
+        assert $2 same_as '-s'
+        assert $3 same_as 'service-01'
+        assert $4 same_as '-b'
+        assert $5 same_as 'service-broker-01'
+
+        echo 'Getting service plan information for service service-01 as user-01...'
+        echo 'OK'
+        echo ''
+        echo 'service plan   description       free or paid'
+        echo 'plan-01        A plan 01         free'
+        echo 'plan-02        A plan 02         free'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf enable-service-access service-01 -bservice-broker-01 -p '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf enable-service-access service-01 -bservice-broker-01 -p '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}service ${reset_color}plan   description       free or paid"
+        assert ${lines[2]} same_as "${fg[yellow]}plan-01 ${reset_color}       A plan 01         free"
+        assert ${lines[3]} same_as "${fg[yellow]}plan-02 ${reset_color}       A plan 02         free"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf enable-service-access service-01 -bservice-broker-01 -p '
+}
+
+@test 'Testing completion: cf enable-service-access service-01 -bservice-broker-01 -p**' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 6.53.0+8e2b70a4a.2020-10-01'
+    }
+
+    cf_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'marketplace'
+        assert $2 same_as '-s'
+        assert $3 same_as 'service-01'
+        assert $4 same_as '-b'
+        assert $5 same_as 'service-broker-01'
+
+        echo 'Getting service plan information for service service-01 as user-01...'
+        echo 'OK'
+        echo ''
+        echo 'service plan   description       free or paid'
+        echo 'plan-01        A plan 01         free'
+        echo 'plan-02        A plan 02         free'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf enable-service-access service-01 -bservice-broker-01 '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf enable-service-access service-01 -bservice-broker-01 -p'
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}service ${reset_color}plan   description       free or paid"
+        assert ${lines[2]} same_as "${fg[yellow]}plan-01 ${reset_color}       A plan 01         free"
+        assert ${lines[3]} same_as "${fg[yellow]}plan-02 ${reset_color}       A plan 02         free"
+    }
+
+    prefix=-p
+    _fzf_complete_cf 'cf enable-service-access service-01 -bservice-broker-01 '
 }
 
 @test 'Testing completion: cf enable-service-access service-01 -p **' {
@@ -19767,6 +20391,48 @@
     assert $state equals 0
     assert ${#lines} equals 1
     assert ${lines[1]} same_as '1'
+}
+
+@test 'Testing post: a service offering' {
+    input=(
+        'service-01   plan-01, plan-02   Provides service 01   service-broker-01'
+    )
+
+    resource=marketplace
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'service-01'
+}
+
+@test 'Testing post: a service offering argument with service broker' {
+    input=(
+        'service-01   plan-01, plan-02   Provides service 01   service-broker-01'
+    )
+
+    cf_options_argument_required=(-b -o -p)
+    resource=marketplace
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as '-b service-broker-01 service-01'
+}
+
+@test 'Testing post: a service offering option with service broker' {
+    input=(
+        'service-01   plan-01, plan-02   Provides service 01   service-broker-01'
+    )
+
+    cf_options_argument_required=(-b -o -p)
+    completing_option=-s
+    resource=marketplace
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'service-01 -b service-broker-01'
 }
 
 @test 'Testing post: a network policy' {
