@@ -932,13 +932,13 @@ _fzf_complete_cf() {
     fi
 
     if [[ $subcommand = (m|marketplace) ]]; then
-        local service_offering=-e
+        local service_offering_option=-e
         if [[ $cf_version = 6 ]]; then
-            service_offering=-s
+            service_offering_option=-s
         fi
 
         cf_options_argument_required+=(
-            $service_offering
+            $service_offering_option
         )
 
         if [[ $cf_version != 6 ]]; then
@@ -949,7 +949,7 @@ _fzf_complete_cf() {
 
         _fzf_complete_cf_parse_completing_option
 
-        if [[ $completing_option = $service_offering ]]; then
+        if [[ $completing_option = $service_offering_option ]]; then
             resource=marketplace
             _fzf_complete_cf-resources '' "$@"
             return
