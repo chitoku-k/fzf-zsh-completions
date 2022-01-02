@@ -413,6 +413,11 @@ _fzf_complete_git() {
                 return
             fi
 
+            if _fzf_complete_git_is_head "${treeish:-HEAD}"; then
+                _fzf_complete_git-status-files 'staged' '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff_cached $FZF_DEFAULT_OPTS" "$@"
+                return
+            fi
+
             _fzf_complete_git-files_tree_and_index '' '' '--multi' "$@"
             return
         fi
@@ -879,4 +884,11 @@ _fzf_complete_git_parse_completing_option() {
         fi
         prefix=${prefix#$prefix_option}
     fi
+}
+
+_fzf_complete_git_is_head() {
+    local head_commit=$(git rev-parse HEAD 2> /dev/null)
+    local target=$(git rev-parse "$1" 2> /dev/null)
+
+    [[ $head_commit = $target ]]
 }
