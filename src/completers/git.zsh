@@ -584,6 +584,51 @@ _fzf_complete_git() {
         return
     fi
 
+    if [[ $subcommand = tag ]]; then
+        local git_options_argument_required=(
+            --cleanup
+            --delete
+            --file
+            --format
+            --local-user
+            --message
+            --points-at
+            --sort
+            -F
+            -d
+            -m
+            -u
+        )
+        local git_options_argument_optional=(
+            --color
+            --column
+            --contains
+            --merged
+            --no-contains
+            --no-merged
+            -n
+        )
+
+        _fzf_complete_git_parse_completing_option
+
+        if [[ -z $completing_option ]]; then
+            local tagname
+            if ! tagname=$(_fzf_complete_parse_argument 3 1 "${(F)git_options_argument_required}" "${arguments[@]}") && [[ -z $tagname ]]; then
+                return
+            fi
+
+            _fzf_complete_git-commits '' "$@"
+            return
+        fi
+
+        case $completing_option in
+            -d|--delete)
+                _fzf_complete_git-tags '--multi' "$@"
+                ;;
+        esac
+        return
+    fi
+
     _fzf_path_completion "$prefix" "$@"
 }
 
@@ -854,11 +899,25 @@ _fzf_complete_git-stashes() {
     shift
 
     _fzf_complete --ansi ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <(
-        git stash list --format='%gd %gs' | _fzf_complete_tabularize ${fg[yellow]}
+        git stash list --format='%gd %gs' 2> /dev/null | _fzf_complete_tabularize ${fg[yellow]}
     )
 }
 
 _fzf_complete_git-stashes_post() {
+    awk '{ print $1 }'
+}
+
+_fzf_complete_git-tags() {
+    local fzf_options=$1
+    shift
+
+    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- "$@" < <(
+        git tag --list --format='%(refname:short) %(objectname:short) %(contents:subject)' 2> /dev/null |
+            _fzf_complete_tabularize ${fg[yellow]} ${fg[green]}
+    )
+}
+
+_fzf_complete_git-tags_post() {
     awk '{ print $1 }'
 }
 
