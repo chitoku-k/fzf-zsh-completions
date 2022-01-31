@@ -1,0 +1,3247 @@
+#!/usr/bin/env zunit
+
+@setup {
+    load ../fzf-zsh-completions.plugin.zsh
+    load _helpers/mock.zsh
+    load _helpers/assertions.zsh
+    mock cf
+    mock _fzf_complete_cf_unknown-subcommand
+    mock __fzf_extract_command
+
+    CF_HOME=tests/_support/cf
+}
+
+@teardown {
+    (unmock cf)
+    (unmock _fzf_complete_cf_app)
+    (unmock _fzf_complete_cf_unknown-subcommand)
+    (unmock __fzf_extract_command)
+}
+
+@test 'Testing completion: cf7 cancel-deployment **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 1
+        assert $1 same_as 'apps'
+
+        echo 'Getting apps in org org-01 / space space-01 as user-01...'
+        echo ''
+        echo 'name     requested state   processes   routes'
+        echo 'app-01   started           web:3/3     app-01.example.com'
+        echo 'app-02   started           web:2/2     app-02.example.com'
+        echo 'app-03   stopped           web:0/1     app-03.example.com'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf cancel-deployment '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf cancel-deployment '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}name     ${reset_color}requested state   processes   routes"
+        assert ${lines[2]} same_as "${fg[yellow]}app-01   ${reset_color}started           web:3/3     app-01.example.com"
+        assert ${lines[3]} same_as "${fg[yellow]}app-02   ${reset_color}started           web:2/2     app-02.example.com"
+        assert ${lines[4]} same_as "${fg[yellow]}app-03   ${reset_color}stopped           web:0/1     app-03.example.com"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf cancel-deployment '
+}
+
+@test 'Testing completion: cf7 packages **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 1
+        assert $1 same_as 'apps'
+
+        echo 'Getting apps in org org-01 / space space-01 as user-01...'
+        echo ''
+        echo 'name     requested state   processes   routes'
+        echo 'app-01   started           web:3/3     app-01.example.com'
+        echo 'app-02   started           web:2/2     app-02.example.com'
+        echo 'app-03   stopped           web:0/1     app-03.example.com'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf packages '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf packages '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}name     ${reset_color}requested state   processes   routes"
+        assert ${lines[2]} same_as "${fg[yellow]}app-01   ${reset_color}started           web:3/3     app-01.example.com"
+        assert ${lines[3]} same_as "${fg[yellow]}app-02   ${reset_color}started           web:2/2     app-02.example.com"
+        assert ${lines[4]} same_as "${fg[yellow]}app-03   ${reset_color}stopped           web:0/1     app-03.example.com"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf packages '
+}
+
+@test 'Testing completion: cf7 add-network-policy **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 1
+        assert $1 same_as 'apps'
+
+        echo 'Getting apps in org org-01 / space space-01 as user-01...'
+        echo ''
+        echo 'name     requested state   processes   routes'
+        echo 'app-01   started           web:3/3     app-01.example.com'
+        echo 'app-02   started           web:2/2     app-02.example.com'
+        echo 'app-03   stopped           web:0/1     app-03.example.com'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf add-network-policy '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf add-network-policy '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}name     ${reset_color}requested state   processes   routes"
+        assert ${lines[2]} same_as "${fg[yellow]}app-01   ${reset_color}started           web:3/3     app-01.example.com"
+        assert ${lines[3]} same_as "${fg[yellow]}app-02   ${reset_color}started           web:2/2     app-02.example.com"
+        assert ${lines[4]} same_as "${fg[yellow]}app-03   ${reset_color}stopped           web:0/1     app-03.example.com"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf add-network-policy '
+}
+
+@test 'Testing completion: cf7 add-network-policy app-01 **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 1
+        assert $1 same_as 'apps'
+
+        echo 'Getting apps in org org-01 / space space-01 as user-01...'
+        echo ''
+        echo 'name     requested state   processes   routes'
+        echo 'app-01   started           web:3/3     app-01.example.com'
+        echo 'app-02   started           web:2/2     app-02.example.com'
+        echo 'app-03   stopped           web:0/1     app-03.example.com'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf add-network-policy app-01 '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf add-network-policy app-01 '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}name     ${reset_color}requested state   processes   routes"
+        assert ${lines[2]} same_as "${fg[yellow]}app-01   ${reset_color}started           web:3/3     app-01.example.com"
+        assert ${lines[3]} same_as "${fg[yellow]}app-02   ${reset_color}started           web:2/2     app-02.example.com"
+        assert ${lines[4]} same_as "${fg[yellow]}app-03   ${reset_color}stopped           web:0/1     app-03.example.com"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf add-network-policy app-01 '
+}
+
+@test 'Testing completion: cf7 add-network-policy -o org-01 -s space-01 app-01 **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 3
+        assert $1 same_as 'org'
+        assert $2 same_as '--guid'
+        assert $3 same_as 'org-01'
+
+        echo '00000000-0000-0000-0000-000000000000'
+    }
+
+    cf_mock_3() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/spaces?q=organization_guid:00000000-0000-0000-0000-000000000000&q=name:space-01'
+
+        echo '{
+           "total_results": 1,
+           "total_pages": 1,
+           "prev_url": null,
+           "next_url": null,
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "00000000-0000-0000-0000-000000000000",
+                    "url": "/v2/spaces/00000000-0000-0000-0000-000000000000",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-01",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/developers",
+                    "managers_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/managers",
+                    "auditors_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/auditors",
+                    "apps_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/apps",
+                    "routes_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/routes",
+                    "domains_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/domains",
+                    "service_instances_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/service_instances",
+                    "app_events_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/app_events",
+                    "events_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/events",
+                    "security_groups_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/staging_security_groups"
+                 }
+              }
+           ]
+        }'
+    }
+
+    cf_mock_4() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/spaces/00000000-0000-0000-0000-000000000000/apps?results-per-page=100'
+
+        echo '{
+           "total_results": 3,
+           "total_pages": 2,
+           "prev_url": null,
+           "next_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/apps?results-per-page=100&page=2",
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "00000000-0000-0000-0000-000000000000",
+                    "url": "/v2/apps/00000000-0000-0000-0000-000000000000",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "app-01",
+                    "production": false,
+                    "space_guid": "00000000-0000-0000-0000-000000000000",
+                    "stack_guid": "00000000-0000-0000-0000-000000000000",
+                    "buildpack": null,
+                    "detected_buildpack": null,
+                    "environment_json": null,
+                    "memory": 1024,
+                    "instances": 3,
+                    "disk_quota": 1024,
+                    "state": "STARTED",
+                    "version": "00000000-0000-0000-0000-000000000000",
+                    "command": null,
+                    "console": false,
+                    "debug": null,
+                    "staging_task_id": null,
+                    "package_state": "PENDING",
+                    "health_check_type": "port",
+                    "health_check_timeout": null,
+                    "staging_failed_reason": null,
+                    "staging_failed_description": null,
+                    "diego": false,
+                    "docker_image": null,
+                    "docker_credentials": {
+                      "username": null,
+                      "password": null
+                    },
+                    "package_updated_at": "2021-01-01T00:00:00Z",
+                    "detected_start_command": "",
+                    "enable_ssh": true,
+                    "ports": null,
+                    "space_url": "/v2/spaces/00000000-0000-0000-0000-000000000000",
+                    "stack_url": "/v2/stacks/00000000-0000-0000-0000-000000000000",
+                    "routes_url": "/v2/apps/00000000-0000-0000-0000-000000000000/routes",
+                    "events_url": "/v2/apps/00000000-0000-0000-0000-000000000000/events",
+                    "service_bindings_url": "/v2/apps/00000000-0000-0000-0000-000000000000/service_bindings",
+                    "route_mappings_url": "/v2/apps/00000000-0000-0000-0000-000000000000/route_mappings"
+                 }
+              },
+              {
+                 "metadata": {
+                    "guid": "11111111-1111-1111-1111-111111111111",
+                    "url": "/v2/apps/11111111-1111-1111-1111-111111111111",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "app-02",
+                    "production": false,
+                    "space_guid": "00000000-0000-0000-0000-000000000000",
+                    "stack_guid": "00000000-0000-0000-0000-000000000000",
+                    "buildpack": null,
+                    "detected_buildpack": null,
+                    "environment_json": null,
+                    "memory": 512,
+                    "instances": 2,
+                    "disk_quota": 1024,
+                    "state": "STARTED",
+                    "version": "00000000-0000-0000-0000-000000000000",
+                    "command": null,
+                    "console": false,
+                    "debug": null,
+                    "staging_task_id": null,
+                    "package_state": "PENDING",
+                    "health_check_type": "port",
+                    "health_check_timeout": null,
+                    "staging_failed_reason": null,
+                    "staging_failed_description": null,
+                    "diego": false,
+                    "docker_image": null,
+                    "docker_credentials": {
+                      "username": null,
+                      "password": null
+                    },
+                    "package_updated_at": "2021-01-01T00:00:00Z",
+                    "detected_start_command": "",
+                    "enable_ssh": true,
+                    "ports": null,
+                    "space_url": "/v2/spaces/00000000-0000-0000-0000-000000000000",
+                    "stack_url": "/v2/stacks/00000000-0000-0000-0000-000000000000",
+                    "routes_url": "/v2/apps/11111111-1111-1111-1111-111111111111/routes",
+                    "events_url": "/v2/apps/11111111-1111-1111-1111-111111111111/events",
+                    "service_bindings_url": "/v2/apps/11111111-1111-1111-1111-111111111111/service_bindings",
+                    "route_mappings_url": "/v2/apps/11111111-1111-1111-1111-111111111111/route_mappings"
+                 }
+              }
+           ]
+        }'
+    }
+
+    cf_mock_5() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/spaces/00000000-0000-0000-0000-000000000000/apps?results-per-page=100&page=2'
+
+        echo '{
+           "total_results": 3,
+           "total_pages": 2,
+           "prev_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/apps?results-per-page=100&page=1",
+           "next_url": null,
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "22222222-2222-2222-2222-222222222222",
+                    "url": "/v2/apps/22222222-2222-2222-2222-222222222222",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "app-03",
+                    "production": false,
+                    "space_guid": "00000000-0000-0000-0000-000000000000",
+                    "stack_guid": "00000000-0000-0000-0000-000000000000",
+                    "buildpack": null,
+                    "detected_buildpack": null,
+                    "environment_json": null,
+                    "memory": 256,
+                    "instances": 1,
+                    "disk_quota": 1024,
+                    "state": "STOPPED",
+                    "version": "00000000-0000-0000-0000-000000000000",
+                    "command": null,
+                    "console": false,
+                    "debug": null,
+                    "staging_task_id": null,
+                    "package_state": "PENDING",
+                    "health_check_type": "port",
+                    "health_check_timeout": null,
+                    "staging_failed_reason": null,
+                    "staging_failed_description": null,
+                    "diego": false,
+                    "docker_image": null,
+                    "docker_credentials": {
+                      "username": null,
+                      "password": null
+                    },
+                    "package_updated_at": "2021-01-01T00:00:00Z",
+                    "detected_start_command": "",
+                    "enable_ssh": true,
+                    "ports": null,
+                    "space_url": "/v2/spaces/00000000-0000-0000-0000-000000000000",
+                    "stack_url": "/v2/stacks/00000000-0000-0000-0000-000000000000",
+                    "routes_url": "/v2/apps/22222222-2222-2222-2222-222222222222/routes",
+                    "events_url": "/v2/apps/22222222-2222-2222-2222-222222222222/events",
+                    "service_bindings_url": "/v2/apps/22222222-2222-2222-2222-222222222222/service_bindings",
+                    "route_mappings_url": "/v2/apps/22222222-2222-2222-2222-222222222222/route_mappings"
+                 }
+              }
+           ]
+        }'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf add-network-policy -o org-01 -s space-01 app-01 '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf add-network-policy -o org-01 -s space-01 app-01 '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 5
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}name  ${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}app-01${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}app-02${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}app-03${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf add-network-policy -o org-01 -s space-01 app-01 '
+}
+
+@test 'Testing completion: cf7 add-network-policy -s space-01 app-01 **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 3
+        assert $1 same_as 'space'
+        assert $2 same_as '--guid'
+        assert $3 same_as 'space-01'
+
+        echo '00000000-0000-0000-0000-000000000000'
+    }
+
+    cf_mock_3() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/spaces/00000000-0000-0000-0000-000000000000/apps?results-per-page=100'
+
+        echo '{
+           "total_results": 3,
+           "total_pages": 2,
+           "prev_url": null,
+           "next_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/apps?results-per-page=100&page=2",
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "00000000-0000-0000-0000-000000000000",
+                    "url": "/v2/apps/00000000-0000-0000-0000-000000000000",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "app-01",
+                    "production": false,
+                    "space_guid": "00000000-0000-0000-0000-000000000000",
+                    "stack_guid": "00000000-0000-0000-0000-000000000000",
+                    "buildpack": null,
+                    "detected_buildpack": null,
+                    "environment_json": null,
+                    "memory": 1024,
+                    "instances": 3,
+                    "disk_quota": 1024,
+                    "state": "STARTED",
+                    "version": "00000000-0000-0000-0000-000000000000",
+                    "command": null,
+                    "console": false,
+                    "debug": null,
+                    "staging_task_id": null,
+                    "package_state": "PENDING",
+                    "health_check_type": "port",
+                    "health_check_timeout": null,
+                    "staging_failed_reason": null,
+                    "staging_failed_description": null,
+                    "diego": false,
+                    "docker_image": null,
+                    "docker_credentials": {
+                      "username": null,
+                      "password": null
+                    },
+                    "package_updated_at": "2021-01-01T00:00:00Z",
+                    "detected_start_command": "",
+                    "enable_ssh": true,
+                    "ports": null,
+                    "space_url": "/v2/spaces/00000000-0000-0000-0000-000000000000",
+                    "stack_url": "/v2/stacks/00000000-0000-0000-0000-000000000000",
+                    "routes_url": "/v2/apps/00000000-0000-0000-0000-000000000000/routes",
+                    "events_url": "/v2/apps/00000000-0000-0000-0000-000000000000/events",
+                    "service_bindings_url": "/v2/apps/00000000-0000-0000-0000-000000000000/service_bindings",
+                    "route_mappings_url": "/v2/apps/00000000-0000-0000-0000-000000000000/route_mappings"
+                 }
+              },
+              {
+                 "metadata": {
+                    "guid": "11111111-1111-1111-1111-111111111111",
+                    "url": "/v2/apps/11111111-1111-1111-1111-111111111111",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "app-02",
+                    "production": false,
+                    "space_guid": "00000000-0000-0000-0000-000000000000",
+                    "stack_guid": "00000000-0000-0000-0000-000000000000",
+                    "buildpack": null,
+                    "detected_buildpack": null,
+                    "environment_json": null,
+                    "memory": 512,
+                    "instances": 2,
+                    "disk_quota": 1024,
+                    "state": "STARTED",
+                    "version": "00000000-0000-0000-0000-000000000000",
+                    "command": null,
+                    "console": false,
+                    "debug": null,
+                    "staging_task_id": null,
+                    "package_state": "PENDING",
+                    "health_check_type": "port",
+                    "health_check_timeout": null,
+                    "staging_failed_reason": null,
+                    "staging_failed_description": null,
+                    "diego": false,
+                    "docker_image": null,
+                    "docker_credentials": {
+                      "username": null,
+                      "password": null
+                    },
+                    "package_updated_at": "2021-01-01T00:00:00Z",
+                    "detected_start_command": "",
+                    "enable_ssh": true,
+                    "ports": null,
+                    "space_url": "/v2/spaces/00000000-0000-0000-0000-000000000000",
+                    "stack_url": "/v2/stacks/00000000-0000-0000-0000-000000000000",
+                    "routes_url": "/v2/apps/11111111-1111-1111-1111-111111111111/routes",
+                    "events_url": "/v2/apps/11111111-1111-1111-1111-111111111111/events",
+                    "service_bindings_url": "/v2/apps/11111111-1111-1111-1111-111111111111/service_bindings",
+                    "route_mappings_url": "/v2/apps/11111111-1111-1111-1111-111111111111/route_mappings"
+                 }
+              }
+           ]
+        }'
+    }
+
+    cf_mock_4() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/spaces/00000000-0000-0000-0000-000000000000/apps?results-per-page=100&page=2'
+
+        echo '{
+           "total_results": 3,
+           "total_pages": 2,
+           "prev_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/apps?results-per-page=100&page=1",
+           "next_url": null,
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "22222222-2222-2222-2222-222222222222",
+                    "url": "/v2/apps/22222222-2222-2222-2222-222222222222",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "app-03",
+                    "production": false,
+                    "space_guid": "00000000-0000-0000-0000-000000000000",
+                    "stack_guid": "00000000-0000-0000-0000-000000000000",
+                    "buildpack": null,
+                    "detected_buildpack": null,
+                    "environment_json": null,
+                    "memory": 256,
+                    "instances": 1,
+                    "disk_quota": 1024,
+                    "state": "STOPPED",
+                    "version": "00000000-0000-0000-0000-000000000000",
+                    "command": null,
+                    "console": false,
+                    "debug": null,
+                    "staging_task_id": null,
+                    "package_state": "PENDING",
+                    "health_check_type": "port",
+                    "health_check_timeout": null,
+                    "staging_failed_reason": null,
+                    "staging_failed_description": null,
+                    "diego": false,
+                    "docker_image": null,
+                    "docker_credentials": {
+                      "username": null,
+                      "password": null
+                    },
+                    "package_updated_at": "2021-01-01T00:00:00Z",
+                    "detected_start_command": "",
+                    "enable_ssh": true,
+                    "ports": null,
+                    "space_url": "/v2/spaces/00000000-0000-0000-0000-000000000000",
+                    "stack_url": "/v2/stacks/00000000-0000-0000-0000-000000000000",
+                    "routes_url": "/v2/apps/22222222-2222-2222-2222-222222222222/routes",
+                    "events_url": "/v2/apps/22222222-2222-2222-2222-222222222222/events",
+                    "service_bindings_url": "/v2/apps/22222222-2222-2222-2222-222222222222/service_bindings",
+                    "route_mappings_url": "/v2/apps/22222222-2222-2222-2222-222222222222/route_mappings"
+                 }
+              }
+           ]
+        }'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf add-network-policy -s space-01 app-01 '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf add-network-policy -s space-01 app-01 '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 4
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}name  ${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}app-01${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}app-02${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}app-03${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf add-network-policy -s space-01 app-01 '
+}
+
+@test 'Testing completion: cf7 add-network-policy -o **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 1
+        assert $1 same_as 'orgs'
+
+        echo 'Getting orgs as user-01...'
+        echo ''
+        echo 'name'
+        echo 'org-01'
+        echo 'org-02'
+        echo 'org-03'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf add-network-policy -o '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf add-network-policy -o '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}name${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}org-01${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}org-02${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}org-03${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf add-network-policy -o '
+}
+
+@test 'Testing completion: cf7 add-network-policy -o org-01 -s **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 3
+        assert $1 same_as 'org'
+        assert $2 same_as '--guid'
+        assert $3 same_as 'org-01'
+
+        echo '00000000-0000-0000-0000-000000000000'
+    }
+
+    cf_mock_3() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100'
+
+        echo '{
+           "total_results": 3,
+           "total_pages": 2,
+           "prev_url": null,
+           "next_url": "/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=2",
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "00000000-0000-0000-0000-000000000000",
+                    "url": "/v2/spaces/00000000-0000-0000-0000-000000000000",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-01",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/developers",
+                    "managers_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/managers",
+                    "auditors_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/auditors",
+                    "apps_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/apps",
+                    "routes_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/routes",
+                    "domains_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/domains",
+                    "service_instances_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/service_instances",
+                    "app_events_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/app_events",
+                    "events_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/events",
+                    "security_groups_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/staging_security_groups"
+                 }
+              },
+              {
+                 "metadata": {
+                    "guid": "11111111-1111-1111-1111-111111111111",
+                    "url": "/v2/spaces/11111111-1111-1111-1111-111111111111",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-02",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/developers",
+                    "managers_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/managers",
+                    "auditors_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/auditors",
+                    "apps_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/apps",
+                    "routes_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/routes",
+                    "domains_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/domains",
+                    "service_instances_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/service_instances",
+                    "app_events_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/app_events",
+                    "events_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/events",
+                    "security_groups_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/staging_security_groups"
+                 }
+              }
+           ]
+        }'
+    }
+
+    cf_mock_4() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=2'
+
+        echo '{
+           "total_results": 3,
+           "total_pages": 2,
+           "prev_url": "/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=1",
+           "next_url": null,
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "22222222-2222-2222-2222-222222222222",
+                    "url": "/v2/spaces/22222222-2222-2222-2222-222222222222",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-03",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/developers",
+                    "managers_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/managers",
+                    "auditors_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/auditors",
+                    "apps_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/apps",
+                    "routes_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/routes",
+                    "domains_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/domains",
+                    "service_instances_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/service_instances",
+                    "app_events_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/app_events",
+                    "events_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/events",
+                    "security_groups_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/staging_security_groups"
+                 }
+              }
+           ]
+        }'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf add-network-policy -o org-01 -s '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf add-network-policy -o org-01 -s '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 4
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}name    ${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}space-01${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}space-02${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}space-03${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf add-network-policy -o org-01 -s '
+}
+
+@test 'Testing completion: cf7 add-network-policy -s **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 1
+        assert $1 same_as 'spaces'
+
+        echo 'Getting spaces in org org-01 as user-01...'
+        echo ''
+        echo 'name'
+        echo 'space-01'
+        echo 'space-02'
+        echo 'space-03'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf add-network-policy -s '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf add-network-policy -s '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}name${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}space-01${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}space-02${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}space-03${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf add-network-policy -s '
+}
+
+@test 'Testing completion: cf7 add-network-policy -o**' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 1
+        assert $1 same_as 'orgs'
+
+        echo 'Getting orgs as user-01...'
+        echo ''
+        echo 'name'
+        echo 'org-01'
+        echo 'org-02'
+        echo 'org-03'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf add-network-policy '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf add-network-policy -o'
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}name${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}org-01${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}org-02${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}org-03${reset_color}"
+    }
+
+    prefix=-o
+    _fzf_complete_cf 'cf add-network-policy '
+}
+
+@test 'Testing completion: cf7 add-network-policy -oorg-01 -s**' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 3
+        assert $1 same_as 'org'
+        assert $2 same_as '--guid'
+        assert $3 same_as 'org-01'
+
+        echo '00000000-0000-0000-0000-000000000000'
+    }
+
+    cf_mock_3() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100'
+
+        echo '{
+           "total_results": 3,
+           "total_pages": 2,
+           "prev_url": null,
+           "next_url": "/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=2",
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "00000000-0000-0000-0000-000000000000",
+                    "url": "/v2/spaces/00000000-0000-0000-0000-000000000000",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-01",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/developers",
+                    "managers_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/managers",
+                    "auditors_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/auditors",
+                    "apps_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/apps",
+                    "routes_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/routes",
+                    "domains_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/domains",
+                    "service_instances_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/service_instances",
+                    "app_events_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/app_events",
+                    "events_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/events",
+                    "security_groups_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/staging_security_groups"
+                 }
+              },
+              {
+                 "metadata": {
+                    "guid": "11111111-1111-1111-1111-111111111111",
+                    "url": "/v2/spaces/11111111-1111-1111-1111-111111111111",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-02",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/developers",
+                    "managers_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/managers",
+                    "auditors_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/auditors",
+                    "apps_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/apps",
+                    "routes_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/routes",
+                    "domains_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/domains",
+                    "service_instances_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/service_instances",
+                    "app_events_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/app_events",
+                    "events_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/events",
+                    "security_groups_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/staging_security_groups"
+                 }
+              }
+           ]
+        }'
+    }
+
+    cf_mock_4() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=2'
+
+        echo '{
+           "total_results": 3,
+           "total_pages": 2,
+           "prev_url": "/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=1",
+           "next_url": null,
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "22222222-2222-2222-2222-222222222222",
+                    "url": "/v2/spaces/22222222-2222-2222-2222-222222222222",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-03",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/developers",
+                    "managers_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/managers",
+                    "auditors_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/auditors",
+                    "apps_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/apps",
+                    "routes_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/routes",
+                    "domains_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/domains",
+                    "service_instances_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/service_instances",
+                    "app_events_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/app_events",
+                    "events_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/events",
+                    "security_groups_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/staging_security_groups"
+                 }
+              }
+           ]
+        }'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf add-network-policy -oorg-01 '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf add-network-policy -oorg-01 -s'
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 4
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}name    ${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}space-01${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}space-02${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}space-03${reset_color}"
+    }
+
+    prefix=-s
+    _fzf_complete_cf 'cf add-network-policy -oorg-01 '
+}
+
+@test 'Testing completion: cf7 add-network-policy -s**' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 1
+        assert $1 same_as 'spaces'
+
+        echo 'Getting spaces in org org-01 as user-01...'
+        echo ''
+        echo 'name'
+        echo 'space-01'
+        echo 'space-02'
+        echo 'space-03'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf add-network-policy '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf add-network-policy -s'
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}name${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}space-01${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}space-02${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}space-03${reset_color}"
+    }
+
+    prefix=-s
+    _fzf_complete_cf 'cf add-network-policy '
+}
+
+@test 'Testing completion: cf7 remove-network-policy **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 1
+        assert $1 same_as 'network-policies'
+
+        echo 'Listing network policies in org org-01 / space space-01 as user-01...'
+        echo ''
+        echo 'source   destination   protocol   ports       destination space   destination org'
+        echo 'app-01   app-02        tcp        8080        space-01            org-01'
+        echo 'app-03   app-04        tcp        8090-8100   space-01            org-01'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf remove-network-policy '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf remove-network-policy '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}source   ${reset_color}destination   protocol   ports       destination space   destination org"
+        assert ${lines[2]} same_as "${fg[yellow]}app-01   ${reset_color}app-02        tcp        8080        space-01            org-01"
+        assert ${lines[3]} same_as "${fg[yellow]}app-03   ${reset_color}app-04        tcp        8090-8100   space-01            org-01"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf remove-network-policy '
+}
+
+@test 'Testing completion: cf7 remove-network-policy app-01 **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 1
+        assert $1 same_as 'apps'
+
+        echo 'Getting apps in org org-01 / space space-01 as user-01...'
+        echo ''
+        echo 'name     requested state   processes   routes'
+        echo 'app-01   started           web:3/3     app-01.example.com'
+        echo 'app-02   started           web:2/2     app-02.example.com'
+        echo 'app-03   stopped           web:0/1     app-03.example.com'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf remove-network-policy app-01 '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf remove-network-policy app-01 '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}name     ${reset_color}requested state   processes   routes"
+        assert ${lines[2]} same_as "${fg[yellow]}app-01   ${reset_color}started           web:3/3     app-01.example.com"
+        assert ${lines[3]} same_as "${fg[yellow]}app-02   ${reset_color}started           web:2/2     app-02.example.com"
+        assert ${lines[4]} same_as "${fg[yellow]}app-03   ${reset_color}stopped           web:0/1     app-03.example.com"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf remove-network-policy app-01 '
+}
+
+@test 'Testing completion: cf7 remove-network-policy -o org-01 -s space-01 app-01 **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 3
+        assert $1 same_as 'org'
+        assert $2 same_as '--guid'
+        assert $3 same_as 'org-01'
+
+        echo '00000000-0000-0000-0000-000000000000'
+    }
+
+    cf_mock_3() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/spaces?q=organization_guid:00000000-0000-0000-0000-000000000000&q=name:space-01'
+
+        echo '{
+           "total_results": 1,
+           "total_pages": 1,
+           "prev_url": null,
+           "next_url": null,
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "00000000-0000-0000-0000-000000000000",
+                    "url": "/v2/spaces/00000000-0000-0000-0000-000000000000",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-01",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/developers",
+                    "managers_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/managers",
+                    "auditors_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/auditors",
+                    "apps_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/apps",
+                    "routes_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/routes",
+                    "domains_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/domains",
+                    "service_instances_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/service_instances",
+                    "app_events_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/app_events",
+                    "events_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/events",
+                    "security_groups_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/staging_security_groups"
+                 }
+              }
+           ]
+        }'
+    }
+
+    cf_mock_4() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/spaces/00000000-0000-0000-0000-000000000000/apps?results-per-page=100'
+
+        echo '{
+           "total_results": 3,
+           "total_pages": 2,
+           "prev_url": null,
+           "next_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/apps?results-per-page=100&page=2",
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "00000000-0000-0000-0000-000000000000",
+                    "url": "/v2/apps/00000000-0000-0000-0000-000000000000",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "app-01",
+                    "production": false,
+                    "space_guid": "00000000-0000-0000-0000-000000000000",
+                    "stack_guid": "00000000-0000-0000-0000-000000000000",
+                    "buildpack": null,
+                    "detected_buildpack": null,
+                    "environment_json": null,
+                    "memory": 1024,
+                    "instances": 3,
+                    "disk_quota": 1024,
+                    "state": "STARTED",
+                    "version": "00000000-0000-0000-0000-000000000000",
+                    "command": null,
+                    "console": false,
+                    "debug": null,
+                    "staging_task_id": null,
+                    "package_state": "PENDING",
+                    "health_check_type": "port",
+                    "health_check_timeout": null,
+                    "staging_failed_reason": null,
+                    "staging_failed_description": null,
+                    "diego": false,
+                    "docker_image": null,
+                    "docker_credentials": {
+                      "username": null,
+                      "password": null
+                    },
+                    "package_updated_at": "2021-01-01T00:00:00Z",
+                    "detected_start_command": "",
+                    "enable_ssh": true,
+                    "ports": null,
+                    "space_url": "/v2/spaces/00000000-0000-0000-0000-000000000000",
+                    "stack_url": "/v2/stacks/00000000-0000-0000-0000-000000000000",
+                    "routes_url": "/v2/apps/00000000-0000-0000-0000-000000000000/routes",
+                    "events_url": "/v2/apps/00000000-0000-0000-0000-000000000000/events",
+                    "service_bindings_url": "/v2/apps/00000000-0000-0000-0000-000000000000/service_bindings",
+                    "route_mappings_url": "/v2/apps/00000000-0000-0000-0000-000000000000/route_mappings"
+                 }
+              },
+              {
+                 "metadata": {
+                    "guid": "11111111-1111-1111-1111-111111111111",
+                    "url": "/v2/apps/11111111-1111-1111-1111-111111111111",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "app-02",
+                    "production": false,
+                    "space_guid": "00000000-0000-0000-0000-000000000000",
+                    "stack_guid": "00000000-0000-0000-0000-000000000000",
+                    "buildpack": null,
+                    "detected_buildpack": null,
+                    "environment_json": null,
+                    "memory": 512,
+                    "instances": 2,
+                    "disk_quota": 1024,
+                    "state": "STARTED",
+                    "version": "00000000-0000-0000-0000-000000000000",
+                    "command": null,
+                    "console": false,
+                    "debug": null,
+                    "staging_task_id": null,
+                    "package_state": "PENDING",
+                    "health_check_type": "port",
+                    "health_check_timeout": null,
+                    "staging_failed_reason": null,
+                    "staging_failed_description": null,
+                    "diego": false,
+                    "docker_image": null,
+                    "docker_credentials": {
+                      "username": null,
+                      "password": null
+                    },
+                    "package_updated_at": "2021-01-01T00:00:00Z",
+                    "detected_start_command": "",
+                    "enable_ssh": true,
+                    "ports": null,
+                    "space_url": "/v2/spaces/00000000-0000-0000-0000-000000000000",
+                    "stack_url": "/v2/stacks/00000000-0000-0000-0000-000000000000",
+                    "routes_url": "/v2/apps/11111111-1111-1111-1111-111111111111/routes",
+                    "events_url": "/v2/apps/11111111-1111-1111-1111-111111111111/events",
+                    "service_bindings_url": "/v2/apps/11111111-1111-1111-1111-111111111111/service_bindings",
+                    "route_mappings_url": "/v2/apps/11111111-1111-1111-1111-111111111111/route_mappings"
+                 }
+              }
+           ]
+        }'
+    }
+
+    cf_mock_5() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/spaces/00000000-0000-0000-0000-000000000000/apps?results-per-page=100&page=2'
+
+        echo '{
+           "total_results": 3,
+           "total_pages": 2,
+           "prev_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/apps?results-per-page=100&page=1",
+           "next_url": null,
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "22222222-2222-2222-2222-222222222222",
+                    "url": "/v2/apps/22222222-2222-2222-2222-222222222222",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "app-03",
+                    "production": false,
+                    "space_guid": "00000000-0000-0000-0000-000000000000",
+                    "stack_guid": "00000000-0000-0000-0000-000000000000",
+                    "buildpack": null,
+                    "detected_buildpack": null,
+                    "environment_json": null,
+                    "memory": 256,
+                    "instances": 1,
+                    "disk_quota": 1024,
+                    "state": "STOPPED",
+                    "version": "00000000-0000-0000-0000-000000000000",
+                    "command": null,
+                    "console": false,
+                    "debug": null,
+                    "staging_task_id": null,
+                    "package_state": "PENDING",
+                    "health_check_type": "port",
+                    "health_check_timeout": null,
+                    "staging_failed_reason": null,
+                    "staging_failed_description": null,
+                    "diego": false,
+                    "docker_image": null,
+                    "docker_credentials": {
+                      "username": null,
+                      "password": null
+                    },
+                    "package_updated_at": "2021-01-01T00:00:00Z",
+                    "detected_start_command": "",
+                    "enable_ssh": true,
+                    "ports": null,
+                    "space_url": "/v2/spaces/00000000-0000-0000-0000-000000000000",
+                    "stack_url": "/v2/stacks/00000000-0000-0000-0000-000000000000",
+                    "routes_url": "/v2/apps/22222222-2222-2222-2222-222222222222/routes",
+                    "events_url": "/v2/apps/22222222-2222-2222-2222-222222222222/events",
+                    "service_bindings_url": "/v2/apps/22222222-2222-2222-2222-222222222222/service_bindings",
+                    "route_mappings_url": "/v2/apps/22222222-2222-2222-2222-222222222222/route_mappings"
+                 }
+              }
+           ]
+        }'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf remove-network-policy -o org-01 -s space-01 app-01 '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf remove-network-policy -o org-01 -s space-01 app-01 '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 5
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}name  ${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}app-01${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}app-02${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}app-03${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf remove-network-policy -o org-01 -s space-01 app-01 '
+}
+
+@test 'Testing completion: cf7 remove-network-policy -s space-01 app-01 **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 3
+        assert $1 same_as 'space'
+        assert $2 same_as '--guid'
+        assert $3 same_as 'space-01'
+
+        echo '00000000-0000-0000-0000-000000000000'
+    }
+
+    cf_mock_3() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/spaces/00000000-0000-0000-0000-000000000000/apps?results-per-page=100'
+
+        echo '{
+           "total_results": 3,
+           "total_pages": 2,
+           "prev_url": null,
+           "next_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/apps?results-per-page=100&page=2",
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "00000000-0000-0000-0000-000000000000",
+                    "url": "/v2/apps/00000000-0000-0000-0000-000000000000",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "app-01",
+                    "production": false,
+                    "space_guid": "00000000-0000-0000-0000-000000000000",
+                    "stack_guid": "00000000-0000-0000-0000-000000000000",
+                    "buildpack": null,
+                    "detected_buildpack": null,
+                    "environment_json": null,
+                    "memory": 1024,
+                    "instances": 3,
+                    "disk_quota": 1024,
+                    "state": "STARTED",
+                    "version": "00000000-0000-0000-0000-000000000000",
+                    "command": null,
+                    "console": false,
+                    "debug": null,
+                    "staging_task_id": null,
+                    "package_state": "PENDING",
+                    "health_check_type": "port",
+                    "health_check_timeout": null,
+                    "staging_failed_reason": null,
+                    "staging_failed_description": null,
+                    "diego": false,
+                    "docker_image": null,
+                    "docker_credentials": {
+                      "username": null,
+                      "password": null
+                    },
+                    "package_updated_at": "2021-01-01T00:00:00Z",
+                    "detected_start_command": "",
+                    "enable_ssh": true,
+                    "ports": null,
+                    "space_url": "/v2/spaces/00000000-0000-0000-0000-000000000000",
+                    "stack_url": "/v2/stacks/00000000-0000-0000-0000-000000000000",
+                    "routes_url": "/v2/apps/00000000-0000-0000-0000-000000000000/routes",
+                    "events_url": "/v2/apps/00000000-0000-0000-0000-000000000000/events",
+                    "service_bindings_url": "/v2/apps/00000000-0000-0000-0000-000000000000/service_bindings",
+                    "route_mappings_url": "/v2/apps/00000000-0000-0000-0000-000000000000/route_mappings"
+                 }
+              },
+              {
+                 "metadata": {
+                    "guid": "11111111-1111-1111-1111-111111111111",
+                    "url": "/v2/apps/11111111-1111-1111-1111-111111111111",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "app-02",
+                    "production": false,
+                    "space_guid": "00000000-0000-0000-0000-000000000000",
+                    "stack_guid": "00000000-0000-0000-0000-000000000000",
+                    "buildpack": null,
+                    "detected_buildpack": null,
+                    "environment_json": null,
+                    "memory": 512,
+                    "instances": 2,
+                    "disk_quota": 1024,
+                    "state": "STARTED",
+                    "version": "00000000-0000-0000-0000-000000000000",
+                    "command": null,
+                    "console": false,
+                    "debug": null,
+                    "staging_task_id": null,
+                    "package_state": "PENDING",
+                    "health_check_type": "port",
+                    "health_check_timeout": null,
+                    "staging_failed_reason": null,
+                    "staging_failed_description": null,
+                    "diego": false,
+                    "docker_image": null,
+                    "docker_credentials": {
+                      "username": null,
+                      "password": null
+                    },
+                    "package_updated_at": "2021-01-01T00:00:00Z",
+                    "detected_start_command": "",
+                    "enable_ssh": true,
+                    "ports": null,
+                    "space_url": "/v2/spaces/00000000-0000-0000-0000-000000000000",
+                    "stack_url": "/v2/stacks/00000000-0000-0000-0000-000000000000",
+                    "routes_url": "/v2/apps/11111111-1111-1111-1111-111111111111/routes",
+                    "events_url": "/v2/apps/11111111-1111-1111-1111-111111111111/events",
+                    "service_bindings_url": "/v2/apps/11111111-1111-1111-1111-111111111111/service_bindings",
+                    "route_mappings_url": "/v2/apps/11111111-1111-1111-1111-111111111111/route_mappings"
+                 }
+              }
+           ]
+        }'
+    }
+
+    cf_mock_4() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/spaces/00000000-0000-0000-0000-000000000000/apps?results-per-page=100&page=2'
+
+        echo '{
+           "total_results": 3,
+           "total_pages": 2,
+           "prev_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/apps?results-per-page=100&page=1",
+           "next_url": null,
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "22222222-2222-2222-2222-222222222222",
+                    "url": "/v2/apps/22222222-2222-2222-2222-222222222222",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "app-03",
+                    "production": false,
+                    "space_guid": "00000000-0000-0000-0000-000000000000",
+                    "stack_guid": "00000000-0000-0000-0000-000000000000",
+                    "buildpack": null,
+                    "detected_buildpack": null,
+                    "environment_json": null,
+                    "memory": 256,
+                    "instances": 1,
+                    "disk_quota": 1024,
+                    "state": "STOPPED",
+                    "version": "00000000-0000-0000-0000-000000000000",
+                    "command": null,
+                    "console": false,
+                    "debug": null,
+                    "staging_task_id": null,
+                    "package_state": "PENDING",
+                    "health_check_type": "port",
+                    "health_check_timeout": null,
+                    "staging_failed_reason": null,
+                    "staging_failed_description": null,
+                    "diego": false,
+                    "docker_image": null,
+                    "docker_credentials": {
+                      "username": null,
+                      "password": null
+                    },
+                    "package_updated_at": "2021-01-01T00:00:00Z",
+                    "detected_start_command": "",
+                    "enable_ssh": true,
+                    "ports": null,
+                    "space_url": "/v2/spaces/00000000-0000-0000-0000-000000000000",
+                    "stack_url": "/v2/stacks/00000000-0000-0000-0000-000000000000",
+                    "routes_url": "/v2/apps/22222222-2222-2222-2222-222222222222/routes",
+                    "events_url": "/v2/apps/22222222-2222-2222-2222-222222222222/events",
+                    "service_bindings_url": "/v2/apps/22222222-2222-2222-2222-222222222222/service_bindings",
+                    "route_mappings_url": "/v2/apps/22222222-2222-2222-2222-222222222222/route_mappings"
+                 }
+              }
+           ]
+        }'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf remove-network-policy -s space-01 app-01 '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf remove-network-policy -s space-01 app-01 '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 4
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}name  ${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}app-01${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}app-02${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}app-03${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf remove-network-policy -s space-01 app-01 '
+}
+
+@test 'Testing completion: cf7 remove-network-policy -o **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 1
+        assert $1 same_as 'orgs'
+
+        echo 'Getting orgs as user-01...'
+        echo ''
+        echo 'name'
+        echo 'org-01'
+        echo 'org-02'
+        echo 'org-03'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf remove-network-policy -o '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf remove-network-policy -o '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}name${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}org-01${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}org-02${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}org-03${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf remove-network-policy -o '
+}
+
+@test 'Testing completion: cf7 remove-network-policy -o org-01 -s **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 3
+        assert $1 same_as 'org'
+        assert $2 same_as '--guid'
+        assert $3 same_as 'org-01'
+
+        echo '00000000-0000-0000-0000-000000000000'
+    }
+
+    cf_mock_3() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100'
+
+        echo '{
+           "total_results": 3,
+           "total_pages": 2,
+           "prev_url": null,
+           "next_url": "/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=2",
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "00000000-0000-0000-0000-000000000000",
+                    "url": "/v2/spaces/00000000-0000-0000-0000-000000000000",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-01",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/developers",
+                    "managers_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/managers",
+                    "auditors_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/auditors",
+                    "apps_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/apps",
+                    "routes_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/routes",
+                    "domains_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/domains",
+                    "service_instances_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/service_instances",
+                    "app_events_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/app_events",
+                    "events_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/events",
+                    "security_groups_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/staging_security_groups"
+                 }
+              },
+              {
+                 "metadata": {
+                    "guid": "11111111-1111-1111-1111-111111111111",
+                    "url": "/v2/spaces/11111111-1111-1111-1111-111111111111",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-02",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/developers",
+                    "managers_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/managers",
+                    "auditors_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/auditors",
+                    "apps_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/apps",
+                    "routes_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/routes",
+                    "domains_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/domains",
+                    "service_instances_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/service_instances",
+                    "app_events_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/app_events",
+                    "events_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/events",
+                    "security_groups_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/staging_security_groups"
+                 }
+              }
+           ]
+        }'
+    }
+
+    cf_mock_4() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=2'
+
+        echo '{
+           "total_results": 3,
+           "total_pages": 2,
+           "prev_url": "/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=1",
+           "next_url": null,
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "22222222-2222-2222-2222-222222222222",
+                    "url": "/v2/spaces/22222222-2222-2222-2222-222222222222",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-03",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/developers",
+                    "managers_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/managers",
+                    "auditors_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/auditors",
+                    "apps_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/apps",
+                    "routes_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/routes",
+                    "domains_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/domains",
+                    "service_instances_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/service_instances",
+                    "app_events_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/app_events",
+                    "events_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/events",
+                    "security_groups_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/staging_security_groups"
+                 }
+              }
+           ]
+        }'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf remove-network-policy -o org-01 -s '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf remove-network-policy -o org-01 -s '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 4
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}name    ${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}space-01${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}space-02${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}space-03${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf remove-network-policy -o org-01 -s '
+}
+
+@test 'Testing completion: cf7 remove-network-policy -s **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 1
+        assert $1 same_as 'spaces'
+
+        echo 'Getting spaces in org org-01 as user-01...'
+        echo ''
+        echo 'name'
+        echo 'space-01'
+        echo 'space-02'
+        echo 'space-03'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf remove-network-policy -s '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf remove-network-policy -s '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}name${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}space-01${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}space-02${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}space-03${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf remove-network-policy -s '
+}
+
+@test 'Testing completion: cf7 remove-network-policy -o**' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 1
+        assert $1 same_as 'orgs'
+
+        echo 'Getting orgs as user-01...'
+        echo ''
+        echo 'name'
+        echo 'org-01'
+        echo 'org-02'
+        echo 'org-03'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf remove-network-policy '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf remove-network-policy -o'
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}name${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}org-01${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}org-02${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}org-03${reset_color}"
+    }
+
+    prefix=-o
+    _fzf_complete_cf 'cf remove-network-policy '
+}
+
+@test 'Testing completion: cf7 remove-network-policy -oorg-01 -s**' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 3
+        assert $1 same_as 'org'
+        assert $2 same_as '--guid'
+        assert $3 same_as 'org-01'
+
+        echo '00000000-0000-0000-0000-000000000000'
+    }
+
+    cf_mock_3() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100'
+
+        echo '{
+           "total_results": 3,
+           "total_pages": 2,
+           "prev_url": null,
+           "next_url": "/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=2",
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "00000000-0000-0000-0000-000000000000",
+                    "url": "/v2/spaces/00000000-0000-0000-0000-000000000000",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-01",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/developers",
+                    "managers_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/managers",
+                    "auditors_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/auditors",
+                    "apps_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/apps",
+                    "routes_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/routes",
+                    "domains_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/domains",
+                    "service_instances_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/service_instances",
+                    "app_events_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/app_events",
+                    "events_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/events",
+                    "security_groups_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/00000000-0000-0000-0000-000000000000/staging_security_groups"
+                 }
+              },
+              {
+                 "metadata": {
+                    "guid": "11111111-1111-1111-1111-111111111111",
+                    "url": "/v2/spaces/11111111-1111-1111-1111-111111111111",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-02",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/developers",
+                    "managers_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/managers",
+                    "auditors_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/auditors",
+                    "apps_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/apps",
+                    "routes_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/routes",
+                    "domains_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/domains",
+                    "service_instances_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/service_instances",
+                    "app_events_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/app_events",
+                    "events_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/events",
+                    "security_groups_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/11111111-1111-1111-1111-111111111111/staging_security_groups"
+                 }
+              }
+           ]
+        }'
+    }
+
+    cf_mock_4() {
+        assert $# equals 2
+        assert $1 same_as 'curl'
+        assert $2 same_as '/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=2'
+
+        echo '{
+           "total_results": 3,
+           "total_pages": 2,
+           "prev_url": "/v2/organizations/00000000-0000-0000-0000-000000000000/spaces?results-per-page=100&page=1",
+           "next_url": null,
+           "resources": [
+              {
+                 "metadata": {
+                    "guid": "22222222-2222-2222-2222-222222222222",
+                    "url": "/v2/spaces/22222222-2222-2222-2222-222222222222",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "updated_at": "2021-01-01T00:00:00Z"
+                 },
+                 "entity": {
+                    "name": "space-03",
+                    "organization_guid": "00000000-0000-0000-0000-000000000000",
+                    "space_quota_definition_guid": null,
+                    "allow_ssh": true,
+                    "organization_url": "/v2/organizations/00000000-0000-0000-0000-000000000000",
+                    "developers_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/developers",
+                    "managers_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/managers",
+                    "auditors_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/auditors",
+                    "apps_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/apps",
+                    "routes_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/routes",
+                    "domains_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/domains",
+                    "service_instances_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/service_instances",
+                    "app_events_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/app_events",
+                    "events_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/events",
+                    "security_groups_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/security_groups",
+                    "staging_security_groups_url": "/v2/spaces/22222222-2222-2222-2222-222222222222/staging_security_groups"
+                 }
+              }
+           ]
+        }'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf remove-network-policy -oorg-01 '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf remove-network-policy -oorg-01 -s'
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 4
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}name    ${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}space-01${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}space-02${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}space-03${reset_color}"
+    }
+
+    prefix=-s
+    _fzf_complete_cf 'cf remove-network-policy -oorg-01 '
+}
+
+@test 'Testing completion: cf7 remove-network-policy -s**' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 1
+        assert $1 same_as 'spaces'
+
+        echo 'Getting spaces in org org-01 as user-01...'
+        echo ''
+        echo 'name'
+        echo 'space-01'
+        echo 'space-02'
+        echo 'space-03'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf remove-network-policy '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf remove-network-policy -s'
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}name${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}space-01${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}space-02${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}space-03${reset_color}"
+    }
+
+    prefix=-s
+    _fzf_complete_cf 'cf remove-network-policy '
+}
+
+@test 'Testing completion: cf7 create-service -b service-broker-01 service-01 **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'marketplace'
+        assert $2 same_as '-e'
+        assert $3 same_as 'service-01'
+        assert $4 same_as '-b'
+        assert $5 same_as 'service-broker-01'
+
+        echo 'Getting service plan information for service offering service-01 from service broker service-broker-01 in org org-01 / space space-01 as user-01...'
+        echo ''
+        echo 'broker: service-broker-01'
+        echo '   plan      description   free or paid   costs              available'
+        echo '   plan-01   A plan 01     free           USD 0.00/MONTHLY   yes'
+        echo '   plan-02   A plan 02     free           USD 0.00/MONTHLY   yes'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf create-service -b service-broker-01 service-01 '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf create-service -b service-broker-01 service-01 '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}plan      ${reset_color}description   free or paid   costs              available"
+        assert ${lines[2]} same_as "${fg[yellow]}plan-01   ${reset_color}A plan 01     free           USD 0.00/MONTHLY   yes"
+        assert ${lines[3]} same_as "${fg[yellow]}plan-02   ${reset_color}A plan 02     free           USD 0.00/MONTHLY   yes"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf create-service -b service-broker-01 service-01 '
+}
+
+@test 'Testing completion: cf7 create-service -bservice-broker-01 service-01 **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'marketplace'
+        assert $2 same_as '-e'
+        assert $3 same_as 'service-01'
+        assert $4 same_as '-b'
+        assert $5 same_as 'service-broker-01'
+
+        echo 'Getting service plan information for service offering service-01 from service broker service-broker-01 in org org-01 / space space-01 as user-01...'
+        echo ''
+        echo 'broker: service-broker-01'
+        echo '   plan      description   free or paid   costs              available'
+        echo '   plan-01   A plan 01     free           USD 0.00/MONTHLY   yes'
+        echo '   plan-02   A plan 02     free           USD 0.00/MONTHLY   yes'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf create-service -bservice-broker-01 service-01 '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf create-service -bservice-broker-01 service-01 '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}plan      ${reset_color}description   free or paid   costs              available"
+        assert ${lines[2]} same_as "${fg[yellow]}plan-01   ${reset_color}A plan 01     free           USD 0.00/MONTHLY   yes"
+        assert ${lines[3]} same_as "${fg[yellow]}plan-02   ${reset_color}A plan 02     free           USD 0.00/MONTHLY   yes"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf create-service -bservice-broker-01 service-01 '
+}
+
+@test 'Testing completion: cf7 create-service -bservice-broker-01 service-01 **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'marketplace'
+        assert $2 same_as '-e'
+        assert $3 same_as 'service-01'
+        assert $4 same_as '-b'
+        assert $5 same_as 'service-broker-01'
+
+        echo 'Getting service plan information for service offering service-01 from service broker service-broker-01 in org org-01 / space space-01 as user-01...'
+        echo ''
+        echo 'broker: service-broker-01'
+        echo '   plan      description   free or paid   costs              available'
+        echo '   plan-01   A plan 01     free           USD 0.00/MONTHLY   yes'
+        echo '   plan-02   A plan 02     free           USD 0.00/MONTHLY   yes'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf create-service -bservice-broker-01 service-01 '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf create-service -bservice-broker-01 service-01 '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}plan      ${reset_color}description   free or paid   costs              available"
+        assert ${lines[2]} same_as "${fg[yellow]}plan-01   ${reset_color}A plan 01     free           USD 0.00/MONTHLY   yes"
+        assert ${lines[3]} same_as "${fg[yellow]}plan-02   ${reset_color}A plan 02     free           USD 0.00/MONTHLY   yes"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf create-service -bservice-broker-01 service-01 '
+}
+
+@test 'Testing completion: cf7 cs -b service-broker-01 service-01 **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'marketplace'
+        assert $2 same_as '-e'
+        assert $3 same_as 'service-01'
+        assert $4 same_as '-b'
+        assert $5 same_as 'service-broker-01'
+
+        echo 'Getting service plan information for service offering service-01 from service broker service-broker-01 in org org-01 / space space-01 as user-01...'
+        echo ''
+        echo 'broker: service-broker-01'
+        echo '   plan      description   free or paid   costs              available'
+        echo '   plan-01   A plan 01     free           USD 0.00/MONTHLY   yes'
+        echo '   plan-02   A plan 02     free           USD 0.00/MONTHLY   yes'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf cs -b service-broker-01 service-01 '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf cs -b service-broker-01 service-01 '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}plan      ${reset_color}description   free or paid   costs              available"
+        assert ${lines[2]} same_as "${fg[yellow]}plan-01   ${reset_color}A plan 01     free           USD 0.00/MONTHLY   yes"
+        assert ${lines[3]} same_as "${fg[yellow]}plan-02   ${reset_color}A plan 02     free           USD 0.00/MONTHLY   yes"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf cs -b service-broker-01 service-01 '
+}
+
+@test 'Testing completion: cf7 cs -bservice-broker-01 service-01 **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'marketplace'
+        assert $2 same_as '-e'
+        assert $3 same_as 'service-01'
+        assert $4 same_as '-b'
+        assert $5 same_as 'service-broker-01'
+
+        echo 'Getting service plan information for service offering service-01 from service broker service-broker-01 in org org-01 / space space-01 as user-01...'
+        echo ''
+        echo 'broker: service-broker-01'
+        echo '   plan      description   free or paid   costs              available'
+        echo '   plan-01   A plan 01     free           USD 0.00/MONTHLY   yes'
+        echo '   plan-02   A plan 02     free           USD 0.00/MONTHLY   yes'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf cs -bservice-broker-01 service-01 '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf cs -bservice-broker-01 service-01 '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}plan      ${reset_color}description   free or paid   costs              available"
+        assert ${lines[2]} same_as "${fg[yellow]}plan-01   ${reset_color}A plan 01     free           USD 0.00/MONTHLY   yes"
+        assert ${lines[3]} same_as "${fg[yellow]}plan-02   ${reset_color}A plan 02     free           USD 0.00/MONTHLY   yes"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf cs -bservice-broker-01 service-01 '
+}
+
+@test 'Testing completion: cf7 disable-service-access service-01 -b service-broker-01 -p **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'marketplace'
+        assert $2 same_as '-e'
+        assert $3 same_as 'service-01'
+        assert $4 same_as '-b'
+        assert $5 same_as 'service-broker-01'
+
+        echo 'Getting service plan information for service offering service-01 from service broker service-broker-01 in org org-01 / space space-01 as user-01...'
+        echo ''
+        echo 'broker: service-broker-01'
+        echo '   plan      description   free or paid   costs              available'
+        echo '   plan-01   A plan 01     free           USD 0.00/MONTHLY   yes'
+        echo '   plan-02   A plan 02     free           USD 0.00/MONTHLY   yes'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf disable-service-access service-01 -b service-broker-01 -p '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf disable-service-access service-01 -b service-broker-01 -p '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}plan      ${reset_color}description   free or paid   costs              available"
+        assert ${lines[2]} same_as "${fg[yellow]}plan-01   ${reset_color}A plan 01     free           USD 0.00/MONTHLY   yes"
+        assert ${lines[3]} same_as "${fg[yellow]}plan-02   ${reset_color}A plan 02     free           USD 0.00/MONTHLY   yes"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf disable-service-access service-01 -b service-broker-01 -p '
+}
+
+@test 'Testing completion: cf7 disable-service-access service-01 -b service-broker-01 -p**' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'marketplace'
+        assert $2 same_as '-e'
+        assert $3 same_as 'service-01'
+        assert $4 same_as '-b'
+        assert $5 same_as 'service-broker-01'
+
+        echo 'Getting service plan information for service offering service-01 from service broker service-broker-01 in org org-01 / space space-01 as user-01...'
+        echo ''
+        echo 'broker: service-broker-01'
+        echo '   plan      description   free or paid   costs              available'
+        echo '   plan-01   A plan 01     free           USD 0.00/MONTHLY   yes'
+        echo '   plan-02   A plan 02     free           USD 0.00/MONTHLY   yes'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf disable-service-access service-01 -b service-broker-01 '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf disable-service-access service-01 -b service-broker-01 -p'
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}plan      ${reset_color}description   free or paid   costs              available"
+        assert ${lines[2]} same_as "${fg[yellow]}plan-01   ${reset_color}A plan 01     free           USD 0.00/MONTHLY   yes"
+        assert ${lines[3]} same_as "${fg[yellow]}plan-02   ${reset_color}A plan 02     free           USD 0.00/MONTHLY   yes"
+    }
+
+    prefix=-p
+    _fzf_complete_cf 'cf disable-service-access service-01 -b service-broker-01 '
+}
+
+@test 'Testing completion: cf7 disable-service-access service-01 -bservice-broker-01 -p **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'marketplace'
+        assert $2 same_as '-e'
+        assert $3 same_as 'service-01'
+        assert $4 same_as '-b'
+        assert $5 same_as 'service-broker-01'
+
+        echo 'Getting service plan information for service offering service-01 from service broker service-broker-01 in org org-01 / space space-01 as user-01...'
+        echo ''
+        echo 'broker: service-broker-01'
+        echo '   plan      description   free or paid   costs              available'
+        echo '   plan-01   A plan 01     free           USD 0.00/MONTHLY   yes'
+        echo '   plan-02   A plan 02     free           USD 0.00/MONTHLY   yes'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf disable-service-access service-01 -bservice-broker-01 -p '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf disable-service-access service-01 -bservice-broker-01 -p '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}plan      ${reset_color}description   free or paid   costs              available"
+        assert ${lines[2]} same_as "${fg[yellow]}plan-01   ${reset_color}A plan 01     free           USD 0.00/MONTHLY   yes"
+        assert ${lines[3]} same_as "${fg[yellow]}plan-02   ${reset_color}A plan 02     free           USD 0.00/MONTHLY   yes"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf disable-service-access service-01 -bservice-broker-01 -p '
+}
+
+@test 'Testing completion: cf7 enable-service-access service-01 -b service-broker-01 -p **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'marketplace'
+        assert $2 same_as '-e'
+        assert $3 same_as 'service-01'
+        assert $4 same_as '-b'
+        assert $5 same_as 'service-broker-01'
+
+        echo 'Getting service plan information for service offering service-01 from service broker service-broker-01 in org org-01 / space space-01 as user-01...'
+        echo ''
+        echo 'broker: service-broker-01'
+        echo '   plan      description   free or paid   costs              available'
+        echo '   plan-01   A plan 01     free           USD 0.00/MONTHLY   yes'
+        echo '   plan-02   A plan 02     free           USD 0.00/MONTHLY   yes'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf enable-service-access service-01 -b service-broker-01 -p '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf enable-service-access service-01 -b service-broker-01 -p '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}plan      ${reset_color}description   free or paid   costs              available"
+        assert ${lines[2]} same_as "${fg[yellow]}plan-01   ${reset_color}A plan 01     free           USD 0.00/MONTHLY   yes"
+        assert ${lines[3]} same_as "${fg[yellow]}plan-02   ${reset_color}A plan 02     free           USD 0.00/MONTHLY   yes"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf enable-service-access service-01 -b service-broker-01 -p '
+}
+
+@test 'Testing completion: cf7 enable-service-access service-01 -b service-broker-01 -p**' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'marketplace'
+        assert $2 same_as '-e'
+        assert $3 same_as 'service-01'
+        assert $4 same_as '-b'
+        assert $5 same_as 'service-broker-01'
+
+        echo 'Getting service plan information for service offering service-01 from service broker service-broker-01 in org org-01 / space space-01 as user-01...'
+        echo ''
+        echo 'broker: service-broker-01'
+        echo '   plan      description   free or paid   costs              available'
+        echo '   plan-01   A plan 01     free           USD 0.00/MONTHLY   yes'
+        echo '   plan-02   A plan 02     free           USD 0.00/MONTHLY   yes'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf enable-service-access service-01 -b service-broker-01 '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf enable-service-access service-01 -b service-broker-01 -p'
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}plan      ${reset_color}description   free or paid   costs              available"
+        assert ${lines[2]} same_as "${fg[yellow]}plan-01   ${reset_color}A plan 01     free           USD 0.00/MONTHLY   yes"
+        assert ${lines[3]} same_as "${fg[yellow]}plan-02   ${reset_color}A plan 02     free           USD 0.00/MONTHLY   yes"
+    }
+
+    prefix=-p
+    _fzf_complete_cf 'cf enable-service-access service-01 -b service-broker-01 '
+}
+
+@test 'Testing completion: cf7 enable-service-access service-01 -bservice-broker-01 -p **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'marketplace'
+        assert $2 same_as '-e'
+        assert $3 same_as 'service-01'
+        assert $4 same_as '-b'
+        assert $5 same_as 'service-broker-01'
+
+        echo 'Getting service plan information for service offering service-01 from service broker service-broker-01 in org org-01 / space space-01 as user-01...'
+        echo ''
+        echo 'broker: service-broker-01'
+        echo '   plan      description   free or paid   costs              available'
+        echo '   plan-01   A plan 01     free           USD 0.00/MONTHLY   yes'
+        echo '   plan-02   A plan 02     free           USD 0.00/MONTHLY   yes'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf enable-service-access service-01 -bservice-broker-01 -p '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf enable-service-access service-01 -bservice-broker-01 -p '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}plan      ${reset_color}description   free or paid   costs              available"
+        assert ${lines[2]} same_as "${fg[yellow]}plan-01   ${reset_color}A plan 01     free           USD 0.00/MONTHLY   yes"
+        assert ${lines[3]} same_as "${fg[yellow]}plan-02   ${reset_color}A plan 02     free           USD 0.00/MONTHLY   yes"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf enable-service-access service-01 -bservice-broker-01 -p '
+}
+
+@test 'Testing completion: cf7 enable-service-access service-01 -bservice-broker-01 -p**' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'marketplace'
+        assert $2 same_as '-e'
+        assert $3 same_as 'service-01'
+        assert $4 same_as '-b'
+        assert $5 same_as 'service-broker-01'
+
+        echo 'Getting service plan information for service offering service-01 from service broker service-broker-01 in org org-01 / space space-01 as user-01...'
+        echo ''
+        echo 'broker: service-broker-01'
+        echo '   plan      description   free or paid   costs              available'
+        echo '   plan-01   A plan 01     free           USD 0.00/MONTHLY   yes'
+        echo '   plan-02   A plan 02     free           USD 0.00/MONTHLY   yes'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf enable-service-access service-01 -bservice-broker-01 '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf enable-service-access service-01 -bservice-broker-01 -p'
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}plan      ${reset_color}description   free or paid   costs              available"
+        assert ${lines[2]} same_as "${fg[yellow]}plan-01   ${reset_color}A plan 01     free           USD 0.00/MONTHLY   yes"
+        assert ${lines[3]} same_as "${fg[yellow]}plan-02   ${reset_color}A plan 02     free           USD 0.00/MONTHLY   yes"
+    }
+
+    prefix=-p
+    _fzf_complete_cf 'cf enable-service-access service-01 -bservice-broker-01 '
+}
+
+@test 'Testing completion: cf7 disable-service-access service-01 -bservice-broker-01 -p**' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'marketplace'
+        assert $2 same_as '-e'
+        assert $3 same_as 'service-01'
+        assert $4 same_as '-b'
+        assert $5 same_as 'service-broker-01'
+
+        echo 'Getting service plan information for service offering service-01 from service broker service-broker-01 in org org-01 / space space-01 as user-01...'
+        echo ''
+        echo 'broker: service-broker-01'
+        echo '   plan      description   free or paid   costs              available'
+        echo '   plan-01   A plan 01     free           USD 0.00/MONTHLY   yes'
+        echo '   plan-02   A plan 02     free           USD 0.00/MONTHLY   yes'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf disable-service-access service-01 -bservice-broker-01 '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf disable-service-access service-01 -bservice-broker-01 -p'
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}plan      ${reset_color}description   free or paid   costs              available"
+        assert ${lines[2]} same_as "${fg[yellow]}plan-01   ${reset_color}A plan 01     free           USD 0.00/MONTHLY   yes"
+        assert ${lines[3]} same_as "${fg[yellow]}plan-02   ${reset_color}A plan 02     free           USD 0.00/MONTHLY   yes"
+    }
+
+    prefix=-p
+    _fzf_complete_cf 'cf disable-service-access service-01 -bservice-broker-01 '
+}
+
+@test 'Testing completion: cf7 restart-app-instance app-01 **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 7.4.0+e55633fed.2021-11-15'
+    }
+
+    cf_mock_2() {
+        assert $# equals 2
+        assert $1 same_as 'app'
+        assert $2 same_as 'app-01'
+
+        echo 'Showing health and status for app app-01 in org org-01 / space space-01 as user-01...'
+        echo ''
+        echo 'name:              app-01'
+        echo 'requested state:   started'
+        echo 'routes:            app-01.example.com'
+        echo 'last uploaded:     Sat 01 Jan 09:00:00 JST 2021'
+        echo 'stack:             cflinuxfs3'
+        echo 'buildpacks:'
+        echo '	name           version   detect output   buildpack name'
+        echo '	go_buildpack   1.9.34    go              go'
+        echo ''
+        echo 'type:           web'
+        echo 'sidecars:       '
+        echo 'instances:      3/3'
+        echo 'memory usage:   1024M'
+        echo '     state     since                  cpu    memory         disk           details'
+        echo '#0   running   2021-01-01T00:00:00Z   0.5%   100.0M of 1G   100.0M of 1G   '
+        echo '#1   running   2021-01-01T00:00:00Z   0.5%   100.0M of 1G   100.0M of 1G   '
+        echo '#2   running   2021-01-01T00:00:00Z   0.5%   100.0M of 1G   100.0M of 1G   '
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf restart-app-instance app-01 '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf restart-app-instance app-01 '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}     ${reset_color}state     since                  cpu    memory         disk           details"
+        assert ${lines[2]} same_as "${fg[yellow]}#0   ${reset_color}running   2021-01-01T00:00:00Z   0.5%   100.0M of 1G   100.0M of 1G   "
+        assert ${lines[3]} same_as "${fg[yellow]}#1   ${reset_color}running   2021-01-01T00:00:00Z   0.5%   100.0M of 1G   100.0M of 1G   "
+        assert ${lines[4]} same_as "${fg[yellow]}#2   ${reset_color}running   2021-01-01T00:00:00Z   0.5%   100.0M of 1G   100.0M of 1G   "
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf restart-app-instance app-01 '
+}
+
+@test 'Testing post: a buildpack name and stack' {
+    input=(
+        '1          binary_buildpack   cflinuxfs3   true      true     binary-buildpack-cflinuxfs3-v1.0.39.zip'
+    )
+
+    cf_version=7
+    resource=buildpacks
+    resource_column=2
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'binary_buildpack --stack=cflinuxfs3'
+}
+
+@test 'Testing post: a buildpack position' {
+    input=(
+        '1          binary_buildpack   cflinuxfs3   true      true     binary-buildpack-cflinuxfs3-v1.0.39.zip'
+    )
+
+    cf_version=7
+    resource=buildpacks
+    resource_column=1
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as '1'
+}
+
+@test 'Testing post: a network policy' {
+    input=(
+        'app-01   app-02        tcp        8080        space-01            org-01'
+    )
+
+    cf_version=7
+    resource=network-policies
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'app-01 app-02 --protocol=tcp --port=8080 -o org-01 -s space-01'
+}
+
+@test 'Testing post: an HTTP route bound to an app' {
+    input=(
+        'space-01   app       example.com                              http   app-01'
+    )
+
+    resource=routes
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'example.com --hostname=app'
+}
+
+@test 'Testing post: an HTTP route bound to apps' {
+    input=(
+        'space-01   app       example.com                              http   app-01, app-02, app-03'
+    )
+
+    resource=routes
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'example.com --hostname=app'
+}
+
+@test 'Testing post: an HTTP path route bound to an app' {
+    input=(
+        'space-01   app       example.com                      /sub    http   app-02'
+    )
+
+    resource=routes
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'example.com --hostname=app --path=/sub'
+}
+
+@test 'Testing post: an HTTP path route bound to apps' {
+    input=(
+        'space-01   app       example.com                      /sub    http   app-02, app-03, app-04'
+    )
+
+    resource=routes
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'example.com --hostname=app --path=/sub'
+}
+
+@test 'Testing post: an HTTP route' {
+    input=(
+        'space-01   app       unbound.example.com                      http'
+    )
+
+    resource=routes
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'unbound.example.com --hostname=app'
+}
+
+@test 'Testing post: an HTTP path route' {
+    input=(
+        'space-01   app       unbound.example.com              /sub    http'
+    )
+
+    resource=routes
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'unbound.example.com --hostname=app --path=/sub'
+}
+
+@test 'Testing post: an HTTP domain route bound to an app' {
+    input=(
+        'space-01             example.com                              http   app-01'
+    )
+
+    resource=routes
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'example.com'
+}
+
+@test 'Testing post: an HTTP domain route bound to apps' {
+    input=(
+        'space-01             example.com                              http   app-01, app-02, app-03'
+    )
+
+    resource=routes
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'example.com'
+}
+
+@test 'Testing post: an HTTP domain path route bound to an app' {
+    input=(
+        'space-01             example.com                      /sub    http   app-02'
+    )
+
+    resource=routes
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'example.com --path=/sub'
+}
+
+@test 'Testing post: an HTTP domain path route bound to apps' {
+    input=(
+        'space-01             example.com                      /sub    http   app-02, app-03, app-04'
+    )
+
+    resource=routes
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'example.com --path=/sub'
+}
+
+@test 'Testing post: an HTTP domain route' {
+    input=(
+        'space-01             unbound.example.com                      http'
+    )
+
+    resource=routes
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'unbound.example.com'
+}
+
+@test 'Testing post: an HTTP domain path route' {
+    input=(
+        'space-01             unbound.example.com              /sub    http'
+    )
+
+    resource=routes
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'unbound.example.com --path=/sub'
+}
+
+@test 'Testing post: a TCP route bound to an app' {
+    input=(
+        'space-01             tcp.example.com           1024           tcp    app-01'
+    )
+
+    resource=routes
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'tcp.example.com --port=1024'
+}
+
+@test 'Testing post: a TCP route bound to apps' {
+    input=(
+        'space-01             tcp.example.com           1024           tcp    app-01, app-02, app-03'
+    )
+
+    resource=routes
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'tcp.example.com --port=1024'
+}
+
+@test 'Testing post: a TCP route' {
+    input=(
+        'space-01             tcp.unbound.example.com   1024           tcp'
+    )
+
+    resource=routes
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'tcp.unbound.example.com --port=1024'
+}
