@@ -1591,8 +1591,9 @@ _fzf_complete_cf-resources() {
 
     _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <(
         "$cf" "$resource" "${cf_arguments[@]}" 2> /dev/null |
-            awk '
-                NR > 1 && !/^$|^TIP:|^OK$/
+            awk -v resource=$resource '
+                resource == "marketplace" { gsub(/^   /, "") }
+                NR > 1 && !/^$|^TIP:|^broker: |^OK$/
                 /^$/ && count++ { exit }
             ' |
             if [[ $resource = routes ]]; then
