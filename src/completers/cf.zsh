@@ -275,7 +275,7 @@ _fzf_complete_cf() {
 
         if [[ $completing_option = (-e|--offering) ]]; then
             resource=marketplace
-            if [[ -n $service_broker ]]; then
+            if [[ $cf_version != 6 ]] && [[ -n $service_broker ]]; then
                 cf_arguments+=(-b "$service_broker")
             fi
             _fzf_complete_cf-resources '' "$@"
@@ -991,11 +991,11 @@ _fzf_complete_cf() {
                 cf_arguments+=(-s "$service")
             else
                 cf_arguments+=(-e "$service")
-            fi
 
-            local service_broker
-            if service_broker=$(_fzf_complete_parse_option_arguments '-b' '' "${(F)cf_options_argument_required}" 'argument' "${arguments[@]}"); then
-                cf_arguments+=(-b "$service_broker")
+                local service_broker
+                if service_broker=$(_fzf_complete_parse_option_arguments '-b' '' "${(F)cf_options_argument_required}" 'argument' "${arguments[@]}"); then
+                    cf_arguments+=(-b "$service_broker")
+                fi
             fi
 
             _fzf_complete_cf-resources '' "$@"
@@ -1037,11 +1037,11 @@ _fzf_complete_cf() {
                 cf_arguments+=(-s "$service")
             else
                 cf_arguments+=(-e "$service")
-            fi
 
-            local service_broker
-            if service_broker=$(_fzf_complete_parse_option_arguments '-b' '' "${(F)cf_options_argument_required}" 'argument' "${arguments[@]}"); then
-                cf_arguments+=(-b "$service_broker")
+                local service_broker
+                if service_broker=$(_fzf_complete_parse_option_arguments '-b' '' "${(F)cf_options_argument_required}" 'argument' "${arguments[@]}"); then
+                    cf_arguments+=(-b "$service_broker")
+                fi
             fi
 
             _fzf_complete_cf-resources '' "$@"

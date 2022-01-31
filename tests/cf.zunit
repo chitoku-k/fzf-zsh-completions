@@ -11505,12 +11505,10 @@
     }
 
     cf_mock_2() {
-        assert $# equals 5
+        assert $# equals 3
         assert $1 same_as 'marketplace'
         assert $2 same_as '-s'
         assert $3 same_as 'service-01'
-        assert $4 same_as '-b'
-        assert $5 same_as 'service-broker-01'
 
         echo 'Getting service plan information for service service-01 as user-01...'
         echo 'OK'
@@ -11557,12 +11555,10 @@
     }
 
     cf_mock_2() {
-        assert $# equals 5
+        assert $# equals 3
         assert $1 same_as 'marketplace'
         assert $2 same_as '-s'
         assert $3 same_as 'service-01'
-        assert $4 same_as '-b'
-        assert $5 same_as 'service-broker-01'
 
         echo 'Getting service plan information for service service-01 as user-01...'
         echo 'OK'
@@ -11803,12 +11799,10 @@
     }
 
     cf_mock_2() {
-        assert $# equals 5
+        assert $# equals 3
         assert $1 same_as 'marketplace'
         assert $2 same_as '-s'
         assert $3 same_as 'service-01'
-        assert $4 same_as '-b'
-        assert $5 same_as 'service-broker-01'
 
         echo 'Getting service plan information for service service-01 as user-01...'
         echo 'OK'
@@ -11855,12 +11849,10 @@
     }
 
     cf_mock_2() {
-        assert $# equals 5
+        assert $# equals 3
         assert $1 same_as 'marketplace'
         assert $2 same_as '-s'
         assert $3 same_as 'service-01'
-        assert $4 same_as '-b'
-        assert $5 same_as 'service-broker-01'
 
         echo 'Getting service plan information for service service-01 as user-01...'
         echo 'OK'
@@ -12243,12 +12235,10 @@
     }
 
     cf_mock_2() {
-        assert $# equals 5
+        assert $# equals 3
         assert $1 same_as 'marketplace'
         assert $2 same_as '-s'
         assert $3 same_as 'service-01'
-        assert $4 same_as '-b'
-        assert $5 same_as 'service-broker-01'
 
         echo 'Getting service plan information for service service-01 as user-01...'
         echo 'OK'
@@ -12295,12 +12285,10 @@
     }
 
     cf_mock_2() {
-        assert $# equals 5
+        assert $# equals 3
         assert $1 same_as 'marketplace'
         assert $2 same_as '-s'
         assert $3 same_as 'service-01'
-        assert $4 same_as '-b'
-        assert $5 same_as 'service-broker-01'
 
         echo 'Getting service plan information for service service-01 as user-01...'
         echo 'OK'
@@ -12347,12 +12335,10 @@
     }
 
     cf_mock_2() {
-        assert $# equals 5
+        assert $# equals 3
         assert $1 same_as 'marketplace'
         assert $2 same_as '-s'
         assert $3 same_as 'service-01'
-        assert $4 same_as '-b'
-        assert $5 same_as 'service-broker-01'
 
         echo 'Getting service plan information for service service-01 as user-01...'
         echo 'OK'
@@ -12399,12 +12385,10 @@
     }
 
     cf_mock_2() {
-        assert $# equals 5
+        assert $# equals 3
         assert $1 same_as 'marketplace'
         assert $2 same_as '-s'
         assert $3 same_as 'service-01'
-        assert $4 same_as '-b'
-        assert $5 same_as 'service-broker-01'
 
         echo 'Getting service plan information for service service-01 as user-01...'
         echo 'OK'
@@ -12793,12 +12777,10 @@
     }
 
     cf_mock_2() {
-        assert $# equals 5
+        assert $# equals 3
         assert $1 same_as 'marketplace'
         assert $2 same_as '-s'
         assert $3 same_as 'service-01'
-        assert $4 same_as '-b'
-        assert $5 same_as 'service-broker-01'
 
         echo 'Getting service plan information for service service-01 as user-01...'
         echo 'OK'
@@ -12845,12 +12827,10 @@
     }
 
     cf_mock_2() {
-        assert $# equals 5
+        assert $# equals 3
         assert $1 same_as 'marketplace'
         assert $2 same_as '-s'
         assert $3 same_as 'service-01'
-        assert $4 same_as '-b'
-        assert $5 same_as 'service-broker-01'
 
         echo 'Getting service plan information for service service-01 as user-01...'
         echo 'OK'
@@ -12897,12 +12877,10 @@
     }
 
     cf_mock_2() {
-        assert $# equals 5
+        assert $# equals 3
         assert $1 same_as 'marketplace'
         assert $2 same_as '-s'
         assert $3 same_as 'service-01'
-        assert $4 same_as '-b'
-        assert $5 same_as 'service-broker-01'
 
         echo 'Getting service plan information for service service-01 as user-01...'
         echo 'OK'
@@ -12949,12 +12927,10 @@
     }
 
     cf_mock_2() {
-        assert $# equals 5
+        assert $# equals 3
         assert $1 same_as 'marketplace'
         assert $2 same_as '-s'
         assert $3 same_as 'service-01'
-        assert $4 same_as '-b'
-        assert $5 same_as 'service-broker-01'
 
         echo 'Getting service plan information for service service-01 as user-01...'
         echo 'OK'
