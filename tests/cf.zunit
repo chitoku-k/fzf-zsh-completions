@@ -9514,7 +9514,7 @@
         assert ${lines[3]} same_as "${fg[yellow]}go_buildpack       ${reset_color}2          true      true     go-buildpack-cflinuxfs3-v1.9.34.zip       cflinuxfs3"
         assert ${lines[4]} same_as "${fg[yellow]}java_buildpack     ${reset_color}3          true      true     java-buildpack-v4.40.zip                  cflinuxfs3"
         assert ${lines[5]} same_as "${fg[yellow]}nodejs_buildpack   ${reset_color}4          true      true     nodejs-buildpack-cflinuxfs3-v1.7.57.zip   cflinuxfs3"
-        assert $resource_column same_as 2
+        assert $resource_column same_as 1
     }
 
     prefix=
@@ -10103,7 +10103,7 @@
         assert ${lines[3]} same_as "${fg[yellow]}go_buildpack       ${reset_color}2          true      true     go-buildpack-cflinuxfs3-v1.9.34.zip       cflinuxfs3"
         assert ${lines[4]} same_as "${fg[yellow]}java_buildpack     ${reset_color}3          true      true     java-buildpack-v4.40.zip                  cflinuxfs3"
         assert ${lines[5]} same_as "${fg[yellow]}nodejs_buildpack   ${reset_color}4          true      true     nodejs-buildpack-cflinuxfs3-v1.7.57.zip   cflinuxfs3"
-        assert $resource_column same_as 2
+        assert $resource_column same_as 1
     }
 
     prefix=
@@ -10155,7 +10155,7 @@
         assert ${lines[3]} same_as "${fg[yellow]}go_buildpack       ${reset_color}2          true      true     go-buildpack-cflinuxfs3-v1.9.34.zip       cflinuxfs3"
         assert ${lines[4]} same_as "${fg[yellow]}java_buildpack     ${reset_color}3          true      true     java-buildpack-v4.40.zip                  cflinuxfs3"
         assert ${lines[5]} same_as "${fg[yellow]}nodejs_buildpack   ${reset_color}4          true      true     nodejs-buildpack-cflinuxfs3-v1.7.57.zip   cflinuxfs3"
-        assert $resource_column same_as 2
+        assert $resource_column same_as 1
     }
 
     prefix=-i
@@ -11505,12 +11505,10 @@
     }
 
     cf_mock_2() {
-        assert $# equals 5
+        assert $# equals 3
         assert $1 same_as 'marketplace'
         assert $2 same_as '-s'
         assert $3 same_as 'service-01'
-        assert $4 same_as '-b'
-        assert $5 same_as 'service-broker-01'
 
         echo 'Getting service plan information for service service-01 as user-01...'
         echo 'OK'
@@ -11557,12 +11555,10 @@
     }
 
     cf_mock_2() {
-        assert $# equals 5
+        assert $# equals 3
         assert $1 same_as 'marketplace'
         assert $2 same_as '-s'
         assert $3 same_as 'service-01'
-        assert $4 same_as '-b'
-        assert $5 same_as 'service-broker-01'
 
         echo 'Getting service plan information for service service-01 as user-01...'
         echo 'OK'
@@ -11803,12 +11799,10 @@
     }
 
     cf_mock_2() {
-        assert $# equals 5
+        assert $# equals 3
         assert $1 same_as 'marketplace'
         assert $2 same_as '-s'
         assert $3 same_as 'service-01'
-        assert $4 same_as '-b'
-        assert $5 same_as 'service-broker-01'
 
         echo 'Getting service plan information for service service-01 as user-01...'
         echo 'OK'
@@ -11855,12 +11849,10 @@
     }
 
     cf_mock_2() {
-        assert $# equals 5
+        assert $# equals 3
         assert $1 same_as 'marketplace'
         assert $2 same_as '-s'
         assert $3 same_as 'service-01'
-        assert $4 same_as '-b'
-        assert $5 same_as 'service-broker-01'
 
         echo 'Getting service plan information for service service-01 as user-01...'
         echo 'OK'
@@ -12243,12 +12235,10 @@
     }
 
     cf_mock_2() {
-        assert $# equals 5
+        assert $# equals 3
         assert $1 same_as 'marketplace'
         assert $2 same_as '-s'
         assert $3 same_as 'service-01'
-        assert $4 same_as '-b'
-        assert $5 same_as 'service-broker-01'
 
         echo 'Getting service plan information for service service-01 as user-01...'
         echo 'OK'
@@ -12295,12 +12285,10 @@
     }
 
     cf_mock_2() {
-        assert $# equals 5
+        assert $# equals 3
         assert $1 same_as 'marketplace'
         assert $2 same_as '-s'
         assert $3 same_as 'service-01'
-        assert $4 same_as '-b'
-        assert $5 same_as 'service-broker-01'
 
         echo 'Getting service plan information for service service-01 as user-01...'
         echo 'OK'
@@ -12347,12 +12335,10 @@
     }
 
     cf_mock_2() {
-        assert $# equals 5
+        assert $# equals 3
         assert $1 same_as 'marketplace'
         assert $2 same_as '-s'
         assert $3 same_as 'service-01'
-        assert $4 same_as '-b'
-        assert $5 same_as 'service-broker-01'
 
         echo 'Getting service plan information for service service-01 as user-01...'
         echo 'OK'
@@ -12399,12 +12385,10 @@
     }
 
     cf_mock_2() {
-        assert $# equals 5
+        assert $# equals 3
         assert $1 same_as 'marketplace'
         assert $2 same_as '-s'
         assert $3 same_as 'service-01'
-        assert $4 same_as '-b'
-        assert $5 same_as 'service-broker-01'
 
         echo 'Getting service plan information for service service-01 as user-01...'
         echo 'OK'
@@ -12793,12 +12777,10 @@
     }
 
     cf_mock_2() {
-        assert $# equals 5
+        assert $# equals 3
         assert $1 same_as 'marketplace'
         assert $2 same_as '-s'
         assert $3 same_as 'service-01'
-        assert $4 same_as '-b'
-        assert $5 same_as 'service-broker-01'
 
         echo 'Getting service plan information for service service-01 as user-01...'
         echo 'OK'
@@ -12845,12 +12827,10 @@
     }
 
     cf_mock_2() {
-        assert $# equals 5
+        assert $# equals 3
         assert $1 same_as 'marketplace'
         assert $2 same_as '-s'
         assert $3 same_as 'service-01'
-        assert $4 same_as '-b'
-        assert $5 same_as 'service-broker-01'
 
         echo 'Getting service plan information for service service-01 as user-01...'
         echo 'OK'
@@ -12897,12 +12877,10 @@
     }
 
     cf_mock_2() {
-        assert $# equals 5
+        assert $# equals 3
         assert $1 same_as 'marketplace'
         assert $2 same_as '-s'
         assert $3 same_as 'service-01'
-        assert $4 same_as '-b'
-        assert $5 same_as 'service-broker-01'
 
         echo 'Getting service plan information for service service-01 as user-01...'
         echo 'OK'
@@ -12949,12 +12927,10 @@
     }
 
     cf_mock_2() {
-        assert $# equals 5
+        assert $# equals 3
         assert $1 same_as 'marketplace'
         assert $2 same_as '-s'
         assert $3 same_as 'service-01'
-        assert $4 same_as '-b'
-        assert $5 same_as 'service-broker-01'
 
         echo 'Getting service plan information for service service-01 as user-01...'
         echo 'OK'
@@ -20367,25 +20343,55 @@
 
 @test 'Testing post: a resource' {
     input=(
-        'binary_buildpack   1          true      true     binary-buildpack-cflinuxfs3-v1.0.39.zip   cflinuxfs3'
+        'app-01   started           3/3         1G       1G     app-01.example.com'
     )
 
-    resource=buildpacks
+    resource=apps
     resource_column=1
     run _fzf_complete_cf-resources_post <<< ${(F)input}
 
     assert $state equals 0
     assert ${#lines} equals 1
-    assert ${lines[1]} same_as 'binary_buildpack'
+    assert ${lines[1]} same_as 'app-01'
 }
 
 @test 'Testing post: a resource with resource column' {
     input=(
+        'app-01   started           3/3         1G       1G     app-01.example.com'
+    )
+
+    resource=apps
+    resource_column=6
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'app-01.example.com'
+}
+
+@test 'Testing post: a buildpack name and stack' {
+    input=(
         'binary_buildpack   1          true      true     binary-buildpack-cflinuxfs3-v1.0.39.zip   cflinuxfs3'
     )
 
+    cf_version=6
     resource=buildpacks
     resource_column=2
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'binary_buildpack -s cflinuxfs3'
+}
+
+@test 'Testing post: a buildpack position' {
+    input=(
+        'binary_buildpack   1          true      true     binary-buildpack-cflinuxfs3-v1.0.39.zip   cflinuxfs3'
+    )
+
+    cf_version=6
+    resource=buildpacks
+    resource_column=1
     run _fzf_complete_cf-resources_post <<< ${(F)input}
 
     assert $state equals 0
@@ -20440,6 +20446,7 @@
         'app-01   app-02        tcp        8080        space-01            org-01'
     )
 
+    cf_version=6
     resource=network-policies
     run _fzf_complete_cf-resources_post <<< ${(F)input}
 

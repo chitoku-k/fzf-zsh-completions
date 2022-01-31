@@ -1,0 +1,162 @@
+#!/usr/bin/env zunit
+
+@setup {
+    load ../fzf-zsh-completions.plugin.zsh
+    load _helpers/mock.zsh
+    load _helpers/assertions.zsh
+    mock cf
+    mock _fzf_complete_cf_unknown-subcommand
+    mock __fzf_extract_command
+
+    CF_HOME=tests/_support/cf
+}
+
+@teardown {
+    (unmock cf)
+    (unmock _fzf_complete_cf_app)
+    (unmock _fzf_complete_cf_unknown-subcommand)
+    (unmock __fzf_extract_command)
+}
+
+@test 'Testing post: an HTTP route bound to an app and service' {
+    input=(
+        'space-01   service   example.com                             http   http1          app-03                   service-instance-03'
+    )
+
+    resource=routes
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'example.com --hostname=service'
+}
+
+@test 'Testing post: an HTTP route bound to apps and service' {
+    input=(
+        'space-01   service   example.com                             http   http1          app-03, app-04, app-05   service-instance-03'
+    )
+
+    resource=routes
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'example.com --hostname=service'
+}
+
+@test 'Testing post: an HTTP path route bound to an app and service' {
+    input=(
+        'space-01   service   example.com                      /sub   http   http1, http2   app-04                   service-instance-03'
+    )
+
+    resource=routes
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'example.com --hostname=service --path=/sub'
+}
+
+@test 'Testing post: an HTTP path route bound to apps and service' {
+    input=(
+        'space-01   service   example.com                      /sub   http   http1, http2   app-04, app-05, app-06   service-instance-03'
+    )
+
+    resource=routes
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'example.com --hostname=service --path=/sub'
+}
+
+@test 'Testing post: an HTTP domain route bound to an app and service' {
+    input=(
+        'space-01             example.com                             http   http2          app-03                   service-instance-03'
+    )
+
+    resource=routes
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'example.com'
+}
+
+@test 'Testing post: an HTTP domain route bound to apps and service' {
+    input=(
+        'space-01             example.com                             http   http2          app-03, app-04, app-05   service-instance-03'
+    )
+
+    resource=routes
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'example.com'
+}
+
+@test 'Testing post: an HTTP domain path route bound to an app and service' {
+    input=(
+        'space-01             example.com                      /sub   http   http2          app-04                   service-instance-03'
+    )
+
+    resource=routes
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'example.com --path=/sub'
+}
+
+@test 'Testing post: an HTTP domain path route bound to apps and service' {
+    input=(
+        'space-01             example.com                      /sub   http   http2          app-04, app-05, app-06   service-instance-03'
+    )
+
+    resource=routes
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'example.com --path=/sub'
+}
+
+@test 'Testing post: an HTTP domain path route bound to a service' {
+    input=(
+        'space-01             unbound.example.com              /sub   http   http2                                   service-instance-03'
+    )
+
+    resource=routes
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'unbound.example.com --path=/sub'
+}
+
+@test 'Testing post: a TCP route bound to apps and service' {
+    input=(
+        'space-01             tcp.example.com           1025          tcp                   app-03, app-04, app-05   service-instance-03'
+    )
+
+    resource=routes
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'tcp.example.com --port=1025'
+}
+
+@test 'Testing post: a TCP route bound to a service' {
+    input=(
+        'space-01             tcp.unbound.example.com   1025          tcp                                            service-instance-03'
+    )
+
+    resource=routes
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'tcp.unbound.example.com --port=1025'
+}
