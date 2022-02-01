@@ -20441,6 +20441,21 @@
     assert ${lines[1]} same_as 'service-01 -b service-broker-01'
 }
 
+@test 'Testing post: a service plan' {
+    input=(
+        'plan-01   A plan 01     free'
+    )
+
+    cf_options_argument_required=(-b -o -p)
+    cf_arguments=(-s service-01)
+    resource=marketplace
+    run _fzf_complete_cf-resources_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as 'plan-01'
+}
+
 @test 'Testing post: a network policy' {
     input=(
         'app-01   app-02        tcp        8080        space-01            org-01'
@@ -20907,7 +20922,7 @@
     assert ${lines[1]} same_as 'key-01'
 }
 
-@test 'Testing post: a service plan' {
+@test 'Testing post: a service plan by service instance' {
     input=(
         'plan-01        A plan 01         free'
     )

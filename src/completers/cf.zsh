@@ -1620,7 +1620,7 @@ _fzf_complete_cf-resources_post() {
             fi
         fi
     elif [[ $resource = marketplace ]]; then
-        if [[ -n ${cf_options_argument_required[(r)-b]} ]]; then
+        if [[ -z ${cf_arguments[(r)-s|-e]} ]] && [[ -n ${cf_options_argument_required[(r)-b]} ]]; then
             if [[ -n $completing_option ]]; then
                 awk '{ print $1, "-b", $NF }'
             else
