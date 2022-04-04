@@ -1058,6 +1058,8 @@ _fzf_complete_kubectl-containers() {
 }
 
 _fzf_complete_kubectl-containers_post() {
+    setopt local_options no_ksh_arrays
+
     if [[ ${subcommands[1]} = set ]] && [[ ${subcommands[2]} = image ]]; then
         awk '{ printf "%s=%s", $1, $2 }'
         return
