@@ -13992,6 +13992,200 @@
     _fzf_complete_cf 'cf enable-org-isolation org-01 '
 }
 
+@test 'Testing completion: cf set-org-default-isolation-segment **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 6.53.0+8e2b70a4a.2020-10-01'
+    }
+
+    cf_mock_2() {
+        assert $# equals 1
+        assert $1 same_as 'orgs'
+
+        echo 'Getting orgs as user-01...'
+        echo ''
+        echo 'name'
+        echo 'org-01'
+        echo 'org-02'
+        echo 'org-03'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf set-org-default-isolation-segment '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf set-org-default-isolation-segment '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}name${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}org-01${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}org-02${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}org-03${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf set-org-default-isolation-segment '
+}
+
+@test 'Testing completion: cf set-org-default-isolation-segment org-01 **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 6.53.0+8e2b70a4a.2020-10-01'
+    }
+
+    cf_mock_2() {
+        assert $# equals 1
+        assert $1 same_as 'isolation-segments'
+
+        echo 'Getting isolation segments as user-01...'
+        echo 'OK'
+        echo ''
+        echo 'name                   orgs'
+        echo 'shared                 '
+        echo 'isolation-segment-01   org-01'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf set-org-default-isolation-segment org-01 '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf set-org-default-isolation-segment org-01 '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}name                   ${reset_color}orgs"
+        assert ${lines[2]} same_as "${fg[yellow]}shared                 ${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}isolation-segment-01   ${reset_color}org-01"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf set-org-default-isolation-segment org-01 '
+}
+
+@test 'Testing completion: cf set-space-isolation-segment **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 6.53.0+8e2b70a4a.2020-10-01'
+    }
+
+    cf_mock_2() {
+        assert $# equals 1
+        assert $1 same_as 'spaces'
+
+        echo 'Getting spaces in org org-01 as user-01...'
+        echo ''
+        echo 'name'
+        echo 'space-01'
+        echo 'space-02'
+        echo 'space-03'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf set-space-isolation-segment '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf set-space-isolation-segment '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}name${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}space-01${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}space-02${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}space-03${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf set-space-isolation-segment '
+}
+
+@test 'Testing completion: cf set-space-isolation-segment space-01 **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 6.53.0+8e2b70a4a.2020-10-01'
+    }
+
+    cf_mock_2() {
+        assert $# equals 1
+        assert $1 same_as 'isolation-segments'
+
+        echo 'Getting isolation segments as user-01...'
+        echo 'OK'
+        echo ''
+        echo 'name                   orgs'
+        echo 'shared                 '
+        echo 'isolation-segment-01   org-01'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf set-space-isolation-segment space-01 '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf set-space-isolation-segment space-01 '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}name                   ${reset_color}orgs"
+        assert ${lines[2]} same_as "${fg[yellow]}shared                 ${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}isolation-segment-01   ${reset_color}org-01"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf set-space-isolation-segment space-01 '
+}
+
 @test 'Testing completion: cf set-org-role user-01 **' {
     cf_mock_1() {
         assert $# equals 1

@@ -1119,10 +1119,26 @@ _fzf_complete_cf() {
         fi
     fi
 
-    if [[ $subcommand = (disable-org-isolation|enable-org-isolation) ]]; then
+    if [[ $subcommand = (disable-org-isolation|enable-org-isolation|set-org-default-isolation-segment) ]]; then
         local org
         if ! org=$(_fzf_complete_parse_argument 2 2 "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
             resource=orgs
+            _fzf_complete_cf-resources '' "$@"
+            return
+        fi
+
+        local isolation_segment
+        if ! isolation_segment=$(_fzf_complete_parse_argument 2 3 "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
+            resource=isolation-segments
+            _fzf_complete_cf-resources '' "$@"
+            return
+        fi
+    fi
+
+    if [[ $subcommand = set-space-isolation-segment ]]; then
+        local space
+        if ! space=$(_fzf_complete_parse_argument 2 2 "${(F)cf_options_argument_required}" "${arguments[@]}") && [[ -z $completing_option ]]; then
+            resource=spaces
             _fzf_complete_cf-resources '' "$@"
             return
         fi
