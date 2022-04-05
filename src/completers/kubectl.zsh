@@ -438,6 +438,44 @@ _fzf_complete_kubectl() {
         fi
     fi
 
+    if [[ ${subcommands[1]} = debug ]]; then
+        kubectl_options_argument_required+=(
+            -c
+            --container
+            --copy-to
+            --env
+            --image
+            --image-pull-policy
+            --set-image
+            --target
+        )
+
+        _fzf_complete_kubectl_parse_resource_and_name 2
+        _fzf_complete_kubectl_parse_completing_option
+        _fzf_complete_kubectl_parse_kubectl_arguments
+
+        if [[ -z $completing_option ]]; then
+            if [[ -z $resource ]]; then
+                resource_suffix=/
+                _fzf_complete_kubectl-resources '' "$@"
+                return
+            fi
+
+            _fzf_complete_kubectl-resource-names '' "$@"
+            return
+        fi
+
+        if [[ -n $resource ]] && [[ -z $name ]]; then
+            name=$resource
+            resource=pods
+        fi
+
+        if [[ $completing_option = --target ]]; then
+            _fzf_complete_kubectl-containers '' "$@"
+            return
+        fi
+    fi
+
     if [[ ${subcommands[1]} = (delete|describe|get|scale|wait) ]]; then
         kubectl_options_argument_required+=(
             --cascade
