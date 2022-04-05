@@ -138,7 +138,7 @@ _fzf_complete_kubectl() {
         return
     fi
 
-    if [[ ${subcommands[1]} = (apply|config|create|rollout|set) ]]; then
+    if [[ ${subcommands[1]} = (apply|certificate|config|create|rollout|set) ]]; then
         subcommands+=($(_fzf_complete_parse_argument 2 2 "${(F)kubectl_options_argument_required}" "${arguments[@]}" || :))
     fi
 
@@ -264,6 +264,26 @@ _fzf_complete_kubectl() {
             _fzf_complete_kubectl-resource-names '' "$@"
             return
         fi
+    fi
+
+    if [[ ${subcommands[1]} = certificate ]] && [[ ${subcommands[2]} = (approve|deny) ]]; then
+        kubectl_options_argument_required+=(
+            -f
+            --filename
+            -k
+            --kustomize
+            -o
+            --output
+            --template
+        )
+
+        _fzf_complete_kubectl_parse_resource_and_name 3
+        _fzf_complete_kubectl_parse_completing_option
+        _fzf_complete_kubectl_parse_kubectl_arguments
+
+        resource=certificatesigningrequests.certificates.k8s.io
+        _fzf_complete_kubectl-resource-names '--multi' "$@"
+        return
     fi
 
     if [[ ${subcommands[1]} = config ]]; then

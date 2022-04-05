@@ -5401,6 +5401,96 @@
     _fzf_complete_kubectl 'kubectl patch '
 }
 
+@test 'Testing completion: kubectl certificate approve **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'certificatesigningrequests.certificates.k8s.io'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAME        AGE   SIGNERNAME                            REQUESTOR          REQUESTEDDURATION   CONDITION'
+        echo 'csr-00000   10s   kubernetes.io/kube-apiserver-client   kubernetes-admin   24h                 Pending'
+        echo 'csr-11111   20s   kubernetes.io/kube-apiserver-client   kubernetes-admin   24h                 Pending'
+        echo 'csr-22222   30s   kubernetes.io/kube-apiserver-client   kubernetes-admin   24h                 Pending'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl certificate approve '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl certificate approve '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}NAME        ${reset_color}AGE   SIGNERNAME                            REQUESTOR          REQUESTEDDURATION   CONDITION"
+        assert ${lines[2]} same_as "${fg[yellow]}csr-00000   ${reset_color}10s   kubernetes.io/kube-apiserver-client   kubernetes-admin   24h                 Pending"
+        assert ${lines[3]} same_as "${fg[yellow]}csr-11111   ${reset_color}20s   kubernetes.io/kube-apiserver-client   kubernetes-admin   24h                 Pending"
+        assert ${lines[4]} same_as "${fg[yellow]}csr-22222   ${reset_color}30s   kubernetes.io/kube-apiserver-client   kubernetes-admin   24h                 Pending"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl certificate approve '
+}
+
+@test 'Testing completion: kubectl certificate deny **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'certificatesigningrequests.certificates.k8s.io'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--all-namespaces'
+
+        echo 'NAME        AGE   SIGNERNAME                            REQUESTOR          REQUESTEDDURATION   CONDITION'
+        echo 'csr-00000   10s   kubernetes.io/kube-apiserver-client   kubernetes-admin   24h                 Pending'
+        echo 'csr-11111   20s   kubernetes.io/kube-apiserver-client   kubernetes-admin   24h                 Pending'
+        echo 'csr-22222   30s   kubernetes.io/kube-apiserver-client   kubernetes-admin   24h                 Pending'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl certificate deny '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl certificate deny '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}NAME        ${reset_color}AGE   SIGNERNAME                            REQUESTOR          REQUESTEDDURATION   CONDITION"
+        assert ${lines[2]} same_as "${fg[yellow]}csr-00000   ${reset_color}10s   kubernetes.io/kube-apiserver-client   kubernetes-admin   24h                 Pending"
+        assert ${lines[3]} same_as "${fg[yellow]}csr-11111   ${reset_color}20s   kubernetes.io/kube-apiserver-client   kubernetes-admin   24h                 Pending"
+        assert ${lines[4]} same_as "${fg[yellow]}csr-22222   ${reset_color}30s   kubernetes.io/kube-apiserver-client   kubernetes-admin   24h                 Pending"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl certificate deny '
+}
+
 @test 'Testing completion: kubectl config delete-cluster **' {
     kubectl_mock_1() {
         assert $# equals 2
