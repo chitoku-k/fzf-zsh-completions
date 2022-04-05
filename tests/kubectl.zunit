@@ -24037,14 +24037,16 @@
 @test 'Testing post: a container name and image' {
     input=(
         'app  alpine:latest'
+        'web  nginx:latest'
     )
 
     subcommands=(set image)
     run _fzf_complete_kubectl-containers_post <<< ${(F)input}
 
     assert $state equals 0
-    assert ${#lines} equals 1
+    assert ${#lines} equals 2
     assert ${lines[1]} same_as 'app=alpine:latest'
+    assert ${lines[2]} same_as 'web=nginx:latest'
 }
 
 @test 'Testing post: a port number' {
