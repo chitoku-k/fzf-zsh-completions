@@ -138,7 +138,7 @@ _fzf_complete_kubectl() {
         return
     fi
 
-    if [[ ${subcommands[1]} = (apply|certificate|config|create|rollout|set) ]]; then
+    if [[ ${subcommands[1]} = (apply|auth|certificate|config|create|rollout|set) ]]; then
         subcommands+=($(_fzf_complete_parse_argument 2 2 "${(F)kubectl_options_argument_required}" "${arguments[@]}" || :))
     fi
 
@@ -215,6 +215,44 @@ _fzf_complete_kubectl() {
                     _fzf_complete_kubectl-resource-names '--multi' "$@"
                 fi
             fi
+            return
+        fi
+    fi
+
+    if [[ ${subcommands[1]} = auth ]] && [[ ${subcommands[2]} = can-i ]]; then
+        kubectl_options_argument_required+=(--subresource)
+
+        local auth_verbs=(
+            create
+            delete
+            deletecollection
+            get
+            list
+            patch
+            update
+            watch
+        )
+
+        local verb
+        verb=$(_fzf_complete_parse_argument 2 3 "${(F)kubectl_options_argument_required}" "${arguments[@]}" || :)
+
+        _fzf_complete_kubectl_parse_resource_and_name 4
+        _fzf_complete_kubectl_parse_completing_option
+        _fzf_complete_kubectl_parse_kubectl_arguments
+
+        if [[ -z $completing_option ]]; then
+            if [[ -z $verb ]]; then
+                _fzf_complete_constants '' "${(F)auth_verbs}" "$@"
+                return
+            fi
+
+            if [[ -z $resource ]]; then
+                resource_suffix=/
+                _fzf_complete_kubectl-resources '' "$@"
+                return
+            fi
+
+            _fzf_complete_kubectl-resource-names '' "$@"
             return
         fi
     fi
