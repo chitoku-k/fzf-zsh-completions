@@ -25,7 +25,7 @@ _fzf_complete_cf() {
         return
     fi
 
-    if [[ $subcommand = (app|cancel-deployment|d|delete|disable-ssh|droplets|e|enable-ssh|env|events|get-health-check|logs|packages|rename|sp|ssh-enabled|st|start|stop|tasks|v3-delete|v3-droplets|v3-env|v3-get-health-check|v3-packages|v3-restart|v3-start|v3-stop) ]]; then
+    if [[ $subcommand = (app|cancel-deployment|d|delete|disable-ssh|droplets|e|enable-ssh|env|events|get-health-check|logs|packages|rename|sp|ssh-code|ssh-enabled|st|start|stop|tasks|v3-delete|v3-droplets|v3-env|v3-get-health-check|v3-packages|v3-restart|v3-start|v3-stop) ]]; then
         resource=apps
         _fzf_complete_cf-resources '' "$@"
         return

@@ -946,6 +946,56 @@
     _fzf_complete_cf 'cf sp '
 }
 
+@test 'Testing completion: cf ssh-code **' {
+    cf_mock_1() {
+        assert $# equals 1
+        assert $1 same_as '--version'
+
+        echo 'cf version 6.53.0+8e2b70a4a.2020-10-01'
+    }
+
+    cf_mock_2() {
+        assert $# equals 1
+        assert $1 same_as 'apps'
+
+        echo 'Getting apps in org org-01 / space space-01 as user-01...'
+        echo 'OK'
+        echo ''
+        echo 'name     requested state   instances   memory   disk   urls'
+        echo 'app-01   started           3/3         1G       1G     app-01.example.com'
+        echo 'app-02   started           2/2         512M     1G     app-02.example.com'
+        echo 'app-03   stopped           0/1         256M     1G     app-03.example.com'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'cf ssh-code '
+
+        echo 'cf'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'cf ssh-code '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert cf mock_times 2
+        assert ${#lines} equals 4
+        assert ${lines[1]} same_as "${fg[yellow]}name     ${reset_color}requested state   instances   memory   disk   urls"
+        assert ${lines[2]} same_as "${fg[yellow]}app-01   ${reset_color}started           3/3         1G       1G     app-01.example.com"
+        assert ${lines[3]} same_as "${fg[yellow]}app-02   ${reset_color}started           2/2         512M     1G     app-02.example.com"
+        assert ${lines[4]} same_as "${fg[yellow]}app-03   ${reset_color}stopped           0/1         256M     1G     app-03.example.com"
+    }
+
+    prefix=
+    _fzf_complete_cf 'cf ssh-code '
+}
+
 @test 'Testing completion: cf ssh-enabled **' {
     cf_mock_1() {
         assert $# equals 1
