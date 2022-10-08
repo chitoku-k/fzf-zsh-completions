@@ -10,7 +10,7 @@ body:
   - type: textarea
     attributes:
       label: OS version
-      placeholder: Ubuntu 20.04
+      placeholder: Ubuntu 22.04
       render: shell
     validations:
       required: true
@@ -18,7 +18,7 @@ body:
     attributes:
       label: zsh version
       description: '`zsh --version` output'
-      placeholder: zsh 5.8 (x86_64-pc-linux-gnu)
+      placeholder: zsh 5.9 (x86_64-pc-linux-gnu)
       render: shell
     validations:
       required: true
@@ -26,7 +26,7 @@ body:
     attributes:
       label: awk version
       description: '`awk --version` output'
-      placeholder: 'GNU Awk 5.1.0, API: 3.0 (GNU MPFR 4.1.0, GNU MP 6.2.1)'
+      placeholder: 'GNU Awk 5.2.0, API 3.2, PMA Avon 7, (GNU MPFR 4.1.0-p13, GNU MP 6.2.1)'
       render: shell
     validations:
       required: true
@@ -42,7 +42,7 @@ body:
     attributes:
       label: fzf version
       description: '`fzf --version` output'
-      placeholder: 0.27.2 (8255aa2)
+      placeholder: 0.34.0 (04d0b02)
       render: shell
     validations:
       required: true
@@ -50,7 +50,7 @@ body:
     attributes:
       label: Command version(s)
       description: 'Command version(s) for completing command (e.g., `git --version` for git completion)'
-      placeholder: git version 2.32.0
+      placeholder: git version 2.38.0
       render: shell
     validations:
       required: true
@@ -98,7 +98,7 @@ body:
   - type: textarea
     attributes:
       label: What happened?
-      description: Describe the command as it is regardless of any usages of aliases.
+      description: Describe the command as it is, regardless of aliases.
     validations:
       required: true
   - type: textarea
