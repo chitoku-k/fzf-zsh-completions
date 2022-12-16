@@ -120,7 +120,7 @@ tests/test.zsh
 - [fzf-preview.zsh][]
 
 [workflow-link]:   https://github.com/chitoku-k/fzf-zsh-completions/actions?query=branch:master
-[workflow-badge]:  https://img.shields.io/github/workflow/status/chitoku-k/fzf-zsh-completions/CI%20Workflow/master.svg?style=flat-square
+[workflow-badge]:  https://img.shields.io/github/actions/workflow/status/chitoku-k/fzf-zsh-completions/ci.yml?branch=master&style=flat-square
 [fzf]:             https://github.com/junegunn/fzf
 [fzf-completions]: https://github.com/junegunn/fzf/blob/master/README.md#fuzzy-completion-for-bash-and-zsh
 [Zsh]:             https://www.zsh.org/
