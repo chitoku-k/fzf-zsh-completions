@@ -19,12 +19,14 @@ _fzf_complete_kubectl() {
     local kubectl_inherited_options_argument_required=(
         --as
         --as-group
+        --as-uid
         --certificate-authority
         --client-certificate
         --client-key
         --cluster
         --context
         --field-selector
+        --kubeconfig
         -l
         --label-columns
         -L
@@ -49,6 +51,7 @@ _fzf_complete_kubectl() {
         --application-metrics-count-limit
         --as
         --as-group
+        --as-uid
         --azure-container-registry-config
         --boot-id-file
         --cache-dir
@@ -109,6 +112,7 @@ _fzf_complete_kubectl() {
     local kubectl_options_argument_optional=(
         --add-dir-header
         --alsologtostderr
+        --disable-compression
         --disable-root-cgroup-stats
         --docker-only
         --docker-tls
@@ -192,10 +196,12 @@ _fzf_complete_kubectl() {
             -l
             -o
             --output
+            --prune-allowlist
             --prune-whitelist
             --selector
             --template
             --timeout
+            --validate
         )
 
         _fzf_complete_kubectl_parse_resource_and_name 3
@@ -215,6 +221,37 @@ _fzf_complete_kubectl() {
                     _fzf_complete_kubectl-resource-names '--multi' "$@"
                 fi
             fi
+            return
+        fi
+    fi
+
+    if [[ ${subcommands[1]} = (attach|exec) ]]; then
+        kubectl_options_argument_required+=(
+            -c
+            --container
+            -f
+            --filename
+            --pod-running-timeout
+            --retries
+        )
+
+        _fzf_complete_kubectl_parse_resource_and_name 2
+
+        if [[ -z $name ]] && [[ -z $prefix_option ]]; then
+            name=$resource
+            resource=pods
+        fi
+
+        _fzf_complete_kubectl_parse_completing_option
+        _fzf_complete_kubectl_parse_kubectl_arguments
+
+        if [[ -z $completing_option ]]; then
+            _fzf_complete_kubectl-resource-names '' "$@"
+            return
+        fi
+
+        if [[ $completing_option = (-c|--container) ]]; then
+            _fzf_complete_kubectl-containers '' "$@"
             return
         fi
     fi
@@ -277,6 +314,7 @@ _fzf_complete_kubectl() {
             --min
             --name
             -o
+            --override-type
             --overrides
             --output
             --patch
@@ -287,6 +325,7 @@ _fzf_complete_kubectl() {
             --target-port
             --template
             --type
+            --validate
         )
 
         _fzf_complete_kubectl_parse_resource_and_name 2
@@ -325,7 +364,17 @@ _fzf_complete_kubectl() {
     fi
 
     if [[ ${subcommands[1]} = config ]]; then
+        kubectl_options_argument_required+=(
+            -o
+            --output
+            --template
+        )
+
         if [[ ${subcommands[2]} = (delete-cluster|delete-context|delete-user|rename-context|set-cluster|set-context|use-context) ]] ; then
+            kubectl_options_argument_required+=(
+                --proxy-url
+            )
+
             _fzf_complete_kubectl_parse_resource_and_name 2
             _fzf_complete_kubectl_parse_completing_option
             _fzf_complete_kubectl_parse_kubectl_arguments
@@ -371,6 +420,7 @@ _fzf_complete_kubectl() {
 
     if [[ ${subcommands[1]} = (cordon|drain|uncordon) ]]; then
         kubectl_options_argument_required+=(
+            --chunk-size
             --dry-run
             --grace-period
             -l
@@ -398,6 +448,10 @@ _fzf_complete_kubectl() {
         kubectl_options_argument_required+=(
             --aggregation-rule
             --annotation
+            --audience
+            --bound-object-kind
+            --bound-object-name
+            --bound-object-uid
             --cert
             --class
             --clusterip
@@ -409,6 +463,7 @@ _fzf_complete_kubectl() {
             --docker-server
             --docker-username
             --dry-run
+            --duration
             --external-name
             -f
             --field-manager
@@ -446,8 +501,9 @@ _fzf_complete_kubectl() {
             --tcp
             --template
             --type
-            --verb
+            --validate
             --value
+            --verb
         )
 
         local set_subcommands=(
@@ -484,7 +540,7 @@ _fzf_complete_kubectl() {
             if [[ $completing_option = --from ]]; then
                 prefix=${prefix##*/}
                 prefix_option=${prefix_option##*/}cronjob/
-                resource=cronjob
+                resource=cronjobs.batch
                 _fzf_complete_kubectl-resource-names '' "$@"
                 return
             fi
@@ -566,7 +622,7 @@ _fzf_complete_kubectl() {
         _fzf_complete_kubectl_parse_kubectl_arguments
 
         if [[ -z $resource ]] && [[ ${subcommands[1]} = scale ]]; then
-            resource=deployments,replicaset,replicationcontrollers,statefulset
+            resource=deployments.apps,replicasets.apps,replicationcontrollers,statefulsets.apps
         fi
 
         if [[ -z $completing_option ]]; then
@@ -591,36 +647,6 @@ _fzf_complete_kubectl() {
             fi
 
             _fzf_complete_kubectl-label-columns '--multi' "$@"
-            return
-        fi
-    fi
-
-    if [[ ${subcommands[1]} = exec ]]; then
-        kubectl_options_argument_required+=(
-            -c
-            --container
-            -f
-            --filename
-            --pod-running-timeout
-        )
-
-        _fzf_complete_kubectl_parse_resource_and_name 2
-
-        if [[ -z $name ]] && [[ -z $prefix_option ]]; then
-            name=$resource
-            resource=pods
-        fi
-
-        _fzf_complete_kubectl_parse_completing_option
-        _fzf_complete_kubectl_parse_kubectl_arguments
-
-        if [[ -z $completing_option ]]; then
-            _fzf_complete_kubectl-resource-names '' "$@"
-            return
-        fi
-
-        if [[ $completing_option = (-c|--container) ]]; then
-            _fzf_complete_kubectl-containers '' "$@"
             return
         fi
     fi
@@ -756,6 +782,23 @@ _fzf_complete_kubectl() {
     fi
 
     if [[ ${subcommands[1]} = rollout ]]; then
+        kubectl_options_argument_required+=(
+            --dry-run
+            -f
+            --field-manager
+            --filename
+            -k
+            --kustomize
+            -l
+            -o
+            --output
+            --revision
+            --selector
+            --template
+            --timeout
+            --to-revision
+        )
+
         _fzf_complete_kubectl_parse_resource_and_name 3
         _fzf_complete_kubectl_parse_completing_option
         _fzf_complete_kubectl_parse_kubectl_arguments
@@ -842,6 +885,7 @@ _fzf_complete_kubectl() {
             --output
             --selector
             --template
+            --validate
         )
 
         _fzf_complete_kubectl_parse_resource_and_name 2
@@ -911,9 +955,11 @@ _fzf_complete_kubectl() {
             --limits
             -o
             --output
+            --override-type
             --overrides
             --pod-running-timeout
             --port
+            --prune-allowlist
             --requests
             --restart
             --selector
