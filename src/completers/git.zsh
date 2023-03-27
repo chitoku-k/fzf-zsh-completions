@@ -137,6 +137,13 @@ _fzf_complete_git() {
             _fzf_complete_git-status-files 'unstaged' '--untracked-files=no' "--multi $_fzf_complete_preview_git_diff $FZF_DEFAULT_OPTS" "$@"
             return
         fi
+
+        case $completing_option in
+            -B)
+                _fzf_complete_git-commits '--multi' "$@"
+                return
+                ;;
+        esac
         return
     fi
 

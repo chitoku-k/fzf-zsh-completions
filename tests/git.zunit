@@ -173,6 +173,36 @@
     _fzf_complete_git 'git checkout '
 }
 
+@test 'Testing completion: git checkout -B **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'git checkout -B '
+
+        echo 'git'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--multi'
+        assert $4 same_as '--'
+        assert $5 same_as 'git checkout -B '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "${fg[yellow]}another-branch$reset_color  ${fg[green]}branch$reset_color   2nd commit"
+        assert ${lines[2]} same_as "${fg[yellow]}master        $reset_color  ${fg[green]}branch$reset_color  1st commit"
+        assert ${lines[3]} same_as "${fg[yellow]}v2            $reset_color  ${fg[green]}tag   $reset_color   2nd commit"
+        assert ${lines[4]} same_as "${fg[yellow]}v1            $reset_color  ${fg[green]}tag   $reset_color  1st commit"
+        assert ${lines[5]} same_as "${fg[yellow]}3e209a3       $reset_color  ${fg[green]}commit$reset_color  1st commit"
+    }
+
+    prefix=
+    _fzf_complete_git 'git checkout -B '
+}
+
 @test 'Testing completion: git checkout -- **' {
     run git checkout another-branch
     echo >> ' file3 containing space '
