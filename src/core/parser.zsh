@@ -90,6 +90,7 @@ _fzf_complete_parse_completing_option() {
 }
 
 _fzf_complete_parse_argument() {
+    setopt local_options extended_glob
     local start_index=$1
     local index=$2
     local options_argument_required=(${(z)3})
