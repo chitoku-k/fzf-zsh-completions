@@ -370,7 +370,7 @@ _fzf_complete_kubectl() {
             --template
         )
 
-        if [[ ${subcommands[2]} = (delete-cluster|delete-context|delete-user|rename-context|set-cluster|set-context|use-context) ]] ; then
+        if [[ ${subcommands[2]} = (delete-cluster|delete-context|delete-user|rename-context|set-cluster|set-context|use|use-context) ]]; then
             kubectl_options_argument_required+=(
                 --proxy-url
             )
@@ -380,7 +380,7 @@ _fzf_complete_kubectl() {
             _fzf_complete_kubectl_parse_kubectl_arguments
 
             if [[ -z $completing_option ]]; then
-                _fzf_complete_kubectl-configs '' "get-${subcommands[2]#*-}s" "$@"
+                _fzf_complete_kubectl-configs '' "get-${${subcommands[2]#*-}:/use/context}s" "$@"
                 return
             fi
         fi

@@ -9032,6 +9032,45 @@
     _fzf_complete_kubectl 'kubectl config set-context '
 }
 
+@test 'Testing completion: kubectl config use **' {
+    kubectl_mock_1() {
+        assert $# equals 2
+        assert $1 same_as 'config'
+        assert $2 same_as 'get-contexts'
+
+        echo 'CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPACE'
+        echo '          kubernetes-admin@kubernetes   kubernetes   kubernetes-admin   '
+        echo '*         minikube@minikube             minikube     minikube           '
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl config use '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl config use '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[green]}CURRENT   ${reset_color}${fg[yellow]}NAME                          ${reset_color}CLUSTER      AUTHINFO           NAMESPACE"
+        assert ${lines[2]} same_as "${fg[green]}          ${reset_color}${fg[yellow]}kubernetes-admin@kubernetes   ${reset_color}kubernetes   kubernetes-admin   "
+        assert ${lines[3]} same_as "${fg[green]}*         ${reset_color}${fg[yellow]}minikube@minikube             ${reset_color}minikube     minikube           "
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl config use '
+}
+
 @test 'Testing completion: kubectl config use-context **' {
     kubectl_mock_1() {
         assert $# equals 2
