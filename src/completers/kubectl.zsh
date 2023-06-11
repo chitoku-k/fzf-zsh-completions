@@ -530,6 +530,7 @@ _fzf_complete_kubectl() {
             'service loadbalancer'
             'service nodeport'
             'serviceaccount'
+            'token'
         )
 
         _fzf_complete_kubectl_parse_resource_and_name 3
@@ -547,6 +548,11 @@ _fzf_complete_kubectl() {
         fi
 
         if [[ -z $completing_option ]]; then
+            if [[ ${subcommands[2]} = token ]]; then
+                resource=serviceaccounts
+                _fzf_complete_kubectl-resource-names '' "$@"
+                return
+            fi
             _fzf_complete_constants '' "${(F)set_subcommands}" "$@"
             return
         fi
