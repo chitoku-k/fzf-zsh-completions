@@ -17,7 +17,7 @@ _fzf_complete_enable_aliases() {
                     () {
                         $functions[_fzf_complete_$completer]
                     } \"\${@/$name/$completer $arguments}\"
-                    LBUFFER=\"\${LBUFFER/$completer $arguments/$name}\"
+                    LBUFFER=\"\${LBUFFER/$completer ${arguments//\//\\/}/$name}\"
                 }
             "
         fi
