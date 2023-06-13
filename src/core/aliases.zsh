@@ -1,5 +1,3 @@
-alias ktest="kubectl --kubeconfig ~/.kube/config"
-
 _fzf_complete_enable_aliases() {
     local expr name value completer
     local completers=("${@[@]:t:r}")
