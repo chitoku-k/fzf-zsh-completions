@@ -7,7 +7,7 @@ _fzf_complete_enable_aliases() {
         name=${expr%%=*}
         value=(${(Q)${(z)${(Q)${(z)expr##*=}}}})
         completer=${completers[(r)$value[1]]}
-        arguments=${(@)value[2,-1]}
+        arguments=${(e@)value[2,-1]}
 
         if [[ -n $completer ]]; then
             source -- "${@[(r)*completers/$completer.zsh]}"
@@ -17,7 +17,7 @@ _fzf_complete_enable_aliases() {
                     () {
                         $functions[_fzf_complete_$completer]
                     } \"\${@/$name/$completer $arguments}\"
-                    LBUFFER=\"\${LBUFFER/$completer ${arguments//\//\\/}/$name}\"
+                    LBUFFER=\"\${LBUFFER/$completer ${(qq)arguments//\//\\/}/$name}\"
                 }
             "
         fi
