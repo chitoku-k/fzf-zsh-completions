@@ -4,7 +4,7 @@ autoload -U colors
 colors
 
 _fzf_complete_kubectl() {
-    setopt local_options extended_glob magic_equal_subst no_aliases
+    setopt local_options extended_glob no_aliases
     local command_pos=$(_fzf_complete_get_command_pos "$@")
     local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$command_pos" "$@")"}[@]}")
     local options_and_subcommand=()
