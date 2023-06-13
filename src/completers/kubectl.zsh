@@ -1571,21 +1571,21 @@ _fzf_complete_kubectl_parse_kubectl_arguments() {
     local shorts=(${all_options:#--*})
     local longs=(${all_options:#-[a-zA-Z0-9]})
 
-    local arguments=()
+    local parsed_arguments=()
     if inherit_values=$(_fzf_complete_parse_option_arguments "$shorts" "$longs" "${(F)kubectl_options_argument_required}" 'option argument' "${arguments[@]}"); then
-        arguments+=("${(Q)${(z)inherit_values}[@]}")
+        parsed_arguments+=("${(Q)${(z)inherit_values}[@]}")
     fi
 
     if inherit_values=$(_fzf_complete_parse_option_arguments "$shorts" "$longs" "${(F)kubectl_options_argument_required}" 'option argument' "${(Q)${(z)RBUFFER}[@]}"); then
-        arguments+=("${(Q)${(z)inherit_values}[@]}")
+        parsed_arguments+=("${(Q)${(z)inherit_values}[@]}")
     fi
 
-    local argument
-    for argument in "${arguments[@]}"; do
-        if [[ -z $argument ]]; then
-            kubectl_arguments+=("$argument")
+    local parsed_argument
+    for parsed_argument in "${parsed_arguments[@]}"; do
+        if [[ -z $parsed_argument ]]; then
+            kubectl_arguments+=("$parsed_argument")
         else
-            kubectl_arguments+=(${(e)~argument})
+            kubectl_arguments+=(${(e)~parsed_argument})
         fi
     done
 }
