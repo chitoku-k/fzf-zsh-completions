@@ -1,23 +1,24 @@
+alias ktest="kubectl --kubeconfig ~/.kube/config"
+
 _fzf_complete_enable_aliases() {
-    local expr name value completer arguments
+    local expr name value completer
     local completers=("${@[@]:t:r}")
 
-    local IFS=$'\n'
-    for expr in $(alias); do
-        name=${expr%%=*}
-        value=(${(Q)${(z)${(Q)${(z)expr##*=}}}})
+    for name expr in ${(kv)aliases[@]}; do
+        value=(${(Q)${(z)expr}})
         completer=${completers[(r)$value[1]]}
-        arguments=${(e@)value[2,-1]}
 
         if [[ -n $completer ]]; then
             source -- "${@[(r)*completers/$completer.zsh]}"
+            echo $name
+            echo ${aliases[$name]}
             eval "
                 _fzf_complete_$name() {
-                    LBUFFER=\"\${LBUFFER/$name/$completer $arguments}\"
+                    LBUFFER=\"\${LBUFFER/$name/\${aliases[$name]}}\"
                     () {
                         $functions[_fzf_complete_$completer]
-                    } \"\${@/$name/$completer $arguments}\"
-                    LBUFFER=\"\${LBUFFER/$completer ${(qq)arguments//\//\\/}/$name}\"
+                    } \"\${@/$name/\${aliases[$name]}}\"
+                    LBUFFER=\"\${LBUFFER/\${aliases[$name]}/$name}\"
                 }
             "
         fi
