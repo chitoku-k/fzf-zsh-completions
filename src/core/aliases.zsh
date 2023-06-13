@@ -8,8 +8,6 @@ _fzf_complete_enable_aliases() {
 
         if [[ -n $completer ]]; then
             source -- "${@[(r)*completers/$completer.zsh]}"
-            echo $name
-            echo ${aliases[$name]}
             eval "
                 _fzf_complete_$name() {
                     LBUFFER=\"\${LBUFFER/$name/\${aliases[$name]}}\"
