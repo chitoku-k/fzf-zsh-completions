@@ -4,7 +4,7 @@ autoload -U colors
 colors
 
 _fzf_complete_kubectl() {
-    setopt local_options extended_glob no_aliases
+    setopt local_options extended_glob magic_equal_subst no_aliases
     local command_pos=$(_fzf_complete_get_command_pos "$@")
     local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$command_pos" "$@")"}[@]}")
     local options_and_subcommand=()
@@ -1571,13 +1571,23 @@ _fzf_complete_kubectl_parse_kubectl_arguments() {
     local shorts=(${all_options:#--*})
     local longs=(${all_options:#-[a-zA-Z0-9]})
 
+    local arguments=()
     if inherit_values=$(_fzf_complete_parse_option_arguments "$shorts" "$longs" "${(F)kubectl_options_argument_required}" 'option argument' "${arguments[@]}"); then
-        kubectl_arguments+=("${(Q)${(z)inherit_values}[@]}")
+        arguments+=("${(Q)${(z)inherit_values}[@]}")
     fi
 
     if inherit_values=$(_fzf_complete_parse_option_arguments "$shorts" "$longs" "${(F)kubectl_options_argument_required}" 'option argument' "${(Q)${(z)RBUFFER}[@]}"); then
-        kubectl_arguments+=("${(Q)${(z)inherit_values}[@]}")
+        arguments+=("${(Q)${(z)inherit_values}[@]}")
     fi
+
+    local argument
+    for argument in "${arguments[@]}"; do
+        if [[ -z $argument ]]; then
+            kubectl_arguments+=("$argument")
+        else
+            kubectl_arguments+=(${(e)~argument})
+        fi
+    done
 }
 
 _fzf_complete_kubectl_parse_global_options_and_subcommand() {
