@@ -1582,11 +1582,7 @@ _fzf_complete_kubectl_parse_kubectl_arguments() {
 
     local parsed_argument
     for parsed_argument in "${parsed_arguments[@]}"; do
-        if [[ -z $parsed_argument ]]; then
-            kubectl_arguments+=("$parsed_argument")
-        else
-            kubectl_arguments+=(${(e)~parsed_argument})
-        fi
+        kubectl_arguments+=("$(echo ${(e)~parsed_argument})")
     done
 }
 
