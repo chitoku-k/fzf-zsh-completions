@@ -583,6 +583,229 @@
     _fzf_complete_kubectl 'kubectl '
 }
 
+@test 'Testing completion: kubectl --kubeconfig=$HOME/.kube/config get **' {
+    kubectl_mock_1() {
+        assert $# equals 4
+        assert $1 same_as 'api-resources'
+        assert $2 same_as '--cached'
+        assert $3 same_as '--verbs=get'
+        assert $4 same_as '--kubeconfig=/root/.kube/config'
+
+        echo 'NAME         SHORTNAMES   APIVERSION                     NAMESPACED   KIND'
+        echo 'configmaps   cm           v1                             true         ConfigMap'
+        echo 'namespaces   ns           v1                             false        Namespace'
+        echo 'nodes        no           v1                             false        Node'
+        echo 'pods         po           v1                             true         Pod'
+        echo 'secrets                   v1                             true         Secret'
+        echo 'services     svc          v1                             true         Service'
+        echo 'ingresses    ing          networking.k8s.io/v1           true         Ingress'
+        echo 'roles                     rbac.authorization.k8s.io/v1   true         Role'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl --kubeconfig=$HOME/.kube/config get '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl --kubeconfig=$HOME/.kube/config get '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 9
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIVERSION                     NAMESPACED   KIND"
+        assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm           v1                             true         ConfigMap"
+        assert ${lines[3]} same_as "${fg[yellow]}namespaces   ${reset_color}ns           v1                             false        Namespace"
+        assert ${lines[4]} same_as "${fg[yellow]}nodes        ${reset_color}no           v1                             false        Node"
+        assert ${lines[5]} same_as "${fg[yellow]}pods         ${reset_color}po           v1                             true         Pod"
+        assert ${lines[6]} same_as "${fg[yellow]}secrets      ${reset_color}             v1                             true         Secret"
+        assert ${lines[7]} same_as "${fg[yellow]}services     ${reset_color}svc          v1                             true         Service"
+        assert ${lines[8]} same_as "${fg[yellow]}ingresses    ${reset_color}ing          networking.k8s.io/v1           true         Ingress"
+        assert ${lines[9]} same_as "${fg[yellow]}roles        ${reset_color}             rbac.authorization.k8s.io/v1   true         Role"
+    }
+
+    HOME=/root
+    prefix=
+    _fzf_complete_kubectl 'kubectl --kubeconfig=$HOME/.kube/config get '
+}
+
+@test 'Testing completion: kubectl --kubeconfig $HOME/.kube/config get **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'api-resources'
+        assert $2 same_as '--cached'
+        assert $3 same_as '--verbs=get'
+        assert $4 same_as '--kubeconfig'
+        assert $5 same_as '/root/.kube/config'
+
+        echo 'NAME         SHORTNAMES   APIVERSION                     NAMESPACED   KIND'
+        echo 'configmaps   cm           v1                             true         ConfigMap'
+        echo 'namespaces   ns           v1                             false        Namespace'
+        echo 'nodes        no           v1                             false        Node'
+        echo 'pods         po           v1                             true         Pod'
+        echo 'secrets                   v1                             true         Secret'
+        echo 'services     svc          v1                             true         Service'
+        echo 'ingresses    ing          networking.k8s.io/v1           true         Ingress'
+        echo 'roles                     rbac.authorization.k8s.io/v1   true         Role'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl --kubeconfig $HOME/.kube/config get '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl --kubeconfig $HOME/.kube/config get '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 9
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIVERSION                     NAMESPACED   KIND"
+        assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm           v1                             true         ConfigMap"
+        assert ${lines[3]} same_as "${fg[yellow]}namespaces   ${reset_color}ns           v1                             false        Namespace"
+        assert ${lines[4]} same_as "${fg[yellow]}nodes        ${reset_color}no           v1                             false        Node"
+        assert ${lines[5]} same_as "${fg[yellow]}pods         ${reset_color}po           v1                             true         Pod"
+        assert ${lines[6]} same_as "${fg[yellow]}secrets      ${reset_color}             v1                             true         Secret"
+        assert ${lines[7]} same_as "${fg[yellow]}services     ${reset_color}svc          v1                             true         Service"
+        assert ${lines[8]} same_as "${fg[yellow]}ingresses    ${reset_color}ing          networking.k8s.io/v1           true         Ingress"
+        assert ${lines[9]} same_as "${fg[yellow]}roles        ${reset_color}             rbac.authorization.k8s.io/v1   true         Role"
+    }
+
+    HOME=/root
+    prefix=
+    _fzf_complete_kubectl 'kubectl --kubeconfig $HOME/.kube/config get '
+}
+
+@test 'Testing completion: kubectl --kubeconfig=~/.kube/config get **' {
+    kubectl_mock_1() {
+        assert $# equals 4
+        assert $1 same_as 'api-resources'
+        assert $2 same_as '--cached'
+        assert $3 same_as '--verbs=get'
+        assert $4 same_as '--kubeconfig=/root/.kube/config'
+
+        echo 'NAME         SHORTNAMES   APIVERSION                     NAMESPACED   KIND'
+        echo 'configmaps   cm           v1                             true         ConfigMap'
+        echo 'namespaces   ns           v1                             false        Namespace'
+        echo 'nodes        no           v1                             false        Node'
+        echo 'pods         po           v1                             true         Pod'
+        echo 'secrets                   v1                             true         Secret'
+        echo 'services     svc          v1                             true         Service'
+        echo 'ingresses    ing          networking.k8s.io/v1           true         Ingress'
+        echo 'roles                     rbac.authorization.k8s.io/v1   true         Role'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl --kubeconfig=~/.kube/config get '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl --kubeconfig=~/.kube/config get '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 9
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIVERSION                     NAMESPACED   KIND"
+        assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm           v1                             true         ConfigMap"
+        assert ${lines[3]} same_as "${fg[yellow]}namespaces   ${reset_color}ns           v1                             false        Namespace"
+        assert ${lines[4]} same_as "${fg[yellow]}nodes        ${reset_color}no           v1                             false        Node"
+        assert ${lines[5]} same_as "${fg[yellow]}pods         ${reset_color}po           v1                             true         Pod"
+        assert ${lines[6]} same_as "${fg[yellow]}secrets      ${reset_color}             v1                             true         Secret"
+        assert ${lines[7]} same_as "${fg[yellow]}services     ${reset_color}svc          v1                             true         Service"
+        assert ${lines[8]} same_as "${fg[yellow]}ingresses    ${reset_color}ing          networking.k8s.io/v1           true         Ingress"
+        assert ${lines[9]} same_as "${fg[yellow]}roles        ${reset_color}             rbac.authorization.k8s.io/v1   true         Role"
+    }
+
+    setopt local_options magic_equal_subst
+    HOME=/root
+    prefix=
+    _fzf_complete_kubectl 'kubectl --kubeconfig=~/.kube/config get '
+}
+
+@test 'Testing completion: kubectl --kubeconfig ~/.kube/config get **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'api-resources'
+        assert $2 same_as '--cached'
+        assert $3 same_as '--verbs=get'
+        assert $4 same_as '--kubeconfig'
+        assert $5 same_as '/root/.kube/config'
+
+        echo 'NAME         SHORTNAMES   APIVERSION                     NAMESPACED   KIND'
+        echo 'configmaps   cm           v1                             true         ConfigMap'
+        echo 'namespaces   ns           v1                             false        Namespace'
+        echo 'nodes        no           v1                             false        Node'
+        echo 'pods         po           v1                             true         Pod'
+        echo 'secrets                   v1                             true         Secret'
+        echo 'services     svc          v1                             true         Service'
+        echo 'ingresses    ing          networking.k8s.io/v1           true         Ingress'
+        echo 'roles                     rbac.authorization.k8s.io/v1   true         Role'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl --kubeconfig ~/.kube/config get '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl --kubeconfig ~/.kube/config get '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 9
+        assert ${lines[1]} same_as "${fg[yellow]}NAME         ${reset_color}SHORTNAMES   APIVERSION                     NAMESPACED   KIND"
+        assert ${lines[2]} same_as "${fg[yellow]}configmaps   ${reset_color}cm           v1                             true         ConfigMap"
+        assert ${lines[3]} same_as "${fg[yellow]}namespaces   ${reset_color}ns           v1                             false        Namespace"
+        assert ${lines[4]} same_as "${fg[yellow]}nodes        ${reset_color}no           v1                             false        Node"
+        assert ${lines[5]} same_as "${fg[yellow]}pods         ${reset_color}po           v1                             true         Pod"
+        assert ${lines[6]} same_as "${fg[yellow]}secrets      ${reset_color}             v1                             true         Secret"
+        assert ${lines[7]} same_as "${fg[yellow]}services     ${reset_color}svc          v1                             true         Service"
+        assert ${lines[8]} same_as "${fg[yellow]}ingresses    ${reset_color}ing          networking.k8s.io/v1           true         Ingress"
+        assert ${lines[9]} same_as "${fg[yellow]}roles        ${reset_color}             rbac.authorization.k8s.io/v1   true         Role"
+    }
+
+    HOME=/root
+    prefix=
+    _fzf_complete_kubectl 'kubectl --kubeconfig ~/.kube/config get '
+}
+
 @test 'Testing completion: kubectl --output=yaml get **' {
     kubectl_mock_1() {
         assert $# equals 3
