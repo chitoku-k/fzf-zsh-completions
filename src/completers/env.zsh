@@ -4,7 +4,7 @@ _fzf_complete_env() {
     setopt local_options no_aliases
     local arguments=("${(Q)${(z)@}[@]}")
     local command_pos=$(_fzf_complete_get_command_pos "${arguments[2,-1]}")
-    arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$command_pos" "${arguments[2,-1]}")"}[@]}")
+    arguments=("${(Q)${(z)$(_fzf_complete_requote_arguments ${(z)arguments[2,-1]})}[@][$command_pos, -1]}")
     local cmd=${arguments[1]}
 
     if (( $+functions[_fzf_complete_$cmd] )); then

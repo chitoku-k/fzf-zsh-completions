@@ -60,11 +60,11 @@ _fzf_complete_git() {
     setopt local_options extended_glob no_aliases
     local prefix_option completing_option
     local command_pos=$(_fzf_complete_get_command_pos "$@")
-    local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$command_pos" "$@")"}[@]}")
+    local arguments=("${(Qe)${(z)$(_fzf_complete_requote_arguments ${~${(z)@}})}[@][$command_pos, -1]}")
     local resolved_commands=()
 
     if (( $command_pos > 1 )); then
-        local -x "${(e)${(z)"$(_fzf_complete_get_env "$command_pos" "$@")"}[@]}"
+        local -x "${(Qe)${(z)$(_fzf_complete_requote_arguments ${~${(z)@}})}[@][1, $command_pos - 1]}"
     fi
 
     while true; do

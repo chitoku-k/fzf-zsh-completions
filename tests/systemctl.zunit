@@ -152,7 +152,7 @@
     _fzf_complete_systemctl 'systemctl status '
 }
 
-@test 'Testing completion: TEST1=value1 TEST2=value2 systemctl status **' {
+@test 'Testing completion: TEST1=$HOME/.config/systemd TEST2=~/.config/systemd systemctl status **' {
     systemctl_mock_1() {
         assert $# equals 5
         assert $1 same_as 'list-units'
@@ -193,7 +193,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'TEST1=value1 TEST2=value2 systemctl status '
+        assert $1 same_as 'TEST1=$HOME/.config/systemd TEST2=~/.config/systemd systemctl status '
 
         echo 'systemctl'
     }
@@ -207,10 +207,10 @@
         assert $5 matches '--preview=*'
         assert $6 same_as '--reverse'
         assert $7 same_as '--'
-        assert $8  same_as 'TEST1=value1 TEST2=value2 systemctl status '
+        assert $8  same_as 'TEST1=$HOME/.config/systemd TEST2=~/.config/systemd systemctl status '
 
-        assert $TEST1 same_as value1
-        assert $TEST2 same_as value2
+        assert $TEST1 same_as /root/.config/systemd
+        assert $TEST2 same_as /root/.config/systemd
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -228,8 +228,10 @@
         assert ${lines[10]} same_as "${fg[green]}●${reset_color} user.slice"
     }
 
+    setopt local_options magic_equal_subst
+    HOME=/root
     prefix=
-    _fzf_complete_systemctl 'TEST1=value1 TEST2=value2 systemctl status '
+    _fzf_complete_systemctl 'TEST1=$HOME/.config/systemd TEST2=~/.config/systemd systemctl status '
 
     assert $TEST1 is_empty
     assert $TEST2 is_empty

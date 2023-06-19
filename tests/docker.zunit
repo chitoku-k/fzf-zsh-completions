@@ -88,10 +88,10 @@
     _fzf_complete_docker 'docker '
 }
 
-@test 'Testing completion: TEST1=value1 TEST2=value2 docker **' {
+@test 'Testing completion: TEST1=$HOME/.docker TEST2=~/.docker docker **' {
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'TEST1=value1 TEST2=value2 docker '
+        assert $1 same_as 'TEST1=$HOME/.docker TEST2=~/.docker docker '
 
         echo 'docker'
     }
@@ -103,16 +103,18 @@
     _fzf_path_completion() {
         assert $# equals 2
         assert $1 same_as ''
-        assert $2 same_as 'TEST1=value1 TEST2=value2 docker '
+        assert $2 same_as 'TEST1=$HOME/.docker TEST2=~/.docker docker '
 
-        assert $TEST1 same_as value1
-        assert $TEST2 same_as value2
+        assert $TEST1 same_as /root/.docker
+        assert $TEST2 same_as /root/.docker
 
         assert __fzf_extract_command mock_times 1
     }
 
+    setopt local_options magic_equal_subst
+    HOME=/root
     prefix=
-    _fzf_complete_docker 'TEST1=value1 TEST2=value2 docker '
+    _fzf_complete_docker 'TEST1=$HOME/.docker TEST2=~/.docker docker '
 
     assert $TEST1 is_empty
     assert $TEST2 is_empty

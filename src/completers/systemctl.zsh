@@ -12,10 +12,10 @@ PREVIEW_OPTIONS
 _fzf_complete_systemctl() {
     setopt local_options no_aliases
     local command_pos=$(_fzf_complete_get_command_pos "$@")
-    local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$command_pos" "$@")"}[@]}")
+    local arguments=("${(Qe)${(z)$(_fzf_complete_requote_arguments ${~${(z)@}})}[@][$command_pos, -1]}")
 
     if (( $command_pos > 1 )); then
-        local -x "${(e)${(z)"$(_fzf_complete_get_env "$command_pos" "$@")"}[@]}"
+        local -x "${(Qe)${(z)$(_fzf_complete_requote_arguments ${~${(z)@}})}[@][1, $command_pos - 1]}"
     fi
 
     local systemctl_options_argument_required=(

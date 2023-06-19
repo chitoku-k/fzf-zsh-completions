@@ -6,18 +6,10 @@ _fzf_complete_get_command_pos() {
     echo ${arguments[(i)$cmd]}
 }
 
-_fzf_complete_trim_env() {
-    local command_pos=$1
-    shift 1
-    local arguments=("${(Q)${(z)@}[@]}")
-    echo ${(q)arguments[$command_pos, -1]}
-}
-
-_fzf_complete_get_env() {
-    local command_pos=$1
-    shift 1
-    local arguments=("${${(z)@}[@]}")
-    echo ${arguments[1, $command_pos - 1]}
+_fzf_complete_requote_arguments() {
+    # FIXME: $HOME and '$HOME' both expands to $HOME, needs a proper escape that can distinguish them.
+    local arguments=("${(Q)@}")
+    echo ${(q)arguments[@]}
 }
 
 _fzf_complete_parse_completing_option() {

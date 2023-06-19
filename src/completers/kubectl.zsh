@@ -6,14 +6,15 @@ colors
 _fzf_complete_kubectl() {
     setopt local_options extended_glob no_aliases
     local command_pos=$(_fzf_complete_get_command_pos "$@")
-    local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$command_pos" "$@")"}[@]}")
+    local arguments=("${(Qe)${(z)$(_fzf_complete_requote_arguments ${~${(z)@}})}[@][$command_pos, -1]}")
+
     local options_and_subcommand=()
     local kubectl_arguments=()
     local last_argument=${arguments[-1]}
     local prefix_option completing_option subcommands namespace resource resource_suffix resource_apiversion_option name
 
     if (( $command_pos > 1 )); then
-        local -x "${(e)${(z)"$(_fzf_complete_get_env "$command_pos" "$@")"}[@]}"
+        local -x "${(Qe)${(z)$(_fzf_complete_requote_arguments ${~${(z)@}})}[@][1, $command_pos - 1]}"
     fi
 
     local kubectl_inherited_options_argument_required=(
@@ -1571,19 +1572,13 @@ _fzf_complete_kubectl_parse_kubectl_arguments() {
     local shorts=(${all_options:#--*})
     local longs=(${all_options:#-[a-zA-Z0-9]})
 
-    local parsed_arguments=()
     if inherit_values=$(_fzf_complete_parse_option_arguments "$shorts" "$longs" "${(F)kubectl_options_argument_required}" 'option argument' "${arguments[@]}"); then
-        parsed_arguments+=("${(Q)${(z)inherit_values}[@]}")
+        kubectl_arguments+=("${(Q)${(z)inherit_values}[@]}")
     fi
 
     if inherit_values=$(_fzf_complete_parse_option_arguments "$shorts" "$longs" "${(F)kubectl_options_argument_required}" 'option argument' "${(Q)${(z)RBUFFER}[@]}"); then
-        parsed_arguments+=("${(Q)${(z)inherit_values}[@]}")
+        kubectl_arguments+=("${(Q)${(z)inherit_values}[@]}")
     fi
-
-    local parsed_argument
-    for parsed_argument in "${parsed_arguments[@]}"; do
-        kubectl_arguments+=("$(echo ${(e)~parsed_argument})")
-    done
 }
 
 _fzf_complete_kubectl_parse_global_options_and_subcommand() {
