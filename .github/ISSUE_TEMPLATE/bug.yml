@@ -26,7 +26,7 @@ body:
     attributes:
       label: awk version
       description: '`awk --version` output'
-      placeholder: 'GNU Awk 5.2.0, API 3.2, PMA Avon 7, (GNU MPFR 4.1.0-p13, GNU MP 6.2.1)'
+      placeholder: 'GNU Awk 5.2.2, API 3.2, PMA Avon 8-g1, (GNU MPFR 4.2.0-p9, GNU MP 6.2.1)'
       render: shell
     validations:
       required: true
@@ -42,7 +42,7 @@ body:
     attributes:
       label: fzf version
       description: '`fzf --version` output'
-      placeholder: 0.34.0 (04d0b02)
+      placeholder: 0.42.0 (d471067e)
       render: shell
     validations:
       required: true
@@ -50,7 +50,7 @@ body:
     attributes:
       label: Command version(s)
       description: 'Command version(s) for completing command (e.g., `git --version` for git completion)'
-      placeholder: git version 2.38.0
+      placeholder: git version 2.41.0
       render: shell
     validations:
       required: true
@@ -84,6 +84,17 @@ body:
         g='git'
         gc='git commit'
         k='kubectl'
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Options
+      description: '`setopt` output'
+      placeholder: |
+        extendedglob
+        magicequalsubst
+        nonomatch
       render: shell
     validations:
       required: true
