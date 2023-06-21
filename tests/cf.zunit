@@ -140,7 +140,7 @@
     _fzf_complete_cf 'cf app '
 }
 
-@test 'Testing completion: TEST1=value1 TEST2=value2 cf app **' {
+@test 'Testing completion: TEST1=$HOME/.cf TEST2=~/.cf cf app **' {
     cf_mock_1() {
         assert $# equals 1
         assert $1 same_as '--version'
@@ -163,7 +163,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'TEST1=value1 TEST2=value2 cf app '
+        assert $1 same_as 'TEST1=$HOME/.cf TEST2=~/.cf cf app '
 
         echo 'cf'
     }
@@ -174,10 +174,10 @@
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--'
-        assert $5 same_as 'TEST1=value1 TEST2=value2 cf app '
+        assert $5 same_as 'TEST1=$HOME/.cf TEST2=~/.cf cf app '
 
-        assert $TEST1 same_as value1
-        assert $TEST2 same_as value2
+        assert $TEST1 same_as /root/.cf
+        assert $TEST2 same_as /root/.cf
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -189,8 +189,10 @@
         assert ${lines[4]} same_as "${fg[yellow]}app-03   ${reset_color}stopped           0/1         256M     1G     app-03.example.com"
     }
 
+    setopt local_options magic_equal_subst
+    HOME=/root
     prefix=
-    _fzf_complete_cf 'TEST1=value1 TEST2=value2 cf app '
+    _fzf_complete_cf 'TEST1=$HOME/.cf TEST2=~/.cf cf app '
 
     assert $TEST1 is_empty
     assert $TEST2 is_empty

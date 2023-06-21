@@ -6,14 +6,15 @@ colors
 _fzf_complete_kubectl() {
     setopt local_options extended_glob no_aliases
     local command_pos=$(_fzf_complete_get_command_pos "$@")
-    local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$command_pos" "$@")"}[@]}")
+    local arguments=("${(Qe)${(z)$(_fzf_complete_requote_arguments ${~${(z)@}})}[@][$command_pos, -1]}")
+
     local options_and_subcommand=()
     local kubectl_arguments=()
     local last_argument=${arguments[-1]}
     local prefix_option completing_option subcommands namespace resource resource_suffix resource_apiversion_option name
 
     if (( $command_pos > 1 )); then
-        local -x "${(e)${(z)"$(_fzf_complete_get_env "$command_pos" "$@")"}[@]}"
+        local -x "${(Qe)${(z)$(_fzf_complete_requote_arguments ${~${(z)@}})}[@][1, $command_pos - 1]}"
     fi
 
     local kubectl_inherited_options_argument_required=(

@@ -3,11 +3,11 @@
 _fzf_complete_yarn() {
     setopt local_options no_aliases
     local command_pos=$(_fzf_complete_get_command_pos "$@")
-    local arguments=("${(Q)${(z)"$(_fzf_complete_trim_env "$command_pos" "$@")"}[@]}")
+    local arguments=("${(Qe)${(z)$(_fzf_complete_requote_arguments ${~${(z)@}})}[@][$command_pos, -1]}")
     local subcommand=${arguments[2]}
 
     if (( $command_pos > 1 )); then
-        local -x "${(e)${(z)"$(_fzf_complete_get_env "$command_pos" "$@")"}[@]}"
+        local -x "${(Qe)${(z)$(_fzf_complete_requote_arguments ${~${(z)@}})}[@][1, $command_pos - 1]}"
     fi
 
     if (( $+functions[_fzf_complete_yarn_${subcommand}] )) && _fzf_complete_yarn_${subcommand} "$@"; then

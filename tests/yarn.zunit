@@ -116,10 +116,10 @@
     _fzf_complete_yarn 'yarn '
 }
 
-@test 'Testing completion: TEST1=value1 TEST2=value2 yarn **' {
+@test 'Testing completion: TEST1=$HOME/.yarn TEST2=~/.yarn yarn **' {
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'TEST1=value1 TEST2=value2 yarn '
+        assert $1 same_as 'TEST1=$HOME/.yarn TEST2=~/.yarn yarn '
 
         echo 'yarn'
     }
@@ -131,10 +131,10 @@
         assert $3 same_as '--print0'
         assert $4 same_as '--tiebreak=index'
         assert $5 same_as '--'
-        assert $6 same_as 'TEST1=value1 TEST2=value2 yarn '
+        assert $6 same_as 'TEST1=$HOME/.yarn TEST2=~/.yarn yarn '
 
-        assert $TEST1 same_as value1
-        assert $TEST2 same_as value2
+        assert $TEST1 same_as /root/.yarn
+        assert $TEST2 same_as /root/.yarn
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -167,8 +167,10 @@
         assert ${actual6[1]} same_as 'lines'
     }
 
+    setopt local_options magic_equal_subst
+    HOME=/root
     prefix=
-    _fzf_complete_yarn 'TEST1=value1 TEST2=value2 yarn '
+    _fzf_complete_yarn 'TEST1=$HOME/.yarn TEST2=~/.yarn yarn '
 
     assert $TEST1 is_empty
     assert $TEST2 is_empty
