@@ -1119,7 +1119,7 @@ _fzf_complete_kubectl-resource-fields() {
     _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <({
         echo TYPE FIELD
         kubectl explain --recursive "$resource" "${kubectl_arguments[@]}" 2> /dev/null | awk '
-            NF < 2 || !/<.+>/ || !/^\s/ {
+            NF < 2 || !/<.+>/ || !/^ / {
                 next
             }
             match($0, /^ +/) {
