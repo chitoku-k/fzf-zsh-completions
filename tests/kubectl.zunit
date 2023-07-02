@@ -17604,40 +17604,40 @@
         assert $3 same_as 'pods'
         assert $4 same_as '--api-version=v1'
 
-        echo 'KIND:     Pod'
-        echo 'VERSION:  v1'
+        echo 'KIND:       Pod'
+        echo 'VERSION:    v1'
         echo ''
         echo 'DESCRIPTION:'
-        echo '     Pod is a collection of containers that can run on a host. This resource is'
-        echo '     created by clients and scheduled onto hosts.'
+        echo '    Pod is a collection of containers that can run on a host. This resource is'
+        echo '    created by clients and scheduled onto hosts.'
         echo ''
         echo 'FIELDS:'
-        echo '   apiVersion	<string>'
-        echo '   kind	<string>'
-        echo '   metadata	<Object>'
-        echo '      annotations	<map[string]string>'
-        echo '      labels	<map[string]string>'
-        echo '      name	<string>'
-        echo '      namespace	<string>'
-        echo '   spec	<Object>'
-        echo '      containers	<[]Object>'
-        echo '         args	<[]string>'
-        echo '         command	<[]string>'
-        echo '         env	<[]Object>'
+        echo '  apiVersion	<string>'
+        echo '  kind	<string>'
+        echo '  metadata	<ObjectMeta>'
+        echo '    annotations	<map[string]string>'
+        echo '    labels	<map[string]string>'
+        echo '    name	<string>'
+        echo '    namespace	<string>'
+        echo '  spec	<PodSpec>'
+        echo '    containers	<[]Container> -required-'
+        echo '      args	<[]string>'
+        echo '      command	<[]string>'
+        echo '      env	<[]EnvVar>'
+        echo '        name	<string> -required-'
+        echo '        value	<string>'
+        echo '        valueFrom	<EnvVarSource>'
+        echo '          configMapKeyRef	<ConfigMapKeySelector>'
+        echo '            key	<string> -required-'
         echo '            name	<string>'
-        echo '            value	<string>'
-        echo '            valueFrom	<Object>'
-        echo '               configMapKeyRef	<Object>'
-        echo '                  key	<string>'
-        echo '                  name	<string>'
-        echo '                  optional	<boolean>'
-        echo '         image	<string>'
-        echo '         imagePullPolicy	<string>'
-        echo '         name	<string>'
-        echo '   status	<Object>'
-        echo '      podIP	<string>'
-        echo '      podIPs	<[]Object>'
-        echo '         ip	<string>'
+        echo '            optional	<boolean>'
+        echo '      image	<string>'
+        echo '      imagePullPolicy	<string>'
+        echo '      name	<string> -required-'
+        echo '  status	<PodStatus>'
+        echo '    podIP	<string>'
+        echo '    podIPs	<[]PodIP>'
+        echo '      ip	<string>'
     }
 
     __fzf_extract_command_mock_1() {
@@ -17659,33 +17659,33 @@
         assert __fzf_extract_command mock_times 1
         assert kubectl mock_times 1
         assert ${#lines} equals 27
-        assert ${lines[1]} same_as "${fg[green]}TYPE             $reset_color  ${fg[yellow]}FIELD                                                 $reset_color"
-        assert ${lines[2]} same_as "${fg[green]}string           $reset_color  ${fg[yellow]}apiVersion                                            $reset_color"
-        assert ${lines[3]} same_as "${fg[green]}string           $reset_color  ${fg[yellow]}kind                                                  $reset_color"
-        assert ${lines[4]} same_as "${fg[green]}Object           $reset_color  ${fg[yellow]}metadata                                              $reset_color"
-        assert ${lines[5]} same_as "${fg[green]}map[string]string$reset_color  ${fg[yellow]}metadata.annotations                                  $reset_color"
-        assert ${lines[6]} same_as "${fg[green]}map[string]string$reset_color  ${fg[yellow]}metadata.labels                                       $reset_color"
-        assert ${lines[7]} same_as "${fg[green]}string           $reset_color  ${fg[yellow]}metadata.name                                         $reset_color"
-        assert ${lines[8]} same_as "${fg[green]}string           $reset_color  ${fg[yellow]}metadata.namespace                                    $reset_color"
-        assert ${lines[9]} same_as "${fg[green]}Object           $reset_color  ${fg[yellow]}spec                                                  $reset_color"
-        assert ${lines[10]} same_as "${fg[green]}[]Object         $reset_color  ${fg[yellow]}spec.containers                                       $reset_color"
-        assert ${lines[11]} same_as "${fg[green]}[]string         $reset_color  ${fg[yellow]}spec.containers.args                                  $reset_color"
-        assert ${lines[12]} same_as "${fg[green]}[]string         $reset_color  ${fg[yellow]}spec.containers.command                               $reset_color"
-        assert ${lines[13]} same_as "${fg[green]}[]Object         $reset_color  ${fg[yellow]}spec.containers.env                                   $reset_color"
-        assert ${lines[14]} same_as "${fg[green]}string           $reset_color  ${fg[yellow]}spec.containers.env.name                              $reset_color"
-        assert ${lines[15]} same_as "${fg[green]}string           $reset_color  ${fg[yellow]}spec.containers.env.value                             $reset_color"
-        assert ${lines[16]} same_as "${fg[green]}Object           $reset_color  ${fg[yellow]}spec.containers.env.valueFrom                         $reset_color"
-        assert ${lines[17]} same_as "${fg[green]}Object           $reset_color  ${fg[yellow]}spec.containers.env.valueFrom.configMapKeyRef         $reset_color"
-        assert ${lines[18]} same_as "${fg[green]}string           $reset_color  ${fg[yellow]}spec.containers.env.valueFrom.configMapKeyRef.key     $reset_color"
-        assert ${lines[19]} same_as "${fg[green]}string           $reset_color  ${fg[yellow]}spec.containers.env.valueFrom.configMapKeyRef.name    $reset_color"
-        assert ${lines[20]} same_as "${fg[green]}boolean          $reset_color  ${fg[yellow]}spec.containers.env.valueFrom.configMapKeyRef.optional$reset_color"
-        assert ${lines[21]} same_as "${fg[green]}string           $reset_color  ${fg[yellow]}spec.containers.image                                 $reset_color"
-        assert ${lines[22]} same_as "${fg[green]}string           $reset_color  ${fg[yellow]}spec.containers.imagePullPolicy                       $reset_color"
-        assert ${lines[23]} same_as "${fg[green]}string           $reset_color  ${fg[yellow]}spec.containers.name                                  $reset_color"
-        assert ${lines[24]} same_as "${fg[green]}Object           $reset_color  ${fg[yellow]}status                                                $reset_color"
-        assert ${lines[25]} same_as "${fg[green]}string           $reset_color  ${fg[yellow]}status.podIP                                          $reset_color"
-        assert ${lines[26]} same_as "${fg[green]}[]Object         $reset_color  ${fg[yellow]}status.podIPs                                         $reset_color"
-        assert ${lines[27]} same_as "${fg[green]}string           $reset_color  ${fg[yellow]}status.podIPs.ip                                      $reset_color"
+        assert ${lines[1]} same_as "${fg[green]}TYPE                $reset_color  ${fg[yellow]}FIELD                                                 $reset_color"
+        assert ${lines[2]} same_as "${fg[green]}string              $reset_color  ${fg[yellow]}apiVersion                                            $reset_color"
+        assert ${lines[3]} same_as "${fg[green]}string              $reset_color  ${fg[yellow]}kind                                                  $reset_color"
+        assert ${lines[4]} same_as "${fg[green]}ObjectMeta          $reset_color  ${fg[yellow]}metadata                                              $reset_color"
+        assert ${lines[5]} same_as "${fg[green]}map[string]string   $reset_color  ${fg[yellow]}metadata.annotations                                  $reset_color"
+        assert ${lines[6]} same_as "${fg[green]}map[string]string   $reset_color  ${fg[yellow]}metadata.labels                                       $reset_color"
+        assert ${lines[7]} same_as "${fg[green]}string              $reset_color  ${fg[yellow]}metadata.name                                         $reset_color"
+        assert ${lines[8]} same_as "${fg[green]}string              $reset_color  ${fg[yellow]}metadata.namespace                                    $reset_color"
+        assert ${lines[9]} same_as "${fg[green]}PodSpec             $reset_color  ${fg[yellow]}spec                                                  $reset_color"
+        assert ${lines[10]} same_as "${fg[green]}[]Container         $reset_color  ${fg[yellow]}spec.containers                                       $reset_color"
+        assert ${lines[11]} same_as "${fg[green]}[]string            $reset_color  ${fg[yellow]}spec.containers.args                                  $reset_color"
+        assert ${lines[12]} same_as "${fg[green]}[]string            $reset_color  ${fg[yellow]}spec.containers.command                               $reset_color"
+        assert ${lines[13]} same_as "${fg[green]}[]EnvVar            $reset_color  ${fg[yellow]}spec.containers.env                                   $reset_color"
+        assert ${lines[14]} same_as "${fg[green]}string              $reset_color  ${fg[yellow]}spec.containers.env.name                              $reset_color"
+        assert ${lines[15]} same_as "${fg[green]}string              $reset_color  ${fg[yellow]}spec.containers.env.value                             $reset_color"
+        assert ${lines[16]} same_as "${fg[green]}EnvVarSource        $reset_color  ${fg[yellow]}spec.containers.env.valueFrom                         $reset_color"
+        assert ${lines[17]} same_as "${fg[green]}ConfigMapKeySelector$reset_color  ${fg[yellow]}spec.containers.env.valueFrom.configMapKeyRef         $reset_color"
+        assert ${lines[18]} same_as "${fg[green]}string              $reset_color  ${fg[yellow]}spec.containers.env.valueFrom.configMapKeyRef.key     $reset_color"
+        assert ${lines[19]} same_as "${fg[green]}string              $reset_color  ${fg[yellow]}spec.containers.env.valueFrom.configMapKeyRef.name    $reset_color"
+        assert ${lines[20]} same_as "${fg[green]}boolean             $reset_color  ${fg[yellow]}spec.containers.env.valueFrom.configMapKeyRef.optional$reset_color"
+        assert ${lines[21]} same_as "${fg[green]}string              $reset_color  ${fg[yellow]}spec.containers.image                                 $reset_color"
+        assert ${lines[22]} same_as "${fg[green]}string              $reset_color  ${fg[yellow]}spec.containers.imagePullPolicy                       $reset_color"
+        assert ${lines[23]} same_as "${fg[green]}string              $reset_color  ${fg[yellow]}spec.containers.name                                  $reset_color"
+        assert ${lines[24]} same_as "${fg[green]}PodStatus           $reset_color  ${fg[yellow]}status                                                $reset_color"
+        assert ${lines[25]} same_as "${fg[green]}string              $reset_color  ${fg[yellow]}status.podIP                                          $reset_color"
+        assert ${lines[26]} same_as "${fg[green]}[]PodIP             $reset_color  ${fg[yellow]}status.podIPs                                         $reset_color"
+        assert ${lines[27]} same_as "${fg[green]}string              $reset_color  ${fg[yellow]}status.podIPs.ip                                      $reset_color"
     }
 
     prefix=pods.
@@ -17699,24 +17699,23 @@
         assert $2 same_as '--recursive'
         assert $3 same_as 'pods.status'
 
-        echo 'KIND:     Pod'
-        echo 'VERSION:  v1'
+        echo 'KIND:       Pod'
+        echo 'VERSION:    v1'
         echo ''
-        echo 'RESOURCE: status <Object>'
+        echo 'FIELD: status <PodStatus>'
         echo ''
         echo 'DESCRIPTION:'
-        echo '     Most recently observed status of the pod. This data may not be up to date.'
-        echo '     Populated by the system. Read-only. More info:'
-        echo '     https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status'
-        echo ''
-        echo '     PodStatus represents information about the status of a pod. Status may'
-        echo '     trail the actual state of a system, especially if the node that hosts the'
-        echo '     pod cannot contact the control plane.'
+        echo '    Most recently observed status of the pod. This data may not be up to date.'
+        echo '    Populated by the system. Read-only. More info:'
+        echo '    https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status'
+        echo '    PodStatus represents information about the status of a pod. Status may trail'
+        echo '    the actual state of a system, especially if the node that hosts the pod'
+        echo '    cannot contact the control plane.'
         echo ''
         echo 'FIELDS:'
-        echo '   podIP	<string>'
-        echo '   podIPs	<[]Object>'
-        echo '      ip	<string>'
+        echo '  podIP	<string>'
+        echo '  podIPs	<[]PodIP>'
+        echo '    ip	<string>'
     }
 
     __fzf_extract_command_mock_1() {
@@ -17738,10 +17737,10 @@
         assert __fzf_extract_command mock_times 1
         assert kubectl mock_times 1
         assert ${#lines} equals 4
-        assert ${lines[1]} same_as "${fg[green]}TYPE    $reset_color  ${fg[yellow]}FIELD    $reset_color"
-        assert ${lines[2]} same_as "${fg[green]}string  $reset_color  ${fg[yellow]}podIP    $reset_color"
-        assert ${lines[3]} same_as "${fg[green]}[]Object$reset_color  ${fg[yellow]}podIPs   $reset_color"
-        assert ${lines[4]} same_as "${fg[green]}string  $reset_color  ${fg[yellow]}podIPs.ip$reset_color"
+        assert ${lines[1]} same_as "${fg[green]}TYPE   $reset_color  ${fg[yellow]}FIELD    $reset_color"
+        assert ${lines[2]} same_as "${fg[green]}string $reset_color  ${fg[yellow]}podIP    $reset_color"
+        assert ${lines[3]} same_as "${fg[green]}[]PodIP$reset_color  ${fg[yellow]}podIPs   $reset_color"
+        assert ${lines[4]} same_as "${fg[green]}string $reset_color  ${fg[yellow]}podIPs.ip$reset_color"
     }
 
     prefix=pods.status.
