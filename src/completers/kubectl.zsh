@@ -1250,7 +1250,7 @@ _fzf_complete_kubectl-annotations_post() {
             echo
         fi
 
-        echo -n ${item%=*}=${${(q+)item#*=}//\\n/\\\\n}
+        echo -n ${item%=*}=${${(q-)item#*=}//$'\n'/\'\$\'\\\\n\'\'}
         first=
     done
 }

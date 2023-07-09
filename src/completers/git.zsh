@@ -778,7 +778,7 @@ _fzf_complete_git-files_tree_and_index_post() {
     local input=$(cat)
 
     for filename in ${(0)input}; do
-        echo ${${(q+)filename}//\\n/\\\\n}
+        echo ${${(q-)filename}//$'\n'/\'\$\'\\\\n\'\'}
     done
 }
 
@@ -820,7 +820,7 @@ _fzf_complete_git-status-files_post() {
     local input=$(cat)
 
     for filename in ${(0)input}; do
-        echo ${${(q+)filename:3}//\\n/\\\\n}
+        echo ${${(q-)filename:3}//$'\n'/\'\$\'\\\\n\'\'}
     done
 }
 
@@ -897,7 +897,7 @@ _fzf_complete_git-show-files_post() {
     local input=$(cat)
 
     for filename in ${(0)input}; do
-        echo ${${(q+)filename}//\\n/\\\\n}
+        echo ${${(q-)filename}//$'\n'/\'\$\'\\\\n\'\'}
     done
 }
 

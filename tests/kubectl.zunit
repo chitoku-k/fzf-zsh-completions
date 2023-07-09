@@ -26107,7 +26107,7 @@
     assert $state equals 0
     assert ${#lines} equals 2
     assert ${lines[1]} same_as "cni.projectcalico.org/podIP=10.0.0.1/32"
-    assert ${lines[2]} same_as "note=\$'line\\nbreaks'"
+    assert ${lines[2]} same_as "note='line'$'\\n''breaks'"
 }
 
 @test 'Testing post: a label name' {

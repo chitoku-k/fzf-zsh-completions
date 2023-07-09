@@ -1,4 +1,4 @@
-typeset -g mock_dir=${funcsourcetrace[1]:P:h:h}/_support/mock
+typeset -g mock_dir=${funcsourcetrace[1]:a:h:h}/_support/mock
 
 mock() {
     local target=$1
