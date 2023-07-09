@@ -791,7 +791,7 @@ _fzf_complete_git-status-files() {
     _fzf_complete --ansi --read0 --print0 ${(Q)${(Z+n+)fzf_options}} -- "$@" < <({
         local previous_status
         local filename
-        local files=$(git status --porcelain=v1 -z ${(Z+n+)git_options} 2> /dev/null)
+        local files=$(git status --porcelain -z ${(Z+n+)git_options} 2> /dev/null)
         local cdup=$(git rev-parse --show-cdup 2> /dev/null)
 
         for filename in ${(0)files}; do
