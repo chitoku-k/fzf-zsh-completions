@@ -14,11 +14,11 @@ _fzf_complete_tabularize() {
         -v colors_args=${(pj: :)@} \
         -v reset=$reset_color '
         BEGIN {
-            split(colors_args, colors, " ")
+            colors_len = split(colors_args, colors, " ")
         }
         {
             str = $0
-            for (i = 1; i <= length(colors); ++i) {
+            for (i = 1; i <= colors_len; ++i) {
                 field_max[i] = length($i) > field_max[i] ? length($i) : field_max[i]
                 fields[NR, i] = $i
                 pos = index(str, FS)
@@ -30,7 +30,7 @@ _fzf_complete_tabularize() {
         }
         END {
             for (i = 1; i <= NR; ++i) {
-                for (j = 1; j <= length(colors); ++j) {
+                for (j = 1; j <= colors_len; ++j) {
                     printf "%s%s%-" field_max[j] "s%s", (j > 1 ? "  " : ""), colors[j], fields[i, j], reset
                 }
                 if ((i, j) in fields) {
@@ -52,23 +52,24 @@ _fzf_complete_colorize() {
         -v colors_args=${(pj: :)@} \
         -v reset=$reset_color '
         BEGIN {
-            split(colors_args, colors, " ")
+            colors_len = split(colors_args, colors, " ")
             header = 1
         }
         header {
             delete fields
-            fields[1] = 1
+            fields_len = 0
+            fields[++fields_len] = 1
             header = 0
 
             for (i = 2; i <= length($0); ++i) {
                 if (substr($0, i - 1, 1) == " " && substr($0, i, 1) != " ") {
-                    fields[length(fields) + 1] = i
+                    fields[++fields_len] = i
                 }
             }
         }
         {
             total = 0
-            for (i = 1; i<= length(colors); ++i) {
+            for (i = 1; i <= colors_len; ++i) {
                 width = fields[i + 1] - fields[i] < 0 ? length($0) : fields[i + 1] - fields[i]
                 total += width
                 printf "%s%s%s", colors[i], substr($0, fields[i], width), reset
