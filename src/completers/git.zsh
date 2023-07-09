@@ -716,7 +716,7 @@ _fzf_complete_git-files_tree() {
         local git_prefix=$(git rev-parse --show-prefix 2> /dev/null)
         cd $(git rev-parse --show-toplevel 2> /dev/null)
 
-        local files=$(git ls-files --deduplicate -z ${(Z+n+)git_options} 2> /dev/null)
+        local files=$(git ls-files -z ${(Z+n+)git_options} 2> /dev/null)
         files=(${(0)files})
         local paths=($cdup${^files})
 
@@ -762,7 +762,7 @@ _fzf_complete_git-files_tree_and_index() {
         cd $(git rev-parse --show-toplevel 2> /dev/null)
 
         local files=()
-        local ls_files=$(git ls-files --deduplicate -z ${(Z+n+)git_ls_files_options} 2> /dev/null)
+        local ls_files=$(git ls-files -z ${(Z+n+)git_ls_files_options} 2> /dev/null)
         local ls_tree=$(git ls-tree --name-only --full-tree -r -z ${(Z+n+)git_ls_tree_options} ${treeish:-HEAD} 2> /dev/null)
         files+=(${(0)ls_files})
         files+=(${(0)ls_tree})
