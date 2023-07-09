@@ -644,8 +644,8 @@ _fzf_complete_git-commits() {
     shift
 
     _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option$prefix_ref" < <({
-        git for-each-ref refs/heads refs/remotes --format='%(refname:lstrip=2) branch %(contents:subject)' 2> /dev/null
-        git for-each-ref refs/tags --format='%(refname:lstrip=2) tag %(contents:subject)' --sort=-version:refname 2> /dev/null
+        git for-each-ref refs/heads refs/remotes --format='%(refname:strip=2) branch %(contents:subject)' 2> /dev/null
+        git for-each-ref refs/tags --format='%(refname:strip=2) tag %(contents:subject)' --sort=-version:refname 2> /dev/null
         git log --format='%h commit %s' 2> /dev/null
     } | _fzf_complete_tabularize ${fg[yellow]} ${fg[green]})
 }
