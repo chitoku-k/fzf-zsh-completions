@@ -3,7 +3,7 @@ on:
   - push
 
 jobs:
-  build:
+  test:
     name: Unit Tests
     runs-on: ${{ matrix.os }}
     strategy:
@@ -31,33 +31,50 @@ jobs:
           sudo update-alternatives --set awk /usr/bin/${{ matrix.awk }}
       - name: Show versions
         run: |
-          echo ::group::zsh
-          zsh --version
-          echo ::endgroup::
-
-          echo ::group::jq
-          jq --version
-          echo ::endgroup::
-
-          echo ::group::awk
-          awk --version 2> /dev/null || awk -W version
-          echo ::endgroup::
-
-          echo ::group::git
-          git --version
-          echo ::endgroup::
-
-          echo ::group::node
-          node --version
-          echo ::endgroup::
-
-          echo ::group::yarn
-          yarn --version
-          echo ::endgroup::
-
-          echo ::group::php
-          php --version
-          echo ::endgroup::
+          tests/versions.zsh
       - name: Run unit tests
         run: |
-          tests/test.zsh --tap --time-limit=30 tests/*.zunit
+          tests/test.zsh --tap --time-limit 30 tests/*.zunit
+  test-container:
+    name: Unit Tests (Container)
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - image: ubuntu-16.04
+            awk: gawk
+          - image: ubuntu-16.04
+            awk: mawk
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Build image
+        id: build
+        uses: docker/build-push-action@v4
+        with:
+          context: tests/_dockerfiles/${{ matrix.image }}
+          load: true
+          build-args: |
+            AWK=${{ matrix.awk }}
+      - name: Show versions
+        run: |
+          docker run \
+            --rm \
+            --env=GITHUB_ACTIONS \
+            --mount=type=bind,source=$(pwd),destination=/fzf-zsh-completions \
+            --workdir=/fzf-zsh-completions \
+            '${{ steps.build.outputs.imageid }}' \
+            tests/versions.zsh
+      - name: Run unit tests
+        run: |
+          docker run \
+            --rm \
+            --mount=type=bind,source=$(pwd),destination=/fzf-zsh-completions \
+            --workdir=/fzf-zsh-completions \
+            '${{ steps.build.outputs.imageid }}' \
+            tests/test.zsh --tap --time-limit 30 tests/*.zunit
