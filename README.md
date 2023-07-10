@@ -20,8 +20,8 @@ sequence that defaults to `**`.
 The following dependencies are optional unless those completions are desired:
 - [docker][] CLI >= 17.03.0 (for `docker` completions)
 - [git][] >= 2.7.1 (for `git` completions)
-- [node][] >= 5.0.0 (for `node` completions)
-- [php][] >= 5.2.3 (for `php` completions)
+- [node][] >= 5.0.0 (for `npm` completions)
+- [php][] >= 5.2.3 (for `composer` completions)
 
 ## Installation
 
