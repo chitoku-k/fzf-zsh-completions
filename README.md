@@ -12,9 +12,16 @@ sequence that defaults to `**`.
 
 ## Prerequisites
 
-- [fzf][]
-- [Zsh][] >= 5.3
-- [jq][]
+- [fzf][] >= 0.21.1
+- [Zsh][] >= 5.1
+- [jq][] >= 1.5
+- awk
+
+The following dependencies are optional unless those completions are desired:
+- [docker][] CLI >= 17.03.0 (for `docker` completions)
+- [git][] >= 2.7.1 (for `git` completions)
+- [node][] >= 5.0.0 (for `npm` completions)
+- [php][] >= 5.2.0 (for `composer` completions)
 
 ## Installation
 
@@ -126,3 +133,7 @@ tests/test.zsh
 [Zsh]:             https://www.zsh.org/
 [fzf-preview.zsh]: https://github.com/yuki-ycino/fzf-preview.zsh
 [jq]:              https://github.com/stedolan/jq
+[docker]:          https://github.com/docker/cli
+[git]:             https://github.com/git/git
+[node]:            https://github.com/nodejs/node
+[php]:             https://github.com/php/php-src

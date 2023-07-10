@@ -8151,9 +8151,9 @@
     assert ${lines[1]} same_as 'file1'
     assert ${lines[2]} same_as 'directory1/file2'
     assert ${lines[3]} same_as "' file3 containing space '"
-    assert ${lines[4]} same_as "\$'file4\\ncontaining\\nnewlines'"
+    assert ${lines[4]} same_as "'file4'$'\\n''containing'$'\\n''newlines'"
     assert ${lines[5]} same_as "' file5 containing space '"
-    assert ${lines[6]} same_as "\$'directory2/file6\\ncontaining\\nnewlines'"
+    assert ${lines[6]} same_as "'directory2/file6'$'\\n''containing'$'\\n''newlines'"
 }
 
 @test 'Testing post: git repositories' {
@@ -8202,9 +8202,9 @@
     assert ${lines[1]} same_as 'file1'
     assert ${lines[2]} same_as 'directory1/file2'
     assert ${lines[3]} same_as "' file3 containing space '"
-    assert ${lines[4]} same_as "\$'file4\\ncontaining\\nnewlines'"
+    assert ${lines[4]} same_as "'file4'$'\\n''containing'$'\\n''newlines'"
     assert ${lines[5]} same_as "' file5 containing space '"
-    assert ${lines[6]} same_as "\$'directory2/file6\\ncontaining\\nnewlines'"
+    assert ${lines[6]} same_as "'directory2/file6'$'\\n''containing'$'\\n''newlines'"
 }
 
 @test 'Testing post: git files in tree and index' {
@@ -8225,9 +8225,9 @@
     assert ${lines[1]} same_as 'file1'
     assert ${lines[2]} same_as 'directory1/file2'
     assert ${lines[3]} same_as "' file3 containing space '"
-    assert ${lines[4]} same_as "\$'file4\\ncontaining\\nnewlines'"
+    assert ${lines[4]} same_as "'file4'$'\\n''containing'$'\\n''newlines'"
     assert ${lines[5]} same_as "' file5 containing space '"
-    assert ${lines[6]} same_as "\$'directory2/file6\\ncontaining\\nnewlines'"
+    assert ${lines[6]} same_as "'directory2/file6'$'\\n''containing'$'\\n''newlines'"
 }
 
 @test 'Testing post: git notes' {

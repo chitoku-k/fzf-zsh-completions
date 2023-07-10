@@ -1250,7 +1250,7 @@ _fzf_complete_kubectl-annotations_post() {
             echo
         fi
 
-        echo -n ${item%=*}=${${(q+)item#*=}//\\n/\\\\n}
+        echo -n ${item%=*}=${${(q-)item#*=}//$'\n'/\'\$\'\\\\n\'\'}
         first=
     done
 }
@@ -1304,7 +1304,7 @@ _fzf_complete_kubectl-selectors() {
                 echo KEY VALUE
             fi
 
-            kubectl get "${resource:-all}" "${kubectl_arguments[@]}" -o jsonpath='{.items[*].metadata.labels}' |
+            kubectl get "${resource:-all}" "${kubectl_arguments[@]}" -o jsonpath='{range .items[*]}{.metadata.labels}{"\n"}{end}' |
                 if [[ $prefix_option = *! ]]; then
                     jq --slurp -r 'map(to_entries[]) | group_by(.key) | map("\(first | .key) \(map(.value) | unique | join(", "))")[]'
                 elif [[ $prefix_option = *= ]] && [[ -n $selector ]]; then
@@ -1452,7 +1452,7 @@ _fzf_complete_kubectl-field-selectors() {
     _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <(
         _fzf_complete_tabularize $fg[yellow] < <({
             echo KEY VALUE
-            kubectl get "${resource:-all}" "${kubectl_arguments[@]}" -o jsonpath='{.items[*]}' |
+            kubectl get "${resource:-all}" "${kubectl_arguments[@]}" -o jsonpath='{range .items[*]}{@}{"\n"}{end}' |
                 jq --slurp -r --arg labels "$labels" '
                     [[($labels | split(" ")), .] | combinations] |
                         map(
@@ -1501,7 +1501,7 @@ _fzf_complete_kubectl-label-columns() {
     _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <(
         _fzf_complete_tabularize $fg[yellow] < <({
             echo KEY VALUES
-            kubectl get "$resource" "${kubectl_arguments[@]}" -o jsonpath='{.items[*].metadata.labels}' |
+            kubectl get "$resource" "${kubectl_arguments[@]}" -o jsonpath='{range .items[*]}{.metadata.labels}{"\n"}{end}' |
                 jq --slurp -r 'map(to_entries[]) | group_by(.key) | map("\(first | .key) \(map(.value) | unique | join(", "))")[]'
         } 2> /dev/null)
     )

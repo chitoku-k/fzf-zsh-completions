@@ -644,8 +644,8 @@ _fzf_complete_git-commits() {
     shift
 
     _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option$prefix_ref" < <({
-        git for-each-ref refs/heads refs/remotes --format='%(refname:lstrip=2) branch %(contents:subject)' 2> /dev/null
-        git for-each-ref refs/tags --format='%(refname:lstrip=2) tag %(contents:subject)' --sort=-version:refname 2> /dev/null
+        git for-each-ref refs/heads refs/remotes --format='%(refname:strip=2) branch %(contents:subject)' 2> /dev/null
+        git for-each-ref refs/tags --format='%(refname:strip=2) tag %(contents:subject)' --sort=-version:refname 2> /dev/null
         git log --format='%h commit %s' 2> /dev/null
     } | _fzf_complete_tabularize ${fg[yellow]} ${fg[green]})
 }
@@ -716,7 +716,7 @@ _fzf_complete_git-files_tree() {
         local git_prefix=$(git rev-parse --show-prefix 2> /dev/null)
         cd $(git rev-parse --show-toplevel 2> /dev/null)
 
-        local files=$(git ls-files --deduplicate -z ${(Z+n+)git_options} 2> /dev/null)
+        local files=$(git ls-files -z ${(Z+n+)git_options} 2> /dev/null)
         files=(${(0)files})
         local paths=($cdup${^files})
 
@@ -762,7 +762,7 @@ _fzf_complete_git-files_tree_and_index() {
         cd $(git rev-parse --show-toplevel 2> /dev/null)
 
         local files=()
-        local ls_files=$(git ls-files --deduplicate -z ${(Z+n+)git_ls_files_options} 2> /dev/null)
+        local ls_files=$(git ls-files -z ${(Z+n+)git_ls_files_options} 2> /dev/null)
         local ls_tree=$(git ls-tree --name-only --full-tree -r -z ${(Z+n+)git_ls_tree_options} ${treeish:-HEAD} 2> /dev/null)
         files+=(${(0)ls_files})
         files+=(${(0)ls_tree})
@@ -778,7 +778,7 @@ _fzf_complete_git-files_tree_and_index_post() {
     local input=$(cat)
 
     for filename in ${(0)input}; do
-        echo ${${(q+)filename}//\\n/\\\\n}
+        echo ${${(q-)filename}//$'\n'/\'\$\'\\\\n\'\'}
     done
 }
 
@@ -791,7 +791,7 @@ _fzf_complete_git-status-files() {
     _fzf_complete --ansi --read0 --print0 ${(Q)${(Z+n+)fzf_options}} -- "$@" < <({
         local previous_status
         local filename
-        local files=$(git status --porcelain=v1 -z ${(Z+n+)git_options} 2> /dev/null)
+        local files=$(git status --porcelain -z ${(Z+n+)git_options} 2> /dev/null)
         local cdup=$(git rev-parse --show-cdup 2> /dev/null)
 
         for filename in ${(0)files}; do
@@ -820,7 +820,7 @@ _fzf_complete_git-status-files_post() {
     local input=$(cat)
 
     for filename in ${(0)input}; do
-        echo ${${(q+)filename:3}//\\n/\\\\n}
+        echo ${${(q-)filename:3}//$'\n'/\'\$\'\\\\n\'\'}
     done
 }
 
@@ -897,7 +897,7 @@ _fzf_complete_git-show-files_post() {
     local input=$(cat)
 
     for filename in ${(0)input}; do
-        echo ${${(q+)filename}//\\n/\\\\n}
+        echo ${${(q-)filename}//$'\n'/\'\$\'\\\\n\'\'}
     done
 }
 

@@ -10,20 +10,54 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-latest
-            timeout: 10
           - os: macos-latest
-            timeout: 30
+          - os: ubuntu-latest
+            awk: gawk
+          - os: ubuntu-latest
+            awk: mawk
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
           submodules: true
       - name: Install Zsh
-        if: startsWith(matrix.os, 'ubuntu')
+        if: ${{ startsWith(matrix.os, 'ubuntu') }}
         run: |
           sudo apt-get update
           sudo apt-get install -y zsh
+      - name: Switch awk variant
+        if: ${{ startsWith(matrix.os, 'ubuntu') && matrix.awk }}
+        run: |
+          sudo update-alternatives --set awk /usr/bin/${{ matrix.awk }}
+      - name: Show versions
+        run: |
+          echo ::group::zsh
+          zsh --version
+          echo ::endgroup::
+
+          echo ::group::jq
+          jq --version
+          echo ::endgroup::
+
+          echo ::group::awk
+          awk --version 2> /dev/null || awk -W version
+          echo ::endgroup::
+
+          echo ::group::git
+          git --version
+          echo ::endgroup::
+
+          echo ::group::node
+          node --version
+          echo ::endgroup::
+
+          echo ::group::yarn
+          yarn --version
+          echo ::endgroup::
+
+          echo ::group::php
+          php --version
+          echo ::endgroup::
       - name: Run unit tests
         run: |
-          tests/test.zsh --tap --time-limit ${{ matrix.timeout }} tests/*.zunit
+          tests/test.zsh --tap --time-limit=30 tests/*.zunit
