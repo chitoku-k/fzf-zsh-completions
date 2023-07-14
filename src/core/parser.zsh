@@ -263,3 +263,45 @@ _fzf_complete_parse_option_arguments() {
 
     echo - ${(q)result}
 }
+
+_fzf_complete_parse_global_options_and_subcommand() {
+    local options_argument_optional=(${(z)1})
+    shift
+
+    local i parsing_argument parsing_subcommand
+    local command_arguments=()
+    local start_index=2
+    local arguments=("$@")
+
+    for i in {$start_index..${#arguments}}; do
+        if [[ -n $parsing_argument ]]; then
+            parsing_argument=
+            command_arguments+=("${arguments[$i]}")
+            continue
+        fi
+
+        if [[ ${arguments[$i]} = -[A-Za-z0-9] ]] || [[ ${arguments[$i]} = --[A-Za-z0-9-](#c1,) ]]; then
+            if [[ ${options_argument_optional[(r)$arguments[$i]]} = ${arguments[$i]} ]]; then
+                parsing_argument=
+            else
+                parsing_argument=1
+            fi
+            command_arguments+=("${arguments[$i]}")
+            continue
+        fi
+
+        if [[ ${arguments[$i]} = -(#c1,2)* ]]; then
+            parsing_argument=
+            command_arguments+=("${arguments[$i]}")
+            continue
+        fi
+
+        parsing_subcommand=1
+        command_arguments+=("${arguments[$i]}")
+        break
+    done
+
+    if [[ -n $parsing_subcommand ]]; then
+        echo ${(q)command_arguments}
+    fi
+}
