@@ -1158,9 +1158,7 @@ _fzf_complete_kubectl-resource-names() {
     local fzf_options=$1
     shift
 
-    if [[ ${+namespace} = 0 ]]; then
-        kubectl_arguments+=(--all-namespaces)
-    fi
+    kubectl_arguments+=(${(Q)${(z)$(_fzf_complete_kubectl_default_arguments)}[@]})
 
     _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@$prefix_option" < <(
         local result=$(kubectl get "$resource" -o wide "${kubectl_arguments[@]}" 2> /dev/null)
@@ -1276,9 +1274,7 @@ _fzf_complete_kubectl-selectors() {
     local fzf_options=$1
     shift
 
-    if [[ ${+namespace} = 0 ]]; then
-        kubectl_arguments+=(--all-namespaces)
-    fi
+    kubectl_arguments+=(${(Q)${(z)$(_fzf_complete_kubectl_default_arguments)}[@]})
 
     if [[ $selector = *, ]]; then
         selector=${selector%,}
@@ -1330,9 +1326,7 @@ _fzf_complete_kubectl-field-selectors() {
     local fzf_options=$1
     shift
 
-    if [[ ${+namespace} = 0 ]]; then
-        kubectl_arguments+=(--all-namespaces)
-    fi
+    kubectl_arguments+=(${(Q)${(z)$(_fzf_complete_kubectl_default_arguments)}[@]})
 
     if [[ $selector = *, ]]; then
         selector=${selector%,}
@@ -1489,9 +1483,7 @@ _fzf_complete_kubectl-label-columns() {
     local fzf_options=$1
     shift
 
-    if [[ ${+namespace} = 0 ]]; then
-        kubectl_arguments+=(--all-namespaces)
-    fi
+    kubectl_arguments+=(${(Q)${(z)$(_fzf_complete_kubectl_default_arguments)}[@]})
 
     if [[ $label_columns = *, ]]; then
         label_columns=${label_columns%,}
@@ -1525,6 +1517,26 @@ _fzf_complete_kubectl-taints() {
 
 _fzf_complete_kubectl-taints_post() {
     awk '{ printf "%s%s=%s:%s", (NR > 1 ? "\n" : ""), $1, $2, $3 }'
+}
+
+_fzf_complete_kubectl_default_arguments() {
+    local default_arguments=()
+
+    if [[ ${resource:l} != (ns|namespace|namespaces) ]] && [[ ${+namespace} = 0 ]]; then
+        local name=$(kubectl config current-context 2> /dev/null)
+        if [[ -n $name ]]; then
+            if kubectl config view -o jsonpath='{range .contexts[*]}{@}{"\n"}{end}' 2> /dev/null |
+                jq --slurp -e --arg name "$name" '.[] | select(.name == $name) | .context.namespace == null' &> /dev/null; then
+                default_arguments+=(--all-namespaces)
+            fi
+        fi
+    fi
+
+    if [[ -z $default_arguments ]]; then
+        return
+    fi
+
+    echo - ${(q)default_arguments}
 }
 
 _fzf_complete_kubectl_parse_resource_and_name() {
