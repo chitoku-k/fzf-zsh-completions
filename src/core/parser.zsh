@@ -162,7 +162,7 @@ _fzf_complete_parse_option() {
         fi
     done
 
-    if [[ -z $result ]]; then
+    if [[ $#result = 0 ]]; then
         return 1
     fi
 
@@ -257,7 +257,7 @@ _fzf_complete_parse_option_arguments() {
         fi
     done
 
-    if [[ -z $result ]]; then
+    if [[ $#result = 0 ]]; then
         return 1
     fi
 

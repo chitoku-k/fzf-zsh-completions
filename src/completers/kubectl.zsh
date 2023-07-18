@@ -11,7 +11,7 @@ _fzf_complete_kubectl() {
     local options_and_subcommand=()
     local kubectl_arguments=()
     local last_argument=${arguments[-1]}
-    local prefix_option completing_option subcommands namespace resource resource_suffix resource_apiversion_option name
+    local prefix_option completing_option subcommands namespace context resource resource_suffix resource_apiversion_option name
 
     if (( $command_pos > 1 )); then
         local -x "${(Qe)${(z)$(_fzf_complete_requote_arguments ${~${(z)@}})}[@][1, $command_pos - 1]}"
@@ -1523,10 +1523,10 @@ _fzf_complete_kubectl_default_arguments() {
     local default_arguments=()
 
     if [[ ${resource:l} != (ns|namespace|namespaces) ]] && [[ ${+namespace} = 0 ]]; then
-        local name=$(kubectl config current-context 2> /dev/null)
-        if [[ -n $name ]]; then
+        local context=${context:-$(kubectl config current-context 2> /dev/null)}
+        if [[ -n $context ]]; then
             if kubectl config view -o jsonpath='{range .contexts[*]}{@}{"\n"}{end}' 2> /dev/null |
-                jq --slurp -e --arg name "$name" '.[] | select(.name == $name) | .context.namespace == null' &> /dev/null; then
+                jq --slurp -e --arg context "$context" '.[] | select(.name == $context) | .context.namespace == null' &> /dev/null; then
                 default_arguments+=(--all-namespaces)
             fi
         fi
@@ -1547,9 +1547,14 @@ _fzf_complete_kubectl_parse_resource_and_name() {
     resource=$(_fzf_complete_parse_argument 2 "$resource_index" "${(F)kubectl_options_argument_required}" "${arguments[@]}" || :)
     name=$(_fzf_complete_parse_argument 2 "$name_index" "${(F)kubectl_options_argument_required}" "${arguments[@]}" || :)
 
-    if ! namespace=$(_fzf_complete_parse_option_arguments '-n' '--namespace' "${(F)kubectl_options_argument_required}" 'option argument' "${(Q)${(z)RBUFFER}[@]}") && \
-        ! namespace=$(_fzf_complete_parse_option_arguments '-n' '--namespace' "${(F)kubectl_options_argument_required}" 'option argument' "${arguments[@]}"); then
+    if ! namespace=$(_fzf_complete_parse_option_arguments '-n' '--namespace' "${(F)kubectl_options_argument_required}" 'argument' "${(Q)${(z)RBUFFER}[@]}") && \
+        ! namespace=$(_fzf_complete_parse_option_arguments '-n' '--namespace' "${(F)kubectl_options_argument_required}" 'argument' "${arguments[@]}"); then
         unset namespace
+    fi
+
+    if ! context=$(_fzf_complete_parse_option_arguments '' '--context' "${(F)kubectl_options_argument_required}" 'argument' "${(Q)${(z)RBUFFER}[@]}") && \
+        ! context=$(_fzf_complete_parse_option_arguments '' '--context' "${(F)kubectl_options_argument_required}" 'argument' "${arguments[@]}"); then
+        unset context
     fi
 
     if [[ $resource = */* ]]; then
