@@ -1016,6 +1016,131 @@
     _fzf_complete_kubectl 'kubectl -oyaml get '
 }
 
+@test 'Testing completion: kubectl --context=kubeadm get pods **' {
+    kubectl_mock_1() {
+        assert $# equals 4
+        assert $1 same_as 'config'
+        assert $2 same_as 'view'
+        assert $3 same_as '-o'
+        assert $4 same_as 'jsonpath={range .contexts[*]}{@}{"\\n"}{end}'
+
+        echo '{"context":{"cluster":"minikube","user":"minikube-admin"},"name":"minikube"}'
+        echo '{"context":{"cluster":"kubeadm","namespace":"default","user":"kubeadm-admin"},"name":"kubeadm"}'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--context=kubeadm'
+
+        echo 'NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl --context=kubeadm get pods '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl --context=kubeadm get pods '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 2
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl --context=kubeadm get pods '
+}
+
+@test 'Testing completion: kubectl --context kubeadm get pods **' {
+    kubectl_mock_1() {
+        assert $# equals 4
+        assert $1 same_as 'config'
+        assert $2 same_as 'view'
+        assert $3 same_as '-o'
+        assert $4 same_as 'jsonpath={range .contexts[*]}{@}{"\\n"}{end}'
+
+        echo '{"context":{"cluster":"minikube","user":"minikube-admin"},"name":"minikube"}'
+        echo '{"context":{"cluster":"kubeadm","namespace":"default","user":"kubeadm-admin"},"name":"kubeadm"}'
+    }
+
+    kubectl_mock_2() {
+        assert $# equals 6
+        assert $1 same_as 'get'
+        assert $2 same_as 'pods'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--context'
+        assert $6 same_as 'kubeadm'
+
+        echo 'NAME                               READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES'
+        echo 'test-0000000000-00000              1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>'
+        echo 'etcd-minikube                      1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>'
+        echo 'kube-apiserver-minikube            1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>'
+        echo 'kube-controller-manager-minikube   1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>'
+        echo 'kube-proxy-00000                   1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>'
+        echo 'kube-scheduler-minikube            1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl --context kubeadm get pods '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl --context kubeadm get pods '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 2
+        assert ${#lines} equals 7
+        assert ${lines[1]} same_as "${fg[yellow]}NAME                               ${reset_color}READY   STATUS    RESTARTS   AGE   IP         NODE       NOMINATED NODE   READINESS GATES"
+        assert ${lines[2]} same_as "${fg[yellow]}test-0000000000-00000              ${reset_color}1/1     Running   0          1d    10.0.0.1   minikube   <none>           <none>"
+        assert ${lines[3]} same_as "${fg[yellow]}etcd-minikube                      ${reset_color}1/1     Running   0          1d    10.0.0.2   minikube   <none>           <none>"
+        assert ${lines[4]} same_as "${fg[yellow]}kube-apiserver-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.3   minikube   <none>           <none>"
+        assert ${lines[5]} same_as "${fg[yellow]}kube-controller-manager-minikube   ${reset_color}1/1     Running   0          1d    10.0.0.4   minikube   <none>           <none>"
+        assert ${lines[6]} same_as "${fg[yellow]}kube-proxy-00000                   ${reset_color}1/1     Running   0          1d    10.0.0.5   minikube   <none>           <none>"
+        assert ${lines[7]} same_as "${fg[yellow]}kube-scheduler-minikube            ${reset_color}1/1     Running   0          1d    10.0.0.6   minikube   <none>           <none>"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl --context kubeadm get pods '
+}
+
 @test 'Testing completion: kubectl diff --labels=**' {
     kubectl_mock_1() {
         assert $# equals 2
