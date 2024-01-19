@@ -130,17 +130,18 @@ _fzf_complete_kubectl() {
         --warnings-as-errors
     )
 
-    options_and_subcommand=("${(Q)${(z)"$(_fzf_complete_parse_global_options_and_subcommand "${(F)kubectl_options_argument_optional}" "${arguments[@]}")"}[@]}")
-    subcommands=("${options_and_subcommand[-1]}")
-    arguments=(
-        "${arguments[1,1][@]}"
-        "${subcommands[1,1][@]}"
-        "${options_and_subcommand[1,-2][@]}"
-        "${arguments[${#options_and_subcommand}+2,-1][@]}"
-    )
+    if options_and_subcommand=("${(Q)${(z)"$(_fzf_complete_parse_global_options_and_subcommand "${(F)kubectl_options_argument_optional}" "${arguments[@]}")"}[@]}"); then
+        subcommands=("${options_and_subcommand[-1]}")
+        arguments=(
+            "${arguments[1,1][@]}"
+            "${subcommands[1,1][@]}"
+            "${options_and_subcommand[1,-2][@]}"
+            "${arguments[${#options_and_subcommand}+2,-1][@]}"
+        )
 
-    if (( $+functions[_fzf_complete_kubectl_${subcommands[1]}] )) && _fzf_complete_kubectl_${subcommands[1]} "$@"; then
-        return
+        if (( $+functions[_fzf_complete_kubectl_${subcommands[1]}] )) && _fzf_complete_kubectl_${subcommands[1]} "$@"; then
+            return
+        fi
     fi
 
     if [[ ${subcommands[1]} = (apply|auth|certificate|config|create|rollout|set) ]]; then

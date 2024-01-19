@@ -1016,6 +1016,90 @@
     _fzf_complete_kubectl 'kubectl -oyaml get '
 }
 
+@test 'Testing completion: kubectl --context=kubeadm --namespace=**' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'namespaces'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--context=kubeadm'
+
+        echo 'NAME          STATUS   AGE'
+        echo 'default       Active   1d'
+        echo 'kube-system   Active   1d'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl --context=kubeadm '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl --context=kubeadm --namespace='
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}NAME          ${reset_color}STATUS   AGE"
+        assert ${lines[2]} same_as "${fg[yellow]}default       ${reset_color}Active   1d"
+        assert ${lines[3]} same_as "${fg[yellow]}kube-system   ${reset_color}Active   1d"
+    }
+
+    prefix=--namespace=
+    _fzf_complete_kubectl 'kubectl --context=kubeadm '
+}
+
+@test 'Testing completion: kubectl --context=kubeadm --namespace **' {
+    kubectl_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'get'
+        assert $2 same_as 'namespaces'
+        assert $3 same_as '-o'
+        assert $4 same_as 'wide'
+        assert $5 same_as '--context=kubeadm'
+
+        echo 'NAME          STATUS   AGE'
+        echo 'default       Active   1d'
+        echo 'kube-system   Active   1d'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'kubectl --context=kubeadm --namespace '
+
+        echo 'kubectl'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'kubectl --context=kubeadm --namespace '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert kubectl mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}NAME          ${reset_color}STATUS   AGE"
+        assert ${lines[2]} same_as "${fg[yellow]}default       ${reset_color}Active   1d"
+        assert ${lines[3]} same_as "${fg[yellow]}kube-system   ${reset_color}Active   1d"
+    }
+
+    prefix=
+    _fzf_complete_kubectl 'kubectl --context=kubeadm --namespace '
+}
+
 @test 'Testing completion: kubectl --context=kubeadm get pods **' {
     kubectl_mock_1() {
         assert $# equals 4

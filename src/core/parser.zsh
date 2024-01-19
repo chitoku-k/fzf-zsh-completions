@@ -301,7 +301,6 @@ _fzf_complete_parse_global_options_and_subcommand() {
         break
     done
 
-    if [[ -n $parsing_subcommand ]]; then
-        echo - ${(q)command_arguments}
-    fi
+    echo - ${(q)command_arguments}
+    [[ -n $parsing_subcommand ]]
 }
