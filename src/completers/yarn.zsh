@@ -45,7 +45,7 @@ _fzf_complete_yarn-workspace() {
         return
     fi
 
-    local workspace_packages_patterns=$(jq -r '.workspaces | map(. + "/package.json") | join("\u0000")' "$parent_package" 2> /dev/null)
+    local workspace_packages_patterns=$(jq -jr '.workspaces | map(. + "/package.json") | join("\u0000")' "$parent_package" 2> /dev/null)
 
    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- "$@" < <(jq -r '.name' ${~${(0)workspace_packages_patterns}} 2> /dev/null)
 }

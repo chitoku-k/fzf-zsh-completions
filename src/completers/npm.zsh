@@ -23,14 +23,9 @@ _fzf_complete_npm_run() {
         return
     fi
 
-    _fzf_complete --ansi --read0 --print0 --tiebreak=index -- "$@" < <(node -e '
-        process.stdout.write(
-            Object.keys(
-                JSON.parse(
-                    require("fs").readFileSync(process.stdin.fd, "utf-8")
-                ).scripts
-            ).join("\0")
-        )' < $package 2> /dev/null)
+    _fzf_complete --ansi --read0 --print0 --tiebreak=index -- "$@" < <(
+        jq -jr '.scripts | keys_unsorted | join("\u0000")' $package 2> /dev/null
+    )
 }
 
 _fzf_complete_npm_run_post() {
