@@ -20,8 +20,6 @@ sequence that defaults to `**`.
 The following dependencies are optional unless those completions are desired:
 - [docker][] CLI >= 17.03.0 (for `docker` completions)
 - [git][] >= 2.7.1 (for `git` completions)
-- [node][] >= 5.0.0 (for `npm` completions)
-- [php][] >= 5.2.0 (for `composer` completions)
 
 ## Installation
 
@@ -135,5 +133,3 @@ tests/test.zsh
 [jq]:              https://github.com/stedolan/jq
 [docker]:          https://github.com/docker/cli
 [git]:             https://github.com/git/git
-[node]:            https://github.com/nodejs/node
-[php]:             https://github.com/php/php-src

@@ -28,15 +28,9 @@ _fzf_complete_composer_run-script() {
         return
     fi
 
-    _fzf_complete --ansi --read0 --print0 --tiebreak=index -- "$@" < <(php -r '
-        echo implode(
-            "\0",
-            array_keys(
-                (array) json_decode(
-                    stream_get_contents(STDIN)
-                )->scripts
-            )
-        );' < $composer 2> /dev/null)
+    _fzf_complete --ansi --read0 --print0 --tiebreak=index -- "$@" < <(
+        jq -jr '.scripts | keys_unsorted | join("\u0000")' $composer 2> /dev/null
+    )
 }
 
 _fzf_complete_composer_run-script_post() {
