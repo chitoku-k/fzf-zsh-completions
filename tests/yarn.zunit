@@ -4,6 +4,8 @@
     load ../fzf-zsh-completions.plugin.zsh
     load _helpers/assertions.zsh
     load _helpers/mock.zsh
+    mock npm
+    mock yarn
     mock _fzf_complete_yarn_unknown-subcommand
     mock __fzf_extract_command
 
@@ -11,6 +13,8 @@
 }
 
 @teardown {
+    (unmock npm)
+    (unmock yarn)
     (unmock _fzf_complete_yarn_run)
     (unmock _fzf_complete_yarn_unknown-subcommand)
     (unmock __fzf_extract_command)
@@ -65,6 +69,13 @@
 }
 
 @test 'Testing completion: yarn **' {
+    npm_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'root'
+
+        echo $(pwd)/node_modules
+    }
+
     __fzf_extract_command_mock_1() {
         assert $# equals 1
         assert $1 same_as 'yarn '
@@ -83,6 +94,7 @@
 
         run cat
         assert __fzf_extract_command mock_times 1
+        assert npm mock_times 1
         assert ${#lines} equals 6
 
         actual1=(${(0)lines[1]})
@@ -177,6 +189,13 @@
 }
 
 @test 'Testing completion: yarn run **' {
+    npm_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'root'
+
+        echo $(pwd)/node_modules
+    }
+
     __fzf_extract_command_mock_1() {
         assert $# equals 1
         assert $1 same_as 'yarn run '
@@ -195,6 +214,7 @@
 
         run cat
         assert __fzf_extract_command mock_times 1
+        assert npm mock_times 1
         assert ${#lines} equals 6
 
         actual1=(${(0)lines[1]})
@@ -232,6 +252,13 @@
     popd
     pushd tests/_support/yarn/workspace
 
+    npm_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'root'
+
+        echo $(pwd)/node_modules
+    }
+
     __fzf_extract_command_mock_1() {
         assert $# equals 1
         assert $1 same_as 'yarn workspace '
@@ -248,6 +275,7 @@
 
         run cat
         assert __fzf_extract_command mock_times 1
+        assert npm mock_times 1
         assert ${#lines} equals 3
 
         assert ${lines[1]} same_as 'package-a'
@@ -262,6 +290,15 @@
 @test 'Testing completion: yarn workspace package-a **' {
     popd
     pushd tests/_support/yarn/workspace
+
+    yarn_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'workspaces'
+        assert $2 same_as '--json'
+        assert $3 same_as 'info'
+
+        echo '{"type":"log","data":"{\\\\n  \"package-a\": {\\\\n    \"location\": \"packages/a\",\\\\n    \"workspaceDependencies\": [],\\\\n    \"mismatchedWorkspaceDependencies\": []\\\\n  },\\\\n  \"package-b\": {\\\\n    \"location\": \"packages/b\",\\\\n    \"workspaceDependencies\": [],\\\\n    \"mismatchedWorkspaceDependencies\": []\\\\n  },\\\\n  \"examples-a\": {\\\\n    \"location\": \"examples/a\",\\\\n    \"workspaceDependencies\": [],\\\\n    \"mismatchedWorkspaceDependencies\": []\\\\n  }\\\\n}"}'
+    }
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
@@ -281,6 +318,8 @@
 
         run cat
         assert __fzf_extract_command mock_times 1
+        assert npm mock_times 0
+        assert yarn mock_times 1
         assert ${#lines} equals 6
 
         actual1=(${(0)lines[1]})
@@ -319,6 +358,15 @@
     popd
     pushd tests/_support/yarn/workspace
 
+    yarn_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'workspaces'
+        assert $2 same_as '--json'
+        assert $3 same_as 'info'
+
+        echo '{"type":"log","data":"{\\\\n  \"package-a\": {\\\\n    \"location\": \"packages/a\",\\\\n    \"workspaceDependencies\": [],\\\\n    \"mismatchedWorkspaceDependencies\": []\\\\n  },\\\\n  \"package-b\": {\\\\n    \"location\": \"packages/b\",\\\\n    \"workspaceDependencies\": [],\\\\n    \"mismatchedWorkspaceDependencies\": []\\\\n  },\\\\n  \"examples-a\": {\\\\n    \"location\": \"examples/a\",\\\\n    \"workspaceDependencies\": [],\\\\n    \"mismatchedWorkspaceDependencies\": []\\\\n  }\\\\n}"}'
+    }
+
     __fzf_extract_command_mock_1() {
         assert $# equals 1
         assert $1 same_as 'yarn workspace package-b '
@@ -337,6 +385,8 @@
 
         run cat
         assert __fzf_extract_command mock_times 1
+        assert npm mock_times 0
+        assert yarn mock_times 1
         assert ${#lines} equals 6
 
         actual1=(${(0)lines[1]})
@@ -375,6 +425,15 @@
     popd
     pushd tests/_support/yarn/workspace
 
+    yarn_mock_1() {
+        assert $# equals 3
+        assert $1 same_as 'workspaces'
+        assert $2 same_as '--json'
+        assert $3 same_as 'info'
+
+        echo '{"type":"log","data":"{\\\\n  \"package-a\": {\\\\n    \"location\": \"packages/a\",\\\\n    \"workspaceDependencies\": [],\\\\n    \"mismatchedWorkspaceDependencies\": []\\\\n  },\\\\n  \"package-b\": {\\\\n    \"location\": \"packages/b\",\\\\n    \"workspaceDependencies\": [],\\\\n    \"mismatchedWorkspaceDependencies\": []\\\\n  },\\\\n  \"examples-a\": {\\\\n    \"location\": \"examples/a\",\\\\n    \"workspaceDependencies\": [],\\\\n    \"mismatchedWorkspaceDependencies\": []\\\\n  }\\\\n}"}'
+    }
+
     __fzf_extract_command_mock_1() {
         assert $# equals 1
         assert $1 same_as 'yarn workspace examples-a '
@@ -393,6 +452,8 @@
 
         run cat
         assert __fzf_extract_command mock_times 1
+        assert npm mock_times 0
+        assert yarn mock_times 1
         assert ${#lines} equals 6
 
         actual1=(${(0)lines[1]})

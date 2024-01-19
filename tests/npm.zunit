@@ -4,6 +4,7 @@
     load ../fzf-zsh-completions.plugin.zsh
     load _helpers/assertions.zsh
     load _helpers/mock.zsh
+    mock npm
     mock _fzf_complete_npm_unknown-subcommand
     mock __fzf_extract_command
 
@@ -11,6 +12,7 @@
 }
 
 @teardown {
+    (unmock npm)
     (unmock _fzf_complete_npm_run)
     (unmock _fzf_complete_npm_unknown-subcommand)
     (unmock __fzf_extract_command)
@@ -121,6 +123,13 @@
 }
 
 @test 'Testing completion: npm run **' {
+    npm_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'root'
+
+        echo $(pwd)/node_modules
+    }
+
     __fzf_extract_command_mock_1() {
         assert $# equals 1
         assert $1 same_as 'npm run '
@@ -139,6 +148,7 @@
 
         run cat
         assert __fzf_extract_command mock_times 1
+        assert npm mock_times 1
         assert ${#lines} equals 6
 
         actual1=(${(0)lines[1]})
