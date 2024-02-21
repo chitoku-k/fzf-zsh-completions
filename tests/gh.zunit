@@ -563,7 +563,7 @@
     _fzf_complete_gh 'gh pr edit '
 }
 
-@test 'Testing completion: gh pr unlock **' {
+@test 'Testing completion: gh pr lock **' {
     gh_mock_1() {
         assert $# equals 4
         assert $1 same_as 'pr'
@@ -583,7 +583,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'gh pr unlock '
+        assert $1 same_as 'gh pr lock '
 
         echo 'gh'
     }
@@ -594,7 +594,7 @@
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--'
-        assert $5 same_as 'gh pr unlock '
+        assert $5 same_as 'gh pr lock '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -612,7 +612,7 @@
     }
 
     prefix=
-    _fzf_complete_gh 'gh pr unlock '
+    _fzf_complete_gh 'gh pr lock '
 }
 
 @test 'Testing completion: gh pr review **' {
@@ -667,7 +667,7 @@
     _fzf_complete_gh 'gh pr review '
 }
 
-@test 'Testing completion: gh pr lock **' {
+@test 'Testing completion: gh pr unlock **' {
     gh_mock_1() {
         assert $# equals 4
         assert $1 same_as 'pr'
@@ -687,7 +687,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'gh pr lock '
+        assert $1 same_as 'gh pr unlock '
 
         echo 'gh'
     }
@@ -698,7 +698,7 @@
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--'
-        assert $5 same_as 'gh pr lock '
+        assert $5 same_as 'gh pr unlock '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -716,7 +716,7 @@
     }
 
     prefix=
-    _fzf_complete_gh 'gh pr lock '
+    _fzf_complete_gh 'gh pr unlock '
 }
 
 @test 'Testing completion: gh pr view **' {
