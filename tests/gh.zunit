@@ -139,6 +139,50 @@
     assert __fzf_extract_command mock_times 1
 }
 
+@test 'Testing completion: gh pr checks **' {
+    gh_mock_1() {
+        assert $# equals 4
+        assert $1 same_as 'pr'
+        assert $2 same_as 'list'
+        assert $3 same_as '--state'
+        assert $4 same_as 'open'
+
+        echo "8\t2nd OPEN PR\t2nd-open\tOPEN"
+        echo "7\t2nd DRAFT PR\t2nd-draft\tDRAFT"
+        echo "4\t1st OPEN PR\t1st-open\tOPEN"
+        echo "3\t1st DRAFT PR\t1st-draft\tDRAFT"
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'gh pr checks '
+
+        echo 'gh'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'gh pr checks '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert gh mock_times 1
+        assert ${#lines} equals 5
+        assert ${lines[1]} same_as "${fg[yellow]}#${reset_color}  ${reset_color}TITLE       ${reset_color}  ${fg[blue]}HEAD     ${reset_color}  ${fg[green]}STATE${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}8${reset_color}  ${reset_color}2nd OPEN PR ${reset_color}  ${fg[blue]}2nd-open ${reset_color}  ${fg[green]}OPEN ${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}7${reset_color}  ${reset_color}2nd DRAFT PR${reset_color}  ${fg[blue]}2nd-draft${reset_color}  ${fg[green]}DRAFT${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}4${reset_color}  ${reset_color}1st OPEN PR ${reset_color}  ${fg[blue]}1st-open ${reset_color}  ${fg[green]}OPEN ${reset_color}"
+        assert ${lines[5]} same_as "${fg[yellow]}3${reset_color}  ${reset_color}1st DRAFT PR${reset_color}  ${fg[blue]}1st-draft${reset_color}  ${fg[green]}DRAFT${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_gh 'gh pr checks '
+}
+
 @test 'Testing completion: gh pr close **' {
     gh_mock_1() {
         assert $# equals 4
@@ -519,6 +563,58 @@
     _fzf_complete_gh 'gh pr edit '
 }
 
+@test 'Testing completion: gh pr lock **' {
+    gh_mock_1() {
+        assert $# equals 4
+        assert $1 same_as 'pr'
+        assert $2 same_as 'list'
+        assert $3 same_as '--state'
+        assert $4 same_as 'all'
+
+        echo "8\t2nd OPEN PR\t2nd-open\tOPEN"
+        echo "7\t2nd DRAFT PR\t2nd-draft\tDRAFT"
+        echo "6\t2nd MERGED PR\t2nd-merged\tMERGED"
+        echo "5\t2nd CLOSED PR\t2nd-closed\tCLOSED"
+        echo "4\t1st OPEN PR\t1st-open\tOPEN"
+        echo "3\t1st DRAFT PR\t1st-draft\tDRAFT"
+        echo "2\t1st MERGED PR\t1st-merged\tMERGED"
+        echo "1\t1st CLOSED PR\t1st-closed\tCLOSED"
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'gh pr lock '
+
+        echo 'gh'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'gh pr lock '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert gh mock_times 1
+        assert ${#lines} equals 9
+        assert ${lines[1]} same_as "${fg[yellow]}#${reset_color}  ${reset_color}TITLE        ${reset_color}  ${fg[blue]}HEAD      ${reset_color}  ${fg[green]}STATE ${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}8${reset_color}  ${reset_color}2nd OPEN PR  ${reset_color}  ${fg[blue]}2nd-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}7${reset_color}  ${reset_color}2nd DRAFT PR ${reset_color}  ${fg[blue]}2nd-draft ${reset_color}  ${fg[green]}DRAFT ${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}6${reset_color}  ${reset_color}2nd MERGED PR${reset_color}  ${fg[blue]}2nd-merged${reset_color}  ${fg[green]}MERGED${reset_color}"
+        assert ${lines[5]} same_as "${fg[yellow]}5${reset_color}  ${reset_color}2nd CLOSED PR${reset_color}  ${fg[blue]}2nd-closed${reset_color}  ${fg[green]}CLOSED${reset_color}"
+        assert ${lines[6]} same_as "${fg[yellow]}4${reset_color}  ${reset_color}1st OPEN PR  ${reset_color}  ${fg[blue]}1st-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}"
+        assert ${lines[7]} same_as "${fg[yellow]}3${reset_color}  ${reset_color}1st DRAFT PR ${reset_color}  ${fg[blue]}1st-draft ${reset_color}  ${fg[green]}DRAFT ${reset_color}"
+        assert ${lines[8]} same_as "${fg[yellow]}2${reset_color}  ${reset_color}1st MERGED PR${reset_color}  ${fg[blue]}1st-merged${reset_color}  ${fg[green]}MERGED${reset_color}"
+        assert ${lines[9]} same_as "${fg[yellow]}1${reset_color}  ${reset_color}1st CLOSED PR${reset_color}  ${fg[blue]}1st-closed${reset_color}  ${fg[green]}CLOSED${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_gh 'gh pr lock '
+}
+
 @test 'Testing completion: gh pr review **' {
     gh_mock_1() {
         assert $# equals 4
@@ -569,6 +665,58 @@
 
     prefix=
     _fzf_complete_gh 'gh pr review '
+}
+
+@test 'Testing completion: gh pr unlock **' {
+    gh_mock_1() {
+        assert $# equals 4
+        assert $1 same_as 'pr'
+        assert $2 same_as 'list'
+        assert $3 same_as '--state'
+        assert $4 same_as 'all'
+
+        echo "8\t2nd OPEN PR\t2nd-open\tOPEN"
+        echo "7\t2nd DRAFT PR\t2nd-draft\tDRAFT"
+        echo "6\t2nd MERGED PR\t2nd-merged\tMERGED"
+        echo "5\t2nd CLOSED PR\t2nd-closed\tCLOSED"
+        echo "4\t1st OPEN PR\t1st-open\tOPEN"
+        echo "3\t1st DRAFT PR\t1st-draft\tDRAFT"
+        echo "2\t1st MERGED PR\t1st-merged\tMERGED"
+        echo "1\t1st CLOSED PR\t1st-closed\tCLOSED"
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'gh pr unlock '
+
+        echo 'gh'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'gh pr unlock '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert gh mock_times 1
+        assert ${#lines} equals 9
+        assert ${lines[1]} same_as "${fg[yellow]}#${reset_color}  ${reset_color}TITLE        ${reset_color}  ${fg[blue]}HEAD      ${reset_color}  ${fg[green]}STATE ${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}8${reset_color}  ${reset_color}2nd OPEN PR  ${reset_color}  ${fg[blue]}2nd-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}7${reset_color}  ${reset_color}2nd DRAFT PR ${reset_color}  ${fg[blue]}2nd-draft ${reset_color}  ${fg[green]}DRAFT ${reset_color}"
+        assert ${lines[4]} same_as "${fg[yellow]}6${reset_color}  ${reset_color}2nd MERGED PR${reset_color}  ${fg[blue]}2nd-merged${reset_color}  ${fg[green]}MERGED${reset_color}"
+        assert ${lines[5]} same_as "${fg[yellow]}5${reset_color}  ${reset_color}2nd CLOSED PR${reset_color}  ${fg[blue]}2nd-closed${reset_color}  ${fg[green]}CLOSED${reset_color}"
+        assert ${lines[6]} same_as "${fg[yellow]}4${reset_color}  ${reset_color}1st OPEN PR  ${reset_color}  ${fg[blue]}1st-open  ${reset_color}  ${fg[green]}OPEN  ${reset_color}"
+        assert ${lines[7]} same_as "${fg[yellow]}3${reset_color}  ${reset_color}1st DRAFT PR ${reset_color}  ${fg[blue]}1st-draft ${reset_color}  ${fg[green]}DRAFT ${reset_color}"
+        assert ${lines[8]} same_as "${fg[yellow]}2${reset_color}  ${reset_color}1st MERGED PR${reset_color}  ${fg[blue]}1st-merged${reset_color}  ${fg[green]}MERGED${reset_color}"
+        assert ${lines[9]} same_as "${fg[yellow]}1${reset_color}  ${reset_color}1st CLOSED PR${reset_color}  ${fg[blue]}1st-closed${reset_color}  ${fg[green]}CLOSED${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_gh 'gh pr unlock '
 }
 
 @test 'Testing completion: gh pr view **' {
