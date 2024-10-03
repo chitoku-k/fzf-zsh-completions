@@ -1,0 +1,742 @@
+#!/usr/bin/env zunit
+
+@setup {
+    load ../fzf-zsh-completions.plugin.zsh
+    load _helpers/mock.zsh
+    load _helpers/assertions.zsh
+    mock glab
+    mock _fzf_complete_glab_unknown-subcommand
+    mock __fzf_extract_command
+}
+
+@teardown {
+    (unmock glab)
+    (unmock _fzf_complete_glab_mr)
+    (unmock _fzf_complete_glab_unknown-subcommand)
+    (unmock __fzf_extract_command)
+}
+
+@test 'Testing overridden completion: glab mr **' {
+    mock _fzf_complete_glab_mr
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'glab mr '
+
+        echo 'glab'
+    }
+
+    _fzf_complete_glab_mr_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'glab mr '
+    }
+
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_glab 'glab mr '
+
+    assert _fzf_complete_glab_mr mock_times 1
+}
+
+@test 'Testing overridden completion: glab unknown-subcommand **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'glab unknown-subcommand '
+
+        echo 'glab'
+    }
+
+    _fzf_complete_glab_unknown-subcommand_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'glab unknown-subcommand '
+    }
+
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    prefix=
+    _fzf_complete_glab 'glab unknown-subcommand '
+
+    assert _fzf_complete_glab_unknown-subcommand mock_times 1
+}
+
+@test 'Testing completion: glab **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'glab '
+
+        echo 'glab'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'glab '
+
+        assert __fzf_extract_command mock_times 1
+    }
+
+    prefix=
+    _fzf_complete_glab 'glab '
+}
+
+@test 'Testing completion: TEST1=$HOME/.config/glab TEST2=~/.config/glab glab **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'TEST1=$HOME/.config/glab TEST2=~/.config/glab glab '
+
+        echo 'glab'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'TEST1=$HOME/.config/glab TEST2=~/.config/glab glab '
+
+        assert $TEST1 same_as /root/.config/glab
+        assert $TEST2 same_as /root/.config/glab
+
+        assert __fzf_extract_command mock_times 1
+    }
+
+    setopt local_options magic_equal_subst
+    HOME=/root
+    prefix=
+    _fzf_complete_glab 'TEST1=$HOME/.config/glab TEST2=~/.config/glab glab '
+
+    assert $TEST1 is_empty
+    assert $TEST2 is_empty
+}
+
+@test 'Testing completion: glab co **' {
+    glab_mock_1() {
+        assert $# equals 4
+        assert $1 same_as 'mr'
+        assert $2 same_as 'list'
+        assert $3 same_as '-F'
+        assert $4 same_as 'json'
+
+        echo -n '['
+        echo -n '  {"id":136297744,"iid":4,"target_branch":"main","source_branch":"1-fake-issue-3","project_id":29316529,"title":"Draft: Resolve \"fake issue\"","state":"opened","created_at":"2022-01-20T21:20:50.665Z","updated_at":"2022-01-20T21:47:54.11Z","upvotes":0,"downvotes":0,"author":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignee":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignees":[{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"}],"reviewers":[],"source_project_id":29316529,"target_project_id":29316529,"labels":[],"label_details":null,"description":"Closes #1","draft":true,"work_in_progress":true,"milestone":null,"merge_when_pipeline_succeeds":false,"detailed_merge_status":"draft_status","merge_error":"","merged_by":null,"merged_at":null,"closed_by":null,"closed_at":null,"subscribed":false,"sha":"44eb489568f7cb1a5a730fce6b247cd3797172ca","merge_commit_sha":"","squash_commit_sha":"","user_notes_count":0,"changes_count":"","should_remove_source_branch":false,"force_remove_source_branch":true,"allow_collaboration":false,"web_url":"https://gitlab.com/OWNER/REPO/-/merge_requests/4","references":{"short":"!4","relative":"!4","full":"OWNER/REPO!4"},"discussion_locked":false,"changes":null,"user":{"can_merge":false},"time_stats":{"human_time_estimate":"","human_total_time_spent":"","time_estimate":0,"total_time_spent":0},"squash":false,"pipeline":null,"head_pipeline":null,"diff_refs":{"base_sha":"","head_sha":"","start_sha":""},"diverged_commits_count":0,"rebase_in_progress":false,"approvals_before_merge":0,"reference":"!4","first_contribution":false,"task_completion_status":{"count":0,"completed_count":0},"has_conflicts":false,"blocking_discussions_resolved":true,"overflow":false,"merge_status":"can_be_merged"},'
+        echo -n '  {"id":135750125,"iid":1,"target_branch":"main","source_branch":"OWNER-main-patch-25608","project_id":29316529,"title":"Update .gitlab-ci.yml","state":"opened","created_at":"2022-01-18T17:02:23.27Z","updated_at":"2022-01-18T18:06:50.054Z","upvotes":0,"downvotes":0,"author":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignee":null,"assignees":[],"reviewers":[],"source_project_id":29316529,"target_project_id":29316529,"labels":[],"label_details":null,"description":"","draft":false,"work_in_progress":false,"milestone":null,"merge_when_pipeline_succeeds":false,"detailed_merge_status":"mergeable","merge_error":"","merged_by":null,"merged_at":null,"closed_by":null,"closed_at":null,"subscribed":false,"sha":"123f34ebfd5d97ef562974e55e01b83f06ae7b4a","merge_commit_sha":"","squash_commit_sha":"","user_notes_count":0,"changes_count":"","should_remove_source_branch":false,"force_remove_source_branch":true,"allow_collaboration":false,"web_url":"https://gitlab.com/OWNER/REPO/-/merge_requests/1","references":{"short":"!1","relative":"!1","full":"OWNER/REPO!1"},"discussion_locked":false,"changes":null,"user":{"can_merge":false},"time_stats":{"human_time_estimate":"","human_total_time_spent":"","time_estimate":0,"total_time_spent":0},"squash":false,"pipeline":null,"head_pipeline":null,"diff_refs":{"base_sha":"","head_sha":"","start_sha":""},"diverged_commits_count":0,"rebase_in_progress":false,"approvals_before_merge":0,"reference":"!1","first_contribution":false,"task_completion_status":{"count":0,"completed_count":0},"has_conflicts":false,"blocking_discussions_resolved":true,"overflow":false,"merge_status":"can_be_merged"}'
+        echo -n ']'
+        echo
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'glab co '
+
+        echo 'glab'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'glab co '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert glab mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}# ${reset_color}  ${reset_color}TITLE                      ${reset_color}  ${fg[blue]}BRANCH                ${reset_color}  ${fg[green]}STATE ${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}!4${reset_color}  ${reset_color}Draft: Resolve \"fake issue\"${reset_color}  ${fg[blue]}1-fake-issue-3        ${reset_color}  ${fg[green]}opened${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}!1${reset_color}  ${reset_color}Update .gitlab-ci.yml      ${reset_color}  ${fg[blue]}OWNER-main-patch-25608${reset_color}  ${fg[green]}opened${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_glab 'glab co '
+}
+
+@test 'Testing completion: glab mr **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'glab mr '
+
+        echo 'glab'
+    }
+
+    prefix=
+    _fzf_complete_glab 'glab mr '
+
+    assert $? equals 0
+    assert __fzf_extract_command mock_times 1
+}
+
+@test 'Testing completion: glab mr approve **' {
+    glab_mock_1() {
+        assert $# equals 4
+        assert $1 same_as 'mr'
+        assert $2 same_as 'list'
+        assert $3 same_as '-F'
+        assert $4 same_as 'json'
+
+        echo -n '['
+        echo -n '  {"id":136297744,"iid":4,"target_branch":"main","source_branch":"1-fake-issue-3","project_id":29316529,"title":"Draft: Resolve \"fake issue\"","state":"opened","created_at":"2022-01-20T21:20:50.665Z","updated_at":"2022-01-20T21:47:54.11Z","upvotes":0,"downvotes":0,"author":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignee":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignees":[{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"}],"reviewers":[],"source_project_id":29316529,"target_project_id":29316529,"labels":[],"label_details":null,"description":"Closes #1","draft":true,"work_in_progress":true,"milestone":null,"merge_when_pipeline_succeeds":false,"detailed_merge_status":"draft_status","merge_error":"","merged_by":null,"merged_at":null,"closed_by":null,"closed_at":null,"subscribed":false,"sha":"44eb489568f7cb1a5a730fce6b247cd3797172ca","merge_commit_sha":"","squash_commit_sha":"","user_notes_count":0,"changes_count":"","should_remove_source_branch":false,"force_remove_source_branch":true,"allow_collaboration":false,"web_url":"https://gitlab.com/OWNER/REPO/-/merge_requests/4","references":{"short":"!4","relative":"!4","full":"OWNER/REPO!4"},"discussion_locked":false,"changes":null,"user":{"can_merge":false},"time_stats":{"human_time_estimate":"","human_total_time_spent":"","time_estimate":0,"total_time_spent":0},"squash":false,"pipeline":null,"head_pipeline":null,"diff_refs":{"base_sha":"","head_sha":"","start_sha":""},"diverged_commits_count":0,"rebase_in_progress":false,"approvals_before_merge":0,"reference":"!4","first_contribution":false,"task_completion_status":{"count":0,"completed_count":0},"has_conflicts":false,"blocking_discussions_resolved":true,"overflow":false,"merge_status":"can_be_merged"},'
+        echo -n '  {"id":135750125,"iid":1,"target_branch":"main","source_branch":"OWNER-main-patch-25608","project_id":29316529,"title":"Update .gitlab-ci.yml","state":"opened","created_at":"2022-01-18T17:02:23.27Z","updated_at":"2022-01-18T18:06:50.054Z","upvotes":0,"downvotes":0,"author":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignee":null,"assignees":[],"reviewers":[],"source_project_id":29316529,"target_project_id":29316529,"labels":[],"label_details":null,"description":"","draft":false,"work_in_progress":false,"milestone":null,"merge_when_pipeline_succeeds":false,"detailed_merge_status":"mergeable","merge_error":"","merged_by":null,"merged_at":null,"closed_by":null,"closed_at":null,"subscribed":false,"sha":"123f34ebfd5d97ef562974e55e01b83f06ae7b4a","merge_commit_sha":"","squash_commit_sha":"","user_notes_count":0,"changes_count":"","should_remove_source_branch":false,"force_remove_source_branch":true,"allow_collaboration":false,"web_url":"https://gitlab.com/OWNER/REPO/-/merge_requests/1","references":{"short":"!1","relative":"!1","full":"OWNER/REPO!1"},"discussion_locked":false,"changes":null,"user":{"can_merge":false},"time_stats":{"human_time_estimate":"","human_total_time_spent":"","time_estimate":0,"total_time_spent":0},"squash":false,"pipeline":null,"head_pipeline":null,"diff_refs":{"base_sha":"","head_sha":"","start_sha":""},"diverged_commits_count":0,"rebase_in_progress":false,"approvals_before_merge":0,"reference":"!1","first_contribution":false,"task_completion_status":{"count":0,"completed_count":0},"has_conflicts":false,"blocking_discussions_resolved":true,"overflow":false,"merge_status":"can_be_merged"}'
+        echo -n ']'
+        echo
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'glab mr approve '
+
+        echo 'glab'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'glab mr approve '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert glab mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}# ${reset_color}  ${reset_color}TITLE                      ${reset_color}  ${fg[blue]}BRANCH                ${reset_color}  ${fg[green]}STATE ${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}!4${reset_color}  ${reset_color}Draft: Resolve \"fake issue\"${reset_color}  ${fg[blue]}1-fake-issue-3        ${reset_color}  ${fg[green]}opened${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}!1${reset_color}  ${reset_color}Update .gitlab-ci.yml      ${reset_color}  ${fg[blue]}OWNER-main-patch-25608${reset_color}  ${fg[green]}opened${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_glab 'glab mr approve '
+}
+
+@test 'Testing completion: glab mr checkout **' {
+    glab_mock_1() {
+        assert $# equals 4
+        assert $1 same_as 'mr'
+        assert $2 same_as 'list'
+        assert $3 same_as '-F'
+        assert $4 same_as 'json'
+
+        echo -n '['
+        echo -n '  {"id":136297744,"iid":4,"target_branch":"main","source_branch":"1-fake-issue-3","project_id":29316529,"title":"Draft: Resolve \"fake issue\"","state":"opened","created_at":"2022-01-20T21:20:50.665Z","updated_at":"2022-01-20T21:47:54.11Z","upvotes":0,"downvotes":0,"author":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignee":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignees":[{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"}],"reviewers":[],"source_project_id":29316529,"target_project_id":29316529,"labels":[],"label_details":null,"description":"Closes #1","draft":true,"work_in_progress":true,"milestone":null,"merge_when_pipeline_succeeds":false,"detailed_merge_status":"draft_status","merge_error":"","merged_by":null,"merged_at":null,"closed_by":null,"closed_at":null,"subscribed":false,"sha":"44eb489568f7cb1a5a730fce6b247cd3797172ca","merge_commit_sha":"","squash_commit_sha":"","user_notes_count":0,"changes_count":"","should_remove_source_branch":false,"force_remove_source_branch":true,"allow_collaboration":false,"web_url":"https://gitlab.com/OWNER/REPO/-/merge_requests/4","references":{"short":"!4","relative":"!4","full":"OWNER/REPO!4"},"discussion_locked":false,"changes":null,"user":{"can_merge":false},"time_stats":{"human_time_estimate":"","human_total_time_spent":"","time_estimate":0,"total_time_spent":0},"squash":false,"pipeline":null,"head_pipeline":null,"diff_refs":{"base_sha":"","head_sha":"","start_sha":""},"diverged_commits_count":0,"rebase_in_progress":false,"approvals_before_merge":0,"reference":"!4","first_contribution":false,"task_completion_status":{"count":0,"completed_count":0},"has_conflicts":false,"blocking_discussions_resolved":true,"overflow":false,"merge_status":"can_be_merged"},'
+        echo -n '  {"id":135750125,"iid":1,"target_branch":"main","source_branch":"OWNER-main-patch-25608","project_id":29316529,"title":"Update .gitlab-ci.yml","state":"opened","created_at":"2022-01-18T17:02:23.27Z","updated_at":"2022-01-18T18:06:50.054Z","upvotes":0,"downvotes":0,"author":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignee":null,"assignees":[],"reviewers":[],"source_project_id":29316529,"target_project_id":29316529,"labels":[],"label_details":null,"description":"","draft":false,"work_in_progress":false,"milestone":null,"merge_when_pipeline_succeeds":false,"detailed_merge_status":"mergeable","merge_error":"","merged_by":null,"merged_at":null,"closed_by":null,"closed_at":null,"subscribed":false,"sha":"123f34ebfd5d97ef562974e55e01b83f06ae7b4a","merge_commit_sha":"","squash_commit_sha":"","user_notes_count":0,"changes_count":"","should_remove_source_branch":false,"force_remove_source_branch":true,"allow_collaboration":false,"web_url":"https://gitlab.com/OWNER/REPO/-/merge_requests/1","references":{"short":"!1","relative":"!1","full":"OWNER/REPO!1"},"discussion_locked":false,"changes":null,"user":{"can_merge":false},"time_stats":{"human_time_estimate":"","human_total_time_spent":"","time_estimate":0,"total_time_spent":0},"squash":false,"pipeline":null,"head_pipeline":null,"diff_refs":{"base_sha":"","head_sha":"","start_sha":""},"diverged_commits_count":0,"rebase_in_progress":false,"approvals_before_merge":0,"reference":"!1","first_contribution":false,"task_completion_status":{"count":0,"completed_count":0},"has_conflicts":false,"blocking_discussions_resolved":true,"overflow":false,"merge_status":"can_be_merged"}'
+        echo -n ']'
+        echo
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'glab mr checkout '
+
+        echo 'glab'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'glab mr checkout '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert glab mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}# ${reset_color}  ${reset_color}TITLE                      ${reset_color}  ${fg[blue]}BRANCH                ${reset_color}  ${fg[green]}STATE ${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}!4${reset_color}  ${reset_color}Draft: Resolve \"fake issue\"${reset_color}  ${fg[blue]}1-fake-issue-3        ${reset_color}  ${fg[green]}opened${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}!1${reset_color}  ${reset_color}Update .gitlab-ci.yml      ${reset_color}  ${fg[blue]}OWNER-main-patch-25608${reset_color}  ${fg[green]}opened${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_glab 'glab mr checkout '
+}
+
+@test 'Testing completion: glab mr close **' {
+    glab_mock_1() {
+        assert $# equals 4
+        assert $1 same_as 'mr'
+        assert $2 same_as 'list'
+        assert $3 same_as '-F'
+        assert $4 same_as 'json'
+
+        echo -n '['
+        echo -n '  {"id":136297744,"iid":4,"target_branch":"main","source_branch":"1-fake-issue-3","project_id":29316529,"title":"Draft: Resolve \"fake issue\"","state":"opened","created_at":"2022-01-20T21:20:50.665Z","updated_at":"2022-01-20T21:47:54.11Z","upvotes":0,"downvotes":0,"author":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignee":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignees":[{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"}],"reviewers":[],"source_project_id":29316529,"target_project_id":29316529,"labels":[],"label_details":null,"description":"Closes #1","draft":true,"work_in_progress":true,"milestone":null,"merge_when_pipeline_succeeds":false,"detailed_merge_status":"draft_status","merge_error":"","merged_by":null,"merged_at":null,"closed_by":null,"closed_at":null,"subscribed":false,"sha":"44eb489568f7cb1a5a730fce6b247cd3797172ca","merge_commit_sha":"","squash_commit_sha":"","user_notes_count":0,"changes_count":"","should_remove_source_branch":false,"force_remove_source_branch":true,"allow_collaboration":false,"web_url":"https://gitlab.com/OWNER/REPO/-/merge_requests/4","references":{"short":"!4","relative":"!4","full":"OWNER/REPO!4"},"discussion_locked":false,"changes":null,"user":{"can_merge":false},"time_stats":{"human_time_estimate":"","human_total_time_spent":"","time_estimate":0,"total_time_spent":0},"squash":false,"pipeline":null,"head_pipeline":null,"diff_refs":{"base_sha":"","head_sha":"","start_sha":""},"diverged_commits_count":0,"rebase_in_progress":false,"approvals_before_merge":0,"reference":"!4","first_contribution":false,"task_completion_status":{"count":0,"completed_count":0},"has_conflicts":false,"blocking_discussions_resolved":true,"overflow":false,"merge_status":"can_be_merged"},'
+        echo -n '  {"id":135750125,"iid":1,"target_branch":"main","source_branch":"OWNER-main-patch-25608","project_id":29316529,"title":"Update .gitlab-ci.yml","state":"opened","created_at":"2022-01-18T17:02:23.27Z","updated_at":"2022-01-18T18:06:50.054Z","upvotes":0,"downvotes":0,"author":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignee":null,"assignees":[],"reviewers":[],"source_project_id":29316529,"target_project_id":29316529,"labels":[],"label_details":null,"description":"","draft":false,"work_in_progress":false,"milestone":null,"merge_when_pipeline_succeeds":false,"detailed_merge_status":"mergeable","merge_error":"","merged_by":null,"merged_at":null,"closed_by":null,"closed_at":null,"subscribed":false,"sha":"123f34ebfd5d97ef562974e55e01b83f06ae7b4a","merge_commit_sha":"","squash_commit_sha":"","user_notes_count":0,"changes_count":"","should_remove_source_branch":false,"force_remove_source_branch":true,"allow_collaboration":false,"web_url":"https://gitlab.com/OWNER/REPO/-/merge_requests/1","references":{"short":"!1","relative":"!1","full":"OWNER/REPO!1"},"discussion_locked":false,"changes":null,"user":{"can_merge":false},"time_stats":{"human_time_estimate":"","human_total_time_spent":"","time_estimate":0,"total_time_spent":0},"squash":false,"pipeline":null,"head_pipeline":null,"diff_refs":{"base_sha":"","head_sha":"","start_sha":""},"diverged_commits_count":0,"rebase_in_progress":false,"approvals_before_merge":0,"reference":"!1","first_contribution":false,"task_completion_status":{"count":0,"completed_count":0},"has_conflicts":false,"blocking_discussions_resolved":true,"overflow":false,"merge_status":"can_be_merged"}'
+        echo -n ']'
+        echo
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'glab mr close '
+
+        echo 'glab'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'glab mr close '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert glab mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}# ${reset_color}  ${reset_color}TITLE                      ${reset_color}  ${fg[blue]}BRANCH                ${reset_color}  ${fg[green]}STATE ${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}!4${reset_color}  ${reset_color}Draft: Resolve \"fake issue\"${reset_color}  ${fg[blue]}1-fake-issue-3        ${reset_color}  ${fg[green]}opened${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}!1${reset_color}  ${reset_color}Update .gitlab-ci.yml      ${reset_color}  ${fg[blue]}OWNER-main-patch-25608${reset_color}  ${fg[green]}opened${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_glab 'glab mr close '
+}
+
+@test 'Testing completion: glab mr merge **' {
+    glab_mock_1() {
+        assert $# equals 4
+        assert $1 same_as 'mr'
+        assert $2 same_as 'list'
+        assert $3 same_as '-F'
+        assert $4 same_as 'json'
+
+        echo -n '['
+        echo -n '  {"id":136297744,"iid":4,"target_branch":"main","source_branch":"1-fake-issue-3","project_id":29316529,"title":"Draft: Resolve \"fake issue\"","state":"opened","created_at":"2022-01-20T21:20:50.665Z","updated_at":"2022-01-20T21:47:54.11Z","upvotes":0,"downvotes":0,"author":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignee":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignees":[{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"}],"reviewers":[],"source_project_id":29316529,"target_project_id":29316529,"labels":[],"label_details":null,"description":"Closes #1","draft":true,"work_in_progress":true,"milestone":null,"merge_when_pipeline_succeeds":false,"detailed_merge_status":"draft_status","merge_error":"","merged_by":null,"merged_at":null,"closed_by":null,"closed_at":null,"subscribed":false,"sha":"44eb489568f7cb1a5a730fce6b247cd3797172ca","merge_commit_sha":"","squash_commit_sha":"","user_notes_count":0,"changes_count":"","should_remove_source_branch":false,"force_remove_source_branch":true,"allow_collaboration":false,"web_url":"https://gitlab.com/OWNER/REPO/-/merge_requests/4","references":{"short":"!4","relative":"!4","full":"OWNER/REPO!4"},"discussion_locked":false,"changes":null,"user":{"can_merge":false},"time_stats":{"human_time_estimate":"","human_total_time_spent":"","time_estimate":0,"total_time_spent":0},"squash":false,"pipeline":null,"head_pipeline":null,"diff_refs":{"base_sha":"","head_sha":"","start_sha":""},"diverged_commits_count":0,"rebase_in_progress":false,"approvals_before_merge":0,"reference":"!4","first_contribution":false,"task_completion_status":{"count":0,"completed_count":0},"has_conflicts":false,"blocking_discussions_resolved":true,"overflow":false,"merge_status":"can_be_merged"},'
+        echo -n '  {"id":135750125,"iid":1,"target_branch":"main","source_branch":"OWNER-main-patch-25608","project_id":29316529,"title":"Update .gitlab-ci.yml","state":"opened","created_at":"2022-01-18T17:02:23.27Z","updated_at":"2022-01-18T18:06:50.054Z","upvotes":0,"downvotes":0,"author":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignee":null,"assignees":[],"reviewers":[],"source_project_id":29316529,"target_project_id":29316529,"labels":[],"label_details":null,"description":"","draft":false,"work_in_progress":false,"milestone":null,"merge_when_pipeline_succeeds":false,"detailed_merge_status":"mergeable","merge_error":"","merged_by":null,"merged_at":null,"closed_by":null,"closed_at":null,"subscribed":false,"sha":"123f34ebfd5d97ef562974e55e01b83f06ae7b4a","merge_commit_sha":"","squash_commit_sha":"","user_notes_count":0,"changes_count":"","should_remove_source_branch":false,"force_remove_source_branch":true,"allow_collaboration":false,"web_url":"https://gitlab.com/OWNER/REPO/-/merge_requests/1","references":{"short":"!1","relative":"!1","full":"OWNER/REPO!1"},"discussion_locked":false,"changes":null,"user":{"can_merge":false},"time_stats":{"human_time_estimate":"","human_total_time_spent":"","time_estimate":0,"total_time_spent":0},"squash":false,"pipeline":null,"head_pipeline":null,"diff_refs":{"base_sha":"","head_sha":"","start_sha":""},"diverged_commits_count":0,"rebase_in_progress":false,"approvals_before_merge":0,"reference":"!1","first_contribution":false,"task_completion_status":{"count":0,"completed_count":0},"has_conflicts":false,"blocking_discussions_resolved":true,"overflow":false,"merge_status":"can_be_merged"}'
+        echo -n ']'
+        echo
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'glab mr merge '
+
+        echo 'glab'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'glab mr merge '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert glab mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}# ${reset_color}  ${reset_color}TITLE                      ${reset_color}  ${fg[blue]}BRANCH                ${reset_color}  ${fg[green]}STATE ${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}!4${reset_color}  ${reset_color}Draft: Resolve \"fake issue\"${reset_color}  ${fg[blue]}1-fake-issue-3        ${reset_color}  ${fg[green]}opened${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}!1${reset_color}  ${reset_color}Update .gitlab-ci.yml      ${reset_color}  ${fg[blue]}OWNER-main-patch-25608${reset_color}  ${fg[green]}opened${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_glab 'glab mr merge '
+}
+
+@test 'Testing completion: glab mr revoke **' {
+    glab_mock_1() {
+        assert $# equals 4
+        assert $1 same_as 'mr'
+        assert $2 same_as 'list'
+        assert $3 same_as '-F'
+        assert $4 same_as 'json'
+
+        echo -n '['
+        echo -n '  {"id":136297744,"iid":4,"target_branch":"main","source_branch":"1-fake-issue-3","project_id":29316529,"title":"Draft: Resolve \"fake issue\"","state":"opened","created_at":"2022-01-20T21:20:50.665Z","updated_at":"2022-01-20T21:47:54.11Z","upvotes":0,"downvotes":0,"author":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignee":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignees":[{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"}],"reviewers":[],"source_project_id":29316529,"target_project_id":29316529,"labels":[],"label_details":null,"description":"Closes #1","draft":true,"work_in_progress":true,"milestone":null,"merge_when_pipeline_succeeds":false,"detailed_merge_status":"draft_status","merge_error":"","merged_by":null,"merged_at":null,"closed_by":null,"closed_at":null,"subscribed":false,"sha":"44eb489568f7cb1a5a730fce6b247cd3797172ca","merge_commit_sha":"","squash_commit_sha":"","user_notes_count":0,"changes_count":"","should_remove_source_branch":false,"force_remove_source_branch":true,"allow_collaboration":false,"web_url":"https://gitlab.com/OWNER/REPO/-/merge_requests/4","references":{"short":"!4","relative":"!4","full":"OWNER/REPO!4"},"discussion_locked":false,"changes":null,"user":{"can_merge":false},"time_stats":{"human_time_estimate":"","human_total_time_spent":"","time_estimate":0,"total_time_spent":0},"squash":false,"pipeline":null,"head_pipeline":null,"diff_refs":{"base_sha":"","head_sha":"","start_sha":""},"diverged_commits_count":0,"rebase_in_progress":false,"approvals_before_merge":0,"reference":"!4","first_contribution":false,"task_completion_status":{"count":0,"completed_count":0},"has_conflicts":false,"blocking_discussions_resolved":true,"overflow":false,"merge_status":"can_be_merged"},'
+        echo -n '  {"id":135750125,"iid":1,"target_branch":"main","source_branch":"OWNER-main-patch-25608","project_id":29316529,"title":"Update .gitlab-ci.yml","state":"opened","created_at":"2022-01-18T17:02:23.27Z","updated_at":"2022-01-18T18:06:50.054Z","upvotes":0,"downvotes":0,"author":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignee":null,"assignees":[],"reviewers":[],"source_project_id":29316529,"target_project_id":29316529,"labels":[],"label_details":null,"description":"","draft":false,"work_in_progress":false,"milestone":null,"merge_when_pipeline_succeeds":false,"detailed_merge_status":"mergeable","merge_error":"","merged_by":null,"merged_at":null,"closed_by":null,"closed_at":null,"subscribed":false,"sha":"123f34ebfd5d97ef562974e55e01b83f06ae7b4a","merge_commit_sha":"","squash_commit_sha":"","user_notes_count":0,"changes_count":"","should_remove_source_branch":false,"force_remove_source_branch":true,"allow_collaboration":false,"web_url":"https://gitlab.com/OWNER/REPO/-/merge_requests/1","references":{"short":"!1","relative":"!1","full":"OWNER/REPO!1"},"discussion_locked":false,"changes":null,"user":{"can_merge":false},"time_stats":{"human_time_estimate":"","human_total_time_spent":"","time_estimate":0,"total_time_spent":0},"squash":false,"pipeline":null,"head_pipeline":null,"diff_refs":{"base_sha":"","head_sha":"","start_sha":""},"diverged_commits_count":0,"rebase_in_progress":false,"approvals_before_merge":0,"reference":"!1","first_contribution":false,"task_completion_status":{"count":0,"completed_count":0},"has_conflicts":false,"blocking_discussions_resolved":true,"overflow":false,"merge_status":"can_be_merged"}'
+        echo -n ']'
+        echo
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'glab mr revoke '
+
+        echo 'glab'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'glab mr revoke '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert glab mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}# ${reset_color}  ${reset_color}TITLE                      ${reset_color}  ${fg[blue]}BRANCH                ${reset_color}  ${fg[green]}STATE ${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}!4${reset_color}  ${reset_color}Draft: Resolve \"fake issue\"${reset_color}  ${fg[blue]}1-fake-issue-3        ${reset_color}  ${fg[green]}opened${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}!1${reset_color}  ${reset_color}Update .gitlab-ci.yml      ${reset_color}  ${fg[blue]}OWNER-main-patch-25608${reset_color}  ${fg[green]}opened${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_glab 'glab mr revoke '
+}
+
+@test 'Testing completion: glab mr todo **' {
+    glab_mock_1() {
+        assert $# equals 4
+        assert $1 same_as 'mr'
+        assert $2 same_as 'list'
+        assert $3 same_as '-F'
+        assert $4 same_as 'json'
+
+        echo -n '['
+        echo -n '  {"id":136297744,"iid":4,"target_branch":"main","source_branch":"1-fake-issue-3","project_id":29316529,"title":"Draft: Resolve \"fake issue\"","state":"opened","created_at":"2022-01-20T21:20:50.665Z","updated_at":"2022-01-20T21:47:54.11Z","upvotes":0,"downvotes":0,"author":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignee":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignees":[{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"}],"reviewers":[],"source_project_id":29316529,"target_project_id":29316529,"labels":[],"label_details":null,"description":"Closes #1","draft":true,"work_in_progress":true,"milestone":null,"merge_when_pipeline_succeeds":false,"detailed_merge_status":"draft_status","merge_error":"","merged_by":null,"merged_at":null,"closed_by":null,"closed_at":null,"subscribed":false,"sha":"44eb489568f7cb1a5a730fce6b247cd3797172ca","merge_commit_sha":"","squash_commit_sha":"","user_notes_count":0,"changes_count":"","should_remove_source_branch":false,"force_remove_source_branch":true,"allow_collaboration":false,"web_url":"https://gitlab.com/OWNER/REPO/-/merge_requests/4","references":{"short":"!4","relative":"!4","full":"OWNER/REPO!4"},"discussion_locked":false,"changes":null,"user":{"can_merge":false},"time_stats":{"human_time_estimate":"","human_total_time_spent":"","time_estimate":0,"total_time_spent":0},"squash":false,"pipeline":null,"head_pipeline":null,"diff_refs":{"base_sha":"","head_sha":"","start_sha":""},"diverged_commits_count":0,"rebase_in_progress":false,"approvals_before_merge":0,"reference":"!4","first_contribution":false,"task_completion_status":{"count":0,"completed_count":0},"has_conflicts":false,"blocking_discussions_resolved":true,"overflow":false,"merge_status":"can_be_merged"},'
+        echo -n '  {"id":135750125,"iid":1,"target_branch":"main","source_branch":"OWNER-main-patch-25608","project_id":29316529,"title":"Update .gitlab-ci.yml","state":"opened","created_at":"2022-01-18T17:02:23.27Z","updated_at":"2022-01-18T18:06:50.054Z","upvotes":0,"downvotes":0,"author":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignee":null,"assignees":[],"reviewers":[],"source_project_id":29316529,"target_project_id":29316529,"labels":[],"label_details":null,"description":"","draft":false,"work_in_progress":false,"milestone":null,"merge_when_pipeline_succeeds":false,"detailed_merge_status":"mergeable","merge_error":"","merged_by":null,"merged_at":null,"closed_by":null,"closed_at":null,"subscribed":false,"sha":"123f34ebfd5d97ef562974e55e01b83f06ae7b4a","merge_commit_sha":"","squash_commit_sha":"","user_notes_count":0,"changes_count":"","should_remove_source_branch":false,"force_remove_source_branch":true,"allow_collaboration":false,"web_url":"https://gitlab.com/OWNER/REPO/-/merge_requests/1","references":{"short":"!1","relative":"!1","full":"OWNER/REPO!1"},"discussion_locked":false,"changes":null,"user":{"can_merge":false},"time_stats":{"human_time_estimate":"","human_total_time_spent":"","time_estimate":0,"total_time_spent":0},"squash":false,"pipeline":null,"head_pipeline":null,"diff_refs":{"base_sha":"","head_sha":"","start_sha":""},"diverged_commits_count":0,"rebase_in_progress":false,"approvals_before_merge":0,"reference":"!1","first_contribution":false,"task_completion_status":{"count":0,"completed_count":0},"has_conflicts":false,"blocking_discussions_resolved":true,"overflow":false,"merge_status":"can_be_merged"}'
+        echo -n ']'
+        echo
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'glab mr todo '
+
+        echo 'glab'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'glab mr todo '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert glab mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}# ${reset_color}  ${reset_color}TITLE                      ${reset_color}  ${fg[blue]}BRANCH                ${reset_color}  ${fg[green]}STATE ${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}!4${reset_color}  ${reset_color}Draft: Resolve \"fake issue\"${reset_color}  ${fg[blue]}1-fake-issue-3        ${reset_color}  ${fg[green]}opened${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}!1${reset_color}  ${reset_color}Update .gitlab-ci.yml      ${reset_color}  ${fg[blue]}OWNER-main-patch-25608${reset_color}  ${fg[green]}opened${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_glab 'glab mr todo '
+}
+
+@test 'Testing completion: glab mr reopen **' {
+    glab_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'mr'
+        assert $2 same_as 'list'
+        assert $3 same_as '--closed'
+        assert $4 same_as '-F'
+        assert $5 same_as 'json'
+
+        echo -n '['
+        echo -n '  {"id":136297744,"iid":4,"target_branch":"main","source_branch":"1-fake-issue-3","project_id":29316529,"title":"Draft: Resolve \"fake issue\"","state":"opened","created_at":"2022-01-20T21:20:50.665Z","updated_at":"2022-01-20T21:47:54.11Z","upvotes":0,"downvotes":0,"author":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignee":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignees":[{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"}],"reviewers":[],"source_project_id":29316529,"target_project_id":29316529,"labels":[],"label_details":null,"description":"Closes #1","draft":true,"work_in_progress":true,"milestone":null,"merge_when_pipeline_succeeds":false,"detailed_merge_status":"draft_status","merge_error":"","merged_by":null,"merged_at":null,"closed_by":null,"closed_at":null,"subscribed":false,"sha":"44eb489568f7cb1a5a730fce6b247cd3797172ca","merge_commit_sha":"","squash_commit_sha":"","user_notes_count":0,"changes_count":"","should_remove_source_branch":false,"force_remove_source_branch":true,"allow_collaboration":false,"web_url":"https://gitlab.com/OWNER/REPO/-/merge_requests/4","references":{"short":"!4","relative":"!4","full":"OWNER/REPO!4"},"discussion_locked":false,"changes":null,"user":{"can_merge":false},"time_stats":{"human_time_estimate":"","human_total_time_spent":"","time_estimate":0,"total_time_spent":0},"squash":false,"pipeline":null,"head_pipeline":null,"diff_refs":{"base_sha":"","head_sha":"","start_sha":""},"diverged_commits_count":0,"rebase_in_progress":false,"approvals_before_merge":0,"reference":"!4","first_contribution":false,"task_completion_status":{"count":0,"completed_count":0},"has_conflicts":false,"blocking_discussions_resolved":true,"overflow":false,"merge_status":"can_be_merged"},'
+        echo -n '  {"id":135750125,"iid":1,"target_branch":"main","source_branch":"OWNER-main-patch-25608","project_id":29316529,"title":"Update .gitlab-ci.yml","state":"opened","created_at":"2022-01-18T17:02:23.27Z","updated_at":"2022-01-18T18:06:50.054Z","upvotes":0,"downvotes":0,"author":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignee":null,"assignees":[],"reviewers":[],"source_project_id":29316529,"target_project_id":29316529,"labels":[],"label_details":null,"description":"","draft":false,"work_in_progress":false,"milestone":null,"merge_when_pipeline_succeeds":false,"detailed_merge_status":"mergeable","merge_error":"","merged_by":null,"merged_at":null,"closed_by":null,"closed_at":null,"subscribed":false,"sha":"123f34ebfd5d97ef562974e55e01b83f06ae7b4a","merge_commit_sha":"","squash_commit_sha":"","user_notes_count":0,"changes_count":"","should_remove_source_branch":false,"force_remove_source_branch":true,"allow_collaboration":false,"web_url":"https://gitlab.com/OWNER/REPO/-/merge_requests/1","references":{"short":"!1","relative":"!1","full":"OWNER/REPO!1"},"discussion_locked":false,"changes":null,"user":{"can_merge":false},"time_stats":{"human_time_estimate":"","human_total_time_spent":"","time_estimate":0,"total_time_spent":0},"squash":false,"pipeline":null,"head_pipeline":null,"diff_refs":{"base_sha":"","head_sha":"","start_sha":""},"diverged_commits_count":0,"rebase_in_progress":false,"approvals_before_merge":0,"reference":"!1","first_contribution":false,"task_completion_status":{"count":0,"completed_count":0},"has_conflicts":false,"blocking_discussions_resolved":true,"overflow":false,"merge_status":"can_be_merged"}'
+        echo -n ']'
+        echo
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'glab mr reopen '
+
+        echo 'glab'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'glab mr reopen '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert glab mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}# ${reset_color}  ${reset_color}TITLE                      ${reset_color}  ${fg[blue]}BRANCH                ${reset_color}  ${fg[green]}STATE ${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}!4${reset_color}  ${reset_color}Draft: Resolve \"fake issue\"${reset_color}  ${fg[blue]}1-fake-issue-3        ${reset_color}  ${fg[green]}opened${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}!1${reset_color}  ${reset_color}Update .gitlab-ci.yml      ${reset_color}  ${fg[blue]}OWNER-main-patch-25608${reset_color}  ${fg[green]}opened${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_glab 'glab mr reopen '
+}
+
+@test 'Testing completion: glab mr diff **' {
+    glab_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'mr'
+        assert $2 same_as 'list'
+        assert $3 same_as '--all'
+        assert $4 same_as '-F'
+        assert $5 same_as 'json'
+
+        echo -n '['
+        echo -n '  {"id":136297744,"iid":4,"target_branch":"main","source_branch":"1-fake-issue-3","project_id":29316529,"title":"Draft: Resolve \"fake issue\"","state":"opened","created_at":"2022-01-20T21:20:50.665Z","updated_at":"2022-01-20T21:47:54.11Z","upvotes":0,"downvotes":0,"author":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignee":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignees":[{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"}],"reviewers":[],"source_project_id":29316529,"target_project_id":29316529,"labels":[],"label_details":null,"description":"Closes #1","draft":true,"work_in_progress":true,"milestone":null,"merge_when_pipeline_succeeds":false,"detailed_merge_status":"draft_status","merge_error":"","merged_by":null,"merged_at":null,"closed_by":null,"closed_at":null,"subscribed":false,"sha":"44eb489568f7cb1a5a730fce6b247cd3797172ca","merge_commit_sha":"","squash_commit_sha":"","user_notes_count":0,"changes_count":"","should_remove_source_branch":false,"force_remove_source_branch":true,"allow_collaboration":false,"web_url":"https://gitlab.com/OWNER/REPO/-/merge_requests/4","references":{"short":"!4","relative":"!4","full":"OWNER/REPO!4"},"discussion_locked":false,"changes":null,"user":{"can_merge":false},"time_stats":{"human_time_estimate":"","human_total_time_spent":"","time_estimate":0,"total_time_spent":0},"squash":false,"pipeline":null,"head_pipeline":null,"diff_refs":{"base_sha":"","head_sha":"","start_sha":""},"diverged_commits_count":0,"rebase_in_progress":false,"approvals_before_merge":0,"reference":"!4","first_contribution":false,"task_completion_status":{"count":0,"completed_count":0},"has_conflicts":false,"blocking_discussions_resolved":true,"overflow":false,"merge_status":"can_be_merged"},'
+        echo -n '  {"id":135750125,"iid":1,"target_branch":"main","source_branch":"OWNER-main-patch-25608","project_id":29316529,"title":"Update .gitlab-ci.yml","state":"opened","created_at":"2022-01-18T17:02:23.27Z","updated_at":"2022-01-18T18:06:50.054Z","upvotes":0,"downvotes":0,"author":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignee":null,"assignees":[],"reviewers":[],"source_project_id":29316529,"target_project_id":29316529,"labels":[],"label_details":null,"description":"","draft":false,"work_in_progress":false,"milestone":null,"merge_when_pipeline_succeeds":false,"detailed_merge_status":"mergeable","merge_error":"","merged_by":null,"merged_at":null,"closed_by":null,"closed_at":null,"subscribed":false,"sha":"123f34ebfd5d97ef562974e55e01b83f06ae7b4a","merge_commit_sha":"","squash_commit_sha":"","user_notes_count":0,"changes_count":"","should_remove_source_branch":false,"force_remove_source_branch":true,"allow_collaboration":false,"web_url":"https://gitlab.com/OWNER/REPO/-/merge_requests/1","references":{"short":"!1","relative":"!1","full":"OWNER/REPO!1"},"discussion_locked":false,"changes":null,"user":{"can_merge":false},"time_stats":{"human_time_estimate":"","human_total_time_spent":"","time_estimate":0,"total_time_spent":0},"squash":false,"pipeline":null,"head_pipeline":null,"diff_refs":{"base_sha":"","head_sha":"","start_sha":""},"diverged_commits_count":0,"rebase_in_progress":false,"approvals_before_merge":0,"reference":"!1","first_contribution":false,"task_completion_status":{"count":0,"completed_count":0},"has_conflicts":false,"blocking_discussions_resolved":true,"overflow":false,"merge_status":"can_be_merged"}'
+        echo -n ']'
+        echo
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'glab mr diff '
+
+        echo 'glab'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'glab mr diff '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert glab mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}# ${reset_color}  ${reset_color}TITLE                      ${reset_color}  ${fg[blue]}BRANCH                ${reset_color}  ${fg[green]}STATE ${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}!4${reset_color}  ${reset_color}Draft: Resolve \"fake issue\"${reset_color}  ${fg[blue]}1-fake-issue-3        ${reset_color}  ${fg[green]}opened${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}!1${reset_color}  ${reset_color}Update .gitlab-ci.yml      ${reset_color}  ${fg[blue]}OWNER-main-patch-25608${reset_color}  ${fg[green]}opened${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_glab 'glab mr diff '
+}
+
+@test 'Testing completion: glab mr issues **' {
+    glab_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'mr'
+        assert $2 same_as 'list'
+        assert $3 same_as '--all'
+        assert $4 same_as '-F'
+        assert $5 same_as 'json'
+
+        echo -n '['
+        echo -n '  {"id":136297744,"iid":4,"target_branch":"main","source_branch":"1-fake-issue-3","project_id":29316529,"title":"Draft: Resolve \"fake issue\"","state":"opened","created_at":"2022-01-20T21:20:50.665Z","updated_at":"2022-01-20T21:47:54.11Z","upvotes":0,"downvotes":0,"author":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignee":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignees":[{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"}],"reviewers":[],"source_project_id":29316529,"target_project_id":29316529,"labels":[],"label_details":null,"description":"Closes #1","draft":true,"work_in_progress":true,"milestone":null,"merge_when_pipeline_succeeds":false,"detailed_merge_status":"draft_status","merge_error":"","merged_by":null,"merged_at":null,"closed_by":null,"closed_at":null,"subscribed":false,"sha":"44eb489568f7cb1a5a730fce6b247cd3797172ca","merge_commit_sha":"","squash_commit_sha":"","user_notes_count":0,"changes_count":"","should_remove_source_branch":false,"force_remove_source_branch":true,"allow_collaboration":false,"web_url":"https://gitlab.com/OWNER/REPO/-/merge_requests/4","references":{"short":"!4","relative":"!4","full":"OWNER/REPO!4"},"discussion_locked":false,"changes":null,"user":{"can_merge":false},"time_stats":{"human_time_estimate":"","human_total_time_spent":"","time_estimate":0,"total_time_spent":0},"squash":false,"pipeline":null,"head_pipeline":null,"diff_refs":{"base_sha":"","head_sha":"","start_sha":""},"diverged_commits_count":0,"rebase_in_progress":false,"approvals_before_merge":0,"reference":"!4","first_contribution":false,"task_completion_status":{"count":0,"completed_count":0},"has_conflicts":false,"blocking_discussions_resolved":true,"overflow":false,"merge_status":"can_be_merged"},'
+        echo -n '  {"id":135750125,"iid":1,"target_branch":"main","source_branch":"OWNER-main-patch-25608","project_id":29316529,"title":"Update .gitlab-ci.yml","state":"opened","created_at":"2022-01-18T17:02:23.27Z","updated_at":"2022-01-18T18:06:50.054Z","upvotes":0,"downvotes":0,"author":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignee":null,"assignees":[],"reviewers":[],"source_project_id":29316529,"target_project_id":29316529,"labels":[],"label_details":null,"description":"","draft":false,"work_in_progress":false,"milestone":null,"merge_when_pipeline_succeeds":false,"detailed_merge_status":"mergeable","merge_error":"","merged_by":null,"merged_at":null,"closed_by":null,"closed_at":null,"subscribed":false,"sha":"123f34ebfd5d97ef562974e55e01b83f06ae7b4a","merge_commit_sha":"","squash_commit_sha":"","user_notes_count":0,"changes_count":"","should_remove_source_branch":false,"force_remove_source_branch":true,"allow_collaboration":false,"web_url":"https://gitlab.com/OWNER/REPO/-/merge_requests/1","references":{"short":"!1","relative":"!1","full":"OWNER/REPO!1"},"discussion_locked":false,"changes":null,"user":{"can_merge":false},"time_stats":{"human_time_estimate":"","human_total_time_spent":"","time_estimate":0,"total_time_spent":0},"squash":false,"pipeline":null,"head_pipeline":null,"diff_refs":{"base_sha":"","head_sha":"","start_sha":""},"diverged_commits_count":0,"rebase_in_progress":false,"approvals_before_merge":0,"reference":"!1","first_contribution":false,"task_completion_status":{"count":0,"completed_count":0},"has_conflicts":false,"blocking_discussions_resolved":true,"overflow":false,"merge_status":"can_be_merged"}'
+        echo -n ']'
+        echo
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'glab mr issues '
+
+        echo 'glab'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'glab mr issues '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert glab mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}# ${reset_color}  ${reset_color}TITLE                      ${reset_color}  ${fg[blue]}BRANCH                ${reset_color}  ${fg[green]}STATE ${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}!4${reset_color}  ${reset_color}Draft: Resolve \"fake issue\"${reset_color}  ${fg[blue]}1-fake-issue-3        ${reset_color}  ${fg[green]}opened${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}!1${reset_color}  ${reset_color}Update .gitlab-ci.yml      ${reset_color}  ${fg[blue]}OWNER-main-patch-25608${reset_color}  ${fg[green]}opened${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_glab 'glab mr issues '
+}
+
+@test 'Testing completion: glab mr note **' {
+    glab_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'mr'
+        assert $2 same_as 'list'
+        assert $3 same_as '--all'
+        assert $4 same_as '-F'
+        assert $5 same_as 'json'
+
+        echo -n '['
+        echo -n '  {"id":136297744,"iid":4,"target_branch":"main","source_branch":"1-fake-issue-3","project_id":29316529,"title":"Draft: Resolve \"fake issue\"","state":"opened","created_at":"2022-01-20T21:20:50.665Z","updated_at":"2022-01-20T21:47:54.11Z","upvotes":0,"downvotes":0,"author":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignee":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignees":[{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"}],"reviewers":[],"source_project_id":29316529,"target_project_id":29316529,"labels":[],"label_details":null,"description":"Closes #1","draft":true,"work_in_progress":true,"milestone":null,"merge_when_pipeline_succeeds":false,"detailed_merge_status":"draft_status","merge_error":"","merged_by":null,"merged_at":null,"closed_by":null,"closed_at":null,"subscribed":false,"sha":"44eb489568f7cb1a5a730fce6b247cd3797172ca","merge_commit_sha":"","squash_commit_sha":"","user_notes_count":0,"changes_count":"","should_remove_source_branch":false,"force_remove_source_branch":true,"allow_collaboration":false,"web_url":"https://gitlab.com/OWNER/REPO/-/merge_requests/4","references":{"short":"!4","relative":"!4","full":"OWNER/REPO!4"},"discussion_locked":false,"changes":null,"user":{"can_merge":false},"time_stats":{"human_time_estimate":"","human_total_time_spent":"","time_estimate":0,"total_time_spent":0},"squash":false,"pipeline":null,"head_pipeline":null,"diff_refs":{"base_sha":"","head_sha":"","start_sha":""},"diverged_commits_count":0,"rebase_in_progress":false,"approvals_before_merge":0,"reference":"!4","first_contribution":false,"task_completion_status":{"count":0,"completed_count":0},"has_conflicts":false,"blocking_discussions_resolved":true,"overflow":false,"merge_status":"can_be_merged"},'
+        echo -n '  {"id":135750125,"iid":1,"target_branch":"main","source_branch":"OWNER-main-patch-25608","project_id":29316529,"title":"Update .gitlab-ci.yml","state":"opened","created_at":"2022-01-18T17:02:23.27Z","updated_at":"2022-01-18T18:06:50.054Z","upvotes":0,"downvotes":0,"author":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignee":null,"assignees":[],"reviewers":[],"source_project_id":29316529,"target_project_id":29316529,"labels":[],"label_details":null,"description":"","draft":false,"work_in_progress":false,"milestone":null,"merge_when_pipeline_succeeds":false,"detailed_merge_status":"mergeable","merge_error":"","merged_by":null,"merged_at":null,"closed_by":null,"closed_at":null,"subscribed":false,"sha":"123f34ebfd5d97ef562974e55e01b83f06ae7b4a","merge_commit_sha":"","squash_commit_sha":"","user_notes_count":0,"changes_count":"","should_remove_source_branch":false,"force_remove_source_branch":true,"allow_collaboration":false,"web_url":"https://gitlab.com/OWNER/REPO/-/merge_requests/1","references":{"short":"!1","relative":"!1","full":"OWNER/REPO!1"},"discussion_locked":false,"changes":null,"user":{"can_merge":false},"time_stats":{"human_time_estimate":"","human_total_time_spent":"","time_estimate":0,"total_time_spent":0},"squash":false,"pipeline":null,"head_pipeline":null,"diff_refs":{"base_sha":"","head_sha":"","start_sha":""},"diverged_commits_count":0,"rebase_in_progress":false,"approvals_before_merge":0,"reference":"!1","first_contribution":false,"task_completion_status":{"count":0,"completed_count":0},"has_conflicts":false,"blocking_discussions_resolved":true,"overflow":false,"merge_status":"can_be_merged"}'
+        echo -n ']'
+        echo
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'glab mr note '
+
+        echo 'glab'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'glab mr note '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert glab mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}# ${reset_color}  ${reset_color}TITLE                      ${reset_color}  ${fg[blue]}BRANCH                ${reset_color}  ${fg[green]}STATE ${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}!4${reset_color}  ${reset_color}Draft: Resolve \"fake issue\"${reset_color}  ${fg[blue]}1-fake-issue-3        ${reset_color}  ${fg[green]}opened${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}!1${reset_color}  ${reset_color}Update .gitlab-ci.yml      ${reset_color}  ${fg[blue]}OWNER-main-patch-25608${reset_color}  ${fg[green]}opened${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_glab 'glab mr note '
+}
+
+@test 'Testing completion: glab mr update **' {
+    glab_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'mr'
+        assert $2 same_as 'list'
+        assert $3 same_as '--all'
+        assert $4 same_as '-F'
+        assert $5 same_as 'json'
+
+        echo -n '['
+        echo -n '  {"id":136297744,"iid":4,"target_branch":"main","source_branch":"1-fake-issue-3","project_id":29316529,"title":"Draft: Resolve \"fake issue\"","state":"opened","created_at":"2022-01-20T21:20:50.665Z","updated_at":"2022-01-20T21:47:54.11Z","upvotes":0,"downvotes":0,"author":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignee":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignees":[{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"}],"reviewers":[],"source_project_id":29316529,"target_project_id":29316529,"labels":[],"label_details":null,"description":"Closes #1","draft":true,"work_in_progress":true,"milestone":null,"merge_when_pipeline_succeeds":false,"detailed_merge_status":"draft_status","merge_error":"","merged_by":null,"merged_at":null,"closed_by":null,"closed_at":null,"subscribed":false,"sha":"44eb489568f7cb1a5a730fce6b247cd3797172ca","merge_commit_sha":"","squash_commit_sha":"","user_notes_count":0,"changes_count":"","should_remove_source_branch":false,"force_remove_source_branch":true,"allow_collaboration":false,"web_url":"https://gitlab.com/OWNER/REPO/-/merge_requests/4","references":{"short":"!4","relative":"!4","full":"OWNER/REPO!4"},"discussion_locked":false,"changes":null,"user":{"can_merge":false},"time_stats":{"human_time_estimate":"","human_total_time_spent":"","time_estimate":0,"total_time_spent":0},"squash":false,"pipeline":null,"head_pipeline":null,"diff_refs":{"base_sha":"","head_sha":"","start_sha":""},"diverged_commits_count":0,"rebase_in_progress":false,"approvals_before_merge":0,"reference":"!4","first_contribution":false,"task_completion_status":{"count":0,"completed_count":0},"has_conflicts":false,"blocking_discussions_resolved":true,"overflow":false,"merge_status":"can_be_merged"},'
+        echo -n '  {"id":135750125,"iid":1,"target_branch":"main","source_branch":"OWNER-main-patch-25608","project_id":29316529,"title":"Update .gitlab-ci.yml","state":"opened","created_at":"2022-01-18T17:02:23.27Z","updated_at":"2022-01-18T18:06:50.054Z","upvotes":0,"downvotes":0,"author":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignee":null,"assignees":[],"reviewers":[],"source_project_id":29316529,"target_project_id":29316529,"labels":[],"label_details":null,"description":"","draft":false,"work_in_progress":false,"milestone":null,"merge_when_pipeline_succeeds":false,"detailed_merge_status":"mergeable","merge_error":"","merged_by":null,"merged_at":null,"closed_by":null,"closed_at":null,"subscribed":false,"sha":"123f34ebfd5d97ef562974e55e01b83f06ae7b4a","merge_commit_sha":"","squash_commit_sha":"","user_notes_count":0,"changes_count":"","should_remove_source_branch":false,"force_remove_source_branch":true,"allow_collaboration":false,"web_url":"https://gitlab.com/OWNER/REPO/-/merge_requests/1","references":{"short":"!1","relative":"!1","full":"OWNER/REPO!1"},"discussion_locked":false,"changes":null,"user":{"can_merge":false},"time_stats":{"human_time_estimate":"","human_total_time_spent":"","time_estimate":0,"total_time_spent":0},"squash":false,"pipeline":null,"head_pipeline":null,"diff_refs":{"base_sha":"","head_sha":"","start_sha":""},"diverged_commits_count":0,"rebase_in_progress":false,"approvals_before_merge":0,"reference":"!1","first_contribution":false,"task_completion_status":{"count":0,"completed_count":0},"has_conflicts":false,"blocking_discussions_resolved":true,"overflow":false,"merge_status":"can_be_merged"}'
+        echo -n ']'
+        echo
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'glab mr update '
+
+        echo 'glab'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'glab mr update '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert glab mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}# ${reset_color}  ${reset_color}TITLE                      ${reset_color}  ${fg[blue]}BRANCH                ${reset_color}  ${fg[green]}STATE ${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}!4${reset_color}  ${reset_color}Draft: Resolve \"fake issue\"${reset_color}  ${fg[blue]}1-fake-issue-3        ${reset_color}  ${fg[green]}opened${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}!1${reset_color}  ${reset_color}Update .gitlab-ci.yml      ${reset_color}  ${fg[blue]}OWNER-main-patch-25608${reset_color}  ${fg[green]}opened${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_glab 'glab mr update '
+}
+
+@test 'Testing completion: glab mr view **' {
+    glab_mock_1() {
+        assert $# equals 5
+        assert $1 same_as 'mr'
+        assert $2 same_as 'list'
+        assert $3 same_as '--all'
+        assert $4 same_as '-F'
+        assert $5 same_as 'json'
+
+        echo -n '['
+        echo -n '  {"id":136297744,"iid":4,"target_branch":"main","source_branch":"1-fake-issue-3","project_id":29316529,"title":"Draft: Resolve \"fake issue\"","state":"opened","created_at":"2022-01-20T21:20:50.665Z","updated_at":"2022-01-20T21:47:54.11Z","upvotes":0,"downvotes":0,"author":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignee":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignees":[{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"}],"reviewers":[],"source_project_id":29316529,"target_project_id":29316529,"labels":[],"label_details":null,"description":"Closes #1","draft":true,"work_in_progress":true,"milestone":null,"merge_when_pipeline_succeeds":false,"detailed_merge_status":"draft_status","merge_error":"","merged_by":null,"merged_at":null,"closed_by":null,"closed_at":null,"subscribed":false,"sha":"44eb489568f7cb1a5a730fce6b247cd3797172ca","merge_commit_sha":"","squash_commit_sha":"","user_notes_count":0,"changes_count":"","should_remove_source_branch":false,"force_remove_source_branch":true,"allow_collaboration":false,"web_url":"https://gitlab.com/OWNER/REPO/-/merge_requests/4","references":{"short":"!4","relative":"!4","full":"OWNER/REPO!4"},"discussion_locked":false,"changes":null,"user":{"can_merge":false},"time_stats":{"human_time_estimate":"","human_total_time_spent":"","time_estimate":0,"total_time_spent":0},"squash":false,"pipeline":null,"head_pipeline":null,"diff_refs":{"base_sha":"","head_sha":"","start_sha":""},"diverged_commits_count":0,"rebase_in_progress":false,"approvals_before_merge":0,"reference":"!4","first_contribution":false,"task_completion_status":{"count":0,"completed_count":0},"has_conflicts":false,"blocking_discussions_resolved":true,"overflow":false,"merge_status":"can_be_merged"},'
+        echo -n '  {"id":135750125,"iid":1,"target_branch":"main","source_branch":"OWNER-main-patch-25608","project_id":29316529,"title":"Update .gitlab-ci.yml","state":"opened","created_at":"2022-01-18T17:02:23.27Z","updated_at":"2022-01-18T18:06:50.054Z","upvotes":0,"downvotes":0,"author":{"id":8814129,"username":"OWNER","name":"Some User","state":"active","created_at":null,"avatar_url":"https://gitlab.com/uploads/-/system/user/avatar/8814129/avatar.png","web_url":"https://gitlab.com/OWNER"},"assignee":null,"assignees":[],"reviewers":[],"source_project_id":29316529,"target_project_id":29316529,"labels":[],"label_details":null,"description":"","draft":false,"work_in_progress":false,"milestone":null,"merge_when_pipeline_succeeds":false,"detailed_merge_status":"mergeable","merge_error":"","merged_by":null,"merged_at":null,"closed_by":null,"closed_at":null,"subscribed":false,"sha":"123f34ebfd5d97ef562974e55e01b83f06ae7b4a","merge_commit_sha":"","squash_commit_sha":"","user_notes_count":0,"changes_count":"","should_remove_source_branch":false,"force_remove_source_branch":true,"allow_collaboration":false,"web_url":"https://gitlab.com/OWNER/REPO/-/merge_requests/1","references":{"short":"!1","relative":"!1","full":"OWNER/REPO!1"},"discussion_locked":false,"changes":null,"user":{"can_merge":false},"time_stats":{"human_time_estimate":"","human_total_time_spent":"","time_estimate":0,"total_time_spent":0},"squash":false,"pipeline":null,"head_pipeline":null,"diff_refs":{"base_sha":"","head_sha":"","start_sha":""},"diverged_commits_count":0,"rebase_in_progress":false,"approvals_before_merge":0,"reference":"!1","first_contribution":false,"task_completion_status":{"count":0,"completed_count":0},"has_conflicts":false,"blocking_discussions_resolved":true,"overflow":false,"merge_status":"can_be_merged"}'
+        echo -n ']'
+        echo
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'glab mr view '
+
+        echo 'glab'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'glab mr view '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert glab mock_times 1
+        assert ${#lines} equals 3
+        assert ${lines[1]} same_as "${fg[yellow]}# ${reset_color}  ${reset_color}TITLE                      ${reset_color}  ${fg[blue]}BRANCH                ${reset_color}  ${fg[green]}STATE ${reset_color}"
+        assert ${lines[2]} same_as "${fg[yellow]}!4${reset_color}  ${reset_color}Draft: Resolve \"fake issue\"${reset_color}  ${fg[blue]}1-fake-issue-3        ${reset_color}  ${fg[green]}opened${reset_color}"
+        assert ${lines[3]} same_as "${fg[yellow]}!1${reset_color}  ${reset_color}Update .gitlab-ci.yml      ${reset_color}  ${fg[blue]}OWNER-main-patch-25608${reset_color}  ${fg[green]}opened${reset_color}"
+    }
+
+    prefix=
+    _fzf_complete_glab 'glab mr view '
+}
+
+@test 'Testing completion: glab "" mr view **' {
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'glab "" mr view '
+
+        echo 'glab'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'glab "" mr view '
+    }
+
+    prefix=
+    _fzf_complete_glab 'glab "" mr view '
+
+    assert __fzf_extract_command mock_times 1
+    assert glab mock_times 0
+}
+
+@test 'Testing post: glab-mr' {
+    input=(
+        '!4  Draft: Resolve "fake issue"  1-fake-issue-3          opened'
+    )
+
+    run _fzf_complete_glab-mr_post <<< ${(F)input}
+
+    assert $state equals 0
+    assert ${#lines} equals 1
+    assert ${lines[1]} same_as '4'
+}
