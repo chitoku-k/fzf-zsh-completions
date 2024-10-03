@@ -47,8 +47,6 @@ _fzf_complete_gh() {
                 return
                 ;;
         esac
-
-        return
     fi
 
     _fzf_path_completion "$prefix" "$@"

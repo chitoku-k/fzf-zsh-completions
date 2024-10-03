@@ -70,6 +70,8 @@ git rebase -i **<TAB>
   - Commit messaees
   - Files
   - Remotes
+- glab
+  - Merge Requests
 - kubectl
   - Annotations/Labels/Field selectors
   - Containers/Ports

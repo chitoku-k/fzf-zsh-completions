@@ -19,17 +19,37 @@ _fzf_complete_glab() {
         return
     fi
 
-    if [[ $glab_command = mr ]]; then
+    if [[ $glab_command = co ]]; then
         local prefix_option completing_option
-        local glab_options_argument_required=()
+        local glab_options_argument_required=(-b --branch -R --repo -u --set-upstream-to)
         local glab_options_argument_optional=()
 
         completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)glab_options_argument_required}" "${(F)glab_options_argument_optional}" || :)
 
         case $completing_option in
+            -b|--branch|-R|--repo|-u|--set-upstream-to)
+                return
+                ;;
 
             *)
-                if [[ $glab_subcommand = (checkout|close|merge|approve|todo|revoke) ]]; then
+                _fzf_complete_glab-mr '' '' "$@"
+                return
+                ;;
+        esac
+    elif [[ $glab_command = mr ]]; then
+        local prefix_option completing_option
+        local glab_options_argument_required=(-R --repo)
+        local glab_options_argument_optional=()
+
+        completing_option=$(_fzf_complete_parse_completing_option "$prefix" "$last_argument" "${(F)glab_options_argument_required}" "${(F)glab_options_argument_optional}" || :)
+
+        case $completing_option in
+            -R|--repo)
+                return
+                ;;
+
+            *)
+                if [[ $glab_subcommand = (approve|checkout|close|merge|revoke|todo) ]]; then
                     _fzf_complete_glab-mr '' '' "$@"
                 fi
 
@@ -37,19 +57,13 @@ _fzf_complete_glab() {
                     _fzf_complete_glab-mr '' '--closed' "$@"
                 fi
 
-                if [[ $glab_subcommand = (diff|update|view) ]]; then
+                if [[ $glab_subcommand = (diff|issues|note|update|view) ]]; then
                     _fzf_complete_glab-mr '' '--all' "$@"
                 fi
 
                 return
                 ;;
         esac
-
-        return
-
-    elif [[ $glab_command = co ]]; then
-        _fzf_complete_glab-mr '' '' "$@"
-        return
     fi
 
     _fzf_path_completion "$prefix" "$@"
@@ -62,10 +76,10 @@ _fzf_complete_glab-mr() {
 
     _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@" < <({
         echo "#\tTITLE\tBRANCH\tSTATE"
-        glab mr list $mr_state -F json | jq -r '(.[] | [.reference, .title, .source_branch, .state]) | @tsv'
+        glab mr list $mr_state -F json | jq -r '.[] | [.reference, .title, .source_branch, .state] | @tsv'
     } | FS="\t" _fzf_complete_tabularize ${fg[yellow]} $reset_color ${fg[blue]} ${fg[green]})
 }
 
 _fzf_complete_glab-mr_post() {
-    awk '{ print $1 }' | tr -d "!"
+    awk '{ print $1 }' | tr -d '!'
 }
