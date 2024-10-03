@@ -17,7 +17,7 @@ jobs:
             awk: mawk
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           submodules: true
       - name: Install Zsh
@@ -48,7 +48,7 @@ jobs:
             awk: mawk
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           submodules: true
       - name: Set up Docker Buildx
