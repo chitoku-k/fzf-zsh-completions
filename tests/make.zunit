@@ -2,7 +2,6 @@
 
 @setup {
     load ../fzf-zsh-completions.plugin.zsh
-    load _helpers/mock.zsh
     load _helpers/assertions.zsh
 
     pushd tests/_support/make
@@ -11,7 +10,6 @@
 }
 
 @teardown {
-    unmock grep
     rm -f -- $tmpfile
 }
 
@@ -34,17 +32,6 @@
 }
 
 @test 'Testing output: make **' {
-    mock grep
-
-    grep_mock_1() {
-        assert $# equals 3
-        assert $1 same_as '-E'
-        assert $2 same_as '^[a-zA-Z_-]+:.*?$$'
-        assert $3 same_as 'Makefile'
-
-        echo "grep_mock_$grep_mock_times error" >&2
-    }
-
     _fzf_complete() {
         assert $# equals 4
         assert $1 same_as '--ansi'
@@ -53,8 +40,9 @@
         assert $4 same_as 'make '
 
         run cat
-        assert grep mock_times 1
-        assert ${#lines} equals 1
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as 'aoi'
+        assert ${lines[2]} same_as 'akane'
     }
 
     prefix=
