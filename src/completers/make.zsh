@@ -13,5 +13,5 @@ _fzf_complete_make-target() {
     # 2. multiple targets on a line `bigoutput   littleoutput  median : `
     # 3. proper exclude variable assigment `var := `
 
-    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- "$@" < <(grep -E '^(([a-zA-Z_-]+)\s*?)*:([^=]|$).*?$' Makefile 2> /dev/null | uniq | awk -F ':' '{ split($1, arr, " "); for (i=1; i<=length(arr); i++) print arr[i] }')
+    _fzf_complete --ansi --tiebreak=index ${(Q)${(Z+n+)fzf_options}} -- "$@" < <(grep -E '^(([a-zA-Z_-]+)\s*?)*:([^=]|$).*?$' Makefile 2> /dev/null | uniq | awk -F ':' '{ n = split($1, arr, " "); for (i=1; i<=n; i++) print arr[i] }')
 }
