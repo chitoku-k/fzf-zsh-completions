@@ -22,9 +22,11 @@
         assert $4 same_as 'make '
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 4
         assert ${lines[1]} same_as 'aoi'
         assert ${lines[2]} same_as 'akane'
+        assert ${lines[3]} same_as 'sayuri'
+        assert ${lines[4]} same_as 'chitori'
     }
 
     prefix=
@@ -40,9 +42,11 @@
         assert $4 same_as 'make '
 
         run cat
-        assert ${#lines} equals 2
+        assert ${#lines} equals 4
         assert ${lines[1]} same_as 'aoi'
         assert ${lines[2]} same_as 'akane'
+        assert ${lines[3]} same_as 'sayuri'
+        assert ${lines[4]} same_as 'chitori'
     }
 
     prefix=
