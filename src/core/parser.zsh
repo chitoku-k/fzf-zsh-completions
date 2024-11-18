@@ -1,8 +1,15 @@
 #!/usr/bin/env zsh
 
 _fzf_complete_get_command_pos() {
+    local cmd
     local arguments=("${(Q)${(z)@}[@]}")
-    local cmd=$(__fzf_extract_command "$@")
+
+    if [[ "$(which __fzf_extract_command)" == *compstate* ]]; then
+        cmd=$cmd_word
+    else
+        cmd=$(__fzf_extract_command "$@")
+    fi
+
     echo ${arguments[(i)$cmd]}
 }
 
