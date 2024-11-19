@@ -4,7 +4,7 @@ _fzf_complete_get_command_pos() {
     local cmd
     local arguments=("${(Q)${(z)@}[@]}")
 
-    if [[ "$(which __fzf_extract_command)" == *compstate* ]]; then
+    if [[ -n $cmd_word ]]; then
         cmd=$cmd_word
     else
         cmd=$(__fzf_extract_command "$@")
