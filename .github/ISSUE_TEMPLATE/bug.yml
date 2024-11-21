@@ -10,7 +10,7 @@ body:
   - type: textarea
     attributes:
       label: OS version
-      placeholder: Ubuntu 22.04
+      placeholder: Ubuntu 24.04
       render: shell
     validations:
       required: true
@@ -18,7 +18,7 @@ body:
     attributes:
       label: zsh version
       description: '`zsh --version` output'
-      placeholder: zsh 5.9 (x86_64-pc-linux-gnu)
+      placeholder: zsh 5.9 (x86_64-ubuntu-linux-gnu)
       render: shell
     validations:
       required: true
@@ -26,7 +26,7 @@ body:
     attributes:
       label: awk version
       description: '`awk --version` or `awk -W version` output'
-      placeholder: 'GNU Awk 5.2.2, API 3.2, PMA Avon 8-g1, (GNU MPFR 4.2.0-p9, GNU MP 6.2.1)'
+      placeholder: 'GNU Awk 5.2.1, API 3.2, PMA Avon 8-g1, (GNU MPFR 4.2.1, GNU MP 6.3.0)'
       render: shell
     validations:
       required: true
@@ -34,7 +34,7 @@ body:
     attributes:
       label: jq version
       description: '`jq --version` output'
-      placeholder: jq-1.6
+      placeholder: jq-1.7
       render: shell
     validations:
       required: true
@@ -42,7 +42,7 @@ body:
     attributes:
       label: fzf version
       description: '`fzf --version` output'
-      placeholder: 0.42.0 (d471067e)
+      placeholder: 0.44.1 (debian)
       render: shell
     validations:
       required: true
@@ -50,7 +50,7 @@ body:
     attributes:
       label: Command version(s)
       description: 'Command version(s) for completing command (e.g., `git --version` for git completion)'
-      placeholder: git version 2.41.0
+      placeholder: git version 2.43.0
       render: shell
     validations:
       required: true
