@@ -2,7 +2,8 @@
 
 _fzf_complete_get_command_pos() {
     local arguments=("${(Q)${(z)@}[@]}")
-    local cmd=$(__fzf_extract_command "$@")
+    local cmd=${cmd_word-$(__fzf_extract_command "$@")}
+
     echo ${arguments[(i)$cmd]}
 }
 
