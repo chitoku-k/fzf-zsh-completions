@@ -76,7 +76,7 @@ _fzf_complete_glab-mr() {
 
     _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@" < <({
         echo "#\tTITLE\tBRANCH\tSTATE"
-        glab mr list $mr_state -F json | jq -r '.[] | [.reference, .title, .source_branch, .state] | @tsv'
+        glab mr list $mr_state -F json | jq -r '.[] | [.references.short, .title, .source_branch, .state] | @tsv'
     } | FS="\t" _fzf_complete_tabularize ${fg[yellow]} $reset_color ${fg[blue]} ${fg[green]})
 }
 
