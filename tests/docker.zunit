@@ -1025,6 +1025,104 @@
     _fzf_complete_docker 'docker tag '
 }
 
+@test 'Testing completion: docker --context test tag **' {
+    docker_mock_1() {
+        assert $# equals 5
+        assert $1 same_as '--context'
+        assert $2 same_as 'test'
+        assert $3 same_as 'images'
+        assert $4 same_as '--format'
+        assert $5 same_as 'table {{.ID}};{{.Repository}};{{.Tag}};{{if .CreatedSince}}{{.CreatedSince}}{{else}}N/A{{end}};{{.Size}}'
+
+        echo 'IMAGE ID;REPOSITORY;TAG;CREATED;SIZE'
+        echo 'e7d92cdc71fe;alpine;latest;18 hours ago;5.59MB'
+        echo '5425b1e460b6;<none>;<none>;1 weeks ago;5.59MB'
+        echo 'ccc6e87d482b;ubuntu;latest;7 weeks ago;64.2MB'
+        echo 'f17f844b1558;zshusers/zsh;master;8 weeks ago;64.3MB'
+        echo '0152bf6f0800;archlinux;latest;18 months ago;409MB'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker --context test tag '
+
+        echo 'docker'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker --context test tag '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert docker mock_times 1
+        assert ${#lines} equals 6
+        assert ${lines[1]} same_as "${fg[yellow]}IMAGE ID    ${reset_color}  ${reset_color}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
+        assert ${lines[2]} same_as "${fg[yellow]}e7d92cdc71fe${reset_color}  ${reset_color}alpine      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 hours ago ${reset_color}  5.59MB"
+        assert ${lines[3]} same_as "${fg[yellow]}5425b1e460b6${reset_color}  ${reset_color}<none>      ${reset_color}  ${reset_color}<none>${reset_color}  ${reset_color}1 weeks ago  ${reset_color}  5.59MB"
+        assert ${lines[4]} same_as "${fg[yellow]}ccc6e87d482b${reset_color}  ${reset_color}ubuntu      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}7 weeks ago  ${reset_color}  64.2MB"
+        assert ${lines[5]} same_as "${fg[yellow]}f17f844b1558${reset_color}  ${reset_color}zshusers/zsh${reset_color}  ${reset_color}master${reset_color}  ${reset_color}8 weeks ago  ${reset_color}  64.3MB"
+        assert ${lines[6]} same_as "${fg[yellow]}0152bf6f0800${reset_color}  ${reset_color}archlinux   ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 months ago${reset_color}  409MB"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker --context test tag '
+}
+
+@test 'Testing completion: docker --host ssh://test tag **' {
+    docker_mock_1() {
+        assert $# equals 5
+        assert $1 same_as '--host'
+        assert $2 same_as 'ssh://test'
+        assert $3 same_as 'images'
+        assert $4 same_as '--format'
+        assert $5 same_as 'table {{.ID}};{{.Repository}};{{.Tag}};{{if .CreatedSince}}{{.CreatedSince}}{{else}}N/A{{end}};{{.Size}}'
+
+        echo 'IMAGE ID;REPOSITORY;TAG;CREATED;SIZE'
+        echo 'e7d92cdc71fe;alpine;latest;18 hours ago;5.59MB'
+        echo '5425b1e460b6;<none>;<none>;1 weeks ago;5.59MB'
+        echo 'ccc6e87d482b;ubuntu;latest;7 weeks ago;64.2MB'
+        echo 'f17f844b1558;zshusers/zsh;master;8 weeks ago;64.3MB'
+        echo '0152bf6f0800;archlinux;latest;18 months ago;409MB'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker --host ssh://test tag '
+
+        echo 'docker'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker --host ssh://test tag '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert docker mock_times 1
+        assert ${#lines} equals 6
+        assert ${lines[1]} same_as "${fg[yellow]}IMAGE ID    ${reset_color}  ${reset_color}REPOSITORY  ${reset_color}  ${reset_color}TAG   ${reset_color}  ${reset_color}CREATED      ${reset_color}  SIZE"
+        assert ${lines[2]} same_as "${fg[yellow]}e7d92cdc71fe${reset_color}  ${reset_color}alpine      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 hours ago ${reset_color}  5.59MB"
+        assert ${lines[3]} same_as "${fg[yellow]}5425b1e460b6${reset_color}  ${reset_color}<none>      ${reset_color}  ${reset_color}<none>${reset_color}  ${reset_color}1 weeks ago  ${reset_color}  5.59MB"
+        assert ${lines[4]} same_as "${fg[yellow]}ccc6e87d482b${reset_color}  ${reset_color}ubuntu      ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}7 weeks ago  ${reset_color}  64.2MB"
+        assert ${lines[5]} same_as "${fg[yellow]}f17f844b1558${reset_color}  ${reset_color}zshusers/zsh${reset_color}  ${reset_color}master${reset_color}  ${reset_color}8 weeks ago  ${reset_color}  64.3MB"
+        assert ${lines[6]} same_as "${fg[yellow]}0152bf6f0800${reset_color}  ${reset_color}archlinux   ${reset_color}  ${reset_color}latest${reset_color}  ${reset_color}18 months ago${reset_color}  409MB"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker --host ssh://test tag '
+}
+
 @test 'Testing completion: docker attach **' {
     docker_mock_1() {
         assert $# equals 4
@@ -1062,6 +1160,88 @@
 
     prefix=
     _fzf_complete_docker 'docker attach '
+}
+
+@test 'Testing completion: docker --context test attach **' {
+    docker_mock_1() {
+        assert $# equals 6
+        assert $1 same_as '--context'
+        assert $2 same_as 'test'
+        assert $3 same_as 'container'
+        assert $4 same_as 'list'
+        assert $5 same_as '--format'
+        assert $6 same_as 'table {{.ID}};{{.Image}};{{.Command}};{{.RunningFor}};{{.Status}};{{.Ports}};{{.Names}}'
+
+        echo 'CONTAINER ID;IMAGE;COMMAND;CREATED;STATUS;PORTS;NAME'
+        echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker --context test attach '
+
+        echo 'docker'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'docker --context test attach '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert docker mock_times 1
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE    ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS     ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
+        assert ${lines[2]} same_as "${fg[yellow]}295e3ea0de41${reset_color}  ${reset_color}archlinux${reset_color}  ${reset_color}\"/bin/zsh --login\"${reset_color}  ${reset_color}4 weeks ago${reset_color}  ${reset_color}Up 1 second${reset_color}  ${reset_color}     ${reset_color}  thankful_smyth"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker --context test attach '
+}
+
+@test 'Testing completion: docker --host ssh://test attach **' {
+    docker_mock_1() {
+        assert $# equals 6
+        assert $1 same_as '--host'
+        assert $2 same_as 'ssh://test'
+        assert $3 same_as 'container'
+        assert $4 same_as 'list'
+        assert $5 same_as '--format'
+        assert $6 same_as 'table {{.ID}};{{.Image}};{{.Command}};{{.RunningFor}};{{.Status}};{{.Ports}};{{.Names}}'
+
+        echo 'CONTAINER ID;IMAGE;COMMAND;CREATED;STATUS;PORTS;NAME'
+        echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker --host ssh://test attach '
+
+        echo 'docker'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'docker --host ssh://test attach '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert docker mock_times 1
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE    ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS     ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
+        assert ${lines[2]} same_as "${fg[yellow]}295e3ea0de41${reset_color}  ${reset_color}archlinux${reset_color}  ${reset_color}\"/bin/zsh --login\"${reset_color}  ${reset_color}4 weeks ago${reset_color}  ${reset_color}Up 1 second${reset_color}  ${reset_color}     ${reset_color}  thankful_smyth"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker --host ssh://test attach '
 }
 
 @test 'Testing completion: docker exec **' {
@@ -1103,6 +1283,88 @@
     _fzf_complete_docker 'docker exec '
 }
 
+@test 'Testing completion: docker --context test exec **' {
+    docker_mock_1() {
+        assert $# equals 6
+        assert $1 same_as '--context'
+        assert $2 same_as 'test'
+        assert $3 same_as 'container'
+        assert $4 same_as 'list'
+        assert $5 same_as '--format'
+        assert $6 same_as 'table {{.ID}};{{.Image}};{{.Command}};{{.RunningFor}};{{.Status}};{{.Ports}};{{.Names}}'
+
+        echo 'CONTAINER ID;IMAGE;COMMAND;CREATED;STATUS;PORTS;NAME'
+        echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker --context test exec '
+
+        echo 'docker'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'docker --context test exec '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert docker mock_times 1
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE    ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS     ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
+        assert ${lines[2]} same_as "${fg[yellow]}295e3ea0de41${reset_color}  ${reset_color}archlinux${reset_color}  ${reset_color}\"/bin/zsh --login\"${reset_color}  ${reset_color}4 weeks ago${reset_color}  ${reset_color}Up 1 second${reset_color}  ${reset_color}     ${reset_color}  thankful_smyth"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker --context test exec '
+}
+
+@test 'Testing completion: docker --host ssh://test exec **' {
+    docker_mock_1() {
+        assert $# equals 6
+        assert $1 same_as '--host'
+        assert $2 same_as 'ssh://test'
+        assert $3 same_as 'container'
+        assert $4 same_as 'list'
+        assert $5 same_as '--format'
+        assert $6 same_as 'table {{.ID}};{{.Image}};{{.Command}};{{.RunningFor}};{{.Status}};{{.Ports}};{{.Names}}'
+
+        echo 'CONTAINER ID;IMAGE;COMMAND;CREATED;STATUS;PORTS;NAME'
+        echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker --host ssh://test exec '
+
+        echo 'docker'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'docker --host ssh://test exec '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert docker mock_times 1
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE    ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS     ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
+        assert ${lines[2]} same_as "${fg[yellow]}295e3ea0de41${reset_color}  ${reset_color}archlinux${reset_color}  ${reset_color}\"/bin/zsh --login\"${reset_color}  ${reset_color}4 weeks ago${reset_color}  ${reset_color}Up 1 second${reset_color}  ${reset_color}     ${reset_color}  thankful_smyth"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker --host ssh://test exec '
+}
+
 @test 'Testing completion: docker top **' {
     docker_mock_1() {
         assert $# equals 4
@@ -1140,6 +1402,88 @@
 
     prefix=
     _fzf_complete_docker 'docker top '
+}
+
+@test 'Testing completion: docker --context test top **' {
+    docker_mock_1() {
+        assert $# equals 6
+        assert $1 same_as '--context'
+        assert $2 same_as 'test'
+        assert $3 same_as 'container'
+        assert $4 same_as 'list'
+        assert $5 same_as '--format'
+        assert $6 same_as 'table {{.ID}};{{.Image}};{{.Command}};{{.RunningFor}};{{.Status}};{{.Ports}};{{.Names}}'
+
+        echo 'CONTAINER ID;IMAGE;COMMAND;CREATED;STATUS;PORTS;NAME'
+        echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker --context test top '
+
+        echo 'docker'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'docker --context test top '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert docker mock_times 1
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE    ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS     ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
+        assert ${lines[2]} same_as "${fg[yellow]}295e3ea0de41${reset_color}  ${reset_color}archlinux${reset_color}  ${reset_color}\"/bin/zsh --login\"${reset_color}  ${reset_color}4 weeks ago${reset_color}  ${reset_color}Up 1 second${reset_color}  ${reset_color}     ${reset_color}  thankful_smyth"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker --context test top '
+}
+
+@test 'Testing completion: docker --host ssh://test top **' {
+    docker_mock_1() {
+        assert $# equals 6
+        assert $1 same_as '--host'
+        assert $2 same_as 'ssh://test'
+        assert $3 same_as 'container'
+        assert $4 same_as 'list'
+        assert $5 same_as '--format'
+        assert $6 same_as 'table {{.ID}};{{.Image}};{{.Command}};{{.RunningFor}};{{.Status}};{{.Ports}};{{.Names}}'
+
+        echo 'CONTAINER ID;IMAGE;COMMAND;CREATED;STATUS;PORTS;NAME'
+        echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker --host ssh://test top '
+
+        echo 'docker'
+    }
+
+    _fzf_complete() {
+        assert $# equals 5
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--'
+        assert $5 same_as 'docker --host ssh://test top '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert docker mock_times 1
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE    ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS     ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
+        assert ${lines[2]} same_as "${fg[yellow]}295e3ea0de41${reset_color}  ${reset_color}archlinux${reset_color}  ${reset_color}\"/bin/zsh --login\"${reset_color}  ${reset_color}4 weeks ago${reset_color}  ${reset_color}Up 1 second${reset_color}  ${reset_color}     ${reset_color}  thankful_smyth"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker --host ssh://test top '
 }
 
 @test 'Testing completion: docker kill **' {
@@ -1182,6 +1526,90 @@
     _fzf_complete_docker 'docker kill '
 }
 
+@test 'Testing completion: docker --context test kill **' {
+    docker_mock_1() {
+        assert $# equals 6
+        assert $1 same_as '--context'
+        assert $2 same_as 'test'
+        assert $3 same_as 'container'
+        assert $4 same_as 'list'
+        assert $5 same_as '--format'
+        assert $6 same_as 'table {{.ID}};{{.Image}};{{.Command}};{{.RunningFor}};{{.Status}};{{.Ports}};{{.Names}}'
+
+        echo 'CONTAINER ID;IMAGE;COMMAND;CREATED;STATUS;PORTS;NAME'
+        echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker --context test kill '
+
+        echo 'docker'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker --context test kill '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert docker mock_times 1
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE    ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS     ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
+        assert ${lines[2]} same_as "${fg[yellow]}295e3ea0de41${reset_color}  ${reset_color}archlinux${reset_color}  ${reset_color}\"/bin/zsh --login\"${reset_color}  ${reset_color}4 weeks ago${reset_color}  ${reset_color}Up 1 second${reset_color}  ${reset_color}     ${reset_color}  thankful_smyth"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker --context test kill '
+}
+
+@test 'Testing completion: docker --host ssh://test kill **' {
+    docker_mock_1() {
+        assert $# equals 6
+        assert $1 same_as '--host'
+        assert $2 same_as 'ssh://test'
+        assert $3 same_as 'container'
+        assert $4 same_as 'list'
+        assert $5 same_as '--format'
+        assert $6 same_as 'table {{.ID}};{{.Image}};{{.Command}};{{.RunningFor}};{{.Status}};{{.Ports}};{{.Names}}'
+
+        echo 'CONTAINER ID;IMAGE;COMMAND;CREATED;STATUS;PORTS;NAME'
+        echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker --host ssh://test kill '
+
+        echo 'docker'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker --host ssh://test kill '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert docker mock_times 1
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE    ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS     ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
+        assert ${lines[2]} same_as "${fg[yellow]}295e3ea0de41${reset_color}  ${reset_color}archlinux${reset_color}  ${reset_color}\"/bin/zsh --login\"${reset_color}  ${reset_color}4 weeks ago${reset_color}  ${reset_color}Up 1 second${reset_color}  ${reset_color}     ${reset_color}  thankful_smyth"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker --host ssh://test kill '
+}
+
 @test 'Testing completion: docker pause **' {
     docker_mock_1() {
         assert $# equals 4
@@ -1222,6 +1650,90 @@
     _fzf_complete_docker 'docker pause '
 }
 
+@test 'Testing completion: docker --context test pause **' {
+    docker_mock_1() {
+        assert $# equals 6
+        assert $1 same_as '--context'
+        assert $2 same_as 'test'
+        assert $3 same_as 'container'
+        assert $4 same_as 'list'
+        assert $5 same_as '--format'
+        assert $6 same_as 'table {{.ID}};{{.Image}};{{.Command}};{{.RunningFor}};{{.Status}};{{.Ports}};{{.Names}}'
+
+        echo 'CONTAINER ID;IMAGE;COMMAND;CREATED;STATUS;PORTS;NAME'
+        echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker --context test pause '
+
+        echo 'docker'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker --context test pause '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert docker mock_times 1
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE    ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS     ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
+        assert ${lines[2]} same_as "${fg[yellow]}295e3ea0de41${reset_color}  ${reset_color}archlinux${reset_color}  ${reset_color}\"/bin/zsh --login\"${reset_color}  ${reset_color}4 weeks ago${reset_color}  ${reset_color}Up 1 second${reset_color}  ${reset_color}     ${reset_color}  thankful_smyth"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker --context test pause '
+}
+
+@test 'Testing completion: docker --host ssh://test pause **' {
+    docker_mock_1() {
+        assert $# equals 6
+        assert $1 same_as '--host'
+        assert $2 same_as 'ssh://test'
+        assert $3 same_as 'container'
+        assert $4 same_as 'list'
+        assert $5 same_as '--format'
+        assert $6 same_as 'table {{.ID}};{{.Image}};{{.Command}};{{.RunningFor}};{{.Status}};{{.Ports}};{{.Names}}'
+
+        echo 'CONTAINER ID;IMAGE;COMMAND;CREATED;STATUS;PORTS;NAME'
+        echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker --host ssh://test pause '
+
+        echo 'docker'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker --host ssh://test pause '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert docker mock_times 1
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE    ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS     ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
+        assert ${lines[2]} same_as "${fg[yellow]}295e3ea0de41${reset_color}  ${reset_color}archlinux${reset_color}  ${reset_color}\"/bin/zsh --login\"${reset_color}  ${reset_color}4 weeks ago${reset_color}  ${reset_color}Up 1 second${reset_color}  ${reset_color}     ${reset_color}  thankful_smyth"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker --host ssh://test pause '
+}
+
 @test 'Testing completion: docker stop **' {
     docker_mock_1() {
         assert $# equals 4
@@ -1260,6 +1772,90 @@
 
     prefix=
     _fzf_complete_docker 'docker stop '
+}
+
+@test 'Testing completion: docker --context test stop **' {
+    docker_mock_1() {
+        assert $# equals 6
+        assert $1 same_as '--context'
+        assert $2 same_as 'test'
+        assert $3 same_as 'container'
+        assert $4 same_as 'list'
+        assert $5 same_as '--format'
+        assert $6 same_as 'table {{.ID}};{{.Image}};{{.Command}};{{.RunningFor}};{{.Status}};{{.Ports}};{{.Names}}'
+
+        echo 'CONTAINER ID;IMAGE;COMMAND;CREATED;STATUS;PORTS;NAME'
+        echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker --context test stop '
+
+        echo 'docker'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker --context test stop '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert docker mock_times 1
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE    ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS     ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
+        assert ${lines[2]} same_as "${fg[yellow]}295e3ea0de41${reset_color}  ${reset_color}archlinux${reset_color}  ${reset_color}\"/bin/zsh --login\"${reset_color}  ${reset_color}4 weeks ago${reset_color}  ${reset_color}Up 1 second${reset_color}  ${reset_color}     ${reset_color}  thankful_smyth"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker --context test stop '
+}
+
+@test 'Testing completion: docker --host ssh://test stop **' {
+    docker_mock_1() {
+        assert $# equals 6
+        assert $1 same_as '--host'
+        assert $2 same_as 'ssh://test'
+        assert $3 same_as 'container'
+        assert $4 same_as 'list'
+        assert $5 same_as '--format'
+        assert $6 same_as 'table {{.ID}};{{.Image}};{{.Command}};{{.RunningFor}};{{.Status}};{{.Ports}};{{.Names}}'
+
+        echo 'CONTAINER ID;IMAGE;COMMAND;CREATED;STATUS;PORTS;NAME'
+        echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker --host ssh://test stop '
+
+        echo 'docker'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker --host ssh://test stop '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert docker mock_times 1
+        assert ${#lines} equals 2
+        assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE    ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS     ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
+        assert ${lines[2]} same_as "${fg[yellow]}295e3ea0de41${reset_color}  ${reset_color}archlinux${reset_color}  ${reset_color}\"/bin/zsh --login\"${reset_color}  ${reset_color}4 weeks ago${reset_color}  ${reset_color}Up 1 second${reset_color}  ${reset_color}     ${reset_color}  thankful_smyth"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker --host ssh://test stop '
 }
 
 @test 'Testing completion: docker unpause **' {
