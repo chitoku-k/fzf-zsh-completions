@@ -7931,6 +7931,57 @@
     _fzf_complete_docker 'docker --context test start '
 }
 
+@test 'Testing completion: docker --context=test start **' {
+    docker_mock_1() {
+        assert $# equals 7
+        assert $1 same_as '--context'
+        assert $2 same_as 'test'
+        assert $3 same_as 'container'
+        assert $4 same_as 'list'
+        assert $5 same_as '--all'
+        assert $6 same_as '--format'
+        assert $7 same_as 'table {{.ID}};{{.Image}};{{.Command}};{{.RunningFor}};{{.Status}};{{.Ports}};{{.Names}}'
+
+        echo 'CONTAINER ID;IMAGE;COMMAND;CREATED;STATUS;PORTS;NAME'
+        echo '728e677dd292;5425b1e460b6;"/bin/sh";12 days ago;Exited (0) 12 days ago;;affectionate_curie'
+        echo '5dbce56c9f3c;app;"/bin/sh";12 days ago;Exited (0) 12 days ago;;priceless_euler'
+        echo '862e5e30b1a7;app;"/bin/sh";12 days ago;Exited (0) 12 days ago;;gifted_elion'
+        echo '61858546cc23;5425b1e460b6;"/bin/sh";12 days ago;Exited (0) 12 days ago;;wonderful_tesla'
+        echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker --context=test start '
+
+        echo 'docker'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker --context=test start '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert docker mock_times 1
+        assert ${#lines} equals 6
+        assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
+        assert ${lines[2]} same_as "${fg[yellow]}728e677dd292${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  affectionate_curie"
+        assert ${lines[3]} same_as "${fg[yellow]}5dbce56c9f3c${reset_color}  ${reset_color}app         ${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  priceless_euler"
+        assert ${lines[4]} same_as "${fg[yellow]}862e5e30b1a7${reset_color}  ${reset_color}app         ${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  gifted_elion"
+        assert ${lines[5]} same_as "${fg[yellow]}61858546cc23${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  wonderful_tesla"
+        assert ${lines[6]} same_as "${fg[yellow]}295e3ea0de41${reset_color}  ${reset_color}archlinux   ${reset_color}  ${reset_color}\"/bin/zsh --login\"${reset_color}  ${reset_color}4 weeks ago${reset_color}  ${reset_color}Up 1 second           ${reset_color}  ${reset_color}     ${reset_color}  thankful_smyth"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker --context=test start '
+}
+
 @test 'Testing completion: docker --host ssh://test start **' {
     docker_mock_1() {
         assert $# equals 7
@@ -7980,6 +8031,57 @@
 
     prefix=
     _fzf_complete_docker 'docker --host ssh://test start '
+}
+
+@test 'Testing completion: docker ----host=ssh://test start **' {
+    docker_mock_1() {
+        assert $# equals 7
+        assert $1 same_as '--host'
+        assert $2 same_as 'ssh://test'
+        assert $3 same_as 'container'
+        assert $4 same_as 'list'
+        assert $5 same_as '--all'
+        assert $6 same_as '--format'
+        assert $7 same_as 'table {{.ID}};{{.Image}};{{.Command}};{{.RunningFor}};{{.Status}};{{.Ports}};{{.Names}}'
+
+        echo 'CONTAINER ID;IMAGE;COMMAND;CREATED;STATUS;PORTS;NAME'
+        echo '728e677dd292;5425b1e460b6;"/bin/sh";12 days ago;Exited (0) 12 days ago;;affectionate_curie'
+        echo '5dbce56c9f3c;app;"/bin/sh";12 days ago;Exited (0) 12 days ago;;priceless_euler'
+        echo '862e5e30b1a7;app;"/bin/sh";12 days ago;Exited (0) 12 days ago;;gifted_elion'
+        echo '61858546cc23;5425b1e460b6;"/bin/sh";12 days ago;Exited (0) 12 days ago;;wonderful_tesla'
+        echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker ----host=ssh://test start '
+
+        echo 'docker'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker ----host=ssh://test start '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert docker mock_times 1
+        assert ${#lines} equals 6
+        assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
+        assert ${lines[2]} same_as "${fg[yellow]}728e677dd292${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  affectionate_curie"
+        assert ${lines[3]} same_as "${fg[yellow]}5dbce56c9f3c${reset_color}  ${reset_color}app         ${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  priceless_euler"
+        assert ${lines[4]} same_as "${fg[yellow]}862e5e30b1a7${reset_color}  ${reset_color}app         ${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  gifted_elion"
+        assert ${lines[5]} same_as "${fg[yellow]}61858546cc23${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  wonderful_tesla"
+        assert ${lines[6]} same_as "${fg[yellow]}295e3ea0de41${reset_color}  ${reset_color}archlinux   ${reset_color}  ${reset_color}\"/bin/zsh --login\"${reset_color}  ${reset_color}4 weeks ago${reset_color}  ${reset_color}Up 1 second           ${reset_color}  ${reset_color}     ${reset_color}  thankful_smyth"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker ----host=ssh://test start '
 }
 
 @test 'Testing completion: docker stats **' {
@@ -8082,6 +8184,57 @@
     _fzf_complete_docker 'docker --context test stats '
 }
 
+@test 'Testing completion: docker --context=test stats **' {
+    docker_mock_1() {
+        assert $# equals 7
+        assert $1 same_as '--context'
+        assert $2 same_as 'test'
+        assert $3 same_as 'container'
+        assert $4 same_as 'list'
+        assert $5 same_as '--all'
+        assert $6 same_as '--format'
+        assert $7 same_as 'table {{.ID}};{{.Image}};{{.Command}};{{.RunningFor}};{{.Status}};{{.Ports}};{{.Names}}'
+
+        echo 'CONTAINER ID;IMAGE;COMMAND;CREATED;STATUS;PORTS;NAME'
+        echo '728e677dd292;5425b1e460b6;"/bin/sh";12 days ago;Exited (0) 12 days ago;;affectionate_curie'
+        echo '5dbce56c9f3c;app;"/bin/sh";12 days ago;Exited (0) 12 days ago;;priceless_euler'
+        echo '862e5e30b1a7;app;"/bin/sh";12 days ago;Exited (0) 12 days ago;;gifted_elion'
+        echo '61858546cc23;5425b1e460b6;"/bin/sh";12 days ago;Exited (0) 12 days ago;;wonderful_tesla'
+        echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker --context=test stats '
+
+        echo 'docker'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker --context=test stats '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert docker mock_times 1
+        assert ${#lines} equals 6
+        assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
+        assert ${lines[2]} same_as "${fg[yellow]}728e677dd292${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  affectionate_curie"
+        assert ${lines[3]} same_as "${fg[yellow]}5dbce56c9f3c${reset_color}  ${reset_color}app         ${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  priceless_euler"
+        assert ${lines[4]} same_as "${fg[yellow]}862e5e30b1a7${reset_color}  ${reset_color}app         ${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  gifted_elion"
+        assert ${lines[5]} same_as "${fg[yellow]}61858546cc23${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  wonderful_tesla"
+        assert ${lines[6]} same_as "${fg[yellow]}295e3ea0de41${reset_color}  ${reset_color}archlinux   ${reset_color}  ${reset_color}\"/bin/zsh --login\"${reset_color}  ${reset_color}4 weeks ago${reset_color}  ${reset_color}Up 1 second           ${reset_color}  ${reset_color}     ${reset_color}  thankful_smyth"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker --context=test stats '
+}
+
 @test 'Testing completion: docker --host ssh://test stats **' {
     docker_mock_1() {
         assert $# equals 7
@@ -8131,6 +8284,57 @@
 
     prefix=
     _fzf_complete_docker 'docker --host ssh://test stats '
+}
+
+@test 'Testing completion: docker ----host=ssh://test stats **' {
+    docker_mock_1() {
+        assert $# equals 7
+        assert $1 same_as '--host'
+        assert $2 same_as 'ssh://test'
+        assert $3 same_as 'container'
+        assert $4 same_as 'list'
+        assert $5 same_as '--all'
+        assert $6 same_as '--format'
+        assert $7 same_as 'table {{.ID}};{{.Image}};{{.Command}};{{.RunningFor}};{{.Status}};{{.Ports}};{{.Names}}'
+
+        echo 'CONTAINER ID;IMAGE;COMMAND;CREATED;STATUS;PORTS;NAME'
+        echo '728e677dd292;5425b1e460b6;"/bin/sh";12 days ago;Exited (0) 12 days ago;;affectionate_curie'
+        echo '5dbce56c9f3c;app;"/bin/sh";12 days ago;Exited (0) 12 days ago;;priceless_euler'
+        echo '862e5e30b1a7;app;"/bin/sh";12 days ago;Exited (0) 12 days ago;;gifted_elion'
+        echo '61858546cc23;5425b1e460b6;"/bin/sh";12 days ago;Exited (0) 12 days ago;;wonderful_tesla'
+        echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker ----host=ssh://test stats '
+
+        echo 'docker'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker ----host=ssh://test stats '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert docker mock_times 1
+        assert ${#lines} equals 6
+        assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
+        assert ${lines[2]} same_as "${fg[yellow]}728e677dd292${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  affectionate_curie"
+        assert ${lines[3]} same_as "${fg[yellow]}5dbce56c9f3c${reset_color}  ${reset_color}app         ${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  priceless_euler"
+        assert ${lines[4]} same_as "${fg[yellow]}862e5e30b1a7${reset_color}  ${reset_color}app         ${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  gifted_elion"
+        assert ${lines[5]} same_as "${fg[yellow]}61858546cc23${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  wonderful_tesla"
+        assert ${lines[6]} same_as "${fg[yellow]}295e3ea0de41${reset_color}  ${reset_color}archlinux   ${reset_color}  ${reset_color}\"/bin/zsh --login\"${reset_color}  ${reset_color}4 weeks ago${reset_color}  ${reset_color}Up 1 second           ${reset_color}  ${reset_color}     ${reset_color}  thankful_smyth"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker ----host=ssh://test stats '
 }
 
 @test 'Testing completion: docker update **' {
@@ -8233,6 +8437,57 @@
     _fzf_complete_docker 'docker --context test update '
 }
 
+@test 'Testing completion: docker --context=test update **' {
+    docker_mock_1() {
+        assert $# equals 7
+        assert $1 same_as '--context'
+        assert $2 same_as 'test'
+        assert $3 same_as 'container'
+        assert $4 same_as 'list'
+        assert $5 same_as '--all'
+        assert $6 same_as '--format'
+        assert $7 same_as 'table {{.ID}};{{.Image}};{{.Command}};{{.RunningFor}};{{.Status}};{{.Ports}};{{.Names}}'
+
+        echo 'CONTAINER ID;IMAGE;COMMAND;CREATED;STATUS;PORTS;NAME'
+        echo '728e677dd292;5425b1e460b6;"/bin/sh";12 days ago;Exited (0) 12 days ago;;affectionate_curie'
+        echo '5dbce56c9f3c;app;"/bin/sh";12 days ago;Exited (0) 12 days ago;;priceless_euler'
+        echo '862e5e30b1a7;app;"/bin/sh";12 days ago;Exited (0) 12 days ago;;gifted_elion'
+        echo '61858546cc23;5425b1e460b6;"/bin/sh";12 days ago;Exited (0) 12 days ago;;wonderful_tesla'
+        echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker --context=test update '
+
+        echo 'docker'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker --context=test update '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert docker mock_times 1
+        assert ${#lines} equals 6
+        assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
+        assert ${lines[2]} same_as "${fg[yellow]}728e677dd292${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  affectionate_curie"
+        assert ${lines[3]} same_as "${fg[yellow]}5dbce56c9f3c${reset_color}  ${reset_color}app         ${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  priceless_euler"
+        assert ${lines[4]} same_as "${fg[yellow]}862e5e30b1a7${reset_color}  ${reset_color}app         ${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  gifted_elion"
+        assert ${lines[5]} same_as "${fg[yellow]}61858546cc23${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  wonderful_tesla"
+        assert ${lines[6]} same_as "${fg[yellow]}295e3ea0de41${reset_color}  ${reset_color}archlinux   ${reset_color}  ${reset_color}\"/bin/zsh --login\"${reset_color}  ${reset_color}4 weeks ago${reset_color}  ${reset_color}Up 1 second           ${reset_color}  ${reset_color}     ${reset_color}  thankful_smyth"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker --context=test update '
+}
+
 @test 'Testing completion: docker --host ssh://test update **' {
     docker_mock_1() {
         assert $# equals 7
@@ -8282,6 +8537,57 @@
 
     prefix=
     _fzf_complete_docker 'docker --host ssh://test update '
+}
+
+@test 'Testing completion: docker ----host=ssh://test update **' {
+    docker_mock_1() {
+        assert $# equals 7
+        assert $1 same_as '--host'
+        assert $2 same_as 'ssh://test'
+        assert $3 same_as 'container'
+        assert $4 same_as 'list'
+        assert $5 same_as '--all'
+        assert $6 same_as '--format'
+        assert $7 same_as 'table {{.ID}};{{.Image}};{{.Command}};{{.RunningFor}};{{.Status}};{{.Ports}};{{.Names}}'
+
+        echo 'CONTAINER ID;IMAGE;COMMAND;CREATED;STATUS;PORTS;NAME'
+        echo '728e677dd292;5425b1e460b6;"/bin/sh";12 days ago;Exited (0) 12 days ago;;affectionate_curie'
+        echo '5dbce56c9f3c;app;"/bin/sh";12 days ago;Exited (0) 12 days ago;;priceless_euler'
+        echo '862e5e30b1a7;app;"/bin/sh";12 days ago;Exited (0) 12 days ago;;gifted_elion'
+        echo '61858546cc23;5425b1e460b6;"/bin/sh";12 days ago;Exited (0) 12 days ago;;wonderful_tesla'
+        echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker ----host=ssh://test update '
+
+        echo 'docker'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker ----host=ssh://test update '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert docker mock_times 1
+        assert ${#lines} equals 6
+        assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
+        assert ${lines[2]} same_as "${fg[yellow]}728e677dd292${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  affectionate_curie"
+        assert ${lines[3]} same_as "${fg[yellow]}5dbce56c9f3c${reset_color}  ${reset_color}app         ${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  priceless_euler"
+        assert ${lines[4]} same_as "${fg[yellow]}862e5e30b1a7${reset_color}  ${reset_color}app         ${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  gifted_elion"
+        assert ${lines[5]} same_as "${fg[yellow]}61858546cc23${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  wonderful_tesla"
+        assert ${lines[6]} same_as "${fg[yellow]}295e3ea0de41${reset_color}  ${reset_color}archlinux   ${reset_color}  ${reset_color}\"/bin/zsh --login\"${reset_color}  ${reset_color}4 weeks ago${reset_color}  ${reset_color}Up 1 second           ${reset_color}  ${reset_color}     ${reset_color}  thankful_smyth"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker ----host=ssh://test update '
 }
 
 @test 'Testing completion: docker wait **' {
@@ -8384,6 +8690,57 @@
     _fzf_complete_docker 'docker --context test wait '
 }
 
+@test 'Testing completion: docker --context=test wait **' {
+    docker_mock_1() {
+        assert $# equals 7
+        assert $1 same_as '--context'
+        assert $2 same_as 'test'
+        assert $3 same_as 'container'
+        assert $4 same_as 'list'
+        assert $5 same_as '--all'
+        assert $6 same_as '--format'
+        assert $7 same_as 'table {{.ID}};{{.Image}};{{.Command}};{{.RunningFor}};{{.Status}};{{.Ports}};{{.Names}}'
+
+        echo 'CONTAINER ID;IMAGE;COMMAND;CREATED;STATUS;PORTS;NAME'
+        echo '728e677dd292;5425b1e460b6;"/bin/sh";12 days ago;Exited (0) 12 days ago;;affectionate_curie'
+        echo '5dbce56c9f3c;app;"/bin/sh";12 days ago;Exited (0) 12 days ago;;priceless_euler'
+        echo '862e5e30b1a7;app;"/bin/sh";12 days ago;Exited (0) 12 days ago;;gifted_elion'
+        echo '61858546cc23;5425b1e460b6;"/bin/sh";12 days ago;Exited (0) 12 days ago;;wonderful_tesla'
+        echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker --context=test wait '
+
+        echo 'docker'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker --context=test wait '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert docker mock_times 1
+        assert ${#lines} equals 6
+        assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
+        assert ${lines[2]} same_as "${fg[yellow]}728e677dd292${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  affectionate_curie"
+        assert ${lines[3]} same_as "${fg[yellow]}5dbce56c9f3c${reset_color}  ${reset_color}app         ${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  priceless_euler"
+        assert ${lines[4]} same_as "${fg[yellow]}862e5e30b1a7${reset_color}  ${reset_color}app         ${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  gifted_elion"
+        assert ${lines[5]} same_as "${fg[yellow]}61858546cc23${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  wonderful_tesla"
+        assert ${lines[6]} same_as "${fg[yellow]}295e3ea0de41${reset_color}  ${reset_color}archlinux   ${reset_color}  ${reset_color}\"/bin/zsh --login\"${reset_color}  ${reset_color}4 weeks ago${reset_color}  ${reset_color}Up 1 second           ${reset_color}  ${reset_color}     ${reset_color}  thankful_smyth"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker --context=test wait '
+}
+
 @test 'Testing completion: docker --host ssh://test wait **' {
     docker_mock_1() {
         assert $# equals 7
@@ -8433,6 +8790,57 @@
 
     prefix=
     _fzf_complete_docker 'docker --host ssh://test wait '
+}
+
+@test 'Testing completion: docker ----host=ssh://test wait **' {
+    docker_mock_1() {
+        assert $# equals 7
+        assert $1 same_as '--host'
+        assert $2 same_as 'ssh://test'
+        assert $3 same_as 'container'
+        assert $4 same_as 'list'
+        assert $5 same_as '--all'
+        assert $6 same_as '--format'
+        assert $7 same_as 'table {{.ID}};{{.Image}};{{.Command}};{{.RunningFor}};{{.Status}};{{.Ports}};{{.Names}}'
+
+        echo 'CONTAINER ID;IMAGE;COMMAND;CREATED;STATUS;PORTS;NAME'
+        echo '728e677dd292;5425b1e460b6;"/bin/sh";12 days ago;Exited (0) 12 days ago;;affectionate_curie'
+        echo '5dbce56c9f3c;app;"/bin/sh";12 days ago;Exited (0) 12 days ago;;priceless_euler'
+        echo '862e5e30b1a7;app;"/bin/sh";12 days ago;Exited (0) 12 days ago;;gifted_elion'
+        echo '61858546cc23;5425b1e460b6;"/bin/sh";12 days ago;Exited (0) 12 days ago;;wonderful_tesla'
+        echo '295e3ea0de41;archlinux;"/bin/zsh --login";4 weeks ago;Up 1 second;;thankful_smyth'
+    }
+
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker ----host=ssh://test wait '
+
+        echo 'docker'
+    }
+
+    _fzf_complete() {
+        assert $# equals 6
+        assert $1 same_as '--ansi'
+        assert $2 same_as '--tiebreak=index'
+        assert $3 same_as '--header-lines=1'
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'docker ----host=ssh://test wait '
+
+        run cat
+        assert __fzf_extract_command mock_times 1
+        assert docker mock_times 1
+        assert ${#lines} equals 6
+        assert ${lines[1]} same_as "${fg[yellow]}CONTAINER ID${reset_color}  ${reset_color}IMAGE       ${reset_color}  ${reset_color}COMMAND           ${reset_color}  ${reset_color}CREATED    ${reset_color}  ${reset_color}STATUS                ${reset_color}  ${reset_color}PORTS${reset_color}  NAME"
+        assert ${lines[2]} same_as "${fg[yellow]}728e677dd292${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  affectionate_curie"
+        assert ${lines[3]} same_as "${fg[yellow]}5dbce56c9f3c${reset_color}  ${reset_color}app         ${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  priceless_euler"
+        assert ${lines[4]} same_as "${fg[yellow]}862e5e30b1a7${reset_color}  ${reset_color}app         ${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  gifted_elion"
+        assert ${lines[5]} same_as "${fg[yellow]}61858546cc23${reset_color}  ${reset_color}5425b1e460b6${reset_color}  ${reset_color}\"/bin/sh\"         ${reset_color}  ${reset_color}12 days ago${reset_color}  ${reset_color}Exited (0) 12 days ago${reset_color}  ${reset_color}     ${reset_color}  wonderful_tesla"
+        assert ${lines[6]} same_as "${fg[yellow]}295e3ea0de41${reset_color}  ${reset_color}archlinux   ${reset_color}  ${reset_color}\"/bin/zsh --login\"${reset_color}  ${reset_color}4 weeks ago${reset_color}  ${reset_color}Up 1 second           ${reset_color}  ${reset_color}     ${reset_color}  thankful_smyth"
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker ----host=ssh://test wait '
 }
 
 @test 'Testing completion: docker "" wait **' {
@@ -8487,6 +8895,32 @@
     assert docker mock_times 0
 }
 
+@test 'Testing completion: docker --context=test "" wait **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker --context=test "" wait '
+
+        echo 'docker'
+    }
+
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'docker --context=test "" wait '
+
+        assert __fzf_extract_command mock_times 1
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker --context=test "" wait '
+
+    assert docker mock_times 0
+}
+
 @test 'Testing completion: docker --host ssh://test "" wait **' {
     __fzf_extract_command_mock_1() {
         assert $# equals 1
@@ -8509,6 +8943,32 @@
 
     prefix=
     _fzf_complete_docker 'docker --host ssh://test "" wait '
+
+    assert docker mock_times 0
+}
+
+@test 'Testing completion: docker ----host=ssh://test "" wait **' {
+    __fzf_extract_command_mock_1() {
+        assert $# equals 1
+        assert $1 same_as 'docker ----host=ssh://test "" wait '
+
+        echo 'docker'
+    }
+
+    _fzf_complete() {
+        fail '_fzf_complete should not be invoked'
+    }
+
+    _fzf_path_completion() {
+        assert $# equals 2
+        assert $1 same_as ''
+        assert $2 same_as 'docker ----host=ssh://test "" wait '
+
+        assert __fzf_extract_command mock_times 1
+    }
+
+    prefix=
+    _fzf_complete_docker 'docker ----host=ssh://test "" wait '
 
     assert docker mock_times 0
 }
