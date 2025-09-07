@@ -786,7 +786,7 @@
     _fzf_complete_docker 'docker --host ssh://test push '
 }
 
-@test 'Testing completion: docker ----host=ssh://test push **' {
+@test 'Testing completion: docker --host=ssh://test push **' {
     docker_mock_1() {
         assert $# equals 7
         assert $1 same_as '--host'
@@ -806,7 +806,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test push '
+        assert $1 same_as 'docker --host=ssh://test push '
 
         echo 'docker'
     }
@@ -817,7 +817,7 @@
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--'
-        assert $5 same_as 'docker ----host=ssh://test push '
+        assert $5 same_as 'docker --host=ssh://test push '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -831,7 +831,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test push '
+    _fzf_complete_docker 'docker --host=ssh://test push '
 }
 
 @test 'Testing completion: docker run **' {
@@ -1024,7 +1024,7 @@
     _fzf_complete_docker 'docker --host ssh://test run '
 }
 
-@test 'Testing completion: docker ----host=ssh://test run **' {
+@test 'Testing completion: docker --host=ssh://test run **' {
     docker_mock_1() {
         assert $# equals 5
         assert $1 same_as '--host'
@@ -1043,7 +1043,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test run '
+        assert $1 same_as 'docker --host=ssh://test run '
 
         echo 'docker'
     }
@@ -1054,7 +1054,7 @@
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--'
-        assert $5 same_as 'docker ----host=ssh://test run '
+        assert $5 same_as 'docker --host=ssh://test run '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -1069,7 +1069,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test run '
+    _fzf_complete_docker 'docker --host=ssh://test run '
 }
 
 @test 'Testing completion: docker rmi **' {
@@ -1266,7 +1266,7 @@
     _fzf_complete_docker 'docker --host ssh://test rmi '
 }
 
-@test 'Testing completion: docker ----host=ssh://test rmi **' {
+@test 'Testing completion: docker --host=ssh://test rmi **' {
     docker_mock_1() {
         assert $# equals 5
         assert $1 same_as '--host'
@@ -1285,7 +1285,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test rmi '
+        assert $1 same_as 'docker --host=ssh://test rmi '
 
         echo 'docker'
     }
@@ -1297,7 +1297,7 @@
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'docker ----host=ssh://test rmi '
+        assert $6 same_as 'docker --host=ssh://test rmi '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -1312,7 +1312,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test rmi '
+    _fzf_complete_docker 'docker --host=ssh://test rmi '
 }
 
 @test 'Testing completion: docker save **' {
@@ -1509,7 +1509,7 @@
     _fzf_complete_docker 'docker --host ssh://test save '
 }
 
-@test 'Testing completion: docker ----host=ssh://test save **' {
+@test 'Testing completion: docker --host=ssh://test save **' {
     docker_mock_1() {
         assert $# equals 5
         assert $1 same_as '--host'
@@ -1528,7 +1528,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test save '
+        assert $1 same_as 'docker --host=ssh://test save '
 
         echo 'docker'
     }
@@ -1540,7 +1540,7 @@
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'docker ----host=ssh://test save '
+        assert $6 same_as 'docker --host=ssh://test save '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -1555,7 +1555,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test save '
+    _fzf_complete_docker 'docker --host=ssh://test save '
 }
 
 @test 'Testing completion: docker tag **' {
@@ -1752,7 +1752,7 @@
     _fzf_complete_docker 'docker --host ssh://test tag '
 }
 
-@test 'Testing completion: docker ----host=ssh://test tag **' {
+@test 'Testing completion: docker --host=ssh://test tag **' {
     docker_mock_1() {
         assert $# equals 5
         assert $1 same_as '--host'
@@ -1771,7 +1771,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test tag '
+        assert $1 same_as 'docker --host=ssh://test tag '
 
         echo 'docker'
     }
@@ -1783,7 +1783,7 @@
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'docker ----host=ssh://test tag '
+        assert $6 same_as 'docker --host=ssh://test tag '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -1798,7 +1798,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test tag '
+    _fzf_complete_docker 'docker --host=ssh://test tag '
 }
 
 @test 'Testing completion: docker attach **' {
@@ -1963,7 +1963,7 @@
     _fzf_complete_docker 'docker --host ssh://test attach '
 }
 
-@test 'Testing completion: docker ----host=ssh://test attach **' {
+@test 'Testing completion: docker --host=ssh://test attach **' {
     docker_mock_1() {
         assert $# equals 6
         assert $1 same_as '--host'
@@ -1979,7 +1979,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test attach '
+        assert $1 same_as 'docker --host=ssh://test attach '
 
         echo 'docker'
     }
@@ -1990,7 +1990,7 @@
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--'
-        assert $5 same_as 'docker ----host=ssh://test attach '
+        assert $5 same_as 'docker --host=ssh://test attach '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -2001,7 +2001,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test attach '
+    _fzf_complete_docker 'docker --host=ssh://test attach '
 }
 
 @test 'Testing completion: docker exec **' {
@@ -2166,7 +2166,7 @@
     _fzf_complete_docker 'docker --host ssh://test exec '
 }
 
-@test 'Testing completion: docker ----host=ssh://test exec **' {
+@test 'Testing completion: docker --host=ssh://test exec **' {
     docker_mock_1() {
         assert $# equals 6
         assert $1 same_as '--host'
@@ -2182,7 +2182,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test exec '
+        assert $1 same_as 'docker --host=ssh://test exec '
 
         echo 'docker'
     }
@@ -2193,7 +2193,7 @@
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--'
-        assert $5 same_as 'docker ----host=ssh://test exec '
+        assert $5 same_as 'docker --host=ssh://test exec '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -2204,7 +2204,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test exec '
+    _fzf_complete_docker 'docker --host=ssh://test exec '
 }
 
 @test 'Testing completion: docker top **' {
@@ -2369,7 +2369,7 @@
     _fzf_complete_docker 'docker --host ssh://test top '
 }
 
-@test 'Testing completion: docker ----host=ssh://test top **' {
+@test 'Testing completion: docker --host=ssh://test top **' {
     docker_mock_1() {
         assert $# equals 6
         assert $1 same_as '--host'
@@ -2385,7 +2385,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test top '
+        assert $1 same_as 'docker --host=ssh://test top '
 
         echo 'docker'
     }
@@ -2396,7 +2396,7 @@
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--'
-        assert $5 same_as 'docker ----host=ssh://test top '
+        assert $5 same_as 'docker --host=ssh://test top '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -2407,7 +2407,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test top '
+    _fzf_complete_docker 'docker --host=ssh://test top '
 }
 
 @test 'Testing completion: docker kill **' {
@@ -2576,7 +2576,7 @@
     _fzf_complete_docker 'docker --host ssh://test kill '
 }
 
-@test 'Testing completion: docker ----host=ssh://test kill **' {
+@test 'Testing completion: docker --host=ssh://test kill **' {
     docker_mock_1() {
         assert $# equals 6
         assert $1 same_as '--host'
@@ -2592,7 +2592,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test kill '
+        assert $1 same_as 'docker --host=ssh://test kill '
 
         echo 'docker'
     }
@@ -2604,7 +2604,7 @@
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'docker ----host=ssh://test kill '
+        assert $6 same_as 'docker --host=ssh://test kill '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -2615,7 +2615,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test kill '
+    _fzf_complete_docker 'docker --host=ssh://test kill '
 }
 
 @test 'Testing completion: docker pause **' {
@@ -2784,7 +2784,7 @@
     _fzf_complete_docker 'docker --host ssh://test pause '
 }
 
-@test 'Testing completion: docker ----host=ssh://test pause **' {
+@test 'Testing completion: docker --host=ssh://test pause **' {
     docker_mock_1() {
         assert $# equals 6
         assert $1 same_as '--host'
@@ -2800,7 +2800,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test pause '
+        assert $1 same_as 'docker --host=ssh://test pause '
 
         echo 'docker'
     }
@@ -2812,7 +2812,7 @@
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'docker ----host=ssh://test pause '
+        assert $6 same_as 'docker --host=ssh://test pause '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -2823,7 +2823,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test pause '
+    _fzf_complete_docker 'docker --host=ssh://test pause '
 }
 
 @test 'Testing completion: docker stop **' {
@@ -2992,7 +2992,7 @@
     _fzf_complete_docker 'docker --host ssh://test stop '
 }
 
-@test 'Testing completion: docker ----host=ssh://test stop **' {
+@test 'Testing completion: docker --host=ssh://test stop **' {
     docker_mock_1() {
         assert $# equals 6
         assert $1 same_as '--host'
@@ -3008,7 +3008,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test stop '
+        assert $1 same_as 'docker --host=ssh://test stop '
 
         echo 'docker'
     }
@@ -3020,7 +3020,7 @@
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'docker ----host=ssh://test stop '
+        assert $6 same_as 'docker --host=ssh://test stop '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -3031,7 +3031,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test stop '
+    _fzf_complete_docker 'docker --host=ssh://test stop '
 }
 
 @test 'Testing completion: docker unpause **' {
@@ -3200,7 +3200,7 @@
     _fzf_complete_docker 'docker --host ssh://test unpause '
 }
 
-@test 'Testing completion: docker ----host=ssh://test unpause **' {
+@test 'Testing completion: docker --host=ssh://test unpause **' {
     docker_mock_1() {
         assert $# equals 6
         assert $1 same_as '--host'
@@ -3216,7 +3216,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test unpause '
+        assert $1 same_as 'docker --host=ssh://test unpause '
 
         echo 'docker'
     }
@@ -3228,7 +3228,7 @@
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'docker ----host=ssh://test unpause '
+        assert $6 same_as 'docker --host=ssh://test unpause '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -3239,7 +3239,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test unpause '
+    _fzf_complete_docker 'docker --host=ssh://test unpause '
 }
 
 @test 'Testing completion: docker commit **' {
@@ -3440,7 +3440,7 @@
     _fzf_complete_docker 'docker --host ssh://test commit '
 }
 
-@test 'Testing completion: docker ----host=ssh://test commit **' {
+@test 'Testing completion: docker --host=ssh://test commit **' {
     docker_mock_1() {
         assert $# equals 7
         assert $1 same_as '--host'
@@ -3461,7 +3461,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test commit '
+        assert $1 same_as 'docker --host=ssh://test commit '
 
         echo 'docker'
     }
@@ -3472,7 +3472,7 @@
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--'
-        assert $5 same_as 'docker ----host=ssh://test commit '
+        assert $5 same_as 'docker --host=ssh://test commit '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -3487,7 +3487,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test commit '
+    _fzf_complete_docker 'docker --host=ssh://test commit '
 }
 
 @test 'Testing completion: docker cp **' {
@@ -3688,7 +3688,7 @@
     _fzf_complete_docker 'docker --host ssh://test cp '
 }
 
-@test 'Testing completion: docker ----host=ssh://test cp **' {
+@test 'Testing completion: docker --host=ssh://test cp **' {
     docker_mock_1() {
         assert $# equals 7
         assert $1 same_as '--host'
@@ -3709,7 +3709,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test cp '
+        assert $1 same_as 'docker --host=ssh://test cp '
 
         echo 'docker'
     }
@@ -3720,7 +3720,7 @@
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--'
-        assert $5 same_as 'docker ----host=ssh://test cp '
+        assert $5 same_as 'docker --host=ssh://test cp '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -3735,7 +3735,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test cp '
+    _fzf_complete_docker 'docker --host=ssh://test cp '
 }
 
 @test 'Testing completion: docker diff **' {
@@ -3936,7 +3936,7 @@
     _fzf_complete_docker 'docker --host ssh://test diff '
 }
 
-@test 'Testing completion: docker ----host=ssh://test diff **' {
+@test 'Testing completion: docker --host=ssh://test diff **' {
     docker_mock_1() {
         assert $# equals 7
         assert $1 same_as '--host'
@@ -3957,7 +3957,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test diff '
+        assert $1 same_as 'docker --host=ssh://test diff '
 
         echo 'docker'
     }
@@ -3968,7 +3968,7 @@
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--'
-        assert $5 same_as 'docker ----host=ssh://test diff '
+        assert $5 same_as 'docker --host=ssh://test diff '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -3983,7 +3983,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test diff '
+    _fzf_complete_docker 'docker --host=ssh://test diff '
 }
 
 @test 'Testing completion: docker export **' {
@@ -4184,7 +4184,7 @@
     _fzf_complete_docker 'docker --host ssh://test export '
 }
 
-@test 'Testing completion: docker ----host=ssh://test export **' {
+@test 'Testing completion: docker --host=ssh://test export **' {
     docker_mock_1() {
         assert $# equals 7
         assert $1 same_as '--host'
@@ -4205,7 +4205,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test export '
+        assert $1 same_as 'docker --host=ssh://test export '
 
         echo 'docker'
     }
@@ -4216,7 +4216,7 @@
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--'
-        assert $5 same_as 'docker ----host=ssh://test export '
+        assert $5 same_as 'docker --host=ssh://test export '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -4231,7 +4231,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test export '
+    _fzf_complete_docker 'docker --host=ssh://test export '
 }
 
 @test 'Testing completion: docker logs **' {
@@ -4432,7 +4432,7 @@
     _fzf_complete_docker 'docker --host ssh://test logs '
 }
 
-@test 'Testing completion: docker ----host=ssh://test logs **' {
+@test 'Testing completion: docker --host=ssh://test logs **' {
     docker_mock_1() {
         assert $# equals 7
         assert $1 same_as '--host'
@@ -4453,7 +4453,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test logs '
+        assert $1 same_as 'docker --host=ssh://test logs '
 
         echo 'docker'
     }
@@ -4464,7 +4464,7 @@
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--'
-        assert $5 same_as 'docker ----host=ssh://test logs '
+        assert $5 same_as 'docker --host=ssh://test logs '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -4479,7 +4479,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test logs '
+    _fzf_complete_docker 'docker --host=ssh://test logs '
 }
 
 @test 'Testing completion: docker port **' {
@@ -4680,7 +4680,7 @@
     _fzf_complete_docker 'docker --host ssh://test port '
 }
 
-@test 'Testing completion: docker ----host=ssh://test port **' {
+@test 'Testing completion: docker --host=ssh://test port **' {
     docker_mock_1() {
         assert $# equals 7
         assert $1 same_as '--host'
@@ -4701,7 +4701,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test port '
+        assert $1 same_as 'docker --host=ssh://test port '
 
         echo 'docker'
     }
@@ -4712,7 +4712,7 @@
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--'
-        assert $5 same_as 'docker ----host=ssh://test port '
+        assert $5 same_as 'docker --host=ssh://test port '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -4727,7 +4727,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test port '
+    _fzf_complete_docker 'docker --host=ssh://test port '
 }
 
 @test 'Testing completion: docker rename **' {
@@ -4928,7 +4928,7 @@
     _fzf_complete_docker 'docker --host ssh://test rename '
 }
 
-@test 'Testing completion: docker ----host=ssh://test rename **' {
+@test 'Testing completion: docker --host=ssh://test rename **' {
     docker_mock_1() {
         assert $# equals 7
         assert $1 same_as '--host'
@@ -4949,7 +4949,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test rename '
+        assert $1 same_as 'docker --host=ssh://test rename '
 
         echo 'docker'
     }
@@ -4960,7 +4960,7 @@
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--'
-        assert $5 same_as 'docker ----host=ssh://test rename '
+        assert $5 same_as 'docker --host=ssh://test rename '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -4975,7 +4975,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test rename '
+    _fzf_complete_docker 'docker --host=ssh://test rename '
 }
 
 @test 'Testing completion: docker inspect **' {
@@ -5180,7 +5180,7 @@
     _fzf_complete_docker 'docker --host ssh://test inspect '
 }
 
-@test 'Testing completion: docker ----host=ssh://test inspect **' {
+@test 'Testing completion: docker --host=ssh://test inspect **' {
     docker_mock_1() {
         assert $# equals 7
         assert $1 same_as '--host'
@@ -5201,7 +5201,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test inspect '
+        assert $1 same_as 'docker --host=ssh://test inspect '
 
         echo 'docker'
     }
@@ -5213,7 +5213,7 @@
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'docker ----host=ssh://test inspect '
+        assert $6 same_as 'docker --host=ssh://test inspect '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -5228,7 +5228,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test inspect '
+    _fzf_complete_docker 'docker --host=ssh://test inspect '
 }
 
 @test 'Testing completion: docker inspect --type=container **' {
@@ -5433,7 +5433,7 @@
     _fzf_complete_docker 'docker --host ssh://test inspect --type=container '
 }
 
-@test 'Testing completion: docker ----host=ssh://test inspect --type=container **' {
+@test 'Testing completion: docker --host=ssh://test inspect --type=container **' {
     docker_mock_1() {
         assert $# equals 7
         assert $1 same_as '--host'
@@ -5454,7 +5454,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test inspect --type=container '
+        assert $1 same_as 'docker --host=ssh://test inspect --type=container '
 
         echo 'docker'
     }
@@ -5466,7 +5466,7 @@
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'docker ----host=ssh://test inspect --type=container '
+        assert $6 same_as 'docker --host=ssh://test inspect --type=container '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -5481,7 +5481,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test inspect --type=container '
+    _fzf_complete_docker 'docker --host=ssh://test inspect --type=container '
 }
 
 @test 'Testing completion: docker inspect --type container **' {
@@ -5686,7 +5686,7 @@
     _fzf_complete_docker 'docker --host ssh://test inspect --type container '
 }
 
-@test 'Testing completion: docker ----host=ssh://test inspect --type container **' {
+@test 'Testing completion: docker --host=ssh://test inspect --type container **' {
     docker_mock_1() {
         assert $# equals 7
         assert $1 same_as '--host'
@@ -5707,7 +5707,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test inspect --type container '
+        assert $1 same_as 'docker --host=ssh://test inspect --type container '
 
         echo 'docker'
     }
@@ -5719,7 +5719,7 @@
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'docker ----host=ssh://test inspect --type container '
+        assert $6 same_as 'docker --host=ssh://test inspect --type container '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -5734,7 +5734,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test inspect --type container '
+    _fzf_complete_docker 'docker --host=ssh://test inspect --type container '
 }
 
 @test 'Testing completion: docker inspect --type=image **' {
@@ -5931,7 +5931,7 @@
     _fzf_complete_docker 'docker --host ssh://test inspect --type=image '
 }
 
-@test 'Testing completion: docker ----host=ssh://test inspect --type=image **' {
+@test 'Testing completion: docker --host=ssh://test inspect --type=image **' {
     docker_mock_1() {
         assert $# equals 5
         assert $1 same_as '--host'
@@ -5950,7 +5950,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test inspect --type=image '
+        assert $1 same_as 'docker --host=ssh://test inspect --type=image '
 
         echo 'docker'
     }
@@ -5962,7 +5962,7 @@
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'docker ----host=ssh://test inspect --type=image '
+        assert $6 same_as 'docker --host=ssh://test inspect --type=image '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -5977,7 +5977,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test inspect --type=image '
+    _fzf_complete_docker 'docker --host=ssh://test inspect --type=image '
 }
 
 @test 'Testing completion: docker inspect --type image **' {
@@ -6174,7 +6174,7 @@
     _fzf_complete_docker 'docker --host ssh://test inspect --type image '
 }
 
-@test 'Testing completion: docker ----host=ssh://test inspect --type image **' {
+@test 'Testing completion: docker --host=ssh://test inspect --type image **' {
     docker_mock_1() {
         assert $# equals 5
         assert $1 same_as '--host'
@@ -6193,7 +6193,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test inspect --type image '
+        assert $1 same_as 'docker --host=ssh://test inspect --type image '
 
         echo 'docker'
     }
@@ -6205,7 +6205,7 @@
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'docker ----host=ssh://test inspect --type image '
+        assert $6 same_as 'docker --host=ssh://test inspect --type image '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -6220,7 +6220,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test inspect --type image '
+    _fzf_complete_docker 'docker --host=ssh://test inspect --type image '
 }
 
 @test 'Testing completion: docker inspect --type=network **' {
@@ -6405,7 +6405,7 @@
     _fzf_complete_docker 'docker --host ssh://test inspect --type=network '
 }
 
-@test 'Testing completion: docker ----host=ssh://test inspect --type=network **' {
+@test 'Testing completion: docker --host=ssh://test inspect --type=network **' {
     docker_mock_1() {
         assert $# equals 6
         assert $1 same_as '--host'
@@ -6423,7 +6423,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test inspect --type=network '
+        assert $1 same_as 'docker --host=ssh://test inspect --type=network '
 
         echo 'docker'
     }
@@ -6435,7 +6435,7 @@
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'docker ----host=ssh://test inspect --type=network '
+        assert $6 same_as 'docker --host=ssh://test inspect --type=network '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -6448,7 +6448,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test inspect --type=network '
+    _fzf_complete_docker 'docker --host=ssh://test inspect --type=network '
 }
 
 @test 'Testing completion: docker inspect --type network **' {
@@ -6633,7 +6633,7 @@
     _fzf_complete_docker 'docker --host ssh://test inspect --type network '
 }
 
-@test 'Testing completion: docker ----host=ssh://test inspect --type network **' {
+@test 'Testing completion: docker --host=ssh://test inspect --type network **' {
     docker_mock_1() {
         assert $# equals 6
         assert $1 same_as '--host'
@@ -6651,7 +6651,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test inspect --type network '
+        assert $1 same_as 'docker --host=ssh://test inspect --type network '
 
         echo 'docker'
     }
@@ -6663,7 +6663,7 @@
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'docker ----host=ssh://test inspect --type network '
+        assert $6 same_as 'docker --host=ssh://test inspect --type network '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -6676,7 +6676,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test inspect --type network '
+    _fzf_complete_docker 'docker --host=ssh://test inspect --type network '
 }
 
 @test 'Testing completion: docker inspect --type=volume **' {
@@ -6861,7 +6861,7 @@
     _fzf_complete_docker 'docker --host ssh://test inspect --type=volume '
 }
 
-@test 'Testing completion: docker ----host=ssh://test inspect --type=volume **' {
+@test 'Testing completion: docker --host=ssh://test inspect --type=volume **' {
     docker_mock_1() {
         assert $# equals 6
         assert $1 same_as '--host'
@@ -6879,7 +6879,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test inspect --type=volume '
+        assert $1 same_as 'docker --host=ssh://test inspect --type=volume '
 
         echo 'docker'
     }
@@ -6891,7 +6891,7 @@
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'docker ----host=ssh://test inspect --type=volume '
+        assert $6 same_as 'docker --host=ssh://test inspect --type=volume '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -6904,7 +6904,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test inspect --type=volume '
+    _fzf_complete_docker 'docker --host=ssh://test inspect --type=volume '
 }
 
 @test 'Testing completion: docker inspect --type volume **' {
@@ -7089,7 +7089,7 @@
     _fzf_complete_docker 'docker --host ssh://test inspect --type volume '
 }
 
-@test 'Testing completion: docker ----host=ssh://test inspect --type volume **' {
+@test 'Testing completion: docker --host=ssh://test inspect --type volume **' {
     docker_mock_1() {
         assert $# equals 6
         assert $1 same_as '--host'
@@ -7107,7 +7107,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test inspect --type volume '
+        assert $1 same_as 'docker --host=ssh://test inspect --type volume '
 
         echo 'docker'
     }
@@ -7119,7 +7119,7 @@
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'docker ----host=ssh://test inspect --type volume '
+        assert $6 same_as 'docker --host=ssh://test inspect --type volume '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -7132,7 +7132,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test inspect --type volume '
+    _fzf_complete_docker 'docker --host=ssh://test inspect --type volume '
 }
 
 @test 'Testing completion: docker inspect --type=task **' {
@@ -7211,10 +7211,10 @@
     assert docker mock_times 0
 }
 
-@test 'Testing completion: docker ----host=ssh://test inspect --type=task **' {
+@test 'Testing completion: docker --host=ssh://test inspect --type=task **' {
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test inspect --type=task '
+        assert $1 same_as 'docker --host=ssh://test inspect --type=task '
 
         echo 'docker'
     }
@@ -7224,7 +7224,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test inspect --type=task '
+    _fzf_complete_docker 'docker --host=ssh://test inspect --type=task '
 
     assert __fzf_extract_command mock_times 1
     assert docker mock_times 0
@@ -7306,10 +7306,10 @@
     assert docker mock_times 0
 }
 
-@test 'Testing completion: docker ----host=ssh://test inspect --type task **' {
+@test 'Testing completion: docker --host=ssh://test inspect --type task **' {
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test inspect --type task '
+        assert $1 same_as 'docker --host=ssh://test inspect --type task '
 
         echo 'docker'
     }
@@ -7319,7 +7319,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test inspect --type task '
+    _fzf_complete_docker 'docker --host=ssh://test inspect --type task '
 
     assert __fzf_extract_command mock_times 1
     assert docker mock_times 0
@@ -7527,7 +7527,7 @@
     _fzf_complete_docker 'docker --host ssh://test restart '
 }
 
-@test 'Testing completion: docker ----host=ssh://test restart **' {
+@test 'Testing completion: docker --host=ssh://test restart **' {
     docker_mock_1() {
         assert $# equals 7
         assert $1 same_as '--host'
@@ -7548,7 +7548,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test restart '
+        assert $1 same_as 'docker --host=ssh://test restart '
 
         echo 'docker'
     }
@@ -7560,7 +7560,7 @@
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'docker ----host=ssh://test restart '
+        assert $6 same_as 'docker --host=ssh://test restart '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -7575,7 +7575,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test restart '
+    _fzf_complete_docker 'docker --host=ssh://test restart '
 }
 
 @test 'Testing completion: docker rm **' {
@@ -7780,7 +7780,7 @@
     _fzf_complete_docker 'docker --host ssh://test rm '
 }
 
-@test 'Testing completion: docker ----host=ssh://test rm **' {
+@test 'Testing completion: docker --host=ssh://test rm **' {
     docker_mock_1() {
         assert $# equals 7
         assert $1 same_as '--host'
@@ -7801,7 +7801,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test rm '
+        assert $1 same_as 'docker --host=ssh://test rm '
 
         echo 'docker'
     }
@@ -7813,7 +7813,7 @@
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'docker ----host=ssh://test rm '
+        assert $6 same_as 'docker --host=ssh://test rm '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -7828,7 +7828,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test rm '
+    _fzf_complete_docker 'docker --host=ssh://test rm '
 }
 
 @test 'Testing completion: docker start **' {
@@ -8033,7 +8033,7 @@
     _fzf_complete_docker 'docker --host ssh://test start '
 }
 
-@test 'Testing completion: docker ----host=ssh://test start **' {
+@test 'Testing completion: docker --host=ssh://test start **' {
     docker_mock_1() {
         assert $# equals 7
         assert $1 same_as '--host'
@@ -8054,7 +8054,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test start '
+        assert $1 same_as 'docker --host=ssh://test start '
 
         echo 'docker'
     }
@@ -8066,7 +8066,7 @@
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'docker ----host=ssh://test start '
+        assert $6 same_as 'docker --host=ssh://test start '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -8081,7 +8081,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test start '
+    _fzf_complete_docker 'docker --host=ssh://test start '
 }
 
 @test 'Testing completion: docker stats **' {
@@ -8286,7 +8286,7 @@
     _fzf_complete_docker 'docker --host ssh://test stats '
 }
 
-@test 'Testing completion: docker ----host=ssh://test stats **' {
+@test 'Testing completion: docker --host=ssh://test stats **' {
     docker_mock_1() {
         assert $# equals 7
         assert $1 same_as '--host'
@@ -8307,7 +8307,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test stats '
+        assert $1 same_as 'docker --host=ssh://test stats '
 
         echo 'docker'
     }
@@ -8319,7 +8319,7 @@
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'docker ----host=ssh://test stats '
+        assert $6 same_as 'docker --host=ssh://test stats '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -8334,7 +8334,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test stats '
+    _fzf_complete_docker 'docker --host=ssh://test stats '
 }
 
 @test 'Testing completion: docker update **' {
@@ -8539,7 +8539,7 @@
     _fzf_complete_docker 'docker --host ssh://test update '
 }
 
-@test 'Testing completion: docker ----host=ssh://test update **' {
+@test 'Testing completion: docker --host=ssh://test update **' {
     docker_mock_1() {
         assert $# equals 7
         assert $1 same_as '--host'
@@ -8560,7 +8560,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test update '
+        assert $1 same_as 'docker --host=ssh://test update '
 
         echo 'docker'
     }
@@ -8572,7 +8572,7 @@
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'docker ----host=ssh://test update '
+        assert $6 same_as 'docker --host=ssh://test update '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -8587,7 +8587,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test update '
+    _fzf_complete_docker 'docker --host=ssh://test update '
 }
 
 @test 'Testing completion: docker wait **' {
@@ -8792,7 +8792,7 @@
     _fzf_complete_docker 'docker --host ssh://test wait '
 }
 
-@test 'Testing completion: docker ----host=ssh://test wait **' {
+@test 'Testing completion: docker --host=ssh://test wait **' {
     docker_mock_1() {
         assert $# equals 7
         assert $1 same_as '--host'
@@ -8813,7 +8813,7 @@
 
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test wait '
+        assert $1 same_as 'docker --host=ssh://test wait '
 
         echo 'docker'
     }
@@ -8825,7 +8825,7 @@
         assert $3 same_as '--header-lines=1'
         assert $4 same_as '--multi'
         assert $5 same_as '--'
-        assert $6 same_as 'docker ----host=ssh://test wait '
+        assert $6 same_as 'docker --host=ssh://test wait '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -8840,7 +8840,7 @@
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test wait '
+    _fzf_complete_docker 'docker --host=ssh://test wait '
 }
 
 @test 'Testing completion: docker "" wait **' {
@@ -8947,10 +8947,10 @@
     assert docker mock_times 0
 }
 
-@test 'Testing completion: docker ----host=ssh://test "" wait **' {
+@test 'Testing completion: docker --host=ssh://test "" wait **' {
     __fzf_extract_command_mock_1() {
         assert $# equals 1
-        assert $1 same_as 'docker ----host=ssh://test "" wait '
+        assert $1 same_as 'docker --host=ssh://test "" wait '
 
         echo 'docker'
     }
@@ -8962,13 +8962,13 @@
     _fzf_path_completion() {
         assert $# equals 2
         assert $1 same_as ''
-        assert $2 same_as 'docker ----host=ssh://test "" wait '
+        assert $2 same_as 'docker --host=ssh://test "" wait '
 
         assert __fzf_extract_command mock_times 1
     }
 
     prefix=
-    _fzf_complete_docker 'docker ----host=ssh://test "" wait '
+    _fzf_complete_docker 'docker --host=ssh://test "" wait '
 
     assert docker mock_times 0
 }
