@@ -135,7 +135,7 @@ _fzf_complete_docker-images() {
     shift 1
 
     _fzf_complete --ansi --tiebreak=index --header-lines=1 ${(Q)${(Z+n+)fzf_options}} -- "$@" < <(
-        docker ${(Q)${(z)docker_default_global_arguments}} images --format 'table {{.ID}};{{.Repository}};{{.Tag}};{{if .CreatedSince}}{{.CreatedSince}}{{else}}N/A{{end}};{{.Size}}' 2> /dev/null \
+        docker ${(Q)${(z)docker_default_global_arguments}} images --all --format 'table {{.ID}};{{.Repository}};{{.Tag}};{{if .CreatedSince}}{{.CreatedSince}}{{else}}N/A{{end}};{{.Size}}' 2> /dev/null \
             | FS=';' _fzf_complete_tabularize $fg[yellow] $reset_color{,,}
     )
 }
