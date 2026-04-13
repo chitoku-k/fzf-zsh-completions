@@ -441,7 +441,7 @@ _fzf_complete_kubectl() {
         fi
 
         if [[ -z $completing_option ]]; then
-            _fzf_complete_kubectl-resource-names '' "$@"
+            _fzf_complete_kubectl-resource-names '--multi' "$@"
             return
         fi
     fi

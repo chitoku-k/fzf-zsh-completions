@@ -10570,12 +10570,13 @@
     }
 
     _fzf_complete() {
-        assert $# equals 5
+        assert $# equals 6
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--'
-        assert $5 same_as 'kubectl cordon '
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl cordon '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -10893,12 +10894,13 @@
     }
 
     _fzf_complete() {
-        assert $# equals 5
+        assert $# equals 6
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--'
-        assert $5 same_as 'kubectl drain '
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl drain '
 
         run cat
         assert __fzf_extract_command mock_times 1
@@ -11216,12 +11218,13 @@
     }
 
     _fzf_complete() {
-        assert $# equals 5
+        assert $# equals 6
         assert $1 same_as '--ansi'
         assert $2 same_as '--tiebreak=index'
         assert $3 same_as '--header-lines=1'
-        assert $4 same_as '--'
-        assert $5 same_as 'kubectl uncordon '
+        assert $4 same_as '--multi'
+        assert $5 same_as '--'
+        assert $6 same_as 'kubectl uncordon '
 
         run cat
         assert __fzf_extract_command mock_times 1
